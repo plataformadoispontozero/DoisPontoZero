@@ -187,6 +187,31 @@
       "pending_requirements": [],
       "last_verified_at": "2026-10-10T21:30:00Z",
       "evidence": "supabase/migrations/20261010000007_phase09_drive_presentations.sql, src/features/drive/*, src/features/presentations/*, vitest suite (64/64 passing)"
+    },
+    {
+      "id": "phase-10",
+      "name": "Fase 10 - Meeting Hub + Team Chat",
+      "status": "completed",
+      "completed_requirements": [
+        "Migration PostgreSQL (20261010000008_phase10_meetings_chat.sql) com 18 tabelas, RLS e RPC convert_action_item_to_task",
+        "Tipagem de domínio em src/types/meetings.ts, src/types/chat.ts, src/types/notifications.ts",
+        "Hooks TanStack Query completos em src/features/meetings/hooks/useMeetings.ts, src/features/chat/hooks/useChat.ts, src/features/notifications/hooks/useNotifications.ts, src/features/calendar/hooks/useCalendarIntegration.ts",
+        "Meeting Hub Dashboard (/meetings) com 4 KPIs reais, busca, filtros e alternância de visões Agenda/Lista/Calendário",
+        "Agendamento de reuniões (/meetings/new) com horários, fuso horário, participantes internos/externos e links de conferência",
+        "Workspace da reunião (/meetings/:meetingId) com 5 abas (Visão Geral, Pauta, Ata, Decisões, Ações)",
+        "Editor de pautas com reordenação e duração estimada",
+        "Editor de atas estruturado com versionamento e imutabilidade de atas finalizadas",
+        "Registro de decisões e conversão transacional de Action Items em tarefas operacionais no Kanban",
+        "Team Chat (/chat, /chat/channels/:channelId, /chat/direct/:conversationId) com 4 tipos de canais (geral, squad, projeto, custom), DMs, Supabase Realtime, anexos privados, reações e menções",
+        "Configurações do Chat (/chat/settings) para gestão de canais e preferências de notificação",
+        "Central de Notificações (/notifications) e badge real de não lidas na TopBar",
+        "Página de integração Google Calendar (/settings/integrations/calendar)",
+        "Abas de integração ClientMeetingsTab no Client Hub e ProjectChatTab no Project Workspace",
+        "Suíte de testes automatizados Vitest (69/69 passando) e build de produção 100% verificado"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T21:46:00Z",
+      "evidence": "supabase/migrations/20261010000008_phase10_meetings_chat.sql, src/features/meetings/*, src/features/chat/*, src/features/notifications/*, vitest suite (69/69 passing)"
     }
   ]
 }

@@ -27,6 +27,11 @@
    - Tabelas: `content_strategies`, `editorial_pillars`, `content_ideas`, `editorial_items`, `strategy_versions`, `strategy_activity`.
    - Funções e RPCs: `get_strategy_overview()`, `generate_editorial_suggestions()`.
 
+6. `20261010000008_phase10_meetings_chat.sql`
+   - Estrutura completa de reuniões, atas versionadas, decisões, action items, canais de chat, conversas DMs, realtime, anexos, menções, reações e notificações.
+   - Tabelas: `meetings`, `meeting_participants`, `meeting_agenda_items`, `meeting_minutes`, `meeting_decisions`, `meeting_action_items`, `meeting_activity`, `calendar_connections`, `meeting_calendar_events`, `chat_channels`, `chat_channel_members`, `chat_conversations`, `chat_conversation_members`, `chat_messages`, `chat_attachments`, `chat_mentions`, `chat_reactions`, `notifications`.
+   - Funções e RPCs: `convert_action_item_to_task()`.
+
 ---
 
 ## Tabelas da Fase 06 (Briefings & Form Builder)

@@ -43,10 +43,15 @@ import {
 } from '@/components/ui/Sheet'
 import { Input } from '@/components/ui/Input'
 
+import { useNotifications } from '@/features/notifications/hooks/useNotifications'
+
 export const TopBar: React.FC = () => {
   const { branding } = useBranding()
   const location = useLocation()
   const navigate = useNavigate()
+
+  const { data: notifications } = useNotifications()
+  const unreadNotifications = (notifications || []).filter((n) => !n.read_at)
 
   // Estados de Dialog e Sheet do Header
   const [searchDialogOpen, setSearchDialogOpen] = useState(false)
@@ -108,21 +113,46 @@ export const TopBar: React.FC = () => {
                 className="relative text-[#A1A1B0] hover:text-[#F8F9FC]"
               >
                 <Bell className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#B8FF65]" />
+                {unreadNotifications.length > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#B8FF65] animate-pulse" />
+                )}
               </IconButton>
             </DropdownTrigger>
-            <DropdownContent align="right" className="w-72 p-0">
+            <DropdownContent align="right" className="w-80 p-0">
               <div className="p-3 border-b border-[#30303B] flex items-center justify-between">
                 <span className="font-heading text-xs font-semibold text-[#F8F9FC]">
                   Notificações
                 </span>
-                <Badge variant="accent" className="text-[10px] py-0">0 novas</Badge>
+                <Badge variant="accent" className="text-[10px] py-0">{unreadNotifications.length} novas</Badge>
               </div>
-              <div className="p-6 text-center text-xs text-[#A1A1B0]">
-                <p className="font-medium text-[#F8F9FC] mb-1">Tudo em dia!</p>
-                <p className="text-[11px] text-[#717182]">
-                  Nenhum alerta pendente para a sua equipe no momento.
-                </p>
+              {unreadNotifications.length === 0 ? (
+                <div className="p-6 text-center text-xs text-[#A1A1B0]">
+                  <p className="font-medium text-[#F8F9FC] mb-1">Tudo em dia!</p>
+                  <p className="text-[11px] text-[#717182]">
+                    Nenhum alerta pendente para a sua equipe no momento.
+                  </p>
+                </div>
+              ) : (
+                <div className="max-h-64 overflow-y-auto divide-y divide-surface-border">
+                  {unreadNotifications.map((n) => (
+                    <div
+                      key={n.id}
+                      onClick={() => navigate('/notifications')}
+                      className="p-3 hover:bg-surface-elevated transition-colors cursor-pointer space-y-0.5"
+                    >
+                      <p className="text-xs font-semibold text-content-primary leading-snug">{n.title}</p>
+                      <p className="text-[11px] text-content-secondary line-clamp-1">{n.body}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="p-2 border-t border-[#30303B] text-center bg-surface-subtle">
+                <button
+                  onClick={() => navigate('/notifications')}
+                  className="text-[11px] font-semibold text-brand-primary hover:underline"
+                >
+                  Ver Central de Notificações
+                </button>
               </div>
             </DropdownContent>
           </Dropdown>

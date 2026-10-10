@@ -93,11 +93,11 @@ describe('All 13 Phase 01 Functional Routes Render Test', () => {
   })
 
   it('renders route: /meetings (Reuniões)', () => {
-    testRoute('/meetings', /Reuniões & Alinhamentos/i)
+    testRoute('/meetings', /Meeting Hub|Reuniões & Alinhamentos/i)
   })
 
   it('renders route: /chat (Chat)', () => {
-    testRoute('/chat', /Chat & Canais Internos/i)
+    testRoute('/chat', /Team Chat|Chat & Canais Internos/i)
   })
 
   it('renders route: /presentations (Apresentações)', () => {

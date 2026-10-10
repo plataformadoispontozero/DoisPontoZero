@@ -105,8 +105,13 @@ npm run preview
 | `/drive/connections` | **Conexões Drive** | Gerenciador OAuth 2.0 de contas e escopos autorizados |
 | `/presentations` | **Apresentações** | Presentation Studio, decks de defesa criativa, showcases e PDFs |
 | `/showcase/:publicToken` | **Showcase Público** | Visualização pública responsiva e tokenizada para clientes |
-| `/meetings` | **Reuniões** | Alinhamentos, pautas e atas inteligentes |
-| `/chat` | **Chat** | Comunicação interna em canais e squads |
+| `/meetings` | **Meeting Hub** | Dashboard de reuniões, agendamento, pautas, atas versionadas, decisões e ações |
+| `/meetings/new` | **Nova Reunião** | Formulário de agendamento com participantes, local e link de conferência |
+| `/meetings/:meetingId` | **Workspace da Reunião** | 5 abas: Visão Geral, Pauta, Ata, Decisões, Ações (com conversão Kanban) |
+| `/chat` | **Team Chat** | Canais (geral, squad, projeto, custom), DMs e Realtime |
+| `/chat/settings` | **Configurações do Chat** | Gerenciamento de canais, membros e preferências de notificação |
+| `/notifications` | **Central de Notificações** | Todas as notificações com leitura individual e em lote |
+| `/settings/integrations/calendar` | **Google Calendar** | Conexão OAuth para sincronização de reuniões |
 | `/settings` | **Configurações** | Parâmetros de sistema e White Label da agência |
 
 ---
@@ -119,6 +124,11 @@ npm run preview
 - [Google Drive Integration Architecture (`docs/GOOGLE_DRIVE_INTEGRATION.md`)](docs/GOOGLE_DRIVE_INTEGRATION.md)
 - [Presentation Studio & Decks (`docs/PRESENTATION_STUDIO.md`)](docs/PRESENTATION_STUDIO.md)
 - [Presentation Security & Public Links (`docs/PRESENTATION_SECURITY.md`)](docs/PRESENTATION_SECURITY.md)
+- [Meeting Hub (`docs/MEETING_HUB.md`)](docs/MEETING_HUB.md)
+- [Team Chat (`docs/TEAM_CHAT.md`)](docs/TEAM_CHAT.md)
+- [Realtime Architecture (`docs/REALTIME_ARCHITECTURE.md`)](docs/REALTIME_ARCHITECTURE.md)
+- [Calendar Integration (`docs/CALENDAR_INTEGRATION.md`)](docs/CALENDAR_INTEGRATION.md)
 - [Diretrizes de Segurança & RLS (`docs/SECURITY.md`)](docs/SECURITY.md)
 - [Schema de Banco de Dados PostgreSQL (`docs/DATABASE.md`)](docs/DATABASE.md)
+- [Phase Status (`docs/PHASE_STATUS.json`)](docs/PHASE_STATUS.json)
 

@@ -32,7 +32,12 @@ import { PresentationWorkspacePage } from '@/features/presentations/Presentation
 import { PresentationExportPage } from '@/features/presentations/PresentationExportPage'
 import { PublicShowcaseViewPage } from '@/features/presentations/public/PublicShowcaseViewPage'
 import { MeetingsPage } from '@/features/meetings/MeetingsPage'
+import { NewMeetingPage } from '@/features/meetings/NewMeetingPage'
+import { MeetingWorkspacePage } from '@/features/meetings/MeetingWorkspacePage'
 import { ChatPage } from '@/features/chat/ChatPage'
+import { ChatSettingsPage } from '@/features/chat/ChatSettingsPage'
+import { NotificationsPage } from '@/features/notifications/NotificationsPage'
+import { CalendarIntegrationPage } from '@/features/settings/CalendarIntegrationPage'
 import { PresentationsPage } from '@/features/presentations/PresentationsPage'
 import { SettingsPage } from '@/features/settings/SettingsPage'
 
@@ -207,8 +212,52 @@ export const router = createBrowserRouter([
         element: <MeetingsPage />,
       },
       {
+        path: 'meetings/new',
+        element: <NewMeetingPage />,
+      },
+      {
+        path: 'meetings/:meetingId',
+        element: <MeetingWorkspacePage />,
+      },
+      {
+        path: 'meetings/:meetingId/edit',
+        element: <MeetingWorkspacePage />,
+      },
+      {
+        path: 'meetings/:meetingId/agenda',
+        element: <MeetingWorkspacePage />,
+      },
+      {
+        path: 'meetings/:meetingId/minutes',
+        element: <MeetingWorkspacePage />,
+      },
+      {
+        path: 'meetings/:meetingId/actions',
+        element: <MeetingWorkspacePage />,
+      },
+      {
         path: 'chat',
         element: <ChatPage />,
+      },
+      {
+        path: 'chat/channels/:channelId',
+        element: <ChatPage />,
+      },
+      {
+        path: 'chat/direct/:conversationId',
+        element: <ChatPage />,
+      },
+      {
+        path: 'chat/settings',
+        element: <ChatSettingsPage />,
+      },
+      {
+        path: 'notifications',
+        element: <NotificationsPage />,
+      },
+      {
+        path: 'settings/integrations/calendar',
+        element: <CalendarIntegrationPage />,
       },
       {
         path: 'presentations',
