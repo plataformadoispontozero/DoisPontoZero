@@ -212,6 +212,33 @@
       "pending_requirements": [],
       "last_verified_at": "2026-10-10T21:46:00Z",
       "evidence": "supabase/migrations/20261010000008_phase10_meetings_chat.sql, src/features/meetings/*, src/features/chat/*, src/features/notifications/*, vitest suite (69/69 passing)"
+    },
+    {
+      "id": "phase-11",
+      "name": "Fase 11 - White Label Studio & Advanced Settings",
+      "status": "completed",
+      "completed_requirements": [
+        "Migration PostgreSQL (20261010000009_phase11_whitelabel.sql) com 5 tabelas (agency_branding, agency_preferences, agency_document_settings, agency_portal_settings, agency_settings_history)",
+        "Row Level Security (RLS) estrita em todas as 5 tabelas com isolamento por agency_id",
+        "RPC get_public_agency_branding para acesso seguro em portais públicos",
+        "Tipagem de domínio completa em src/types/whitelabel.ts",
+        "Módulo de contraste WCAG 2.2 AA em src/lib/contrast.ts com cálculo de razão e validação automática",
+        "Hooks TanStack Query completos em useAgencySettings.ts (branding, preferences, team) com fallback determinístico",
+        "Settings Overview Page (/settings) com 12 módulos navegáveis em cards",
+        "White Label Studio (/settings/white-label) com editor de cores, validação de contraste em tempo real, seletor de fontes Google Fonts, BrandPreview e preview mobile via Sheet",
+        "Agency Settings Page (/settings/agency) com dados legais e fiscais",
+        "Appearance Settings Page (/settings/appearance) com tema e atalhos",
+        "Team Management Page (/settings/team) com listagem de membros, convites com hash seguro de 7 dias, seletor de cargos e proteção de OWNER",
+        "Permission Studio (/settings/permissions) com matriz visual de permissões 5 Roles × 15+ Módulos",
+        "Workspace Preferences (/settings/workspace), Document Branding (/settings/documents), Client Experience (/settings/client-experience)",
+        "Integrations Center (/settings/integrations), Security Center (/settings/security), Activity Center (/settings/activity)",
+        "Diagnostics Page (/settings/diagnostics) com manifesto técnico auditado de Fases 01 a 11",
+        "Componente BrandPreview para visualização em tempo real de branding",
+        "Suíte de testes automatizados Vitest (75/75 passando) e build de produção 100% verificado"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T22:13:00Z",
+      "evidence": "supabase/migrations/20261010000009_phase11_whitelabel.sql, src/features/settings/*, src/lib/contrast.ts, src/types/whitelabel.ts, docs/WHITE_LABEL_STUDIO.md, vitest suite (75/75 passing)"
     }
   ]
 }
