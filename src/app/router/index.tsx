@@ -25,13 +25,19 @@ import { ServiceCatalogPage } from '@/features/proposals/ServiceCatalogPage'
 import { ProposalTemplatesPage } from '@/features/proposals/ProposalTemplatesPage'
 import { ProposalExportPage } from '@/features/proposals/ProposalExportPage'
 import { PublicProposalViewPage } from '@/features/proposals/public/PublicProposalViewPage'
+import { DriveBrowserPage } from '@/features/drive/DriveBrowserPage'
+import { DriveConnectionsPage } from '@/features/drive/DriveConnectionsPage'
+import { NewPresentationPage } from '@/features/presentations/NewPresentationPage'
+import { PresentationWorkspacePage } from '@/features/presentations/PresentationWorkspacePage'
+import { PresentationExportPage } from '@/features/presentations/PresentationExportPage'
+import { PublicShowcaseViewPage } from '@/features/presentations/public/PublicShowcaseViewPage'
 import { MeetingsPage } from '@/features/meetings/MeetingsPage'
 import { ChatPage } from '@/features/chat/ChatPage'
 import { PresentationsPage } from '@/features/presentations/PresentationsPage'
 import { SettingsPage } from '@/features/settings/SettingsPage'
 
 export const router = createBrowserRouter([
-  // Public standalone routes for external clients (Briefing & Proposal)
+  // Public standalone routes for external clients (Briefing, Proposal, Showcase)
   {
     path: '/b/:publicToken',
     element: <PublicBriefingFormPage />,
@@ -39,6 +45,10 @@ export const router = createBrowserRouter([
   {
     path: '/p/:publicToken',
     element: <PublicProposalViewPage />,
+  },
+  {
+    path: '/showcase/:publicToken',
+    element: <PublicShowcaseViewPage />,
   },
   {
     path: '/',
@@ -87,6 +97,18 @@ export const router = createBrowserRouter([
       {
         path: 'squads',
         element: <SquadsPage />,
+      },
+      {
+        path: 'drive',
+        element: <DriveBrowserPage />,
+      },
+      {
+        path: 'drive/connections',
+        element: <DriveConnectionsPage />,
+      },
+      {
+        path: 'drive/clients/:clientId',
+        element: <DriveBrowserPage />,
       },
       {
         path: 'briefings',
@@ -191,6 +213,30 @@ export const router = createBrowserRouter([
       {
         path: 'presentations',
         element: <PresentationsPage />,
+      },
+      {
+        path: 'presentations/new',
+        element: <NewPresentationPage />,
+      },
+      {
+        path: 'presentations/:presentationId',
+        element: <PresentationWorkspacePage />,
+      },
+      {
+        path: 'presentations/:presentationId/edit',
+        element: <PresentationWorkspacePage />,
+      },
+      {
+        path: 'presentations/:presentationId/preview',
+        element: <PresentationWorkspacePage />,
+      },
+      {
+        path: 'presentations/:presentationId/versions',
+        element: <PresentationWorkspacePage />,
+      },
+      {
+        path: 'presentations/:presentationId/export',
+        element: <PresentationExportPage />,
       },
       {
         path: 'settings',

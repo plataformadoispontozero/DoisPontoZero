@@ -101,7 +101,7 @@ describe('All 13 Phase 01 Functional Routes Render Test', () => {
   })
 
   it('renders route: /presentations (Apresentações)', () => {
-    testRoute('/presentations', /Apresentações & Decks/i)
+    testRoute('/presentations', /Presentation Studio/i)
   })
 
   it('renders route: /settings (Configurações)', () => {

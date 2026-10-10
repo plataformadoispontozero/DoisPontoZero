@@ -164,6 +164,29 @@
       "pending_requirements": [],
       "last_verified_at": "2026-10-10T21:10:00Z",
       "evidence": "supabase/migrations/20261010000006_phase08_proposals.sql, src/features/proposals/*, vitest suite (60/60 passing)"
+    },
+    {
+      "id": "phase-09",
+      "name": "Fase 09 - Google Drive e Presentation Studio",
+      "status": "completed",
+      "completed_requirements": [
+        "Migration PostgreSQL (20261010000007_phase09_drive_presentations.sql) com 11 tabelas, RLS e RPC de visualização pública",
+        "Tipagem de domínio completa em src/types/drive.ts e src/types/presentations.ts",
+        "Hooks TanStack Query completos em src/features/drive/hooks/useDrive.ts e src/features/presentations/hooks/usePresentations.ts",
+        "Google Drive Connection Manager (/drive/connections) e Google Drive Browser (/drive/browser)",
+        "Componente de integração ClientDriveTab no Client Hub",
+        "Presentation Studio Dashboard (/presentations) com busca, filtros e estatísticas de entregas",
+        "Wizard de criação (/presentations/new) em 4 passos com seleção de cliente, mês/ano de referência e template editorial",
+        "Workspace da Apresentação (/presentations/:presentationId) com 4 abas (Builder de Seções, Preview Responsivo, Publicação & Links Públicos, Histórico de Versões)",
+        "Gerador de PDF Editorial (@react-pdf/renderer) em src/features/presentations/pdf/",
+        "Tela de Exportação de PDF (/presentations/:presentationId/export) com branding customizado",
+        "Visualização pública interativa e independente (/showcase/:publicToken)",
+        "Componente de integração ClientPresentationsTab no Client Hub",
+        "Suíte de testes automatizados Vitest (64/64 passando) e build de produção 100% verificado"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T21:30:00Z",
+      "evidence": "supabase/migrations/20261010000007_phase09_drive_presentations.sql, src/features/drive/*, src/features/presentations/*, vitest suite (64/64 passing)"
     }
   ]
 }

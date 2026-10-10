@@ -1,0 +1,242 @@
+// ============================================================
+// DOIS.ZERO | CREATIVE AGENCY OS
+// FASE 09: GOOGLE DRIVE INTEGRATION HOOKS
+// TanStack Query hooks & local demo fallback for Drive Management
+// ============================================================
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
+import type {
+  GoogleConnection,
+  ClientDriveFolder,
+  DriveFileReference,
+  ProjectDriveFile,
+} from '@/types/drive'
+
+// Mock Initial Connection & File References for Demo Mode
+const DEMO_GOOGLE_CONNECTION: GoogleConnection = {
+  id: 'gconn-demo-001',
+  agency_id: 'demo-agency',
+  google_account_id: 'google-user-12345',
+  google_email: 'criativo@matrizcriativa.com.br',
+  status: 'connected',
+  scopes: ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive.readonly'],
+  expires_at: new Date(Date.now() + 7 * 86400000).toISOString(),
+  last_verified_at: new Date().toISOString(),
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+}
+
+const DEMO_DRIVE_FILES: DriveFileReference[] = [
+  {
+    id: 'dref-001',
+    agency_id: 'demo-agency',
+    connection_id: 'gconn-demo-001',
+    google_file_id: '1A2B3C4D5E6F_reels_01',
+    name: 'Reels_Lancamento_Acme_V1.mp4',
+    mime_type: 'video/mp4',
+    web_view_link: 'https://drive.google.com/file/d/1A2B3C4D5E6F_reels_01/view',
+    thumbnail_reference: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=400',
+    size_bytes: 45200000,
+    modified_time: new Date(Date.now() - 86400000).toISOString(),
+    last_synced_at: new Date().toISOString(),
+    availability_status: 'available',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'dref-002',
+    agency_id: 'demo-agency',
+    connection_id: 'gconn-demo-001',
+    google_file_id: '2B3C4D5E6F7G_carrossel',
+    name: 'Carrossel_Identidade_Starlight.pdf',
+    mime_type: 'application/pdf',
+    web_view_link: 'https://drive.google.com/file/d/2B3C4D5E6F7G_carrossel/view',
+    thumbnail_reference: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?w=400',
+    size_bytes: 12800000,
+    modified_time: new Date(Date.now() - 2 * 86400000).toISOString(),
+    last_synced_at: new Date().toISOString(),
+    availability_status: 'available',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'dref-003',
+    agency_id: 'demo-agency',
+    connection_id: 'gconn-demo-001',
+    google_file_id: '3C4D5E6F7G8H_brandbook',
+    name: 'Brandbook_Manual_Marca_Nexus.pdf',
+    mime_type: 'application/pdf',
+    web_view_link: 'https://drive.google.com/file/d/3C4D5E6F7G8H_brandbook/view',
+    thumbnail_reference: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400',
+    size_bytes: 34500000,
+    modified_time: new Date(Date.now() - 4 * 86400000).toISOString(),
+    last_synced_at: new Date().toISOString(),
+    availability_status: 'available',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+]
+
+let demoConnectionStore: GoogleConnection | null = DEMO_GOOGLE_CONNECTION
+let demoFilesStore: DriveFileReference[] = [...DEMO_DRIVE_FILES]
+let demoClientFoldersStore: ClientDriveFolder[] = [
+  {
+    id: 'cfolder-001',
+    agency_id: 'demo-agency',
+    client_id: 'cli-001',
+    google_folder_id: 'folder_acme_main_2026',
+    folder_name: 'Acme Corp — Entregas & Artes 2026',
+    folder_url: 'https://drive.google.com/drive/folders/folder_acme_main_2026',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+]
+
+// 1. Hook: Google Connection Status
+export function useDriveConnection() {
+  return useQuery({
+    queryKey: ['drive_connection'],
+    queryFn: async (): Promise<GoogleConnection | null> => {
+      if (isSupabaseConfigured && supabase) {
+        try {
+          const { data } = await supabase
+            .from('google_connections')
+            .select('*')
+            .eq('agency_id', 'demo-agency')
+            .single()
+
+          if (data) return data
+        } catch (err) {
+          console.warn('Supabase fetch google connection error:', err)
+        }
+      }
+      return demoConnectionStore
+    },
+  })
+}
+
+// 2. Hook: Drive Files Browser
+export function useDriveFiles(search?: string, mimeType?: string) {
+  return useQuery({
+    queryKey: ['drive_files', search, mimeType],
+    queryFn: async (): Promise<DriveFileReference[]> => {
+      if (isSupabaseConfigured && supabase) {
+        try {
+          let query = supabase.from('drive_file_references').select('*')
+          if (search) query = query.ilike('name', `%${search}%`)
+          if (mimeType) query = query.eq('mime_type', mimeType)
+          const { data } = await query
+          if (data && data.length > 0) return data
+        } catch (err) {
+          console.warn('Supabase fetch drive files error:', err)
+        }
+      }
+
+      return demoFilesStore.filter((f) => {
+        const matchesSearch = !search || f.name.toLowerCase().includes(search.toLowerCase())
+        const matchesMime = !mimeType || f.mime_type === mimeType
+        return matchesSearch && matchesMime
+      })
+    },
+  })
+}
+
+// 3. Hook: Client Drive Folders
+export function useClientDriveFolders(clientId?: string) {
+  return useQuery({
+    queryKey: ['client_drive_folders', clientId],
+    enabled: Boolean(clientId),
+    queryFn: async (): Promise<ClientDriveFolder[]> => {
+      if (isSupabaseConfigured && supabase) {
+        try {
+          const { data } = await supabase
+            .from('client_drive_folders')
+            .select('*')
+            .eq('client_id', clientId)
+
+          if (data) return data
+        } catch (err) {
+          console.warn('Supabase fetch client folders error:', err)
+        }
+      }
+      return demoClientFoldersStore.filter((f) => f.client_id === clientId)
+    },
+  })
+}
+
+// 4. Hook: Link Folder to Client
+export function useLinkClientDriveFolder() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (payload: { clientId: string; folderName: string; googleFolderId: string }) => {
+      const newFolder: ClientDriveFolder = {
+        id: `cfolder-${Date.now()}`,
+        agency_id: 'demo-agency',
+        client_id: payload.clientId,
+        google_folder_id: payload.googleFolderId,
+        folder_name: payload.folderName,
+        folder_url: `https://drive.google.com/drive/folders/${payload.googleFolderId}`,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+
+      demoClientFoldersStore = [newFolder, ...demoClientFoldersStore]
+
+      if (isSupabaseConfigured && supabase) {
+        try {
+          await supabase.from('client_drive_folders').insert(newFolder)
+        } catch (err) {
+          console.warn('Could not insert client drive folder in Supabase:', err)
+        }
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['client_drive_folders', payload.clientId] })
+      return newFolder
+    },
+  })
+}
+
+// 5. Hook: Toggle Connect/Disconnect Google Drive
+export function useToggleDriveConnection() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (connect: boolean) => {
+      if (connect) {
+        demoConnectionStore = DEMO_GOOGLE_CONNECTION
+      } else {
+        demoConnectionStore = null
+      }
+
+      if (isSupabaseConfigured && supabase) {
+        try {
+          if (connect) {
+            await supabase.from('google_connections').upsert(DEMO_GOOGLE_CONNECTION)
+          } else {
+            await supabase.from('google_connections').delete().eq('agency_id', 'demo-agency')
+          }
+        } catch (err) {
+          console.warn('Could not update connection in Supabase:', err)
+        }
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['drive_connection'] })
+      return demoConnectionStore
+    },
+  })
+}
+
+// 6. Hook: Composite Drive Hook
+export function useDrive() {
+  const connectionQuery = useDriveConnection()
+  const driveFilesQuery = useDriveFiles()
+
+  return {
+    connection: connectionQuery.data || null,
+    driveFiles: driveFilesQuery.data || [],
+    isLoadingConnection: connectionQuery.isLoading,
+    isLoadingFiles: driveFilesQuery.isLoading,
+  }
+}

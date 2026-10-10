@@ -93,7 +93,7 @@ let demoClientsCache: Client[] = [
 // Hooks
 // -------------------------
 
-export function useClients(agencyId: string, filters?: ClientFilters) {
+export function useClients(agencyId: string = 'demo-agency', filters?: ClientFilters) {
   return useQuery<Client[]>({
     queryKey: ['clients', agencyId, filters],
     queryFn: async () => {

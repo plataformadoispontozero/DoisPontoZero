@@ -99,11 +99,14 @@ npm run preview
 | `/briefings` | **Briefing Studio** | Biblioteca de modelos, Form Builder visual e PDF Studio editorial |
 | `/briefings/templates` | **Modelos de Briefing** | Templates oficiais versionados para branding, social, motion, etc. |
 | `/b/:publicToken` | **Formulário Público** | Preenchimento seguro mobile-first para clientes sem login |
-| `/strategy` | **Estratégia** | Diagnósticos, personas e planejamento de contas |
-| `/proposals` | **Propostas** | Orçamentos comerciais e precificação de squad |
+| `/strategy` | **Estratégia** | Strategy Studio, diagnósticos, pilares e gerador editorial |
+| `/proposals` | **Propostas** | Proposal Studio, motor de precificação e aprovações públicas |
+| `/drive` | **Google Drive** | Navegador de arquivos sincronizados e autorizados |
+| `/drive/connections` | **Conexões Drive** | Gerenciador OAuth 2.0 de contas e escopos autorizados |
+| `/presentations` | **Apresentações** | Presentation Studio, decks de defesa criativa, showcases e PDFs |
+| `/showcase/:publicToken` | **Showcase Público** | Visualização pública responsiva e tokenizada para clientes |
 | `/meetings` | **Reuniões** | Alinhamentos, pautas e atas inteligentes |
 | `/chat` | **Chat** | Comunicação interna em canais e squads |
-| `/presentations` | **Apresentações** | Decks de defesa criativa e pitchings |
 | `/settings` | **Configurações** | Parâmetros de sistema e White Label da agência |
 
 ---
@@ -112,6 +115,10 @@ npm run preview
 - [Status Geral de Implementação (`docs/IMPLEMENTATION_STATUS.md`)](docs/IMPLEMENTATION_STATUS.md)
 - [Briefing Studio Architecture (`docs/BRIEFING_STUDIO.md`)](docs/BRIEFING_STUDIO.md)
 - [PDF Studio & Editorial Generation (`docs/PDF_GENERATION.md`)](docs/PDF_GENERATION.md)
+- [Google Drive API & OAuth Setup (`docs/GOOGLE_DRIVE_SETUP.md`)](docs/GOOGLE_DRIVE_SETUP.md)
+- [Google Drive Integration Architecture (`docs/GOOGLE_DRIVE_INTEGRATION.md`)](docs/GOOGLE_DRIVE_INTEGRATION.md)
+- [Presentation Studio & Decks (`docs/PRESENTATION_STUDIO.md`)](docs/PRESENTATION_STUDIO.md)
+- [Presentation Security & Public Links (`docs/PRESENTATION_SECURITY.md`)](docs/PRESENTATION_SECURITY.md)
 - [Diretrizes de Segurança & RLS (`docs/SECURITY.md`)](docs/SECURITY.md)
 - [Schema de Banco de Dados PostgreSQL (`docs/DATABASE.md`)](docs/DATABASE.md)
 

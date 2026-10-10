@@ -252,4 +252,58 @@ Executado com `npm run build`:
 - **Build de Produção**: `npm run build` -> Exit code 0 (zero erros TypeScript, bundle otimizado).
 - **Suíte de Testes Vitest**: `npm test` -> 52/52 testes passando (8 arquivos de testes, incluindo `strategy.test.tsx`).
 
+---
+
+## 9. Resumo das Implementações da Fase 08 (Proposal Studio + Commercial Proposals)
+
+### 9.1 Banco de Dados & RLS
+- **Migration**: `supabase/migrations/20261010000006_phase08_proposals.sql`
+- **11 Tabelas**: `proposals`, `proposal_sections`, `proposal_services`, `proposal_recipients`, `proposal_deliverables`, `proposal_terms`, `proposal_public_links`, `proposal_feedback`, `proposal_activity`, `proposal_versions`, `proposal_exports`.
+- **RPCs Transacionais**: `get_public_proposal` (com tokens SHA-256) e `submit_public_proposal_feedback`.
+- **Segurança RLS**: Isolamento estrito por `agency_id`.
+
+### 9.2 Motor de Precificação (Pricing Engine)
+- Aritmética inteira pura em centavos (`pricingEngine.ts`) para evitar erros de ponto flutuante.
+- Suporte a descontos em percentual/valor fixo, impostos/margens e pagamento parcelado.
+
+### 9.3 Rotas e Interface
+- `/proposals`: Dashboard com estatísticas reais, busca e filtros de status.
+- `/proposals/new`: Wizard comercial em 3 passos com vinculação a cliente, briefing e estratégia.
+- `/proposals/:proposalId`: Workspace com 4 abas (Editor de Seções, Precificação & Serviços, Versões & Aprovações, PDF & Compartilhamento).
+- `/p/:publicToken`: Visualização pública responsiva e independente com formulário de aceite e negociação.
+- **PDF Studio**: Exportação A4 vertical via `@react-pdf/renderer` com marca d'água 5% opacidade e capa editorial.
+- **Client Hub**: Aba `ClientProposalsTab` integrada.
+
+---
+
+## 10. Resumo das Implementações da Fase 09 (Google Drive + Presentation Studio)
+
+### 10.1 Banco de Dados & RLS
+- **Migration**: `supabase/migrations/20261010000007_phase09_drive_presentations.sql`
+- **11 Tabelas**: `google_connections`, `client_drive_folders`, `drive_file_references`, `presentations`, `presentation_sections`, `presentation_assets`, `presentation_public_links`, `presentation_views`, `presentation_versions`, `presentation_exports`, `presentation_activity`.
+- **RPC Transacional**: `get_public_showcase(p_token)` com registro de acesso e contadores de visualização.
+- **Segurança RLS**: Isolamento multi-tenant restrito por `agency_id`.
+
+### 10.2 Google Drive Integration
+- **Conexão OAuth 2.0**: Gerenciamento de credenciais, permissões de escopo e status de conexão.
+- **Navegador de Arquivos**: Interface com filtros por tipo MIME (MP4, PDF, imagem), busca por nome e status de disponibilidade.
+- **Client Hub Integration**: Aba `ClientDriveTab` para vinculação direta de pastas do Drive a cadastros de clientes.
+
+### 10.3 Presentation Studio
+- **Templates Editoriais**: Presets oficiais (*Social Media Monthly Showcase* e *Creative Deliverables & Branding*).
+- **Wizard de Criação em 4 Passos**: Seleção de cliente, mês/ano de referência, título/descrição e escolha de template editorial.
+- **Workspace Editorial (4 Abas)**:
+  1. **Builder de Seções**: Adição, reordenação e personalização de 11 tipos de seções editoriais.
+  2. **Preview Responsivo**: Alternância em tempo real entre visões Desktop, Tablet e Mobile.
+  3. **Publicação & Compartilhamento**: Emissão de links públicos tokenizados com contadores de visualizações.
+  4. **Histórico de Versões**: Registro de snapshots imutáveis das versões aprovadas.
+- **PDF Studio (@react-pdf/renderer)**: Exportação de relatórios visuais profissionais A4 com branding personalizado da agência.
+- **Showcase Público autônomo (/showcase/:publicToken)**: Visualização responsiva independente para clientes.
+- **Client Hub Integration**: Aba `ClientPresentationsTab` integrada.
+
+### 10.4 Testes e Validação Final
+- **Build de Produção**: `npm run build` -> Exit code 0 (zero erros TypeScript, bundles otimizados).
+- **Suíte de Testes Vitest**: `npm test` -> **64/64 testes passando (12/12 arquivos de teste 100% verdes)**.
+
+
 
