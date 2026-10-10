@@ -331,6 +331,36 @@ Executado com `npm run build`:
 - **Build de Produção**: `npm run build` -> Exit code 0 (zero erros TypeScript, bundle minificado).
 - **Suíte de Testes Vitest**: `npm test` -> **69/69 testes passando (15/15 arquivos de teste 100% verdes)**.
 
+---
 
+## 12. Resumo das Implementações da Fase 11 (White Label Studio + Advanced Settings)
 
+### 12.1 Banco de Dados & RLS
+- **Migration**: `supabase/migrations/20261010000009_phase11_whitelabel.sql`
+- **5 Tabelas**: `agency_branding`, `agency_preferences`, `agency_document_settings`, `agency_portal_settings`, `agency_settings_history`.
+- **RPC Transacional**: `get_public_agency_branding(p_agency_id)` para acesso seguro e sanitizado em portais públicos de clientes (Briefings, Propostas, Showcases).
+- **Segurança RLS**: Isolamento estrito por `agency_id` em todas as tabelas e auditoria de alterações com snapshot JSON em `agency_settings_history`.
 
+### 12.2 White Label Studio & Design System Personalizável
+- **Rotas**:
+  - `/settings` (Visão Geral com 12 módulos de configuração em cards)
+  - `/settings/agency` (Dados legais, fiscais e endereço)
+  - `/settings/branding` (White Label Studio completo)
+  - `/settings/appearance` (Tema, modo escuro/claro e densidade visual)
+  - `/settings/team` (Gestão de membros e convites protegidos)
+  - `/settings/permissions` (Permission Studio com matriz de controle de acesso)
+  - `/settings/workspace` (Preferências regionais, moeda, timezone)
+  - `/settings/documents` (Branding de documentos e PDFs)
+  - `/settings/client-experience` (Configurações de portais públicos de clientes)
+  - `/settings/integrations` (Central de integrações e conectividade de serviços)
+  - `/settings/security` (Segurança, 2FA, sessões e auditoria)
+  - `/settings/activity` (Log e auditoria de alterações de configurações)
+  - `/settings/diagnostics` (Manifesto técnico auditado de Fases 01 a 11)
+- **Motor de Validação WCAG 2.2 AA**: `src/lib/contrast.ts` com cálculo em tempo real de contraste entre cor de texto e cor de fundo, garantindo conformidade com padrões de acessibilidade.
+- **Tipagem de Domínio**: `src/types/whitelabel.ts`.
+- **Componente BrandPreview**: Visualização ao vivo e instantânea das alterações de cores, tipografia e logotipos tanto para desktop quanto para mobile.
+- **Gestão de Equipe**: Convites com tokens seguros de 7 dias, atribuição de funções com proteção contra remoção/modificação indevida do cargo OWNER.
+
+### 12.3 Testes e Validação Final
+- **Build de Produção**: `npm run build` (`tsc -b && vite build`) -> **Exit code 0 (zero erros TypeScript, bundle minificado)**.
+- **Suíte de Testes Vitest**: `npm test` -> **75/75 testes passando (16/16 arquivos de teste 100% verdes)**.

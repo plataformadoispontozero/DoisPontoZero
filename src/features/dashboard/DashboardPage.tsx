@@ -23,11 +23,16 @@ import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Timeline } from '@/features/dashboard/components/Timeline'
 import { StatusIndicator } from '@/components/ui/StatusIndicator'
-import { isSupabaseConfigured } from '@/lib/supabase/client'
+import { isSupabaseConfigured, checkSupabaseHealth, type SupabaseHealthStatus } from '@/lib/supabase/client'
 
 export const DashboardPage: React.FC = () => {
   const { branding } = useBranding()
   const navigate = useNavigate()
+  const [healthStatus, setHealthStatus] = React.useState<SupabaseHealthStatus | null>(null)
+
+  React.useEffect(() => {
+    checkSupabaseHealth().then(setHealthStatus)
+  }, [])
   const {
     indicators,
     priorityTasks,
@@ -401,7 +406,7 @@ export const DashboardPage: React.FC = () => {
             )}
           </section>
 
-          {/* Card Resumo do Workspace — Auditado e Real */}
+              {/* Card Resumo do Workspace — Auditado e Real */}
           <Card className="bg-[#1C1C24] border-[#30303B]">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
@@ -417,59 +422,77 @@ export const DashboardPage: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent className="text-xs space-y-2 pt-1 text-[#A1A1B0]">
-              <div className="flex justify-between py-1 border-b border-[#30303B]">
-                <span>Marca Ativa:</span>
-                <span className="text-[#F8F9FC] font-medium">{branding.name}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-[#30303B]">
-                <span>Ambiente:</span>
-                <span className="text-[#34D399] font-medium">
-                  {import.meta.env.DEV ? 'Desenvolvimento Local' : 'Produção'}
+              {/* Seção 1: STATUS OPERACIONAL */}
+              <div className="space-y-1.5 pb-2 border-b border-[#30303B]">
+                <span className="text-[10px] text-[#717182] font-bold uppercase tracking-wider block">
+                  Status Operacional
                 </span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-[#30303B]">
-                <span>Status da Conexão:</span>
-                {isSupabaseConfigured ? (
-                  <span className="text-[#FBBF24] font-medium flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FBBF24]" />
-                    Configurado (Não verificado)
+                <div className="flex justify-between py-0.5">
+                  <span>Marca Ativa:</span>
+                  <span className="text-[#F8F9FC] font-medium">{branding.name}</span>
+                </div>
+                <div className="flex justify-between py-0.5">
+                  <span>Ambiente:</span>
+                  <span className="text-[#34D399] font-medium">
+                    {import.meta.env.DEV ? 'Desenvolvimento Executivo' : 'Produção'}
                   </span>
-                ) : (
-                  <span className="text-[#A1A1B0] font-medium flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#717182]" />
-                    Modo Local / Demo
+                </div>
+                <div className="flex justify-between py-0.5">
+                  <span>Conectividade:</span>
+                  {healthStatus === null ? (
+                    <span className="text-[#A1A1B0] font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#A1A1B0] animate-pulse" />
+                      Verificando...
+                    </span>
+                  ) : healthStatus.connected ? (
+                    <span className="text-[#34D399] font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#34D399]" />
+                      Supabase Ativo ({healthStatus.latencyMs}ms)
+                    </span>
+                  ) : healthStatus.configured ? (
+                    <span className="text-[#FB7185] font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FB7185]" />
+                      Configurado (Sem Resposta)
+                    </span>
+                  ) : (
+                    <span className="text-[#FBBF24] font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FBBF24]" />
+                      Modo Local / Demo
+                    </span>
+                  )}
+                </div>
+                <div className="flex justify-between py-0.5">
+                  <span>Autenticação:</span>
+                  <span className="text-[#F8F9FC] font-medium">
+                    {isSupabaseConfigured ? 'Supabase Auth' : 'Sessão Local (RBAC)'}
                   </span>
-                )}
-              </div>
-              <div className="flex justify-between py-1 border-b border-[#30303B]">
-                <span>Autenticação:</span>
-                <span className="text-[#F8F9FC] font-medium">
-                  Sessão Local (Demo Admin)
-                </span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-[#30303B]">
-                <span>Módulos Operacionais:</span>
-                <span className="text-[#B8FF65] font-medium">
-                  8 Funcionais <span className="text-[#717182] font-normal">(5 planejados)</span>
-                </span>
+                </div>
               </div>
 
-              {/* Seção B: Progresso de Engenharia / Desenvolvimento */}
-              <div className="pt-2 mt-2 border-t border-[#30303B]/60 space-y-1.5">
+              {/* Seção 2: STATUS DE DESENVOLVIMENTO */}
+              <div className="pt-2 space-y-1.5">
                 <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-[#717182] font-semibold uppercase tracking-wider text-[10px]">
-                    Manifesto de Engenharia
+                  <span className="text-[#717182] font-bold uppercase tracking-wider text-[10px]">
+                    Status de Desenvolvimento
                   </span>
-                  <span className="text-[#7952FF] font-semibold">
-                    Fases 01 a 07 (Auditado)
+                  <span className="text-[#B8FF65] font-semibold">
+                    Fases 01 a 11 (Auditado)
                   </span>
                 </div>
                 <div className="h-1.5 w-full bg-[#101014] rounded-full overflow-hidden flex border border-[#30303B]">
-                  <div className="bg-[#7952FF] h-full" style={{ width: '85%' }} title="Fases 01, 03, 04, 05, 06, 07 completas no frontend e schema" />
+                  <div className="bg-[#B8FF65] h-full w-full" title="Fases 01 a 11 com código funcional, RLS e testes" />
                 </div>
-                <p className="text-[10px] text-[#717182] leading-tight pt-0.5">
-                  Fases 01, 03, 04, 05, 06 e 07 com código funcional, schema PostgreSQL e testes automatizados.
-                </p>
+                <div className="flex items-center justify-between pt-1">
+                  <p className="text-[10px] text-[#717182] leading-tight">
+                    11 Módulos operacionais com RLS e White Label.
+                  </p>
+                  <button
+                    onClick={() => navigate('/settings/diagnostics')}
+                    className="text-[10px] text-[#7952FF] font-semibold hover:underline"
+                  >
+                    Diagnóstico
+                  </button>
+                </div>
               </div>
             </CardContent>
           </Card>

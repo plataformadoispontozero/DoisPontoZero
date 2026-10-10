@@ -1,0 +1,44 @@
+name: Dois.Zero CI Pipeline
+
+on:
+  push:
+    branches: [ principal, release/* ]
+  pull_request:
+    branches: [ principal ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit-and-test:
+    name: Code Quality, Security & Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: TypeScript Type Checking (tsc -b)
+        run: npx tsc -b
+
+      - name: Code Quality Audit (oxlint)
+        run: npx oxlint
+        continue-on-error: true
+
+      - name: Execute Vitest Automated Test Suite
+        run: npm run test
+
+      - name: Production Bundle Verification (Vite Build)
+        run: npm run build
+        env:
+          VITE_APP_ENV: production

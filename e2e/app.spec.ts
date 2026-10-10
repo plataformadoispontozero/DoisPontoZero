@@ -10,12 +10,12 @@ test.describe('Dois.Zero Application Baseline', () => {
 
   test('should navigate between modules', async ({ page }) => {
     await page.goto('/projects')
-    await expect(page.getByRole('heading', { name: /Projetos/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Projetos & Demandas' })).toBeVisible()
     
     await page.goto('/clients')
-    await expect(page.getByRole('heading', { name: /Clientes/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Clientes & Contas' })).toBeVisible()
 
     await page.goto('/settings')
-    await expect(page.getByText(/Configuração White Label Centralizada/i)).toBeVisible()
+    await expect(page.getByText(/White Label Studio & System Architecture/i)).toBeVisible()
   })
 })

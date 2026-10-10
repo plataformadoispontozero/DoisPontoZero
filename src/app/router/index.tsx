@@ -39,7 +39,20 @@ import { ChatSettingsPage } from '@/features/chat/ChatSettingsPage'
 import { NotificationsPage } from '@/features/notifications/NotificationsPage'
 import { CalendarIntegrationPage } from '@/features/settings/CalendarIntegrationPage'
 import { PresentationsPage } from '@/features/presentations/PresentationsPage'
-import { SettingsPage } from '@/features/settings/SettingsPage'
+import { SettingsLayout } from '@/features/settings/components/SettingsLayout'
+import { SettingsOverviewPage } from '@/features/settings/SettingsOverviewPage'
+import { AgencySettingsPage } from '@/features/settings/AgencySettingsPage'
+import { WhiteLabelStudioPage } from '@/features/settings/WhiteLabelStudioPage'
+import { AppearanceSettingsPage } from '@/features/settings/AppearanceSettingsPage'
+import { TeamManagementPage } from '@/features/settings/TeamManagementPage'
+import { PermissionStudioPage } from '@/features/settings/PermissionStudioPage'
+import { WorkspacePreferencesPage } from '@/features/settings/WorkspacePreferencesPage'
+import { DocumentBrandingPage } from '@/features/settings/DocumentBrandingPage'
+import { ClientExperiencePage } from '@/features/settings/ClientExperiencePage'
+import { IntegrationsCenterPage } from '@/features/settings/IntegrationsCenterPage'
+import { SecurityCenterPage } from '@/features/settings/SecurityCenterPage'
+import { ActivityCenterPage } from '@/features/settings/ActivityCenterPage'
+import { DiagnosticsPage } from '@/features/settings/DiagnosticsPage'
 
 export const router = createBrowserRouter([
   // Public standalone routes for external clients (Briefing, Proposal, Showcase)
@@ -289,7 +302,61 @@ export const router = createBrowserRouter([
       },
       {
         path: 'settings',
-        element: <SettingsPage />,
+        element: <SettingsLayout />,
+        children: [
+          {
+            index: true,
+            element: <SettingsOverviewPage />,
+          },
+          {
+            path: 'agency',
+            element: <AgencySettingsPage />,
+          },
+          {
+            path: 'branding',
+            element: <WhiteLabelStudioPage />,
+          },
+          {
+            path: 'appearance',
+            element: <AppearanceSettingsPage />,
+          },
+          {
+            path: 'team',
+            element: <TeamManagementPage />,
+          },
+          {
+            path: 'permissions',
+            element: <PermissionStudioPage />,
+          },
+          {
+            path: 'workspace',
+            element: <WorkspacePreferencesPage />,
+          },
+          {
+            path: 'documents',
+            element: <DocumentBrandingPage />,
+          },
+          {
+            path: 'client-experience',
+            element: <ClientExperiencePage />,
+          },
+          {
+            path: 'integrations',
+            element: <IntegrationsCenterPage />,
+          },
+          {
+            path: 'security',
+            element: <SecurityCenterPage />,
+          },
+          {
+            path: 'activity',
+            element: <ActivityCenterPage />,
+          },
+          {
+            path: 'diagnostics',
+            element: <DiagnosticsPage />,
+          },
+        ],
       },
       {
         path: '*',

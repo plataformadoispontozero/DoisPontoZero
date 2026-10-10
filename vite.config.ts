@@ -22,6 +22,30 @@ export default defineConfig({
     port: 5173,
     strictPort: false,
   },
+  build: {
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('@react-pdf/renderer')) {
+            return 'vendor-pdf'
+          }
+          if (id.includes('@supabase/')) {
+            return 'vendor-supabase'
+          }
+          if (id.includes('@tanstack/')) {
+            return 'vendor-tanstack'
+          }
+          if (id.includes('@dnd-kit/')) {
+            return 'vendor-dnd'
+          }
+          if (id.includes('lucide-react')) {
+            return 'vendor-icons'
+          }
+        },
+      },
+    },
+  },
   // @ts-expect-error vitest config
   test: {
     globals: true,

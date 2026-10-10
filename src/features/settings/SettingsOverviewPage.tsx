@@ -1,0 +1,74 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
+import { settingsTabs } from './components/SettingsLayout'
+import { ArrowRight, Sparkles } from 'lucide-react'
+
+export const SettingsOverviewPage: React.FC = () => {
+  // Exclude overview tab itself from grid
+  const tabs = settingsTabs.filter((t) => t.id !== 'overview')
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-200">
+      {/* Banner de Boas-Vindas */}
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#7952FF]/20 via-[#1C1C24] to-[#101014] border border-[#7952FF]/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1 max-w-2xl">
+          <div className="flex items-center gap-2 text-[#B8FF65] text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-4 h-4" />
+            <span>White Label Studio & System Architecture</span>
+          </div>
+          <h2 className="text-xl font-bold text-[#F8F9FC]">
+            Painel Central de Administração da Agência
+          </h2>
+          <p className="text-xs text-[#A1A1B0] leading-relaxed">
+            Personalize toda a experiência da plataforma, defina as permissões de acesso da equipe, ajuste a identidade visual nos portais públicos e consulte a auditoria operacional do workspace.
+          </p>
+        </div>
+
+        <Link
+          to="/settings/branding"
+          className="px-4 py-2.5 rounded-xl bg-[#7952FF] hover:bg-[#7952FF]/90 text-white font-medium text-xs flex items-center justify-center gap-2 shadow-lg shadow-[#7952FF]/25 shrink-0 transition-all"
+        >
+          <span>Abrir White Label Studio</span>
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+
+      {/* Grid com os 12 Módulos de Configuração */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tabs.map((tab) => {
+          const Icon = tab.icon
+          return (
+            <Link key={tab.id} to={tab.path} className="group focus:outline-none">
+              <Card className="h-full transition-all duration-200 group-hover:border-[#7952FF]/60 group-hover:bg-[#1C1C24]/90 group-hover:shadow-lg group-hover:shadow-[#7952FF]/5">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="p-2.5 rounded-xl bg-[#7952FF]/10 text-[#7952FF] group-hover:bg-[#7952FF] group-hover:text-white transition-colors">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    {tab.badge && (
+                      <span className="text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider bg-[#B8FF65]/20 text-[#B8FF65]">
+                        {tab.badge}
+                      </span>
+                    )}
+                  </div>
+                  <CardTitle className="text-base font-bold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors flex items-center gap-1.5 mt-3">
+                    {tab.label}
+                    <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#7952FF]" />
+                  </CardTitle>
+                  <CardDescription className="text-xs text-[#A1A1B0] line-clamp-2">
+                    Acesse e gerencie parâmetros de {tab.label.toLowerCase()} do workspace.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0 text-[11px] text-[#717182] flex items-center justify-between">
+                  <span>Clique para abrir</span>
+                  <span className="font-mono text-[10px]">{tab.path}</span>
+                </CardContent>
+              </Card>
+            </Link>
+          )
+        })}
+      </div>
+    </div>
+  )
+}

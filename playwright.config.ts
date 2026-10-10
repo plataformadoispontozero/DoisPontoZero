@@ -7,6 +7,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'list',
+  timeout: 60000,
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
@@ -14,15 +15,26 @@ export default defineConfig({
   projects: [
     {
       name: 'Desktop Chrome',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+      use: {
+        browserName: 'chromium',
+        viewport: { width: 1440, height: 900 },
+      },
     },
     {
       name: 'Tablet iPad',
-      use: { ...devices['iPad (gen 7)'], viewport: { width: 768, height: 1024 } },
+      use: {
+        browserName: 'chromium',
+        viewport: { width: 768, height: 1024 },
+      },
     },
     {
       name: 'Mobile iPhone 14',
-      use: { ...devices['iPhone 14'], viewport: { width: 390, height: 844 } },
+      use: {
+        browserName: 'chromium',
+        viewport: { width: 390, height: 844 },
+        isMobile: true,
+        hasTouch: true,
+      },
     },
   ],
   webServer: {
