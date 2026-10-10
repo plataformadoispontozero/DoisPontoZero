@@ -12,9 +12,9 @@ test.describe('Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais', () =>
 
   test('Fluxo 02: Módulo de Projetos & Tarefas', async ({ page }) => {
     await page.goto('/projects')
-    await expect(page.getByRole('heading', { name: /Projetos/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Projetos & Demandas' })).toBeVisible()
     await page.goto('/tasks')
-    await expect(page.getByRole('heading', { name: /Tarefas/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Tarefas & Produção' })).toBeVisible()
   })
 
   test('Fluxo 03: Briefing Studio & Templates Oficiais', async ({ page }) => {
