@@ -23,11 +23,16 @@ import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Timeline } from '@/features/dashboard/components/Timeline'
 import { StatusIndicator } from '@/components/ui/StatusIndicator'
-import { isSupabaseConfigured } from '@/lib/supabase/client'
+import { isSupabaseConfigured, checkSupabaseHealth, type SupabaseHealthStatus } from '@/lib/supabase/client'
 
 export const DashboardPage: React.FC = () => {
   const { branding } = useBranding()
   const navigate = useNavigate()
+  const [healthStatus, setHealthStatus] = React.useState<SupabaseHealthStatus | null>(null)
+
+  React.useEffect(() => {
+    checkSupabaseHealth().then(setHealthStatus)
+  }, [])
   const {
     indicators,
     priorityTasks,
@@ -434,10 +439,20 @@ export const DashboardPage: React.FC = () => {
                 </div>
                 <div className="flex justify-between py-0.5">
                   <span>Conectividade:</span>
-                  {isSupabaseConfigured ? (
+                  {healthStatus === null ? (
+                    <span className="text-[#A1A1B0] font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#A1A1B0] animate-pulse" />
+                      Verificando...
+                    </span>
+                  ) : healthStatus.connected ? (
                     <span className="text-[#34D399] font-medium flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#34D399]" />
-                      Conectado Supabase
+                      Supabase Ativo ({healthStatus.latencyMs}ms)
+                    </span>
+                  ) : healthStatus.configured ? (
+                    <span className="text-[#FB7185] font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FB7185]" />
+                      Configurado (Sem Resposta)
                     </span>
                   ) : (
                     <span className="text-[#FBBF24] font-medium flex items-center gap-1">

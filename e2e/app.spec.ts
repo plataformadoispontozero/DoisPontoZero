@@ -16,6 +16,6 @@ test.describe('Dois.Zero Application Baseline', () => {
     await expect(page.getByRole('heading', { name: /Clientes/i })).toBeVisible()
 
     await page.goto('/settings')
-    await expect(page.getByText(/Configuração White Label Centralizada/i)).toBeVisible()
+    await expect(page.getByText(/White Label Studio & System Architecture/i)).toBeVisible()
   })
 })
