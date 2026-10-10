@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "project": "Dois.Zero Creative Agency OS",
+  "generated_at": "2026-10-10T17:35:00Z",
+  "phases": [
+    {
+      "id": "phase-01",
+      "name": "Fase 01 - Design System, Shell e Dashboard",
+      "status": "completed",
+      "completed_requirements": [
+        "Design System com 17+ componentes e variantes semânticas",
+        "AppShell responsivo com Sidebar retrátil e persistência de estado",
+        "Header e navegação rápida mobile em Sheet",
+        "Dashboard gerencial inicial estruturado (Seções A a F)",
+        "Suíte de testes unitários com Vitest",
+        "Zero erros no build de produção (tsc e vite)"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T17:35:00Z",
+      "evidence": "src/components/ui, src/components/navigation, src/features/dashboard"
+    },
+    {
+      "id": "phase-02",
+      "name": "Fase 02 - Supabase, Auth e Permission Studio",
+      "status": "in_progress",
+      "completed_requirements": [
+        "Migration PostgreSQL com tabelas de autenticação, agências, membros, roles e permissões",
+        "Políticas de Row Level Security (RLS) e funções seguras de verificação",
+        "Cliente Supabase configurado com verificação de ambiente isSupabaseConfigured",
+        "Definição de tipagens Database completas em src/lib/supabase/types.ts"
+      ],
+      "pending_requirements": [
+        "Rotas frontend de autenticação (/login, /forgot-password, /reset-password)",
+        "Interface administrativa do Permission Studio (/settings/permissions)",
+        "Página de gestão de membros e convites (/settings/team)",
+        "Conexão com projeto Supabase remoto ativo com credenciais de produção"
+      ],
+      "last_verified_at": "2026-10-10T17:35:00Z",
+      "evidence": "supabase/migrations/20261010000001_phase02_schema_and_rls.sql, src/lib/supabase/types.ts"
+    },
+    {
+      "id": "phase-03",
+      "name": "Fase 03 - CRM e Client Hub",
+      "status": "in_progress",
+      "completed_requirements": [
+        "Modelagem da tabela clients com campos de branding, status e datas em PostgreSQL",
+        "Políticas RLS para isolamento de clientes por agência",
+        "Tipagem de Client integrada no sistema de projetos",
+        "Componente de integração ClientBriefingsTab para visualização e exportação direta de briefings"
+      ],
+      "pending_requirements": [
+        "Interface completa de listagem e edição de clientes em src/features/clients/ClientsPage.tsx",
+        "Client Hub completo com brand guidelines e repositório de arquivos"
+      ],
+      "last_verified_at": "2026-10-10T17:35:00Z",
+      "evidence": "supabase/migrations/20261010000002_phase04_projects_tasks.sql (tabela clients), src/features/clients/components/ClientBriefingsTab.tsx"
+    },
+    {
+      "id": "phase-04",
+      "name": "Fase 04 - Projetos, Kanban e Gestão de Tarefas",
+      "status": "completed",
+      "completed_requirements": [
+        "Migration PostgreSQL com 14 tabelas (projects, boards, columns, tasks, checklists, comments, attachments, links, activity)",
+        "RPCs transacionais (create_project_with_board, move_task, get_project_progress)",
+        "Row Level Security com can_access_project() e can_access_task()",
+        "Página de projetos (/projects) com busca, filtros de status e alternância grade/lista",
+        "Formulário de criação de projeto (/projects/new) com validações e cálculo de prazos",
+        "Workspace do projeto (/projects/:projectId) com abas Quadro, Lista e Calendário",
+        "Quadro Kanban com @dnd-kit, colunas categorizadas, límites WIP e atualização otimista",
+        "TaskDetailPanel lateral amplo em Sheet com checklists, subtarefas, chat, links e auditoria",
+        "Visualização de tarefas em Lista (TaskListView) e Calendário (TaskCalendarView)",
+        "Painel unificado de tarefas (/tasks) com suporte a URL direta (/tasks/:taskId)",
+        "Testes unitários automatizados em src/features/projects/projects.test.tsx"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T17:35:00Z",
+      "evidence": "supabase/migrations/20261010000002_phase04_projects_tasks.sql, src/features/projects/*, src/features/tasks/*"
+    },
+    {
+      "id": "phase-05",
+      "name": "Fase 05 - Squads e Gestão de Equipe",
+      "status": "completed",
+      "completed_requirements": [
+        "Migration PostgreSQL (20261010000003_phase05_squads.sql) com 5 tabelas (squads, squad_members, squad_goals, squad_performance_snapshots, squad_projects)",
+        "RPCs transacionais (compute_squad_ranking, upsert_performance_snapshot)",
+        "Row Level Security com helper functions is_agency_member e is_agency_admin",
+        "7 novas permissões do módulo squads cadastradas",
+        "Tipagem de domínio completa em src/types/squads.ts",
+        "TanStack Query hooks em src/features/squads/hooks/useSquads.ts",
+        "SquadsPage operacional com 4 abas (Squads, Ranking com pódio, Metas, Performance com anéis de progresso) e 3 diálogos modais"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T17:35:00Z",
+      "evidence": "supabase/migrations/20261010000003_phase05_squads.sql, src/features/squads/SquadsPage.tsx, src/types/squads.ts"
+    },
+    {
+      "id": "phase-06",
+      "name": "Fase 06 - Briefing Studio e Professional PDF",
+      "status": "completed",
+      "completed_requirements": [
+        "Migration PostgreSQL (20261010000004_phase06_briefings.sql) com 10 tabelas e 9 permissões",
+        "Funções seguras RPC (get_public_briefing com token hash sanitizado, submit_public_briefing com snapshot imutável)",
+        "Tipos de domínio e semântica Strategy/Proposal em src/types/briefing.ts",
+        "5 Templates oficiais de briefing (Branding, Social Media, Motion Design, Audiovisual, Campanha)",
+        "Form Builder visual (/briefings/templates/new e edit) em 3 colunas com reordenação e validação",
+        "Fluxo de criação de briefing em 5 etapas (/briefings/new) com geração de token seguro",
+        "Formulário público responsivo mobile-first (/b/:publicToken) fora do AppLayout autenticado",
+        "Visualização de respostas (/briefings/:briefingId/responses) com notas internas e auditoria",
+        "PDF Studio (@react-pdf/renderer) com diagramação A4 vertical, cabeçalho e marca-d'água 5% opacidade em todas as páginas",
+        "Componente de integração para CRM Client Hub (ClientBriefingsTab)",
+        "Suíte de testes com Vitest (43/43 passando) e build de produção 100% validado"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T17:35:00Z",
+      "evidence": "supabase/migrations/20261010000004_phase06_briefings.sql, src/features/briefing/*, vitest suite (43/43 passing)"
+    },
+    {
+      "id": "phase-07",
+      "name": "Fase 07 - Strategy Studio e Editorial Generator",
+      "status": "completed",
+      "completed_requirements": [
+        "Migration PostgreSQL (20261010000005_phase07_strategy.sql) com 6 tabelas (content_strategies, editorial_pillars, content_ideas, editorial_items, strategy_versions, strategy_activity)",
+        "Funções e RPCs transacionais: get_strategy_overview e generate_editorial_suggestions",
+        "Row Level Security (RLS) estrita em todas as 6 tabelas e permissões de agência cadastradas",
+        "Tipagem de domínio completa em src/types/strategy.ts",
+        "Hooks TanStack Query completos em src/features/strategy/hooks/useStrategy.ts (com fallback determinístico para modo demo)",
+        "Serviço Briefing Intelligence (briefingIntelligence.ts) com mapeamento determinístico de respostas de briefing para campos estratégicos",
+        "Serviço Editorial Engine (editorialEngine.ts) com gerador determinístico baseado em pesos, frequências e rotação de tópicos",
+        "Painel Strategy Studio (/strategy) com KPIs, listagem, filtros de busca/status e barras de composição de pilares",
+        "Wizard de Criação de Estratégia (/strategy/new) em 3 etapas com chips dinâmicos e canais",
+        "Workspace Estratégico (/strategy/:strategyId) com 4 abas (Visão Geral, Pilares, Banco de Ideias, Calendário Editorial)",
+        "Gerenciamento de Pilares com cálculo de distribuição percentual, cores e tópicos de exemplo",
+        "Banco de Ideias com filtros de status, aprovação rápida e conversão direta em Pauta Editorial",
+        "Calendário Editorial com visão em Lista e por Data/Agrupamento, horários e transições de status",
+        "Modal EditorialGeneratorDialog para geração de grade de conteúdo em lote com motor determinístico",
+        "Modal BriefingSyncDialog para sincronização e análise de cobertura de dados de briefing",
+        "Rotas integradas no React Router (/strategy, /strategy/new, /strategy/:strategyId)",
+        "Suíte de testes unitários Vitest (52/52 passando) e build de produção 100% verificado"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T18:49:00Z",
+      "evidence": "supabase/migrations/20261010000005_phase07_strategy.sql, src/features/strategy/*, src/features/strategy/strategy.test.tsx"
+    }
+  ]
+}

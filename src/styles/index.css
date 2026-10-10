@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Semantic Color Tokens - Fase 01 */
+    --color-bg: #101014;
+    --color-surface: #1C1C24;
+    --color-surface-elevated: #252530;
+    --color-border: #30303B;
+    --color-border-hover: #424252;
+    
+    --color-primary: #7952FF;
+    --color-primary-hover: #673DF5;
+    --color-accent: #B8FF65;
+    --color-accent-hover: #A4F547;
+    
+    --color-text-primary: #F8F9FC;
+    --color-text-secondary: #A1A1B0;
+    --color-text-muted: #717182;
+    
+    --color-success: #34D399;
+    --color-warning: #FBBF24;
+    --color-error: #FB7185;
+    
+    /* Typography */
+    --font-heading: 'Space Grotesk', system-ui, sans-serif;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 200ms ease;
+    --transition-slow: 250ms ease;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  /* Accessibility: Prefers Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
+
+/* Subtle glassmorphism card */
+.surface-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.875rem;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.surface-card:hover {
+  border-color: var(--color-border-hover);
+}
+
+/* Focus outline WCAG 2.2 AA compliant */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

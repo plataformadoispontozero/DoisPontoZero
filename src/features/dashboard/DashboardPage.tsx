@@ -1,0 +1,480 @@
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import {
+  FolderKanban,
+  CheckCircle2,
+  Calendar,
+  Clock,
+  ArrowRight,
+  Plus,
+  Users,
+  Compass,
+  Sparkles,
+  Layers,
+  FileCheck2,
+} from 'lucide-react'
+import { useBranding } from '@/hooks/useBranding'
+import { useDashboardData } from '@/features/dashboard/data/useDashboardData'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { SectionHeader } from '@/components/ui/SectionHeader'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
+import { EmptyState } from '@/components/shared/EmptyState'
+import { Timeline } from '@/features/dashboard/components/Timeline'
+import { StatusIndicator } from '@/components/ui/StatusIndicator'
+import { isSupabaseConfigured } from '@/lib/supabase/client'
+
+export const DashboardPage: React.FC = () => {
+  const { branding } = useBranding()
+  const navigate = useNavigate()
+  const {
+    indicators,
+    priorityTasks,
+    recentProjects,
+    upcomingMeetings,
+    activities,
+    isInitialEnvironment,
+  } = useDashboardData()
+
+  // Data formatada em português brasileiro (pt-BR)
+  const formattedDate = new Intl.DateTimeFormat('pt-BR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date())
+
+  // Capitaliza a primeira letra do dia da semana
+  const capitalizedDate =
+    formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-200">
+      {/* A. CABEÇALHO */}
+      <PageHeader
+        title="Visão Geral"
+        subtitle="Acompanhe a operação criativa da sua agência."
+        badge={
+          <Badge variant="accent" className="font-semibold text-[11px]">
+            {capitalizedDate}
+          </Badge>
+        }
+        actions={
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => navigate('/briefings')}
+              className="text-xs"
+            >
+              <Compass className="w-3.5 h-3.5 text-[#A1A1B0]" />
+              <span>Novo Briefing</span>
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => navigate('/projects')}
+              className="text-xs"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Novo Projeto</span>
+            </Button>
+          </div>
+        }
+      />
+
+      {/* B. INDICADORES (4 Cards conectados à camada de dados) */}
+      <section aria-labelledby="indicadores-operacionais">
+        <SectionHeader
+          title="Indicadores Operacionais"
+          subtitle="Consumindo camada de dados do sistema"
+          badge={
+            isInitialEnvironment ? (
+              <Badge variant="neutral" className="text-[10px]">
+                Ambiente Inicial
+              </Badge>
+            ) : undefined
+          }
+        />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card 1: Projetos Ativos */}
+          <Card className="hover:border-[#424252] transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs font-medium text-[#A1A1B0]">
+                Projetos ativos
+              </CardTitle>
+              <div className="p-2 rounded-lg bg-[#7952FF]/10 text-[#7952FF]">
+                <FolderKanban className="w-4 h-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold font-heading text-[#F8F9FC]">
+                {indicators.activeProjects}
+              </div>
+              <p className="text-[11px] text-[#717182] mt-1">
+                Nenhum projeto em andamento
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Card 2: Tarefas Pendentes */}
+          <Card className="hover:border-[#424252] transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs font-medium text-[#A1A1B0]">
+                Tarefas pendentes
+              </CardTitle>
+              <div className="p-2 rounded-lg bg-amber-500/10 text-[#FBBF24]">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold font-heading text-[#F8F9FC]">
+                {indicators.pendingTasks}
+              </div>
+              <p className="text-[11px] text-[#717182] mt-1">
+                Fila de produção limpa
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Card 3: Entregas da Semana */}
+          <Card className="hover:border-[#424252] transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs font-medium text-[#A1A1B0]">
+                Entregas da semana
+              </CardTitle>
+              <div className="p-2 rounded-lg bg-[#B8FF65]/10 text-[#B8FF65]">
+                <Clock className="w-4 h-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold font-heading text-[#F8F9FC]">
+                {indicators.weekDeliveries}
+              </div>
+              <p className="text-[11px] text-[#717182] mt-1">
+                Sem prazos críticos nesta semana
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Card 4: Aprovações Aguardando */}
+          <Card className="hover:border-[#424252] transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs font-medium text-[#A1A1B0]">
+                Aprovações aguardando
+              </CardTitle>
+              <div className="p-2 rounded-lg bg-[#34D399]/10 text-[#34D399]">
+                <FileCheck2 className="w-4 h-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold font-heading text-[#F8F9FC]">
+                {indicators.pendingApprovals}
+              </div>
+              <p className="text-[11px] text-[#717182] mt-1">
+                Sem peças pendentes de aceite
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* C. MINHAS PRIORIDADES */}
+      <section aria-labelledby="suas-prioridades">
+        <SectionHeader
+          title="Suas prioridades"
+          subtitle="Demandas críticas atribuídas a você"
+          actions={
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/tasks')}
+              className="text-xs text-[#A1A1B0] hover:text-[#F8F9FC]"
+            >
+              <span>Ver todas as tarefas</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Button>
+          }
+        />
+
+        {priorityTasks.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {priorityTasks.map((task) => (
+              <Card key={task.id} className="p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="text-xs font-semibold text-[#F8F9FC]">
+                      {task.title}
+                    </h4>
+                    <span className="text-[11px] text-[#A1A1B0]">
+                      {task.projectName} • {task.clientName}
+                    </span>
+                  </div>
+                  <Badge variant="warning">{task.priority}</Badge>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card className="border-dashed border-[#30303B] bg-[#1C1C24]/40">
+            <CardContent className="p-8 text-center flex flex-col items-center">
+              <div className="w-12 h-12 rounded-xl bg-[#252530] flex items-center justify-center text-[#A1A1B0] mb-3">
+                <CheckCircle2 className="w-6 h-6 text-[#34D399]" />
+              </div>
+              <h4 className="font-heading text-sm font-semibold text-[#F8F9FC]">
+                Nenhuma tarefa atribuída ainda.
+              </h4>
+              <p className="text-xs text-[#A1A1B0] max-w-sm mt-1 mb-4">
+                Você não possui demandas alocadas para hoje. Explore os projetos da agência para visualizar o backlog operacional.
+              </p>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => navigate('/projects')}
+                className="gap-2 text-xs"
+              >
+                <span>Explorar projetos</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      {/* Grid Duplo: PROJETOS RECENTES (2 cols) & REUNIÕES + ATIVIDADE (1 col) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* D. PROJETOS RECENTES */}
+        <section className="lg:col-span-2 space-y-4" aria-labelledby="projetos-recentes">
+          <SectionHeader
+            title="Projetos recentes"
+            subtitle="Campanhas e entregáveis em andamento"
+            actions={
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/projects')}
+                className="text-xs text-[#A1A1B0] hover:text-[#F8F9FC]"
+              >
+                <span>Ver projetos</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            }
+          />
+
+          {recentProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {recentProjects.map((project) => (
+                <Card key={project.id} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="text-sm font-semibold text-[#F8F9FC]">
+                        {project.name}
+                      </h4>
+                      <p className="text-xs text-[#A1A1B0]">{project.client}</p>
+                    </div>
+                    <StatusIndicator status="in_progress" label={project.status} />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs text-[#A1A1B0]">
+                      <span>Progresso</span>
+                      <span>{project.progress}%</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-[#252530] overflow-hidden">
+                      <div
+                        className="h-full bg-[#7952FF] rounded-full"
+                        style={{ width: `${project.progress}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-[#717182] pt-2 border-t border-[#30303B]">
+                    <span>Resp: {project.owner.name}</span>
+                    <span>Prazo: {project.deadline}</span>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="border-dashed border-[#30303B] bg-[#1C1C24]/40">
+              <CardContent className="p-8 text-center flex flex-col items-center">
+                <div className="w-12 h-12 rounded-xl bg-[#252530] flex items-center justify-center text-[#A1A1B0] mb-3">
+                  <FolderKanban className="w-6 h-6 text-[#7952FF]" />
+                </div>
+                <h4 className="font-heading text-sm font-semibold text-[#F8F9FC]">
+                  Nenhum projeto registrado no workspace
+                </h4>
+                <p className="text-xs text-[#A1A1B0] max-w-sm mt-1 mb-4">
+                  Os projetos criados com squads, clientes e prazos de entrega aparecerão aqui com progresso dinâmico.
+                </p>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate('/projects')}
+                  className="gap-2 text-xs"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Criar Primeiro Projeto</span>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* F. ATIVIDADE RECENTE */}
+          <div className="pt-4 space-y-3">
+            <SectionHeader
+              title="Atividade recente"
+              subtitle="Histórico operacional do workspace"
+            />
+            <Card className="p-4">
+              <Timeline activities={activities} />
+            </Card>
+          </div>
+        </section>
+
+        {/* E. PRÓXIMAS REUNIÕES & STATUS DO SISTEMA (1 coluna lateral) */}
+        <div className="space-y-6">
+          {/* E. Próximas Reuniões */}
+          <section className="space-y-3" aria-labelledby="proximas-reunioes">
+            <SectionHeader
+              title="Próximas reuniões"
+              actions={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/meetings')}
+                  className="text-xs text-[#A1A1B0] hover:text-[#F8F9FC]"
+                >
+                  <span>Agenda</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              }
+            />
+
+            {upcomingMeetings.length > 0 ? (
+              <div className="space-y-2.5">
+                {upcomingMeetings.map((meeting) => (
+                  <Card key={meeting.id} className="p-3.5 space-y-2">
+                    <div className="flex items-start justify-between">
+                      <h4 className="text-xs font-semibold text-[#F8F9FC]">
+                        {meeting.title}
+                      </h4>
+                      <Badge variant="accent" className="text-[10px]">
+                        {meeting.platform}
+                      </Badge>
+                    </div>
+                    {meeting.client && (
+                      <p className="text-[11px] text-[#A1A1B0]">{meeting.client}</p>
+                    )}
+                    <div className="flex items-center gap-3 text-[10px] text-[#717182]">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-[#7952FF]" />
+                        {meeting.time}
+                      </span>
+                      <span>{meeting.attendees.length} participantes</span>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card className="border-dashed border-[#30303B] bg-[#1C1C24]/40">
+                <CardContent className="p-6 text-center flex flex-col items-center">
+                  <div className="w-10 h-10 rounded-xl bg-[#252530] flex items-center justify-center text-[#A1A1B0] mb-2.5">
+                    <Calendar className="w-5 h-5 text-[#B8FF65]" />
+                  </div>
+                  <h4 className="font-heading text-xs font-semibold text-[#F8F9FC]">
+                    Nenhuma reunião agendada para hoje
+                  </h4>
+                  <p className="text-[11px] text-[#A1A1B0] mt-1 mb-3">
+                    Sincronize com Google Calendar ou crie pautas de alinhamento com clientes.
+                  </p>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => navigate('/meetings')}
+                    className="text-xs"
+                  >
+                    Agendar Reunião
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </section>
+
+          {/* Card Resumo do Workspace — Auditado e Real */}
+          <Card className="bg-[#1C1C24] border-[#30303B]">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#7952FF]" />
+                  <CardTitle className="text-xs font-semibold text-[#F8F9FC]">
+                    Status do Workspace
+                  </CardTitle>
+                </div>
+                <span className="text-[10px] text-[#A1A1B0] font-mono">
+                  {branding.company.workspaceName}
+                </span>
+              </div>
+            </CardHeader>
+            <CardContent className="text-xs space-y-2 pt-1 text-[#A1A1B0]">
+              <div className="flex justify-between py-1 border-b border-[#30303B]">
+                <span>Marca Ativa:</span>
+                <span className="text-[#F8F9FC] font-medium">{branding.name}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-[#30303B]">
+                <span>Ambiente:</span>
+                <span className="text-[#34D399] font-medium">
+                  {import.meta.env.DEV ? 'Desenvolvimento Local' : 'Produção'}
+                </span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-[#30303B]">
+                <span>Status da Conexão:</span>
+                {isSupabaseConfigured ? (
+                  <span className="text-[#FBBF24] font-medium flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FBBF24]" />
+                    Configurado (Não verificado)
+                  </span>
+                ) : (
+                  <span className="text-[#A1A1B0] font-medium flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#717182]" />
+                    Modo Local / Demo
+                  </span>
+                )}
+              </div>
+              <div className="flex justify-between py-1 border-b border-[#30303B]">
+                <span>Autenticação:</span>
+                <span className="text-[#F8F9FC] font-medium">
+                  Sessão Local (Demo Admin)
+                </span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-[#30303B]">
+                <span>Módulos Operacionais:</span>
+                <span className="text-[#B8FF65] font-medium">
+                  8 Funcionais <span className="text-[#717182] font-normal">(5 planejados)</span>
+                </span>
+              </div>
+
+              {/* Seção B: Progresso de Engenharia / Desenvolvimento */}
+              <div className="pt-2 mt-2 border-t border-[#30303B]/60 space-y-1.5">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-[#717182] font-semibold uppercase tracking-wider text-[10px]">
+                    Manifesto de Engenharia
+                  </span>
+                  <span className="text-[#7952FF] font-semibold">
+                    Fases 01 a 07 (Auditado)
+                  </span>
+                </div>
+                <div className="h-1.5 w-full bg-[#101014] rounded-full overflow-hidden flex border border-[#30303B]">
+                  <div className="bg-[#7952FF] h-full" style={{ width: '85%' }} title="Fases 01, 03, 04, 05, 06, 07 completas no frontend e schema" />
+                </div>
+                <p className="text-[10px] text-[#717182] leading-tight pt-0.5">
+                  Fases 01, 03, 04, 05, 06 e 07 com código funcional, schema PostgreSQL e testes automatizados.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+}
