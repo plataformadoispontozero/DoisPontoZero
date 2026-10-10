@@ -89,7 +89,7 @@ describe('All 13 Phase 01 Functional Routes Render Test', () => {
   })
 
   it('renders route: /proposals (Propostas)', () => {
-    testRoute('/proposals', /Propostas & Orçamentos/i)
+    testRoute('/proposals', /Proposal Studio|Propostas & Orçamentos/i)
   })
 
   it('renders route: /meetings (Reuniões)', () => {

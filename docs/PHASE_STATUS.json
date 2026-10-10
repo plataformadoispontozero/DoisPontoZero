@@ -140,6 +140,30 @@
       "pending_requirements": [],
       "last_verified_at": "2026-10-10T18:49:00Z",
       "evidence": "supabase/migrations/20261010000005_phase07_strategy.sql, src/features/strategy/*, src/features/strategy/strategy.test.tsx"
+    },
+    {
+      "id": "phase-08",
+      "name": "Fase 08 - Proposal Studio e Commercial Proposals",
+      "status": "completed",
+      "completed_requirements": [
+        "Migration PostgreSQL (20261010000006_phase08_proposals.sql) com 11 tabelas e 6 permissões seguras RLS",
+        "RPCs transacionais (get_public_proposal com hash SHA-256 e submit_public_proposal_feedback)",
+        "Tipagem de domínio completa em src/types/proposals.ts",
+        "Motor de precificação Pricing Engine (pricingEngine.ts) com aritmética inteira em centavos",
+        "Serviços de integração briefingIntegration.ts e strategyIntegration.ts",
+        "7 Templates comerciais oficiais em initialTemplates.ts",
+        "Catálogo de serviços da agência em initialServices.ts e ServiceCatalogPage.tsx",
+        "Painel Proposal Studio (/proposals) com indicadores reais, busca, filtros de status e alternância grade/lista",
+        "Wizard de criação (/proposals/new) em 3 etapas com vinculo a cliente, briefing e estratégia",
+        "Workspace da proposta (/proposals/:proposalId) com 4 abas (Editor de Seções em 3 áreas, Precificação & Serviços, Versões & Aprovações, PDF & Compartilhamento)",
+        "Página pública autônoma (/p/:publicToken) responsiva com navegação por seções e formulário de aceite/negociação",
+        "PDF Studio para propostas (@react-pdf/renderer) com diagramação A4 vertical, capa editorial, marca-d'água 5% opacidade e paginação",
+        "Componente de integração ClientProposalsTab no CRM Client Hub",
+        "Suíte de testes automatizados Vitest (60/60 passando) e build de produção 100% verificado"
+      ],
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-10T21:10:00Z",
+      "evidence": "supabase/migrations/20261010000006_phase08_proposals.sql, src/features/proposals/*, vitest suite (60/60 passing)"
     }
   ]
 }

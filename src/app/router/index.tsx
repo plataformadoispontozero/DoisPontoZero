@@ -19,16 +19,26 @@ import { StrategyPage } from '@/features/strategy/StrategyPage'
 import { NewStrategyPage } from '@/features/strategy/NewStrategyPage'
 import { StrategyWorkspacePage } from '@/features/strategy/StrategyWorkspacePage'
 import { ProposalsPage } from '@/features/proposals/ProposalsPage'
+import { NewProposalPage } from '@/features/proposals/NewProposalPage'
+import { ProposalWorkspacePage } from '@/features/proposals/ProposalWorkspacePage'
+import { ServiceCatalogPage } from '@/features/proposals/ServiceCatalogPage'
+import { ProposalTemplatesPage } from '@/features/proposals/ProposalTemplatesPage'
+import { ProposalExportPage } from '@/features/proposals/ProposalExportPage'
+import { PublicProposalViewPage } from '@/features/proposals/public/PublicProposalViewPage'
 import { MeetingsPage } from '@/features/meetings/MeetingsPage'
 import { ChatPage } from '@/features/chat/ChatPage'
 import { PresentationsPage } from '@/features/presentations/PresentationsPage'
 import { SettingsPage } from '@/features/settings/SettingsPage'
 
 export const router = createBrowserRouter([
-  // Public standalone route for clients filling briefings outside the admin AppLayout
+  // Public standalone routes for external clients (Briefing & Proposal)
   {
     path: '/b/:publicToken',
     element: <PublicBriefingFormPage />,
+  },
+  {
+    path: '/p/:publicToken',
+    element: <PublicProposalViewPage />,
   },
   {
     path: '/',
@@ -129,6 +139,46 @@ export const router = createBrowserRouter([
       {
         path: 'proposals',
         element: <ProposalsPage />,
+      },
+      {
+        path: 'proposals/new',
+        element: <NewProposalPage />,
+      },
+      {
+        path: 'proposals/templates',
+        element: <ProposalTemplatesPage />,
+      },
+      {
+        path: 'proposals/templates/new',
+        element: <ProposalTemplatesPage />,
+      },
+      {
+        path: 'proposals/templates/:templateId/edit',
+        element: <ProposalTemplatesPage />,
+      },
+      {
+        path: 'proposals/services',
+        element: <ServiceCatalogPage />,
+      },
+      {
+        path: 'proposals/:proposalId',
+        element: <ProposalWorkspacePage />,
+      },
+      {
+        path: 'proposals/:proposalId/edit',
+        element: <ProposalWorkspacePage />,
+      },
+      {
+        path: 'proposals/:proposalId/preview',
+        element: <ProposalWorkspacePage />,
+      },
+      {
+        path: 'proposals/:proposalId/versions',
+        element: <ProposalWorkspacePage />,
+      },
+      {
+        path: 'proposals/:proposalId/export',
+        element: <ProposalExportPage />,
       },
       {
         path: 'meetings',
