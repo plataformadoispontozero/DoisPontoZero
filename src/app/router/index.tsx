@@ -5,6 +5,7 @@ import { SettingsLayout } from '@/features/settings/components/SettingsLayout'
 
 export const router = createBrowserRouter([
   { path: '/', lazy: async () => ({ Component: (await import('@/features/public-site/PublicSitePage')).PublicSitePage }) },
+  { path: '/portfolio/:projectId', lazy: async () => ({ Component: (await import('@/features/public-site/PublicPortfolioPage')).PublicPortfolioPage }) },
   { path: '/brief', lazy: async () => ({ Component: (await import('@/features/public-site/PublicBriefPage')).PublicBriefPage }) },
   { path: '/login', element: <AuthPage /> },
   { path: '/forgot-password', element: <AuthPage mode="forgot" /> },

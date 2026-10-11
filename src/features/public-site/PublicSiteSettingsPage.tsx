@@ -370,7 +370,7 @@ export function PublicSiteSettingsPage() {
           <>
             <p className="text-sm text-[#aaa6bb]">
               Escolha Hero para os posters do fundo ou Galeria para a sequência
-              de câmera. Marque estudos conceituais; publique resultados apenas
+              de câmera. Na hero, imagens horizontais WebP passam em loop na largura da tela. Use a mesma proporção entre artes (por exemplo 1920 × 1080). Marque estudos conceituais; publique resultados apenas
               quando comprovados.
             </p>
             {content.projects.map((p, i) => {
@@ -460,6 +460,18 @@ export function PublicSiteSettingsPage() {
                     value={p.description}
                     onChange={(v) => set({ ...p, description: v })}
                   />
+                  <Field label="Cliente (opcional)" value={p.client || ""} onChange={(v) => set({ ...p, client: v })} />
+                  <h4>Materiais da página de portfólio</h4>
+                  {(p.materials || []).map((material, materialIndex) => (
+                    <div key={materialIndex} className="space-y-3 rounded-xl border border-white/10 p-4">
+                      <Media busy={busy} upload={upload} label={`Material ${materialIndex + 1}`} value={material.image}
+                        onChange={(image) => set({ ...p, materials: (p.materials || []).map((m, j) => j === materialIndex ? { ...m, image } : m) })} />
+                      <Field label="Legenda do material" value={material.caption}
+                        onChange={(caption) => set({ ...p, materials: (p.materials || []).map((m, j) => j === materialIndex ? { ...m, caption } : m) })} />
+                      <button type="button" onClick={() => set({ ...p, materials: (p.materials || []).filter((_, j) => j !== materialIndex) })}>Remover material</button>
+                    </div>
+                  ))}
+                  {(p.materials || []).length < 20 && <button type="button" onClick={() => set({ ...p, materials: [...(p.materials || []), { image: "", caption: "" }] })}>Adicionar material</button>}
                   <Field
                     label="Resultado verificado (opcional)"
                     value={p.result}

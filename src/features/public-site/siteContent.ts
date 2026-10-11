@@ -8,6 +8,8 @@ export interface SiteProject {
   concept: boolean;
   tone: "lime" | "violet" | "coral" | "silver";
   placement: "hero" | "gallery";
+  client?: string;
+  materials?: { image: string; caption: string }[];
 }
 export interface SiteClient {
   name: string;
@@ -252,6 +254,8 @@ export function normalizeSiteContent(value: unknown): SiteContent {
         title: str(p.title),
         category: str(p.category),
         description: str(p.description),
+        client: str(p.client),
+        materials: list(p.materials, (m) => ({ image: safeMediaUrl(str(m.image)), caption: str(m.caption) }), 20).filter((m) => m.image),
         image: safeMediaUrl(str(p.image)),
         result: str(p.result),
         concept: p.concept !== false,

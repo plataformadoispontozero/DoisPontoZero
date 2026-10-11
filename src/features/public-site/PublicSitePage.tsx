@@ -28,7 +28,7 @@ export function PublicSitePage() {
   const [menu, setMenu] = useState(false);
   const [paused, setPaused] = useState(false);
   const [motion, setMotion] = useState(true);
-  const hero = c.projects.filter((p) => p.placement === "hero").slice(0, 3);
+  const hero = c.projects.filter((p) => p.placement === "hero");
   const gallery = c.projects.filter((p) => p.placement === "gallery");
   const scene = useSceneMotion(motion && available && !pending && gallery.length > 1, gallery.length);
   useEffect(() => {
@@ -112,11 +112,13 @@ export function PublicSitePage() {
         <section className="dz-hero" aria-labelledby="hero-title">
           <div className="dz-hero-grid" aria-hidden="true" />
           <div className="dz-hero-art" aria-hidden="true">
-            {hero.map((p, i) => (
-              <div key={p.id} className={`dz-hero-poster dz-hero-poster-${i}`}>
-                <Poster project={p} decorative />
-              </div>
-            ))}
+            <div className="dz-hero-loop">
+              {[0, 1].map((group) => <div className="dz-hero-loop-group" key={group}>
+                {hero.map((p) => <div key={p.id} className="dz-hero-slide">
+                  {p.image ? <img src={p.image} alt="" loading={group === 0 ? "eager" : "lazy"} /> : <Poster project={p} decorative />}
+                </div>)}
+              </div>)}
+            </div>
           </div>
           <div className="dz-hero-copy">
             {c.logo && (
@@ -207,7 +209,7 @@ export function PublicSitePage() {
                         window.scrollTo({
                           top:
                             scene.current.offsetTop +
-                            (i / (gallery.length - 1)) *
+                            ((i + 0.7) / gallery.length) *
                               (scene.current.offsetHeight - window.innerHeight),
                           behavior: "instant",
                         });
@@ -234,8 +236,8 @@ export function PublicSitePage() {
                       <span className="dz-project-kind">
                         {p.concept ? "ESTUDO AUTORAL" : "PROJETO DA AGÊNCIA"}
                       </span>
-                      <Link className="dz-text-link" to="/brief">
-                        Quero criar algo assim <ArrowUpRight size={17} />
+                      <Link className="dz-text-link" to={`/portfolio/${encodeURIComponent(p.id)}`}>
+                        Ver portfólio <ArrowUpRight size={17} />
                       </Link>
                     </div>
                   </article>
@@ -320,9 +322,7 @@ export function PublicSitePage() {
                   <div><h4>O que fazemos</h4><p>{s.explanation}</p></div>
                   <div><h4>O que pode ser entregue</h4><p>{s.delivery}</p></div>
                   <p className="dz-service-scope">As entregas são definidas na proposta, conforme o seu objetivo e o escopo contratado.</p>
-                  <Link className="dz-text-link" to={`/brief?service=${encodeURIComponent(s.name)}`}>
-                    Solicitar briefing de {s.name} <ArrowUpRight size={18} />
-                  </Link>
+
                 </div>
               </details>
             ))}
@@ -432,7 +432,7 @@ export function PublicSitePage() {
       <footer className="dz-footer dz-container">
         <div className="dz-footer-top">
           <Link to="/" className="dz-wordmark">
-            dois<span>.</span>zero
+            <BrandLogo src={c.logo || "/agency/official-logo.webp"} name={c.name} />
           </Link>
           <div className="dz-footer-links">
             {c.instagram && (

@@ -60,3 +60,11 @@ Identidade validada com build de produção, 18/18 E2E públicos e `git diff --c
 Logo com letras brancas e símbolo original laranja, sem suporte branco; maior contraste no CTA final e nomes da equipe; retratos com cantos arredondados. Câmera CSS 3D combina percurso vertical, profundidade e rotações. Botões e ícones respondem ao hover, respeitando movimento reduzido.
 
 Refinamento validado com build de produção, 18/18 E2E públicos, revisão visual em desktop/mobile sem overflow e `git diff --check`.
+
+
+## Portfólio em etapas — 2026-10-11
+Scroll apresenta imagem antes da descrição, com um projeto visível por vez para evitar sobreposição. Rota pública /portfolio/:projectId apresenta projeto, cliente opcional e até 20 materiais com upload/legendas no editor. Sem dados inventados; site sem projeto publicado retorna estado indisponível. Removidos CTAs de briefing dos serviços. Logo oficial aplicada também no rodapé.
+
+Hero preparada para carrossel contínuo horizontal de artes WebP em largura total, sem limite de três; conteúdo vem dos projetos marcados Hero no editor (limite total de 12 projetos). Loop duplicado sem salto, pausado com movimento desativado/reduzido. Imagens usam contain para preservar a arte completa.
+
+Entrega validada com build de produção, 18 E2E públicos existentes e 3 regressões novas de portfólio (21 verificações em três viewports). Conferência com Supabase real validou imagem antes da copy, rota de detalhes, estado inexistente, hero duplicada e logo no rodapé.

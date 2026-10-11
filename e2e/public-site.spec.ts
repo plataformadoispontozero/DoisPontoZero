@@ -229,3 +229,19 @@ test("viewer cannot enter public site management", async ({ page }) => {
     page.getByRole("heading", { name: "Acesso negado" }),
   ).toBeVisible();
 });
+
+test("portfolio details, hero loop and footer branding preserve the public contact flow", async ({ page }) => {
+  await intercept(page);
+  await page.goto("/");
+  await expect(page.locator(".dz-hero-loop-group")).toHaveCount(2);
+  await expect(page.locator("footer .dz-brand-logo")).toHaveCount(1);
+  await expect(page.getByRole("link", { name: /Solicitar briefing de/ })).toHaveCount(0);
+  const href = await page.locator(".dz-scene-copy a").first().getAttribute("href");
+  await page.goto(href!);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Presença que fica.");
+  await expect(page.getByRole("heading", { name: "A ideia por trás do projeto." })).toBeVisible();
+  await page.getByRole("link", { name: "Começar meu projeto" }).click();
+  await expect(page).toHaveURL(/\/brief$/);
+  await page.goto("/portfolio/project-that-does-not-exist");
+  await expect(page.getByRole("heading", { name: "Projeto indisponível" })).toBeVisible();
+});

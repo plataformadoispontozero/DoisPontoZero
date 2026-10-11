@@ -1543,3 +1543,31 @@
 .dz-contact .dz-button:hover { background: #ff824f; }
 @media(max-width:767px) { .dz-brand-logo { width: 140px; } .dz-brand-hero { width: 230px; } .dz-brand-logo .dz-hero-logo { display:block; } }
 @media(prefers-reduced-motion:reduce) { .dz-site .dz-button, .dz-site a svg, .dz-site button svg { transition:none; } .dz-site .dz-button:hover, .dz-site a:hover svg, .dz-site button:hover svg { transform:none; } }
+
+.dz-gallery { height: 420svh; }
+.dz-scene-copy { transition: opacity .12s linear, transform .12s linear; }
+.dz-portfolio-page { min-height: 100svh; padding: 70px 0; }
+.dz-portfolio-page h1 { font-size: clamp(42px,7vw,90px); margin: 40px 0 20px; }
+.dz-portfolio-page > div > .dz-eyebrow { margin-top: 55px; }
+.dz-portfolio-cover { max-width: 850px; margin: 50px auto; }
+.dz-portfolio-cover .dz-poster { min-height: 500px; position:relative; }
+.dz-portfolio-story { max-width: 800px; margin: 70px 0; }
+.dz-portfolio-story h2 { font-size: clamp(30px,4vw,50px); }
+.dz-portfolio-story p { color: #ddd; font-size:18px; }
+.dz-portfolio-materials { display:grid; gap:40px; margin:60px 0; }
+.dz-portfolio-materials figure { margin:0; }
+.dz-portfolio-materials img { display:block; width:100%; height:auto; border-radius:20px; }
+.dz-portfolio-materials figcaption { margin-top:12px; color:#ccc; }
+.dz-gallery-static, .dz-gallery-single { height:auto; }
+.dz-gallery-static .dz-scene-copy, .dz-gallery-single .dz-scene-copy { opacity:1 !important; transform:none !important; }
+@media(max-width:767px), (prefers-reduced-motion:reduce) { .dz-gallery { height:auto; } .dz-scene-copy { opacity:1 !important; transform:none !important; } .dz-scene-panel { pointer-events:auto !important; } .dz-portfolio-cover .dz-poster { min-height:350px; } }
+
+.dz-hero-art { overflow:hidden; display:flex; align-items:center; }
+.dz-hero-loop { display:flex; width:max-content; animation: dz-hero-carousel 60s linear infinite; }
+.dz-hero-loop-group { display:flex; flex-shrink:0; }
+.dz-hero-slide { width:100vw; height:80svh; flex:0 0 auto; opacity:.62; }
+.dz-hero-slide > img { display:block; width:100%; height:100%; object-fit:contain; }
+.dz-hero-slide > .dz-poster { width:100%; height:100%; border-radius:0; }
+@keyframes dz-hero-carousel { to { transform:translateX(-50%); } }
+.dz-static .dz-hero-loop { animation:none; }
+@media(prefers-reduced-motion:reduce) { .dz-hero-loop { animation:none; } }
