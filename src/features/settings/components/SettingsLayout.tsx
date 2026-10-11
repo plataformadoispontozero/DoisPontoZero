@@ -29,6 +29,7 @@ export interface SettingsTabItem {
 
 export const settingsTabs: SettingsTabItem[] = [
   { id: 'overview', label: 'Visão Geral', path: '/settings', icon: LayoutGrid },
+  { id: 'public-site', label: 'Site público da agência', path: '/settings/public-site', icon: Globe2 },
   { id: 'agency', label: 'Dados da Agência', path: '/settings/agency', icon: Building2 },
   { id: 'branding', label: 'White Label Studio', path: '/settings/branding', icon: Palette, badge: 'Pro' },
   { id: 'appearance', label: 'Aparência & Tema', path: '/settings/appearance', icon: SunMoon },

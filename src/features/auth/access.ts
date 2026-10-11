@@ -27,6 +27,7 @@ export function routePermission(path: string): string | null {
   if (module === 'settings') {
     if (segments[1] === 'permissions') return 'permissions.manage'
     if (segments[1] === 'team') return 'members.view'
+    if (segments[1] === 'public-site') return 'branding.manage'
     if (segments[1] === 'branding') return 'branding.manage'
     return 'settings.view'
   }

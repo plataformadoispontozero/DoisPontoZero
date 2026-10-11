@@ -4,6 +4,8 @@ import { createBrowserRouter, Navigate, redirect } from 'react-router-dom'
 import { SettingsLayout } from '@/features/settings/components/SettingsLayout'
 
 export const router = createBrowserRouter([
+  { path: '/', lazy: async () => ({ Component: (await import('@/features/public-site/PublicSitePage')).PublicSitePage }) },
+  { path: '/brief', lazy: async () => ({ Component: (await import('@/features/public-site/PublicBriefPage')).PublicBriefPage }) },
   { path: '/login', element: <AuthPage /> },
   { path: '/forgot-password', element: <AuthPage mode="forgot" /> },
   { path: '/reset-password', element: <AuthPage mode="reset" /> },
@@ -21,14 +23,9 @@ export const router = createBrowserRouter([
     lazy: async () => ({ Component: (await import('@/features/presentations/public/PublicShowcaseViewPage')).PublicShowcaseViewPage }),
   },
   {
-    path: '/',
     hydrateFallbackElement: <main className="p-8 text-[#F8F9FC]" role="status">Carregando aplicativo…</main>,
     element: <ProtectedWorkspace />,
     children: [
-      {
-        index: true,
-        element: <Navigate to="/dashboard" replace />,
-      },
       {
         path: 'dashboard',
         lazy: async () => ({ Component: (await import('@/features/dashboard/DashboardPage')).DashboardPage }),
@@ -270,6 +267,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             lazy: async () => ({ Component: (await import('@/features/settings/SettingsOverviewPage')).SettingsOverviewPage }),
+          },
+          {
+            path: 'public-site',
+            lazy: async () => ({ Component: (await import('@/features/public-site/PublicSiteSettingsPage')).PublicSiteSettingsPage }),
           },
           {
             path: 'agency',

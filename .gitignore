@@ -39,3 +39,5 @@ supabase/.temp/
 
 dist-auth-test/
 dist-demo-test/
+
+dist-public-test/
