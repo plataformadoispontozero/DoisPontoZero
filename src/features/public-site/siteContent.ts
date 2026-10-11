@@ -43,7 +43,7 @@ export interface SiteContent {
 export const SITE_SLUG = import.meta.env.VITE_PUBLIC_SITE_SLUG || "dois-zero";
 export const defaultSiteContent: SiteContent = {
   name: "Dois.Zero",
-  logo: "/agency/dois.zero-logotipo2.png.webp",
+  logo: "/agency/official-logo.webp",
   eyebrow: "ESTRATÉGIA + CRIATIVIDADE + PERFORMANCE",
   headline: "Sua marca merece",
   highlight: "o próximo nível.",

@@ -2,7 +2,7 @@
   --dz-bg: #101013;
   --dz-fg: #f2f2ee;
   --dz-muted: #99999f;
-  --dz-lime: #c3ff70;
+  --dz-lime: #ff5a1f;
   background: var(--dz-bg);
   color: var(--dz-fg);
   font-family: Inter, sans-serif;
@@ -75,7 +75,7 @@
   min-height: 54px;
 }
 .dz-button:hover {
-  background: #d5ff9b;
+  background: #ff783f;
   transform: translateY(-2px);
 }
 .dz-text-link {
@@ -93,7 +93,7 @@
   left: 20px;
   z-index: 100;
   padding: 12px;
-  background: #c3ff70;
+  background: #ff5a1f;
   color: #101013 !important;
 }
 .dz-skip:focus {
@@ -281,14 +281,14 @@
   color: #101013;
 }
 .dz-poster-lime {
-  background: #c3ff70;
+  background: #ff5a1f;
 }
 .dz-poster-violet {
-  background: #8460f3;
-  color: #f6f3ff;
+  background: #242424;
+  color: #ffffff;
 }
 .dz-poster-coral {
-  background: #ff765b;
+  background: #ff5a1f;
 }
 .dz-poster-silver {
   background: #e6e5e0;
@@ -830,7 +830,7 @@
 }
 .dz-draft-banner {
   text-align: center;
-  background: #7355d3;
+  background: #9b3008;
   color: #fff;
   font-size: 12px;
   padding: 8px;
@@ -960,11 +960,11 @@
 }
 .dz-service-options label:has(input:checked) {
   border-color: var(--dz-lime);
-  background: #c3ff7012;
+  background: #ff5a1f12;
 }
 .dz-service-options input {
   margin-right: 8px;
-  accent-color: #c3ff70;
+  accent-color: #ff5a1f;
 }
 .dz-brief-review {
   display: grid;
@@ -990,7 +990,7 @@
 }
 .dz-check input {
   margin-top: 6px;
-  accent-color: #c3ff70;
+  accent-color: #ff5a1f;
 }
 .dz-form-fallback {
   border-top: 1px solid #ffffff20;
@@ -1503,7 +1503,7 @@
 
 .dz-team-heading { margin-top: 70px; }
 .dz-team-heading h2 { font-size: clamp(32px, 4vw, 56px); }
-.dz-team-placeholder { flex-direction: column; gap: 18px; background: radial-gradient(ellipse at top, #353042, #1c1b22); border: 1px solid #ffffff12; }
+.dz-team-placeholder { flex-direction: column; gap: 18px; background: radial-gradient(ellipse at top, #303030, #171717); border: 1px solid #ffffff12; }
 .dz-team-placeholder span { font-size: 12px; letter-spacing: .08em; color: #aaa8b3; }
 
 .dz-service { border-bottom: 1px solid #ffffff20; }
@@ -1517,3 +1517,8 @@
 .dz-service-description p { max-width: none; font-size: 14px; }
 .dz-service-scope, .dz-service-description > a { grid-column: 1 / -1; }
 @media(max-width:767px) { .dz-service-description { padding: 0 0 28px 34px; grid-template-columns: 1fr; gap: 20px; } .dz-service-toggle { grid-column: 3; grid-row: 1; } }
+
+/* Original black-and-orange artwork stays intact on a white backing. */
+.dz-wordmark img { display: block; width: 150px; height: auto; padding: 9px 12px; background: #fff; border-radius: 4px; box-sizing: content-box; }
+.dz-hero-logo { width: 230px; height: auto; padding: 15px 22px; background: #fff; border-radius: 5px; box-sizing: content-box; }
+@media(max-width:767px) { .dz-wordmark img { width: 120px; } .dz-hero-logo { width: 190px; } }

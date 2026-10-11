@@ -48,3 +48,9 @@ Seção de equipe validada com build de produção, 18/18 E2E públicos e `git d
 Serviços agora expandem com explicação, exemplos de entregas e CTA para briefing com serviço selecionado. Escopo comercial é definido na proposta.
 
 Serviços validados com build de produção, 18/18 E2E públicos e conferência manual em 1440/390 px: acordeão abre e CTA seleciona o serviço correto.
+
+
+## Identidade oficial — 2026-10-11
+Logo enviada pelo usuário aplicada sem alterações em hero e navegação, com suporte branco para legibilidade do desenho preto no site escuro. Paleta pública ajustada para laranja, preto e branco.
+
+Identidade validada com build de produção, 18/18 E2E públicos e `git diff --check`. Laranja de interface `#ff5a1f` é uma aproximação visual; não foi fornecida uma especificação cromática exata.

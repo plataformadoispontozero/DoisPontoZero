@@ -67,7 +67,7 @@ export function PublicSitePage() {
       )}
       <header className="dz-nav">
         <Link className="dz-wordmark" to="/" aria-label={`${c.name} — início`}>
-          dois<span>.</span>zero<span className="dz-wordmark-symbol">↗</span>
+          <img src={c.logo || "/agency/official-logo.webp"} alt={c.name} width="275" height="39" />
         </Link>
         <button
           className="dz-menu-button"
