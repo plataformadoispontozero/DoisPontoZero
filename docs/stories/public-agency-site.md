@@ -74,3 +74,9 @@ Entrega validada com build de produção, 18 E2E públicos existentes e 3 regres
 Entrada e saída com curva smoothstep e dissolução contínua nas fronteiras; descrição sai antes da troca de arte. Intervalo central mantém câmera, imagem e copy paradas para leitura. Extensão de scroll ajustada à quantidade de projetos (170svh por projeto + viewport de entrada). Último projeto permanece legível até saída da seção; mobile e movimento reduzido continuam estáticos.
 
 Transições validadas com build de produção, 108 testes unitários (incluindo continuidade, pausa de leitura e último painel), 21 E2E públicos e `git diff --check`.
+
+
+## Opacidade da hero — 2026-10-11
+Artes de fundo em preto e branco, opacidade inicial 50%. Slider de 0–100% em Hero & identidade, persistido no conteúdo público e rascunho. Filtro aplicado somente ao carrossel de fundo, preservando logo, copy, botões e cores do portfólio. Conteúdo antigo recebe 50% por padrão; sem migration.
+
+Hero em grayscale e opacidade configurável validadas com build de produção, 109 testes unitários, 21 E2E públicos e `git diff --check`; estilos computados confirmaram opacidade 0,5 e grayscale 1 no fundo.

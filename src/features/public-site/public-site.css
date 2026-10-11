@@ -1565,9 +1565,11 @@
 .dz-hero-art { overflow:hidden; display:flex; align-items:center; }
 .dz-hero-loop { display:flex; width:max-content; animation: dz-hero-carousel 60s linear infinite; }
 .dz-hero-loop-group { display:flex; flex-shrink:0; }
-.dz-hero-slide { width:100vw; height:80svh; flex:0 0 auto; opacity:.62; }
+.dz-hero-slide { width:100vw; height:80svh; flex:0 0 auto; opacity:1; }
 .dz-hero-slide > img { display:block; width:100%; height:100%; object-fit:contain; }
 .dz-hero-slide > .dz-poster { width:100%; height:100%; border-radius:0; }
 @keyframes dz-hero-carousel { to { transform:translateX(-50%); } }
 .dz-static .dz-hero-loop { animation:none; }
 @media(prefers-reduced-motion:reduce) { .dz-hero-loop { animation:none; } }
+
+.dz-hero-loop { filter: grayscale(1); }

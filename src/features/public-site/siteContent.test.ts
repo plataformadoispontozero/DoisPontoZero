@@ -86,3 +86,10 @@ describe("Public site boundaries", () => {
     expect(url.searchParams.get("text")).toContain("Uma ideia & outra?");
   });
 });
+
+ it("normalizes the hero background opacity without changing project media", () => {
+   expect(normalizeSiteContent({ ...defaultSiteContent, heroOpacity: undefined }).heroOpacity).toBe(50);
+   expect(normalizeSiteContent({ ...defaultSiteContent, heroOpacity: 150 }).heroOpacity).toBe(100);
+   expect(normalizeSiteContent({ ...defaultSiteContent, heroOpacity: -5 }).heroOpacity).toBe(0);
+   expect(normalizeSiteContent({ ...defaultSiteContent, heroOpacity: 25 }).heroOpacity).toBe(25);
+ });

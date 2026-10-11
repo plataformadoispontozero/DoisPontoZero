@@ -106,7 +106,7 @@ export function PublicSitePage() {
         <section className="dz-hero" aria-labelledby="hero-title">
           <div className="dz-hero-grid" aria-hidden="true" />
           <div className="dz-hero-art" aria-hidden="true">
-            <div className="dz-hero-loop">
+            <div className="dz-hero-loop" style={{ opacity: (c.heroOpacity ?? 50) / 100 }}>
               {[0, 1].map((group) => <div className="dz-hero-loop-group" key={group}>
                 {hero.map((p) => <div key={p.id} className="dz-hero-slide">
                   {p.image ? <img src={p.image} alt="" loading={group === 0 ? "eager" : "lazy"} /> : <Poster project={p} decorative />}

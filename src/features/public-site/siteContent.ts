@@ -28,6 +28,7 @@ export interface SiteContent {
   name: string;
   logo: string;
   eyebrow: string;
+  heroOpacity?: number;
   headline: string;
   highlight: string;
   intro: string;
@@ -46,6 +47,7 @@ export const SITE_SLUG = import.meta.env.VITE_PUBLIC_SITE_SLUG || "dois-zero";
 export const defaultSiteContent: SiteContent = {
   name: "Dois.Zero",
   logo: "/agency/official-logo.webp",
+  heroOpacity: 50,
   eyebrow: "ESTRATÉGIA + CRIATIVIDADE + PERFORMANCE",
   headline: "Sua marca merece",
   highlight: "o próximo nível.",
@@ -238,6 +240,7 @@ export function normalizeSiteContent(value: unknown): SiteContent {
     name: str(c.name, "Dois.Zero"),
     logo: safeMediaUrl(str(c.logo)),
     eyebrow: str(c.eyebrow),
+    heroOpacity: typeof c.heroOpacity === "number" && Number.isFinite(c.heroOpacity) ? Math.max(0, Math.min(100, c.heroOpacity)) : 50,
     headline: str(c.headline),
     highlight: str(c.highlight),
     intro: str(c.intro),

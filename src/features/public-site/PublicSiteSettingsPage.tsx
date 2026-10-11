@@ -171,7 +171,7 @@ export function PublicSiteSettingsPage() {
     setContent(next);
     setNotice("");
   }
-  function patch(field: keyof SiteContent, value: string) {
+  function patch<K extends keyof SiteContent>(field: K, value: SiteContent[K]) {
     change({ ...content, [field]: value });
   }
   function saveDraft() {
@@ -331,6 +331,12 @@ export function PublicSiteSettingsPage() {
               value={content.logo}
               onChange={(v) => patch("logo", v)}
             />
+            <div className="space-y-3 rounded-xl border border-white/10 p-4">
+              <label htmlFor="hero-opacity" className="block text-sm">Opacidade das artes de fundo: {content.heroOpacity ?? 50}%</label>
+              <input id="hero-opacity" className="w-full accent-[#FF5A1F]" type="range" min="0" max="100" step="1" value={content.heroOpacity ?? 50}
+                onChange={(e) => patch("heroOpacity", Number(e.target.value))} />
+              <p className="text-xs text-[#B8B8C0]">As artes da hero ficam em preto e branco. 0% oculta as artes; 100% usa a opacidade máxima. A logo, os textos e os botões não são afetados.</p>
+            </div>
             <Field
               label="Texto acima do título"
               value={content.eyebrow}
