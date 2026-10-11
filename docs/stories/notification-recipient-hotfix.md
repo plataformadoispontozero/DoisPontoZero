@@ -1,6 +1,6 @@
 # Correção do filtro de notificações — 11/10/2026
 
-Status: Tested; publicação autorizada em andamento.
+Status: Done — correção publicada; confirmação da sessão do usuário pendente.
 
 Problema: agência com login OWNER válido exibe alerta global no dashboard. Consultas e updates usam notifications.user_id, enquanto o contrato SQL/TypeScript define recipient_id.
 
@@ -8,8 +8,10 @@ Problema: agência com login OWNER válido exibe alerta global no dashboard. Con
 - [x] Corrigir leitura, marcação individual e marcação de todas as notificações para recipient_id, mantendo filtro agency_id.
 - [x] Teste de regressão intercepta contrato e exige destinatário correto após login; desktop/tablet/mobile 3/3 PASS.
 - [x] Build, typecheck, lint (com avisos), 81/81 testes unitários e git diff --check PASS.
-- [ ] Push e deploy do frontend no Worker existente.
+- [x] Push e deploy do frontend no Worker existente.
 
 Arquivos: src/features/notifications/hooks/useNotifications.ts, e2e/agency-access.spec.ts, docs/stories/notification-recipient-hotfix.md.
 
 Não foram alterados dados, schema ou RLS do Supabase. O smoke público não valida sessão autenticada do usuário; atualização da tela autenticada precisa confirmar ausência do aviso. Outras falhas de consultas continuam visíveis.
+
+Commit da correção: 7a3bc22. Worker doispontozero publicado com sucesso. Verificação externa: workers.dev e doispontozero.renatodesigner.com.br/login HTTP 200, ambos servindo o bundle mais recente.
