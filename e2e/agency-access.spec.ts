@@ -9,7 +9,7 @@ const roleId = '22222222-2222-4222-8222-222222222222'
 const user = { id: userId, aud: 'authenticated', role: 'authenticated', email: 'agency-test@example.invalid', app_metadata: { provider: 'email' }, user_metadata: {}, created_at: new Date().toISOString() }
 const token = `${Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')}.${Buffer.from(JSON.stringify({ sub: userId, exp: Math.floor(Date.now()/1000)+3600, role: 'authenticated', aud: 'authenticated' })).toString('base64url')}.audit-signature`
 
-async function api(page: Page, options: { member?: boolean; owner?: boolean; failClients?: boolean; invalidLogin?: boolean; invalidSession?: boolean; unavailable?: boolean; inactive?: boolean } = {}) {
+async function api(page: Page, options: { member?: boolean; owner?: boolean; failClients?: boolean; invalidLogin?: boolean; invalidSession?: boolean; unavailable?: boolean; inactive?: boolean; agenda?: boolean } = {}) {
   const reads: string[] = []
   let savedClient: any = null
   await page.route('https://audit-auth.supabase.co/**', async route => {
@@ -24,6 +24,11 @@ async function api(page: Page, options: { member?: boolean; owner?: boolean; fai
     if (table === 'profiles') return respond([{ full_name: 'Usuário de teste' }])
     if (table === 'agency_members') return respond(options.member === false || options.inactive ? [] : [agencyA,agencyB].map((id,index) => ({ agency_id: id, role_id: roleId, agencies: { id, name: `Agência ${index ? 'B':'A'}`, status: 'active' }, roles: { id: roleId, name: options.owner === false ? 'VIEWER':'OWNER' } })))
     if (table === 'role_permissions') return respond([{ allowed: true, permissions: { permission_key: 'dashboard.view' } }])
+    if (options.agenda && table === 'meetings') return respond([
+      {id:'55555555-5555-4555-8555-555555555555',title:'Reunião pessoal real',starts_at:new Date().toISOString(),organizer_id:userId,meeting_participants:[]},
+      {id:'66666666-6666-4666-8666-666666666666',title:'Reunião de outro usuário',starts_at:new Date().toISOString(),organizer_id:'other-user',meeting_participants:[]},
+    ])
+    if (options.agenda && table === 'tasks') return respond([{id:'77777777-7777-4777-8777-777777777777',title:'Prazo da minha tarefa',due_date:new Date().toISOString().slice(0,10),task_assignees:[{user_id:userId}]}])
     if (table === 'notifications') {
       reads.push('notification:' + url.searchParams.get('recipient_id'))
       if (url.searchParams.has('user_id')) return respond({code:'42703',message:'column user_id does not exist'},400)
@@ -145,4 +150,17 @@ test('public proposal without a verified token cannot show a fixture or require 
   await expect(page.getByRole('heading',{name:'Link Inválido ou Expirado'})).toBeVisible()
   await expect(page).toHaveURL(/\/p\/invalid-token$/)
   await expect(page.getByText('Acme Corp Brasil',{exact:true})).toHaveCount(0)
+})
+
+test('personal agenda lists real API meetings and deadlines and links to creation',async ({page})=>{
+  await api(page,{agenda:true}); await login(page)
+  await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
+  await page.goto('/calendar')
+  await expect(page.getByRole('link',{name:'Reunião pessoal real',exact:true})).toBeVisible()
+  await expect(page.getByRole('link',{name:'Prazo da minha tarefa',exact:true})).toBeVisible()
+  await expect(page.getByText('Reunião de outro usuário',{exact:true})).toHaveCount(0)
+  await page.getByLabel('Período',{exact:true}).selectOption('week')
+  await expect(page.getByRole('link',{name:'Reunião pessoal real',exact:true})).toBeVisible()
+  await page.getByRole('button',{name:'Novo Compromisso',exact:true}).click()
+  await expect(page).toHaveURL(/\/meetings\/new$/)
 })
