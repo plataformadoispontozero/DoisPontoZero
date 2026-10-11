@@ -178,10 +178,10 @@ export const NewStrategyPage: React.FC = () => {
                     onClick={() => setStep(idx)}
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                       isActive
-                        ? 'bg-[#7952FF] text-white shadow-lg shadow-[#7952FF]/20'
+                        ? 'bg-[#C74410] text-white shadow-lg shadow-[#C74410]/20'
                         : isComplete
-                          ? 'bg-[#7952FF]/10 text-[#7952FF]'
-                          : 'bg-[#1C1C24] text-[#717182] hover:text-[#A1A1B0]'
+                          ? 'bg-[#C74410]/10 text-[#C74410]'
+                          : 'bg-[#1C1C24] text-[#98989F] hover:text-[#B8B8C0]'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
@@ -202,13 +202,13 @@ export const NewStrategyPage: React.FC = () => {
         <Card>
           <CardContent className="p-6 space-y-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-[#F8F9FC]">
-              <Compass className="w-4 h-4 text-[#7952FF]" />
+              <Compass className="w-4 h-4 text-[#C74410]" />
               Identidade da Estratégia
             </div>
 
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">Nome da Estratégia *</label>
+                <label className="text-xs font-medium text-[#B8B8C0]">Nome da Estratégia *</label>
                 <Input
                   placeholder="Ex: Estratégia Social Q4 2026"
                   value={form.name}
@@ -217,7 +217,7 @@ export const NewStrategyPage: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">Descrição</label>
+                <label className="text-xs font-medium text-[#B8B8C0]">Descrição</label>
                 <Textarea
                   placeholder="Descreva brevemente o contexto e propósito dessa estratégia..."
                   value={form.description}
@@ -227,7 +227,7 @@ export const NewStrategyPage: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">
+                <label className="text-xs font-medium text-[#B8B8C0]">
                   <Target className="w-3 h-3 inline mr-1" />
                   Objetivo Principal
                 </label>
@@ -255,13 +255,13 @@ export const NewStrategyPage: React.FC = () => {
         <Card>
           <CardContent className="p-6 space-y-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-[#F8F9FC]">
-              <Target className="w-4 h-4 text-[#7952FF]" />
+              <Target className="w-4 h-4 text-[#C74410]" />
               Diagnóstico Estratégico
             </div>
 
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">
+                <label className="text-xs font-medium text-[#B8B8C0]">
                   <Users className="w-3 h-3 inline mr-1" />
                   Público-Alvo
                 </label>
@@ -274,7 +274,7 @@ export const NewStrategyPage: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">
+                <label className="text-xs font-medium text-[#B8B8C0]">
                   <MessageSquare className="w-3 h-3 inline mr-1" />
                   Tom de Voz
                 </label>
@@ -287,7 +287,7 @@ export const NewStrategyPage: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">
+                <label className="text-xs font-medium text-[#B8B8C0]">
                   <Award className="w-3 h-3 inline mr-1" />
                   Posicionamento de Marca
                 </label>
@@ -301,7 +301,7 @@ export const NewStrategyPage: React.FC = () => {
 
               {/* Competitors */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">Concorrentes Mapeados</label>
+                <label className="text-xs font-medium text-[#B8B8C0]">Concorrentes Mapeados</label>
                 <div className="flex gap-2">
                   <Input
                     placeholder="Adicionar concorrente..."
@@ -331,10 +331,10 @@ export const NewStrategyPage: React.FC = () => {
                     {form.competitors.map((c, i) => (
                       <span
                         key={i}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#1C1C24] text-[11px] text-[#A1A1B0] border border-[#30303B]"
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#1C1C24] text-[11px] text-[#B8B8C0] border border-[#30303B]"
                       >
                         {c}
-                        <button onClick={() => removeFromArray('competitors', i)} className="text-[#717182] hover:text-red-400">
+                        <button onClick={() => removeFromArray('competitors', i)} className="text-[#98989F] hover:text-red-400">
                           <X className="w-3 h-3" />
                         </button>
                       </span>
@@ -345,7 +345,7 @@ export const NewStrategyPage: React.FC = () => {
 
               {/* Key Messages */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">
+                <label className="text-xs font-medium text-[#B8B8C0]">
                   <Zap className="w-3 h-3 inline mr-1" />
                   Mensagens-Chave
                 </label>
@@ -378,10 +378,10 @@ export const NewStrategyPage: React.FC = () => {
                     {form.key_messages.map((m, i) => (
                       <span
                         key={i}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#7952FF]/10 text-[11px] text-[#7952FF] border border-[#7952FF]/20"
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#C74410]/10 text-[11px] text-[#C74410] border border-[#C74410]/20"
                       >
                         {m}
-                        <button onClick={() => removeFromArray('key_messages', i)} className="text-[#7952FF]/50 hover:text-red-400">
+                        <button onClick={() => removeFromArray('key_messages', i)} className="text-[#C74410]/50 hover:text-red-400">
                           <X className="w-3 h-3" />
                         </button>
                       </span>
@@ -392,7 +392,7 @@ export const NewStrategyPage: React.FC = () => {
 
               {/* Restrictions */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-[#A1A1B0]">
+                <label className="text-xs font-medium text-[#B8B8C0]">
                   <ShieldAlert className="w-3 h-3 inline mr-1" />
                   Restrições Comunicacionais
                 </label>
@@ -457,14 +457,14 @@ export const NewStrategyPage: React.FC = () => {
         <Card>
           <CardContent className="p-6 space-y-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-[#F8F9FC]">
-              <Globe className="w-4 h-4 text-[#7952FF]" />
+              <Globe className="w-4 h-4 text-[#C74410]" />
               Canais & Período
             </div>
 
             <div className="space-y-4">
               {/* Channel Selection */}
               <div className="space-y-2">
-                <label className="text-xs font-medium text-[#A1A1B0]">Canais de Distribuição</label>
+                <label className="text-xs font-medium text-[#B8B8C0]">Canais de Distribuição</label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                   {(Object.keys(SOCIAL_CHANNEL_CONFIG) as SocialChannel[]).map((ch) => {
                     const cfg = SOCIAL_CHANNEL_CONFIG[ch]
@@ -476,8 +476,8 @@ export const NewStrategyPage: React.FC = () => {
                         onClick={() => toggleChannel(ch)}
                         className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium transition-all border ${
                           isSelected
-                            ? 'border-[#7952FF] bg-[#7952FF]/10 text-[#F8F9FC]'
-                            : 'border-[#30303B] bg-[#1C1C24] text-[#717182] hover:text-[#A1A1B0] hover:border-[#717182]/30'
+                            ? 'border-[#C74410] bg-[#C74410]/10 text-[#F8F9FC]'
+                            : 'border-[#30303B] bg-[#1C1C24] text-[#98989F] hover:text-[#B8B8C0] hover:border-[#98989F]/30'
                         }`}
                       >
                         <span
@@ -494,7 +494,7 @@ export const NewStrategyPage: React.FC = () => {
               {/* Period */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-[#A1A1B0]">
+                  <label className="text-xs font-medium text-[#B8B8C0]">
                     <CalendarDays className="w-3 h-3 inline mr-1" />
                     Início do Período
                   </label>
@@ -505,7 +505,7 @@ export const NewStrategyPage: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-[#A1A1B0]">
+                  <label className="text-xs font-medium text-[#B8B8C0]">
                     <CalendarDays className="w-3 h-3 inline mr-1" />
                     Fim do Período
                   </label>

@@ -35,7 +35,7 @@ const DEMO_COLUMNS: BoardColumn[] = [
     agency_id: MOCK_AGENCY_ID,
     board_id: 'board-1',
     name: 'Backlog Criativo',
-    color: '#717182',
+    color: '#98989F',
     position: 1000,
     category: 'backlog',
     wip_limit: null,
@@ -47,7 +47,7 @@ const DEMO_COLUMNS: BoardColumn[] = [
     agency_id: MOCK_AGENCY_ID,
     board_id: 'board-1',
     name: 'Em Produção',
-    color: '#7952FF',
+    color: '#C74410',
     position: 2000,
     category: 'in_progress',
     wip_limit: 4,
@@ -287,16 +287,16 @@ export const TasksPage: React.FC = () => {
       {/* Metrics Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <div className="bg-[#1C1C24] p-4 rounded-2xl border border-[#30303B] space-y-1">
-          <span className="text-[11px] font-semibold text-[#717182] uppercase tracking-wider">
+          <span className="text-[11px] font-semibold text-[#98989F] uppercase tracking-wider">
             Total de Tarefas
           </span>
           <p className="font-heading text-xl font-bold text-[#F8F9FC]">{tasksToDisplay.length}</p>
         </div>
         <div className="bg-[#1C1C24] p-4 rounded-2xl border border-[#30303B] space-y-1">
-          <span className="text-[11px] font-semibold text-[#7952FF] uppercase tracking-wider">
+          <span className="text-[11px] font-semibold text-[#C74410] uppercase tracking-wider">
             Em Produção
           </span>
-          <p className="font-heading text-xl font-bold text-[#7952FF]">
+          <p className="font-heading text-xl font-bold text-[#C74410]">
             {tasksToDisplay.filter((t) => t.status === 'in_progress').length}
           </p>
         </div>

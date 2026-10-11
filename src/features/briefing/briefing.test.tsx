@@ -157,7 +157,7 @@ describe('Briefing Studio — Domain & PDF Model', () => {
 
     const model = transformBriefingToPdfModel(mockBriefing, {
       agencyName: 'Agência Criativa Premium',
-      primaryColor: '#7952FF',
+      primaryColor: '#C74410',
     })
 
     expect(model.title).toBe('Redesign Marca 2026')

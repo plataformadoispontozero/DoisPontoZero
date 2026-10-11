@@ -130,14 +130,14 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl bg-[#1C1C24] border-[#30303B] text-[#F8F9FC] max-h-[85vh] flex flex-col">
         <DialogHeader>
-          <div className="flex items-center gap-2 text-[#7952FF] mb-1">
+          <div className="flex items-center gap-2 text-[#C74410] mb-1">
             <Sparkles className="w-5 h-5" />
             <span className="text-xs font-semibold tracking-wider uppercase">Editorial Engine</span>
           </div>
           <DialogTitle className="text-base font-semibold text-[#F8F9FC]">
             Gerador Determinístico de Grade Editorial
           </DialogTitle>
-          <p className="text-xs text-[#A1A1B0] mt-0.5">
+          <p className="text-xs text-[#B8B8C0] mt-0.5">
             Distribui pautas ao longo do período calculando frequência, peso percentual dos pilares e rotação de formatos.
           </p>
         </DialogHeader>
@@ -150,7 +150,7 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
             <h4 className="text-sm font-semibold text-[#F8F9FC]">
               Pilares Editoriais Necessários
             </h4>
-            <p className="text-xs text-[#A1A1B0] max-w-sm mx-auto">
+            <p className="text-xs text-[#B8B8C0] max-w-sm mx-auto">
               Para gerar sugestões editoriais automáticas, você precisa cadastrar ao menos 1 pilar editorial com porcentagem e frequência.
             </p>
           </div>
@@ -159,9 +159,9 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
             {/* Control Bar */}
             <div className="p-3 bg-[#13131A] rounded-xl border border-[#30303B] flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
-                <span className="text-[#A1A1B0] font-medium">Período de Planejamento:</span>
+                <span className="text-[#B8B8C0] font-medium">Período de Planejamento:</span>
                 <select
-                  className="h-8 rounded-md bg-[#1C1C24] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="h-8 rounded-md bg-[#1C1C24] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={periodDays}
                   onChange={(e) => setPeriodDays(Number(e.target.value))}
                 >
@@ -193,12 +193,12 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
                     <button
                       type="button"
                       onClick={toggleSelectAll}
-                      className="flex items-center gap-1.5 text-[#A1A1B0] hover:text-[#F8F9FC]"
+                      className="flex items-center gap-1.5 text-[#B8B8C0] hover:text-[#F8F9FC]"
                     >
                       {selectedIndices.length === suggestions.length ? (
-                        <CheckSquare className="w-4 h-4 text-[#7952FF]" />
+                        <CheckSquare className="w-4 h-4 text-[#C74410]" />
                       ) : (
-                        <Square className="w-4 h-4 text-[#717182]" />
+                        <Square className="w-4 h-4 text-[#98989F]" />
                       )}
                       <span>
                         Selecionar Todos ({selectedIndices.length}/{suggestions.length})
@@ -207,14 +207,14 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-[#A1A1B0]">Destino:</span>
+                    <span className="text-[#B8B8C0]">Destino:</span>
                     <button
                       type="button"
                       onClick={() => setDestination('calendar')}
                       className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
                         destination === 'calendar'
-                          ? 'bg-[#7952FF] text-white'
-                          : 'bg-[#13131A] text-[#A1A1B0] hover:text-[#F8F9FC]'
+                          ? 'bg-[#C74410] text-white'
+                          : 'bg-[#13131A] text-[#B8B8C0] hover:text-[#F8F9FC]'
                       }`}
                     >
                       Calendário Editorial
@@ -224,8 +224,8 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
                       onClick={() => setDestination('ideas')}
                       className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
                         destination === 'ideas'
-                          ? 'bg-[#7952FF] text-white'
-                          : 'bg-[#13131A] text-[#A1A1B0] hover:text-[#F8F9FC]'
+                          ? 'bg-[#C74410] text-white'
+                          : 'bg-[#13131A] text-[#B8B8C0] hover:text-[#F8F9FC]'
                       }`}
                     >
                       Banco de Ideias
@@ -245,15 +245,15 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
                         onClick={() => toggleSelectOne(idx)}
                         className={`p-3 rounded-lg border text-xs cursor-pointer transition-all flex items-start gap-3 ${
                           isSelected
-                            ? 'bg-[#7952FF]/5 border-[#7952FF]/40 shadow-sm'
+                            ? 'bg-[#C74410]/5 border-[#C74410]/40 shadow-sm'
                             : 'bg-[#13131A]/60 border-[#30303B]/60 opacity-60 hover:opacity-100'
                         }`}
                       >
                         <div className="mt-0.5">
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-[#7952FF]" />
+                            <CheckSquare className="w-4 h-4 text-[#C74410]" />
                           ) : (
-                            <Square className="w-4 h-4 text-[#717182]" />
+                            <Square className="w-4 h-4 text-[#98989F]" />
                           )}
                         </div>
 
@@ -268,18 +268,18 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
                                 {sug.pillar_name}
                               </span>
                               <span className="text-[#30303B]">|</span>
-                              <span className="px-1.5 py-0.2 rounded bg-[#1C1C24] text-[#A1A1B0] text-[10px] border border-[#30303B]">
+                              <span className="px-1.5 py-0.2 rounded bg-[#1C1C24] text-[#B8B8C0] text-[10px] border border-[#30303B]">
                                 {formatCfg ? formatCfg.label : sug.suggested_format}
                               </span>
                             </div>
 
-                            <span className="text-[11px] text-[#A1A1B0] flex items-center gap-1">
-                              <Calendar className="w-3 h-3 text-[#7952FF]" />
+                            <span className="text-[11px] text-[#B8B8C0] flex items-center gap-1">
+                              <Calendar className="w-3 h-3 text-[#C74410]" />
                               {sug.suggested_date}
                             </span>
                           </div>
 
-                          <p className="text-xs text-[#A1A1B0]">
+                          <p className="text-xs text-[#B8B8C0]">
                             {sug.example_topics[0] || 'Conteúdo sugerido para o pilar'}
                           </p>
 
@@ -288,7 +288,7 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
                               {sug.example_topics.slice(1, 3).map((t, i) => (
                                 <span
                                   key={i}
-                                  className="text-[10px] text-[#717182] bg-[#1C1C24] px-1.5 py-0.2 rounded"
+                                  className="text-[10px] text-[#98989F] bg-[#1C1C24] px-1.5 py-0.2 rounded"
                                 >
                                   {t}
                                 </span>
@@ -306,7 +306,7 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
         )}
 
         <DialogFooter className="mt-2 border-t border-[#30303B] pt-3 flex justify-between items-center">
-          <div className="text-[11px] text-[#717182]">
+          <div className="text-[11px] text-[#98989F]">
             Algoritmo determinístico baseado em pesos & frequências.
           </div>
 

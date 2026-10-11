@@ -35,10 +35,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       )}
     >
       <div className="relative mb-4">
-        <div className="w-14 h-14 rounded-2xl bg-[#7952FF]/10 border border-[#7952FF]/20 flex items-center justify-center text-[#7952FF] shadow-inner">
+        <div className="w-14 h-14 rounded-2xl bg-[#C74410]/10 border border-[#C74410]/20 flex items-center justify-center text-[#C74410] shadow-inner">
           <Icon className="w-7 h-7" />
         </div>
-        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#B8FF65] text-[#101014] flex items-center justify-center shadow">
+        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#FF8759] text-[#101014] flex items-center justify-center shadow">
           <Sparkles className="w-3 h-3" />
         </div>
       </div>
@@ -56,24 +56,24 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </h3>
 
       {subtitle && (
-        <p className="text-xs font-medium text-[#B89EFF] mb-2.5">
+        <p className="text-xs font-medium text-[#FFAC8A] mb-2.5">
           {subtitle}
         </p>
       )}
 
-      <p className="text-xs text-[#A1A1B0] max-w-md leading-relaxed mb-5">
+      <p className="text-xs text-[#B8B8C0] max-w-md leading-relaxed mb-5">
         {description}
       </p>
 
       {features.length > 0 && (
         <div className="w-full bg-[#101014]/60 rounded-xl p-3.5 border border-[#30303B] mb-5 text-left">
-          <span className="text-[11px] font-semibold text-[#A1A1B0] uppercase tracking-wider block mb-2">
+          <span className="text-[11px] font-semibold text-[#B8B8C0] uppercase tracking-wider block mb-2">
             Escopo funcional previsto:
           </span>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#F8F9FC]">
             {features.map((item, index) => (
               <li key={index} className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#B8FF65] shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF8759] shrink-0" />
                 <span>{item}</span>
               </li>
             ))}

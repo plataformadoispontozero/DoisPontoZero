@@ -123,14 +123,14 @@ export const StrategyWorkspacePage: React.FC = () => {
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-lg font-bold text-[#F8F9FC] tracking-tight">{strategy.name}</h1>
               {strategy.client && (
-                <span className="text-xs text-[#A1A1B0] flex items-center gap-1">
-                  <Building className="w-3 h-3 text-[#7952FF]" />
+                <span className="text-xs text-[#B8B8C0] flex items-center gap-1">
+                  <Building className="w-3 h-3 text-[#C74410]" />
                   {strategy.client.name}
                 </span>
               )}
             </div>
             {strategy.description && (
-              <p className="text-xs text-[#A1A1B0] line-clamp-1 mt-0.5">{strategy.description}</p>
+              <p className="text-xs text-[#B8B8C0] line-clamp-1 mt-0.5">{strategy.description}</p>
             )}
           </div>
         </div>
@@ -138,7 +138,7 @@ export const StrategyWorkspacePage: React.FC = () => {
         {/* Actions & Status Dropdown */}
         <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
           <select
-            className="h-8 rounded-lg bg-[#1C1C24] border border-[#30303B] px-2.5 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+            className="h-8 rounded-lg bg-[#1C1C24] border border-[#30303B] px-2.5 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
             value={strategy.status}
             onChange={(e) => handleStatusChange(e.target.value as StrategyStatus)}
           >
@@ -153,7 +153,7 @@ export const StrategyWorkspacePage: React.FC = () => {
             variant="secondary"
             size="sm"
             onClick={() => setIsGeneratorOpen(true)}
-            className="gap-1.5 h-8 text-xs text-[#7952FF] border-[#7952FF]/30 hover:bg-[#7952FF]/10"
+            className="gap-1.5 h-8 text-xs text-[#C74410] border-[#C74410]/30 hover:bg-[#C74410]/10"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Gerador Editorial</span>
@@ -163,7 +163,7 @@ export const StrategyWorkspacePage: React.FC = () => {
             variant="secondary"
             size="sm"
             onClick={handlePrint}
-            className="gap-1.5 h-8 text-xs text-[#A1A1B0] hover:text-[#F8F9FC]"
+            className="gap-1.5 h-8 text-xs text-[#B8B8C0] hover:text-[#F8F9FC]"
             title="Imprimir ou exportar resumo em PDF"
           >
             <Printer className="w-3.5 h-3.5" />
@@ -176,11 +176,11 @@ export const StrategyWorkspacePage: React.FC = () => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-3.5 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#7952FF]/15 text-[#7952FF] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-lg bg-[#C74410]/15 text-[#C74410] flex items-center justify-center">
               <Layers className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] font-semibold uppercase text-[#717182] block tracking-wider">
+              <span className="text-[10px] font-semibold uppercase text-[#98989F] block tracking-wider">
                 Pilares
               </span>
               <span className="text-base font-bold text-[#F8F9FC]">{pillars.length}</span>
@@ -194,7 +194,7 @@ export const StrategyWorkspacePage: React.FC = () => {
               <Lightbulb className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] font-semibold uppercase text-[#717182] block tracking-wider">
+              <span className="text-[10px] font-semibold uppercase text-[#98989F] block tracking-wider">
                 Ideias no Banco
               </span>
               <div className="flex items-baseline gap-1.5">
@@ -211,7 +211,7 @@ export const StrategyWorkspacePage: React.FC = () => {
               <Calendar className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] font-semibold uppercase text-[#717182] block tracking-wider">
+              <span className="text-[10px] font-semibold uppercase text-[#98989F] block tracking-wider">
                 Pautas Agendadas
               </span>
               <span className="text-base font-bold text-[#F8F9FC]">{editorialItems.length}</span>
@@ -225,7 +225,7 @@ export const StrategyWorkspacePage: React.FC = () => {
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] font-semibold uppercase text-[#717182] block tracking-wider">
+              <span className="text-[10px] font-semibold uppercase text-[#98989F] block tracking-wider">
                 Publicadas
               </span>
               <span className="text-base font-bold text-[#F8F9FC]">{publishedItemsCount}</span>
@@ -239,25 +239,25 @@ export const StrategyWorkspacePage: React.FC = () => {
         <TabsList className="bg-[#1C1C24] border border-[#30303B] p-1 rounded-xl flex gap-1 w-full max-w-xl">
           <TabsTrigger
             value="overview"
-            className="flex-1 text-xs py-2 data-[state=active]:bg-[#7952FF] data-[state=active]:text-white"
+            className="flex-1 text-xs py-2 data-[state=active]:bg-[#C74410] data-[state=active]:text-white"
           >
             Visão Geral
           </TabsTrigger>
           <TabsTrigger
             value="pillars"
-            className="flex-1 text-xs py-2 data-[state=active]:bg-[#7952FF] data-[state=active]:text-white"
+            className="flex-1 text-xs py-2 data-[state=active]:bg-[#C74410] data-[state=active]:text-white"
           >
             Pilares ({pillars.length})
           </TabsTrigger>
           <TabsTrigger
             value="ideas"
-            className="flex-1 text-xs py-2 data-[state=active]:bg-[#7952FF] data-[state=active]:text-white"
+            className="flex-1 text-xs py-2 data-[state=active]:bg-[#C74410] data-[state=active]:text-white"
           >
             Banco de Ideias ({ideas.length})
           </TabsTrigger>
           <TabsTrigger
             value="editorial"
-            className="flex-1 text-xs py-2 data-[state=active]:bg-[#7952FF] data-[state=active]:text-white"
+            className="flex-1 text-xs py-2 data-[state=active]:bg-[#C74410] data-[state=active]:text-white"
           >
             Calendário & Pautas ({editorialItems.length})
           </TabsTrigger>

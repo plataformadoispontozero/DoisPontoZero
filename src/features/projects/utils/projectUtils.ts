@@ -22,9 +22,9 @@ export const PRIORITY_CONFIG: Record<
   },
   normal: {
     label: 'Normal',
-    color: 'text-[#A1A1B0]',
+    color: 'text-[#B8B8C0]',
     bg: 'bg-[#30303B]/60 border border-[#424252]',
-    dotColor: 'bg-[#717182]',
+    dotColor: 'bg-[#98989F]',
   },
   low: {
     label: 'Baixa',
@@ -43,13 +43,13 @@ export const TASK_STATUS_CONFIG: Record<
 > = {
   open: {
     label: 'Aberta',
-    color: 'text-[#A1A1B0]',
+    color: 'text-[#B8B8C0]',
     bg: 'bg-[#30303B]/60',
   },
   in_progress: {
     label: 'Em andamento',
-    color: 'text-[#7952FF]',
-    bg: 'bg-[#7952FF]/15',
+    color: 'text-[#C74410]',
+    bg: 'bg-[#C74410]/15',
   },
   review: {
     label: 'Em revisão',
@@ -63,8 +63,8 @@ export const TASK_STATUS_CONFIG: Record<
   },
   archived: {
     label: 'Arquivada',
-    color: 'text-[#717182]',
-    bg: 'bg-[#717182]/15',
+    color: 'text-[#98989F]',
+    bg: 'bg-[#98989F]/15',
   },
 }
 
@@ -95,15 +95,15 @@ export const PROJECT_STATUS_CONFIG: Record<
   },
   completed: {
     label: 'Concluído',
-    color: 'text-[#7952FF]',
-    bg: 'bg-[#7952FF]/15 border border-[#7952FF]/30',
-    dotColor: 'bg-[#7952FF]',
+    color: 'text-[#C74410]',
+    bg: 'bg-[#C74410]/15 border border-[#C74410]/30',
+    dotColor: 'bg-[#C74410]',
   },
   archived: {
     label: 'Arquivado',
-    color: 'text-[#717182]',
-    bg: 'bg-[#717182]/15 border border-[#717182]/30',
-    dotColor: 'bg-[#717182]',
+    color: 'text-[#98989F]',
+    bg: 'bg-[#98989F]/15 border border-[#98989F]/30',
+    dotColor: 'bg-[#98989F]',
   },
 }
 
@@ -114,8 +114,8 @@ export const COLUMN_CATEGORY_CONFIG: Record<
   ColumnCategory,
   { label: string; color: string }
 > = {
-  backlog: { label: 'Backlog', color: '#717182' },
-  in_progress: { label: 'Em andamento', color: '#7952FF' },
+  backlog: { label: 'Backlog', color: '#98989F' },
+  in_progress: { label: 'Em andamento', color: '#C74410' },
   review: { label: 'Em revisão', color: '#FBBF24' },
   done: { label: 'Concluído', color: '#34D399' },
 }
@@ -137,7 +137,7 @@ export function detectLinkType(url: string): {
     return { type: 'YouTube', icon: '▶️', color: 'text-red-400' }
   if (u.includes('notion.so')) return { type: 'Notion', icon: '📄', color: 'text-[#F8F9FC]' }
   if (u.includes('loom.com')) return { type: 'Loom', icon: '🎥', color: 'text-violet-400' }
-  return { type: 'Link', icon: '🔗', color: 'text-[#A1A1B0]' }
+  return { type: 'Link', icon: '🔗', color: 'text-[#B8B8C0]' }
 }
 
 // -------------------------

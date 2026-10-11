@@ -9,14 +9,14 @@
     --color-border: #30303B;
     --color-border-hover: #424252;
     
-    --color-primary: #7952FF;
-    --color-primary-hover: #673DF5;
-    --color-accent: #B8FF65;
-    --color-accent-hover: #A4F547;
+    --color-primary: #C74410;
+    --color-primary-hover: #A8370A;
+    --color-accent: #FF8759;
+    --color-accent-hover: #FF9A73;
     
     --color-text-primary: #F8F9FC;
-    --color-text-secondary: #A1A1B0;
-    --color-text-muted: #717182;
+    --color-text-secondary: #B8B8C0;
+    --color-text-muted: #98989F;
     
     --color-success: #34D399;
     --color-warning: #FBBF24;
@@ -91,3 +91,25 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+/* Shared official artwork, preserving its orange symbol on dark surfaces. */
+.dz-brand-logo { display:inline-block; position:relative; width:175px; line-height:0; }
+.dz-brand-logo img { display:block; width:100%; height:auto; margin:0; background:transparent; }
+.dz-brand-official > img:first-child { filter:brightness(0) invert(1); }
+.dz-brand-logo .dz-brand-symbol { position:absolute; inset:0; clip-path:inset(0 88% 0 0); filter:none; }
+.dz-auth-page { min-height:100svh; display:grid; place-items:center; padding:48px 28px; background:radial-gradient(ellipse at 10% 15%,#9c360d33,transparent 50%),#101014; }
+.dz-auth-layout { width:min(1050px,100%); display:grid; grid-template-columns:1.1fr 1fr; gap:90px; align-items:center; }
+.dz-auth-intro h2 { font-size:clamp(36px,4.5vw,60px); line-height:1.1; letter-spacing:-.04em; margin:28px 0; }
+.dz-auth-intro h2 span { color:#ff8759; }
+.dz-auth-intro > p:not(.dz-auth-eyebrow) { color:#c0c0c7; line-height:1.8; max-width:420px; }
+.dz-auth-eyebrow { font-size:11px; letter-spacing:.12em; color:#ff8759; margin:32px 0 14px; }
+.dz-auth-back { display:inline-flex; align-items:center; gap:10px; color:#dedee4; margin-top:34px; font-size:13px; }
+.dz-auth-card { padding:38px; border:1px solid #ff87592a; border-radius:24px; background:#1b1b21; box-shadow:0 30px 80px #0005; }
+.dz-auth-lock { display:grid; place-items:center; width:52px; height:52px; border-radius:16px; color:#ff8759; background:#ff5a1f15; }
+.dz-auth-card .dz-auth-eyebrow { margin-top:22px; }
+.dz-auth-card h1 { font-size:28px; line-height:1.2; margin:0 0 16px; }
+.dz-auth-description { font-size:13px; line-height:1.7; color:#c0c0c7; margin-bottom:26px; }
+.dz-auth-card label { display:block; font-size:13px; margin-bottom:8px; color:#eee; }
+.dz-auth-recovery { display:inline-block; color:#ffac8a; font-size:13px; margin-top:22px; }
+.dz-auth-client-note { border-top:1px solid #ffffff14; padding-top:22px; margin-top:24px; color:#bcbcc5; font-size:12px; line-height:1.7; }
+@media(max-width:767px) { .dz-auth-page { padding:30px 20px; } .dz-auth-layout { grid-template-columns:1fr; gap:28px; max-width:480px; } .dz-auth-intro h2 { font-size:34px; margin:18px 0; } .dz-auth-intro > p:not(.dz-auth-eyebrow), .dz-auth-intro .dz-auth-back { display:none; } .dz-auth-intro .dz-auth-eyebrow { margin-top:22px; } .dz-auth-card { padding:26px; } }

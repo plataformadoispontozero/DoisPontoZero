@@ -288,7 +288,7 @@ export const BRIEFING_CATEGORY_CONFIG: Record<
   BriefingCategory,
   { label: string; description: string; color: string }
 > = {
-  branding: { label: 'Branding & Identidade', description: 'Manual de marca, tom e posicionamento', color: '#7952FF' },
+  branding: { label: 'Branding & Identidade', description: 'Manual de marca, tom e posicionamento', color: '#C74410' },
   social_media: { label: 'Social Media', description: 'Linhas editoriais, tom de voz e formatos', color: '#10B981' },
   motion: { label: 'Motion Design', description: 'Animações 2D/3D, vinhetas e entregáveis', color: '#F59E0B' },
   audiovisual: { label: 'Audiovisual & Vídeo', description: 'Produções em vídeo, roteiros e diárias', color: '#EC4899' },

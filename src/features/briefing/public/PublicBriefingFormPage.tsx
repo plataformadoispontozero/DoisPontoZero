@@ -116,7 +116,7 @@ export const PublicBriefingFormPage: React.FC = () => {
             agency: {
               name: 'Dois.Zero Creative Agency',
               branding: {
-                primaryColor: '#7952FF',
+                primaryColor: '#C74410',
               },
             },
             sections: fallbackTpl.sections.map((s, idx) => ({
@@ -154,8 +154,8 @@ export const PublicBriefingFormPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-[#101014] text-[#F8F9FC] flex items-center justify-center p-4">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 border-2 border-[#7952FF] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm text-[#A1A1B0]">Carregando formulário seguro...</p>
+          <div className="w-10 h-10 border-2 border-[#C74410] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm text-[#B8B8C0]">Carregando formulário seguro...</p>
         </div>
       </div>
     )
@@ -170,7 +170,7 @@ export const PublicBriefingFormPage: React.FC = () => {
               <AlertCircle className="w-6 h-6" />
             </div>
             <h2 className="text-lg font-bold text-[#F8F9FC]">Acesso Indisponível</h2>
-            <p className="text-sm text-[#A1A1B0]">{error || 'Não foi possível acessar este briefing.'}</p>
+            <p className="text-sm text-[#B8B8C0]">{error || 'Não foi possível acessar este briefing.'}</p>
           </CardContent>
         </Card>
       </div>
@@ -274,12 +274,12 @@ export const PublicBriefingFormPage: React.FC = () => {
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <h2 className="text-2xl font-bold text-[#F8F9FC]">Briefing Enviado com Sucesso!</h2>
-            <p className="text-sm text-[#A1A1B0] leading-relaxed">
+            <p className="text-sm text-[#B8B8C0] leading-relaxed">
               Obrigado por compartilhar suas informações com{' '}
               <strong className="text-[#F8F9FC]">{data.agency.name}</strong>. Nossa equipe criativa já
               recebeu suas respostas e iniciará o planejamento do projeto.
             </p>
-            <div className="p-3 bg-[#1C1C24] rounded-lg border border-[#30303B] text-xs text-[#717182]">
+            <div className="p-3 bg-[#1C1C24] rounded-lg border border-[#30303B] text-xs text-[#98989F]">
               Uma cópia em PDF com versão auditada foi arquivada no sistema da agência.
             </div>
           </CardContent>
@@ -294,12 +294,12 @@ export const PublicBriefingFormPage: React.FC = () => {
       <header className="border-b border-[#30303B] bg-[#111116]/80 backdrop-blur sticky top-0 z-30">
         <div className="max-w-2xl mx-auto px-4 py-3.5 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#7952FF]">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#C74410]">
               Briefing Oficial
             </span>
             <div className="text-sm font-bold text-[#F8F9FC]">{data.agency.name}</div>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-[#A1A1B0]">
+          <div className="flex items-center gap-1.5 text-xs text-[#B8B8C0]">
             <Lock className="w-3.5 h-3.5 text-[#10B981]" />
             <span className="text-[11px]">Conexão Segura</span>
           </div>
@@ -308,7 +308,7 @@ export const PublicBriefingFormPage: React.FC = () => {
         {/* Progress Bar */}
         <div className="w-full bg-[#1C1C24] h-1.5">
           <div
-            className="bg-[#7952FF] h-1.5 transition-all duration-300"
+            className="bg-[#C74410] h-1.5 transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -318,7 +318,7 @@ export const PublicBriefingFormPage: React.FC = () => {
       <main className="max-w-2xl mx-auto px-4 pt-6 space-y-6">
         {/* Briefing Title */}
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+          <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
             <span>
               Etapa {currentSectionIndex + 1} de {totalSections}
             </span>
@@ -326,7 +326,7 @@ export const PublicBriefingFormPage: React.FC = () => {
           </div>
           <h1 className="text-xl md:text-2xl font-bold text-[#F8F9FC]">{data.briefing.title}</h1>
           {data.briefing.description && (
-            <p className="text-xs md:text-sm text-[#A1A1B0] leading-relaxed">
+            <p className="text-xs md:text-sm text-[#B8B8C0] leading-relaxed">
               {data.briefing.description}
             </p>
           )}
@@ -337,11 +337,11 @@ export const PublicBriefingFormPage: React.FC = () => {
           <CardContent className="p-5 md:p-6 space-y-6">
             <div className="pb-3 border-b border-[#30303B]">
               <h2 className="text-base font-bold text-[#F8F9FC] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#7952FF]" />
+                <span className="w-2 h-2 rounded-full bg-[#C74410]" />
                 {currentSection?.title}
               </h2>
               {currentSection?.description && (
-                <p className="text-xs text-[#A1A1B0] mt-1">{currentSection.description}</p>
+                <p className="text-xs text-[#B8B8C0] mt-1">{currentSection.description}</p>
               )}
             </div>
 
@@ -358,7 +358,7 @@ export const PublicBriefingFormPage: React.FC = () => {
                     </label>
 
                     {q.description && (
-                      <p className="text-xs text-[#A1A1B0] leading-relaxed">{q.description}</p>
+                      <p className="text-xs text-[#B8B8C0] leading-relaxed">{q.description}</p>
                     )}
 
                     {/* Question Input Renderers */}
@@ -421,8 +421,8 @@ export const PublicBriefingFormPage: React.FC = () => {
                             key={opt.id}
                             className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
                               val === opt.value
-                                ? 'bg-[#252530] border-[#7952FF] text-[#F8F9FC]'
-                                : 'bg-[#1C1C24] border-[#30303B] text-[#A1A1B0] hover:border-[#7952FF]/40'
+                                ? 'bg-[#252530] border-[#C74410] text-[#F8F9FC]'
+                                : 'bg-[#1C1C24] border-[#30303B] text-[#B8B8C0] hover:border-[#C74410]/40'
                             }`}
                           >
                             <input
@@ -431,7 +431,7 @@ export const PublicBriefingFormPage: React.FC = () => {
                               value={opt.value}
                               checked={val === opt.value}
                               onChange={() => handleAnswerChange(q.id, opt.value)}
-                              className="w-4 h-4 accent-[#7952FF]"
+                              className="w-4 h-4 accent-[#C74410]"
                             />
                             <span className="text-xs md:text-sm font-medium">{opt.label}</span>
                           </label>
@@ -450,8 +450,8 @@ export const PublicBriefingFormPage: React.FC = () => {
                               key={opt.id}
                               className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
                                 isChecked
-                                  ? 'bg-[#252530] border-[#7952FF] text-[#F8F9FC]'
-                                  : 'bg-[#1C1C24] border-[#30303B] text-[#A1A1B0] hover:border-[#7952FF]/40'
+                                  ? 'bg-[#252530] border-[#C74410] text-[#F8F9FC]'
+                                  : 'bg-[#1C1C24] border-[#30303B] text-[#B8B8C0] hover:border-[#C74410]/40'
                               }`}
                             >
                               <input
@@ -468,7 +468,7 @@ export const PublicBriefingFormPage: React.FC = () => {
                                     )
                                   }
                                 }}
-                                className="w-4 h-4 accent-[#7952FF]"
+                                className="w-4 h-4 accent-[#C74410]"
                               />
                               <span className="text-xs md:text-sm font-medium">{opt.label}</span>
                             </label>
@@ -479,8 +479,8 @@ export const PublicBriefingFormPage: React.FC = () => {
 
                     {q.question_type === 'file_upload' && (
                       <div className="p-4 border border-dashed border-[#30303B] rounded-lg text-center bg-[#1C1C24]/50">
-                        <Upload className="w-6 h-6 text-[#7952FF] mx-auto mb-2" />
-                        <p className="text-xs text-[#A1A1B0] mb-2">
+                        <Upload className="w-6 h-6 text-[#C74410] mx-auto mb-2" />
+                        <p className="text-xs text-[#B8B8C0] mb-2">
                           {val ? `Arquivo selecionado: ${val}` : 'Anexe referências, PDFs ou imagens'}
                         </p>
                         <input

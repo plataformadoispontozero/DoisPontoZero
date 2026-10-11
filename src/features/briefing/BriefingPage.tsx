@@ -87,45 +87,45 @@ export const BriefingPage: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4 space-y-1">
-            <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+            <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
               <span>Briefings Ativos</span>
-              <FileText className="w-3.5 h-3.5 text-[#7952FF]" />
+              <FileText className="w-3.5 h-3.5 text-[#C74410]" />
             </div>
             <div className="text-2xl font-bold text-[#F8F9FC]">{totalActive}</div>
-            <div className="text-[10px] text-[#717182]">Total em acompanhamento</div>
+            <div className="text-[10px] text-[#98989F]">Total em acompanhamento</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 space-y-1">
-            <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+            <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
               <span>Aguardando Resposta</span>
               <Clock className="w-3.5 h-3.5 text-amber-400" />
             </div>
             <div className="text-2xl font-bold text-amber-400">{waitingResponse}</div>
-            <div className="text-[10px] text-[#717182]">Com link enviado ao cliente</div>
+            <div className="text-[10px] text-[#98989F]">Com link enviado ao cliente</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 space-y-1">
-            <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+            <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
               <span>Recebidos</span>
-              <Send className="w-3.5 h-3.5 text-[#7952FF]" />
+              <Send className="w-3.5 h-3.5 text-[#C74410]" />
             </div>
-            <div className="text-2xl font-bold text-[#7952FF]">{received}</div>
-            <div className="text-[10px] text-[#717182]">Prontos para análise criativa</div>
+            <div className="text-2xl font-bold text-[#C74410]">{received}</div>
+            <div className="text-[10px] text-[#98989F]">Prontos para análise criativa</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 space-y-1">
-            <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+            <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
               <span>Em Análise</span>
               <Sparkles className="w-3.5 h-3.5 text-[#10B981]" />
             </div>
             <div className="text-2xl font-bold text-[#10B981]">{underReview}</div>
-            <div className="text-[10px] text-[#717182]">Em revisão estratégica</div>
+            <div className="text-[10px] text-[#98989F]">Em revisão estratégica</div>
           </CardContent>
         </Card>
       </div>
@@ -134,7 +134,7 @@ export const BriefingPage: React.FC = () => {
       <Card>
         <CardContent className="p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-[#717182] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-[#98989F] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <div className="pl-9">
               <Input
                 placeholder="Buscar por título ou cliente..."
@@ -149,8 +149,8 @@ export const BriefingPage: React.FC = () => {
               onClick={() => setStatusFilter('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
                 statusFilter === 'all'
-                  ? 'bg-[#7952FF] text-white'
-                  : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC]'
+                  ? 'bg-[#C74410] text-white'
+                  : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC]'
               }`}
             >
               Todos ({briefings.length})
@@ -165,8 +165,8 @@ export const BriefingPage: React.FC = () => {
                   onClick={() => setStatusFilter(stKey)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
                     statusFilter === stKey
-                      ? 'bg-[#7952FF] text-white'
-                      : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC]'
+                      ? 'bg-[#C74410] text-white'
+                      : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC]'
                   }`}
                 >
                   {cfg.label} ({count})
@@ -214,7 +214,7 @@ export const BriefingPage: React.FC = () => {
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#1C1C24] text-[#A1A1B0] border-b border-[#30303B]">
+              <thead className="bg-[#1C1C24] text-[#B8B8C0] border-b border-[#30303B]">
                 <tr>
                   <th className="py-3 px-4 font-semibold">Briefing / Título</th>
                   <th className="py-3 px-4 font-semibold">Cliente</th>
@@ -238,13 +238,13 @@ export const BriefingPage: React.FC = () => {
                       className="hover:bg-[#1C1C24]/50 transition-colors cursor-pointer group"
                       onClick={() => navigate(`/briefings/${b.id}/responses`)}
                     >
-                      <td className="py-3 px-4 font-bold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors">
+                      <td className="py-3 px-4 font-bold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors">
                         {b.title}
                       </td>
-                      <td className="py-3 px-4 text-[#A1A1B0]">
+                      <td className="py-3 px-4 text-[#B8B8C0]">
                         {b.client?.name || 'Cliente Geral'}
                       </td>
-                      <td className="py-3 px-4 text-[#7952FF] font-medium">
+                      <td className="py-3 px-4 text-[#C74410] font-medium">
                         {b.template?.name || 'Personalizado'}
                       </td>
                       <td className="py-3 px-4">
@@ -252,10 +252,10 @@ export const BriefingPage: React.FC = () => {
                           {statusCfg.label}
                         </Badge>
                       </td>
-                      <td className="py-3 px-4 text-[#717182]">
+                      <td className="py-3 px-4 text-[#98989F]">
                         {new Date(b.created_at).toLocaleDateString('pt-BR')}
                       </td>
-                      <td className="py-3 px-4 text-[#717182]">
+                      <td className="py-3 px-4 text-[#98989F]">
                         {new Date(b.updated_at).toLocaleDateString('pt-BR')}
                       </td>
                       <td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
@@ -274,7 +274,7 @@ export const BriefingPage: React.FC = () => {
                             onClick={() => navigate(`/briefings/${b.id}/export`)}
                             title="Gerar PDF"
                           >
-                            <Sparkles className="w-3.5 h-3.5 text-[#7952FF]" />
+                            <Sparkles className="w-3.5 h-3.5 text-[#C74410]" />
                           </Button>
                         </div>
                       </td>

@@ -90,45 +90,45 @@ export const StrategyPage: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4 space-y-1">
-            <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+            <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
               <span>Estratégias Ativas</span>
               <TrendingUp className="w-3.5 h-3.5 text-[#10B981]" />
             </div>
             <div className="text-2xl font-bold text-[#F8F9FC]">{totalActive}</div>
-            <div className="text-[10px] text-[#717182]">Em execução agora</div>
+            <div className="text-[10px] text-[#98989F]">Em execução agora</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 space-y-1">
-            <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+            <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
               <span>Em Rascunho</span>
               <Clock className="w-3.5 h-3.5 text-amber-400" />
             </div>
             <div className="text-2xl font-bold text-amber-400">{totalDraft}</div>
-            <div className="text-[10px] text-[#717182]">Aguardando finalização</div>
+            <div className="text-[10px] text-[#98989F]">Aguardando finalização</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 space-y-1">
-            <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+            <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
               <span>Ideias no Banco</span>
-              <Lightbulb className="w-3.5 h-3.5 text-[#7952FF]" />
+              <Lightbulb className="w-3.5 h-3.5 text-[#C74410]" />
             </div>
-            <div className="text-2xl font-bold text-[#7952FF]">{totalIdeas}</div>
-            <div className="text-[10px] text-[#717182]">Conteúdos planejados</div>
+            <div className="text-2xl font-bold text-[#C74410]">{totalIdeas}</div>
+            <div className="text-[10px] text-[#98989F]">Conteúdos planejados</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 space-y-1">
-            <div className="flex items-center justify-between text-xs text-[#A1A1B0]">
+            <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
               <span>Pautas Criadas</span>
               <CalendarDays className="w-3.5 h-3.5 text-[#3B82F6]" />
             </div>
             <div className="text-2xl font-bold text-[#3B82F6]">{totalEditorial}</div>
-            <div className="text-[10px] text-[#717182]">Itens no calendário editorial</div>
+            <div className="text-[10px] text-[#98989F]">Itens no calendário editorial</div>
           </CardContent>
         </Card>
       </div>
@@ -137,7 +137,7 @@ export const StrategyPage: React.FC = () => {
       <Card>
         <CardContent className="p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-[#717182] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-[#98989F] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <div className="pl-9">
               <Input
                 placeholder="Buscar estratégia por nome..."
@@ -152,8 +152,8 @@ export const StrategyPage: React.FC = () => {
               onClick={() => setStatusFilter('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
                 statusFilter === 'all'
-                  ? 'bg-[#7952FF] text-white'
-                  : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC]'
+                  ? 'bg-[#C74410] text-white'
+                  : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC]'
               }`}
             >
               Todas ({strategies.length})
@@ -168,8 +168,8 @@ export const StrategyPage: React.FC = () => {
                   onClick={() => setStatusFilter(stKey)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
                     statusFilter === stKey
-                      ? 'bg-[#7952FF] text-white'
-                      : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC]'
+                      ? 'bg-[#C74410] text-white'
+                      : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC]'
                   }`}
                 >
                   {cfg.label} ({count})
@@ -230,18 +230,18 @@ export const StrategyPage: React.FC = () => {
             return (
               <Card
                 key={strategy.id}
-                className="group hover:border-[#7952FF]/40 transition-all duration-200 cursor-pointer"
+                className="group hover:border-[#C74410]/40 transition-all duration-200 cursor-pointer"
                 onClick={() => navigate(`/strategy/${strategy.id}`)}
               >
                 <CardContent className="p-5 space-y-4">
                   {/* Header */}
                   <div className="flex items-start justify-between">
                     <div className="space-y-1 flex-1 min-w-0">
-                      <h3 className="text-sm font-bold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors truncate">
+                      <h3 className="text-sm font-bold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors truncate">
                         {strategy.name}
                       </h3>
                       {strategy.description && (
-                        <p className="text-[11px] text-[#717182] line-clamp-2">
+                        <p className="text-[11px] text-[#98989F] line-clamp-2">
                           {strategy.description}
                         </p>
                       )}
@@ -255,10 +255,10 @@ export const StrategyPage: React.FC = () => {
                   </div>
 
                   {/* Client & Period */}
-                  <div className="flex items-center gap-3 text-[10px] text-[#717182]">
+                  <div className="flex items-center gap-3 text-[10px] text-[#98989F]">
                     {strategy.client && (
                       <span className="flex items-center gap-1">
-                        <Target className="w-3 h-3 text-[#7952FF]" />
+                        <Target className="w-3 h-3 text-[#C74410]" />
                         {strategy.client.name}
                       </span>
                     )}
@@ -278,7 +278,7 @@ export const StrategyPage: React.FC = () => {
                       {strategy.channels.map((ch) => (
                         <span
                           key={ch}
-                          className="px-2 py-0.5 rounded-md bg-[#1C1C24] text-[10px] text-[#A1A1B0] font-medium capitalize"
+                          className="px-2 py-0.5 rounded-md bg-[#1C1C24] text-[10px] text-[#B8B8C0] font-medium capitalize"
                         >
                           {ch}
                         </span>
@@ -289,7 +289,7 @@ export const StrategyPage: React.FC = () => {
                   {/* Pillars Preview */}
                   {pillars.length > 0 && (
                     <div className="space-y-2">
-                      <div className="text-[10px] text-[#717182] font-medium uppercase tracking-wider">
+                      <div className="text-[10px] text-[#98989F] font-medium uppercase tracking-wider">
                         Pilares Editoriais ({pillars.length})
                       </div>
                       <div className="flex gap-1 h-2 rounded-full overflow-hidden bg-[#1C1C24]">
@@ -309,7 +309,7 @@ export const StrategyPage: React.FC = () => {
                         {pillars.map((p) => (
                           <span
                             key={p.id}
-                            className="flex items-center gap-1 text-[10px] text-[#A1A1B0]"
+                            className="flex items-center gap-1 text-[10px] text-[#B8B8C0]"
                           >
                             <span
                               className="w-2 h-2 rounded-full shrink-0"
@@ -324,9 +324,9 @@ export const StrategyPage: React.FC = () => {
 
                   {/* Footer Stats */}
                   <div className="flex items-center justify-between pt-2 border-t border-[#30303B]/50">
-                    <div className="flex items-center gap-4 text-[10px] text-[#717182]">
+                    <div className="flex items-center gap-4 text-[10px] text-[#98989F]">
                       <span className="flex items-center gap-1">
-                        <Lightbulb className="w-3 h-3 text-[#7952FF]" />
+                        <Lightbulb className="w-3 h-3 text-[#C74410]" />
                         {strategy.ideas_count ?? 0} ideias
                       </span>
                       <span className="flex items-center gap-1">
@@ -338,7 +338,7 @@ export const StrategyPage: React.FC = () => {
                         {strategy.published_count ?? 0} publicadas
                       </span>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-[#717182] group-hover:text-[#7952FF] transition-colors" />
+                    <ChevronRight className="w-4 h-4 text-[#98989F] group-hover:text-[#C74410] transition-colors" />
                   </div>
                 </CardContent>
               </Card>

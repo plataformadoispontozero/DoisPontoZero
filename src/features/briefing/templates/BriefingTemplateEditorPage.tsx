@@ -342,7 +342,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase text-[#7952FF]">Form Builder</span>
+              <span className="text-xs font-semibold uppercase text-[#C74410]">Form Builder</span>
               {hasUnsavedChanges && (
                 <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-medium">
                   Alterações não salvas
@@ -373,7 +373,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
       <Card>
         <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
-            <label className="text-xs font-medium text-[#A1A1B0] block mb-1">Nome do Modelo</label>
+            <label className="text-xs font-medium text-[#B8B8C0] block mb-1">Nome do Modelo</label>
             <Input
               value={name}
               onChange={(e) => {
@@ -385,14 +385,14 @@ export const BriefingTemplateEditorPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[#A1A1B0] block mb-1">Categoria de Demanda</label>
+            <label className="text-xs font-medium text-[#B8B8C0] block mb-1">Categoria de Demanda</label>
             <select
               value={category}
               onChange={(e) => {
                 setCategory(e.target.value as BriefingCategory)
                 markDirty()
               }}
-              className="w-full bg-[#1C1C24] border border-[#30303B] rounded-lg px-3 py-2 text-sm text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+              className="w-full bg-[#1C1C24] border border-[#30303B] rounded-lg px-3 py-2 text-sm text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
             >
               {(Object.keys(BRIEFING_CATEGORY_CONFIG) as BriefingCategory[]).map((catKey) => (
                 <option key={catKey} value={catKey}>
@@ -403,7 +403,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[#A1A1B0] block mb-1">Descrição</label>
+            <label className="text-xs font-medium text-[#B8B8C0] block mb-1">Descrição</label>
             <Input
               value={description}
               onChange={(e) => {
@@ -422,11 +422,11 @@ export const BriefingTemplateEditorPage: React.FC = () => {
         <div className="lg:col-span-3 space-y-3">
           <Card>
             <CardContent className="p-4 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#A1A1B0]">
-                <Plus className="w-3.5 h-3.5 text-[#7952FF]" />
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B8B8C0]">
+                <Plus className="w-3.5 h-3.5 text-[#C74410]" />
                 <span>Tipos de Perguntas</span>
               </div>
-              <p className="text-[11px] text-[#717182]">
+              <p className="text-[11px] text-[#98989F]">
                 Clique para adicionar à seção ativa do formulário.
               </p>
 
@@ -442,14 +442,14 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                         const targetSecId = sections[activeSectionIndex]?.id || sections[0]?.id
                         if (targetSecId) addQuestion(targetSecId, typeKey)
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#1C1C24] hover:bg-[#252530] border border-[#30303B]/60 hover:border-[#7952FF]/50 text-left transition-all group"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#1C1C24] hover:bg-[#252530] border border-[#30303B]/60 hover:border-[#C74410]/50 text-left transition-all group"
                     >
-                      <div className="w-6 h-6 rounded bg-[#252530] group-hover:bg-[#7952FF]/20 flex items-center justify-center text-[#A1A1B0] group-hover:text-[#7952FF] transition-colors">
+                      <div className="w-6 h-6 rounded bg-[#252530] group-hover:bg-[#C74410]/20 flex items-center justify-center text-[#B8B8C0] group-hover:text-[#C74410] transition-colors">
                         <Icon className="w-3.5 h-3.5" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-[#F8F9FC]">{cfg.label}</div>
-                        <div className="text-[10px] text-[#717182] truncate">{cfg.description}</div>
+                        <div className="text-[10px] text-[#98989F] truncate">{cfg.description}</div>
                       </div>
                     </button>
                   )
@@ -473,7 +473,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
               {/* Section Header */}
               <div className="p-3 bg-[#1C1C24] border-b border-[#30303B] flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 flex-1">
-                  <div className="w-2 h-2 rounded-full bg-[#7952FF]" />
+                  <div className="w-2 h-2 rounded-full bg-[#C74410]" />
                   <input
                     value={section.title}
                     onChange={(e) => {
@@ -482,7 +482,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                       setSections(updated)
                       markDirty()
                     }}
-                    className="bg-transparent text-sm font-bold text-[#F8F9FC] focus:outline-none focus:border-b focus:border-[#7952FF] flex-1"
+                    className="bg-transparent text-sm font-bold text-[#F8F9FC] focus:outline-none focus:border-b focus:border-[#C74410] flex-1"
                     placeholder="Título da Seção..."
                   />
                 </div>
@@ -491,7 +491,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                   <button
                     onClick={() => moveSection(sIdx, 'up')}
                     disabled={sIdx === 0}
-                    className="p-1 text-[#717182] hover:text-[#F8F9FC] disabled:opacity-30"
+                    className="p-1 text-[#98989F] hover:text-[#F8F9FC] disabled:opacity-30"
                     title="Mover Seção para Cima"
                   >
                     <ChevronUp className="w-3.5 h-3.5" />
@@ -499,14 +499,14 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                   <button
                     onClick={() => moveSection(sIdx, 'down')}
                     disabled={sIdx === sections.length - 1}
-                    className="p-1 text-[#717182] hover:text-[#F8F9FC] disabled:opacity-30"
+                    className="p-1 text-[#98989F] hover:text-[#F8F9FC] disabled:opacity-30"
                     title="Mover Seção para Baixo"
                   >
                     <ChevronDown className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => deleteSection(section.id)}
-                    className="p-1 text-[#717182] hover:text-red-400"
+                    className="p-1 text-[#98989F] hover:text-red-400"
                     title="Excluir Seção"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -518,11 +518,11 @@ export const BriefingTemplateEditorPage: React.FC = () => {
               <CardContent className="p-3 space-y-2.5">
                 {section.questions.length === 0 ? (
                   <div className="p-6 text-center border border-dashed border-[#30303B] rounded-lg">
-                    <p className="text-xs text-[#717182]">Esta seção ainda não possui perguntas.</p>
+                    <p className="text-xs text-[#98989F]">Esta seção ainda não possui perguntas.</p>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="mt-2 text-[#7952FF]"
+                      className="mt-2 text-[#C74410]"
                       onClick={() => addQuestion(section.id, 'short_text')}
                     >
                       <Plus className="w-3 h-3 mr-1" />
@@ -540,13 +540,13 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                         onClick={() => setSelectedQuestionId(q.id)}
                         className={`p-3 rounded-lg border transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-[#252530] border-[#7952FF] shadow-sm shadow-[#7952FF]/10'
-                            : 'bg-[#1C1C24]/80 border-[#30303B]/60 hover:border-[#7952FF]/40'
+                            ? 'bg-[#252530] border-[#C74410] shadow-sm shadow-[#C74410]/10'
+                            : 'bg-[#1C1C24]/80 border-[#30303B]/60 hover:border-[#C74410]/40'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                            <div className="w-5 h-5 rounded bg-[#111116] flex items-center justify-center text-[#7952FF] shrink-0 mt-0.5">
+                            <div className="w-5 h-5 rounded bg-[#111116] flex items-center justify-center text-[#C74410] shrink-0 mt-0.5">
                               <Icon className="w-3 h-3" />
                             </div>
                             <div className="flex-1 min-w-0">
@@ -559,7 +559,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                                 )}
                               </div>
                               {q.description && (
-                                <p className="text-[11px] text-[#717182] truncate mt-0.5">
+                                <p className="text-[11px] text-[#98989F] truncate mt-0.5">
                                   {q.description}
                                 </p>
                               )}
@@ -570,7 +570,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                             <button
                               onClick={() => moveQuestion(sIdx, qIdx, 'up')}
                               disabled={qIdx === 0}
-                              className="p-1 text-[#717182] hover:text-[#F8F9FC] disabled:opacity-30"
+                              className="p-1 text-[#98989F] hover:text-[#F8F9FC] disabled:opacity-30"
                               title="Subir"
                             >
                               <ChevronUp className="w-3 h-3" />
@@ -578,21 +578,21 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                             <button
                               onClick={() => moveQuestion(sIdx, qIdx, 'down')}
                               disabled={qIdx === section.questions.length - 1}
-                              className="p-1 text-[#717182] hover:text-[#F8F9FC] disabled:opacity-30"
+                              className="p-1 text-[#98989F] hover:text-[#F8F9FC] disabled:opacity-30"
                               title="Descer"
                             >
                               <ChevronDown className="w-3 h-3" />
                             </button>
                             <button
                               onClick={() => duplicateQuestion(sIdx, qIdx)}
-                              className="p-1 text-[#717182] hover:text-[#F8F9FC]"
+                              className="p-1 text-[#98989F] hover:text-[#F8F9FC]"
                               title="Duplicar"
                             >
                               <Copy className="w-3 h-3" />
                             </button>
                             <button
                               onClick={() => deleteQuestion(sIdx, qIdx)}
-                              className="p-1 text-[#717182] hover:text-red-400"
+                              className="p-1 text-[#98989F] hover:text-red-400"
                               title="Excluir"
                             >
                               <Trash2 className="w-3 h-3" />
@@ -607,7 +607,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full text-xs text-[#A1A1B0] hover:text-[#F8F9FC] border border-dashed border-[#30303B]"
+                  className="w-full text-xs text-[#B8B8C0] hover:text-[#F8F9FC] border border-dashed border-[#30303B]"
                   onClick={() => addQuestion(section.id, 'short_text')}
                 >
                   <Plus className="w-3 h-3 mr-1" />
@@ -622,19 +622,19 @@ export const BriefingTemplateEditorPage: React.FC = () => {
         <div className="lg:col-span-4 space-y-3">
           <Card>
             <CardContent className="p-4 space-y-3.5">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#A1A1B0] pb-2 border-b border-[#30303B]">
-                <Settings2 className="w-3.5 h-3.5 text-[#7952FF]" />
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#B8B8C0] pb-2 border-b border-[#30303B]">
+                <Settings2 className="w-3.5 h-3.5 text-[#C74410]" />
                 <span>Propriedades do Campo</span>
               </div>
 
               {!activeQuestion ? (
-                <div className="p-8 text-center text-xs text-[#717182]">
+                <div className="p-8 text-center text-xs text-[#98989F]">
                   Selecione uma pergunta no centro para editar seus detalhes.
                 </div>
               ) : (
                 <div className="space-y-3">
                   <div>
-                    <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                    <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                       Enunciado / Rótulo da Pergunta
                     </label>
                     <Input
@@ -645,7 +645,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                    <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                       Identificador Semântico (Key)
                     </label>
                     <Input
@@ -653,13 +653,13 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                       onChange={(e) => updateActiveQuestion({ question_key: e.target.value })}
                       placeholder="Ex: target_audience"
                     />
-                    <span className="text-[10px] text-[#717182] mt-0.5 block">
+                    <span className="text-[10px] text-[#98989F] mt-0.5 block">
                       Usado na extração para Strategy e Proposal Studios.
                     </span>
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                    <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                       Descrição / Instruções
                     </label>
                     <Textarea
@@ -671,7 +671,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                    <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                       Tipo de Pergunta
                     </label>
                     <select
@@ -679,7 +679,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                       onChange={(e) =>
                         updateActiveQuestion({ question_type: e.target.value as QuestionType })
                       }
-                      className="w-full bg-[#1C1C24] border border-[#30303B] rounded-lg px-3 py-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                      className="w-full bg-[#1C1C24] border border-[#30303B] rounded-lg px-3 py-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                     >
                       {(Object.keys(QUESTION_TYPE_CONFIG) as QuestionType[]).map((tKey) => (
                         <option key={tKey} value={tKey}>
@@ -690,7 +690,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                    <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                       Placeholder
                     </label>
                     <Input
@@ -704,7 +704,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                   <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#1C1C24] border border-[#30303B]">
                     <div>
                       <div className="text-xs font-semibold text-[#F8F9FC]">Campo Obrigatório</div>
-                      <div className="text-[10px] text-[#717182]">
+                      <div className="text-[10px] text-[#98989F]">
                         Cliente deve preencher antes de enviar
                       </div>
                     </div>
@@ -712,7 +712,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                       type="checkbox"
                       checked={activeQuestion.is_required}
                       onChange={(e) => updateActiveQuestion({ is_required: e.target.checked })}
-                      className="w-4 h-4 accent-[#7952FF]"
+                      className="w-4 h-4 accent-[#C74410]"
                     />
                   </div>
 
@@ -727,7 +727,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 text-[10px] text-[#7952FF]"
+                          className="h-6 text-[10px] text-[#C74410]"
                           onClick={() => {
                             const newOpt: QuestionOption = {
                               id: String(Date.now()),
@@ -768,7 +768,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                                 )
                                 updateActiveQuestion({ options: updatedOpts })
                               }}
-                              className="p-1.5 text-[#717182] hover:text-red-400"
+                              className="p-1.5 text-[#98989F] hover:text-red-400"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -795,17 +795,17 @@ export const BriefingTemplateEditorPage: React.FC = () => {
 
         <DialogBody className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
           <div className="text-center pb-4 border-b border-[#30303B]">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#7952FF]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#C74410]">
               {BRIEFING_CATEGORY_CONFIG[category].label}
             </span>
             <h2 className="text-xl font-bold text-[#F8F9FC] mt-1">{name}</h2>
-            {description && <p className="text-xs text-[#A1A1B0] mt-1">{description}</p>}
+            {description && <p className="text-xs text-[#B8B8C0] mt-1">{description}</p>}
           </div>
 
           {sections.map((sec, sIdx) => (
             <div key={sec.id} className="space-y-3">
               <div className="flex items-center gap-2 pb-1 border-b border-[#30303B]">
-                <span className="text-xs font-bold text-[#7952FF]">0{sIdx + 1}.</span>
+                <span className="text-xs font-bold text-[#C74410]">0{sIdx + 1}.</span>
                 <h3 className="text-sm font-bold text-[#F8F9FC]">{sec.title}</h3>
               </div>
 
@@ -815,18 +815,18 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                     <label className="text-xs font-medium text-[#F8F9FC] block">
                       {q.label} {q.is_required && <span className="text-red-400">*</span>}
                     </label>
-                    {q.description && <p className="text-[11px] text-[#717182]">{q.description}</p>}
+                    {q.description && <p className="text-[11px] text-[#98989F]">{q.description}</p>}
 
                     {q.question_type === 'long_text' ? (
                       <Textarea placeholder={q.placeholder || 'Sua resposta...'} rows={2} readOnly />
                     ) : q.question_type === 'single_choice' || q.question_type === 'multiple_choice' ? (
                       <div className="space-y-1.5 pt-1">
                         {q.options.map((opt) => (
-                          <div key={opt.id} className="flex items-center gap-2 text-xs text-[#A1A1B0]">
+                          <div key={opt.id} className="flex items-center gap-2 text-xs text-[#B8B8C0]">
                             <input
                               type={q.question_type === 'single_choice' ? 'radio' : 'checkbox'}
                               disabled
-                              className="accent-[#7952FF]"
+                              className="accent-[#C74410]"
                             />
                             <span>{opt.label}</span>
                           </div>

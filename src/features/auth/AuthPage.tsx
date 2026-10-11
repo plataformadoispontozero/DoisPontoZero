@@ -1,4 +1,5 @@
-import { startGoogleOAuth } from './googleOAuth'
+import { OfficialBrandLogo } from '@/components/shared/OfficialBrandLogo'
+import { ArrowLeft, ArrowUpRight, LockKeyhole } from 'lucide-react'
 import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
@@ -17,16 +18,10 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
   const [busy, setBusy] = useState(false)
   const params = new URLSearchParams(location.search)
   const returnPath = safeReturnPath(location.state?.from ?? params.get('next'))
-  const [error, setError] = useState(() => params.has('error') || new URLSearchParams(location.hash.slice(1)).has('error') ? 'O acesso com Google foi cancelado ou não pôde ser concluído. Tente novamente.' : '')
+  const [error, setError] = useState(() => params.has('error') || new URLSearchParams(location.hash.slice(1)).has('error') ? 'O acesso foi cancelado ou não pôde ser concluído. Tente novamente.' : '')
   const [message, setMessage] = useState('')
   if (mode === 'login' && (auth.user || auth.isDemo)) return <Navigate to={returnPath} replace />
   const title = mode === 'forgot' ? 'Recuperar senha' : mode === 'reset' ? 'Definir nova senha' : 'Entrar na sua agência'
-  async function signInGoogle() {
-    if (busy) return
-    setBusy(true); setError(''); setMessage('')
-    try { await startGoogleOAuth(window.location.origin, returnPath) }
-    catch (cause) { setError(cause instanceof Error ? cause.message : 'Não foi possível entrar com Google.'); setBusy(false) }
-  }
   async function submit(event: React.FormEvent) {
     event.preventDefault(); setError(''); setMessage('')
     if (!supabase) { setError('Configure o Supabase para acessar o modo agência.'); return }
@@ -50,5 +45,32 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
     } catch { setError(mode === 'login' ? 'Não foi possível entrar. Confira e-mail e senha ou tente novamente.' : 'Não foi possível concluir. Confira o link de recuperação e tente novamente.') }
     finally { setBusy(false) }
   }
-  return <main className="min-h-screen bg-[#101014] text-[#F8F9FC] flex items-center justify-center p-4"><section className="w-full max-w-md rounded-xl border border-[#30303B] bg-[#1C1C24] p-6 space-y-5"><Link to="/" className="font-bold">Dois.Zero</Link><h1 className="text-2xl font-semibold">{title}</h1>{!isSupabaseConfigured && <p role="alert">Supabase não configurado. O acesso administrativo permanece protegido.</p>}<form onSubmit={submit} className="space-y-4">{mode !== 'reset' && <div><label htmlFor="auth-email">E-mail</label><Input id="auth-email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} /></div>}{mode !== 'forgot' && <div><label htmlFor="auth-password">Senha</label><Input id="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required minLength={mode === 'reset' ? 8 : undefined} value={password} onChange={e => setPassword(e.target.value)} /></div>}{mode === 'reset' && <div><label htmlFor="auth-confirm">Confirmar senha</label><Input id="auth-confirm" type="password" autoComplete="new-password" required value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>}{error && <p role="alert" className="text-[#FB7185]">{error}</p>}{message && <p role="status">{message}</p>}<Button type="submit" variant="primary" loading={busy} disabled={busy || !supabase || (mode === 'reset' && !auth.session)}>{mode === 'login' ? 'Entrar' : mode === 'forgot' ? 'Enviar instruções' : 'Atualizar senha'}</Button></form>{mode === 'login' && <div className="space-y-3 border-t border-[#30303B] pt-4"><Button type="button" size="lg" className="w-full" disabled={busy || !supabase} onClick={() => void signInGoogle()}>Continuar com Google</Button><p className="text-xs text-[#A1A1B0]">Entre ou crie sua conta com Google. O acesso à agência depende de um convite ou vínculo ativo.</p></div>}{mode === 'login' ? <Link to="/forgot-password" className="block text-[#B8FF65]">Esqueci minha senha</Link> : <Link to="/login" className="block text-[#B8FF65]">Voltar ao login</Link>}</section></main>
+  return <main className="dz-auth-page">
+    <div className="dz-auth-layout">
+      <aside className="dz-auth-intro">
+        <Link to="/" aria-label="Dois.Zero — início"><OfficialBrandLogo src="/agency/official-logo.webp" name="Dois.Zero" /></Link>
+        <p className="dz-auth-eyebrow">WORKSPACE DA EQUIPE</p>
+        <h2>Boas ideias.<br /><span>Uma equipe conectada.</span></h2>
+        <p>Projetos, conteúdo e entregas em um só lugar. Seu espaço para transformar estratégia em trabalho que acontece.</p>
+        <Link to="/" className="dz-auth-back"><ArrowLeft size={17} /> Voltar ao site da agência</Link>
+      </aside>
+      <section className="dz-auth-card" aria-labelledby="auth-title">
+        <div className="dz-auth-lock"><LockKeyhole size={24} /></div>
+        <p className="dz-auth-eyebrow">ACESSO RESTRITO À EQUIPE</p>
+        <h1 id="auth-title">{title}</h1>
+        <p className="dz-auth-description">{mode === 'login' ? 'Entre com o e-mail e a senha da sua conta de equipe. Precisa de acesso? Fale com o administrador da agência.' : mode === 'forgot' ? 'Informe o e-mail da sua conta para receber as instruções de recuperação.' : 'Escolha uma nova senha para voltar ao seu workspace.'}</p>
+        {!isSupabaseConfigured && <p role="alert">Supabase não configurado. O acesso administrativo permanece protegido.</p>}
+        <form onSubmit={submit} className="space-y-5">
+          {mode !== 'reset' && <div><label htmlFor="auth-email">E-mail</label><Input id="auth-email" type="email" autoComplete="email" placeholder="voce@agencia.com" required value={email} onChange={e => setEmail(e.target.value)} /></div>}
+          {mode !== 'forgot' && <div><label htmlFor="auth-password">Senha</label><Input id="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required minLength={mode === 'reset' ? 8 : undefined} value={password} onChange={e => setPassword(e.target.value)} /></div>}
+          {mode === 'reset' && <div><label htmlFor="auth-confirm">Confirmar senha</label><Input id="auth-confirm" type="password" autoComplete="new-password" required value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>}
+          {error && <p role="alert" className="text-[#FB7185]">{error}</p>}
+          {message && <p role="status">{message}</p>}
+          <Button className="w-full" size="lg" type="submit" variant="primary" loading={busy} disabled={busy || !supabase || (mode === 'reset' && !auth.session)}>{mode === 'login' ? 'Entrar' : mode === 'forgot' ? 'Enviar instruções' : 'Atualizar senha'}<ArrowUpRight size={18} /></Button>
+        </form>
+        {mode === 'login' ? <Link to="/forgot-password" className="dz-auth-recovery">Esqueci minha senha</Link> : <Link to="/login" className="dz-auth-recovery">Voltar ao login</Link>}
+        <p className="dz-auth-client-note">É cliente? Briefings e aprovações são acessados pelos links enviados pela agência, sem precisar entrar no workspace.</p>
+      </section>
+    </div>
+  </main>
 }

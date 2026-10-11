@@ -177,14 +177,14 @@ export const ClientsPage: React.FC = () => {
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[11px] font-semibold uppercase text-[#717182] block tracking-wider">
+              <span className="text-[11px] font-semibold uppercase text-[#98989F] block tracking-wider">
                 Total de Clientes
               </span>
               <span className="text-xl font-bold text-[#F8F9FC] mt-0.5 block">
                 {clients.length}
               </span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#7952FF]/10 text-[#7952FF] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#C74410]/10 text-[#C74410] flex items-center justify-center">
               <Building2 className="w-5 h-5" />
             </div>
           </CardContent>
@@ -193,7 +193,7 @@ export const ClientsPage: React.FC = () => {
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[11px] font-semibold uppercase text-[#717182] block tracking-wider">
+              <span className="text-[11px] font-semibold uppercase text-[#98989F] block tracking-wider">
                 Contas Ativas
               </span>
               <span className="text-xl font-bold text-emerald-400 mt-0.5 block">
@@ -209,14 +209,14 @@ export const ClientsPage: React.FC = () => {
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[11px] font-semibold uppercase text-[#717182] block tracking-wider">
+              <span className="text-[11px] font-semibold uppercase text-[#98989F] block tracking-wider">
                 Inativos / Pausados
               </span>
-              <span className="text-xl font-bold text-[#A1A1B0] mt-0.5 block">
+              <span className="text-xl font-bold text-[#B8B8C0] mt-0.5 block">
                 {inactiveCount}
               </span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-[#252530] text-[#A1A1B0] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#252530] text-[#B8B8C0] flex items-center justify-center">
               <Clock className="w-5 h-5" />
             </div>
           </CardContent>
@@ -226,7 +226,7 @@ export const ClientsPage: React.FC = () => {
       {/* Search & Filter Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-sm">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#717182]" />
+          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#98989F]" />
           <Input
             placeholder="Buscar por nome ou slug..."
             value={search}
@@ -242,8 +242,8 @@ export const ClientsPage: React.FC = () => {
               onClick={() => setSelectedStatus(st)}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
                 selectedStatus === st
-                  ? 'bg-[#7952FF] text-white shadow-sm'
-                  : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC] border border-[#30303B]'
+                  ? 'bg-[#C74410] text-white shadow-sm'
+                  : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC] border border-[#30303B]'
               }`}
             >
               {st === 'all' ? 'Todos' : st === 'active' ? 'Ativos' : 'Inativos'}
@@ -280,19 +280,19 @@ export const ClientsPage: React.FC = () => {
             return (
               <Card
                 key={client.id}
-                className="bg-[#1C1C24] border-[#30303B] hover:border-[#7952FF]/40 transition-colors flex flex-col justify-between group"
+                className="bg-[#1C1C24] border-[#30303B] hover:border-[#C74410]/40 transition-colors flex flex-col justify-between group"
               >
                 <CardContent className="p-5 space-y-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7952FF]/20 to-[#B8FF65]/20 border border-[#7952FF]/30 flex items-center justify-center font-bold text-xs text-[#F8F9FC]">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C74410]/20 to-[#FF8759]/20 border border-[#C74410]/30 flex items-center justify-center font-bold text-xs text-[#F8F9FC]">
                         {initials}
                       </div>
                       <div>
-                        <h4 className="text-sm font-semibold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors">
+                        <h4 className="text-sm font-semibold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors">
                           {client.name}
                         </h4>
-                        <span className="text-[11px] text-[#717182] font-mono">
+                        <span className="text-[11px] text-[#98989F] font-mono">
                           @{client.slug}
                         </span>
                       </div>
@@ -306,7 +306,7 @@ export const ClientsPage: React.FC = () => {
                     </Badge>
                   </div>
 
-                  <div className="pt-2 border-t border-[#30303B]/60 flex items-center justify-between text-xs text-[#A1A1B0]">
+                  <div className="pt-2 border-t border-[#30303B]/60 flex items-center justify-between text-xs text-[#B8B8C0]">
                     <span>Cadastrado em:</span>
                     <span className="font-medium text-[#F8F9FC]">
                       {new Date(client.created_at).toLocaleDateString('pt-BR')}
@@ -318,14 +318,14 @@ export const ClientsPage: React.FC = () => {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleOpenEdit(client)}
-                      className="p-1.5 rounded-lg text-[#717182] hover:text-[#F8F9FC] hover:bg-[#30303B]/60 transition-colors"
+                      className="p-1.5 rounded-lg text-[#98989F] hover:text-[#F8F9FC] hover:bg-[#30303B]/60 transition-colors"
                       title="Editar dados do cliente"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDelete(client.id)}
-                      className="p-1.5 rounded-lg text-[#717182] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      className="p-1.5 rounded-lg text-[#98989F] hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       title="Arquivar cliente"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -336,7 +336,7 @@ export const ClientsPage: React.FC = () => {
                     variant="secondary"
                     size="sm"
                     onClick={() => navigate(`/clients/${client.id}`)}
-                    className="text-xs h-7 gap-1 px-2.5 text-[#7952FF] hover:bg-[#7952FF]/10"
+                    className="text-xs h-7 gap-1 px-2.5 text-[#C74410] hover:bg-[#C74410]/10"
                   >
                     <span>Client Hub</span>
                     <ArrowRight className="w-3 h-3" />
@@ -359,7 +359,7 @@ export const ClientsPage: React.FC = () => {
 
           <div className="space-y-4 py-2 text-xs">
             <div className="space-y-1.5">
-              <label htmlFor="client-name" className="font-medium text-[#A1A1B0]">Nome da Marca / Razão Social *</label>
+              <label htmlFor="client-name" className="font-medium text-[#B8B8C0]">Nome da Marca / Razão Social *</label>
               <Input
                 id="client-name" placeholder="Ex: Studio Vertex Design"
                 value={name}
@@ -380,7 +380,7 @@ export const ClientsPage: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="client-slug" className="font-medium text-[#A1A1B0]">Identificador Único (Slug)</label>
+              <label htmlFor="client-slug" className="font-medium text-[#B8B8C0]">Identificador Único (Slug)</label>
               <Input
                 id="client-slug" placeholder="studio-vertex"
                 value={slug}
@@ -389,7 +389,7 @@ export const ClientsPage: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="client-logo" className="font-medium text-[#A1A1B0]">URL do Logotipo (Opcional)</label>
+              <label htmlFor="client-logo" className="font-medium text-[#B8B8C0]">URL do Logotipo (Opcional)</label>
               <Input
                 id="client-logo" placeholder="https://exemplo.com/logo.png"
                 value={logoUrl}
@@ -398,9 +398,9 @@ export const ClientsPage: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="client-status" className="font-medium text-[#A1A1B0]">Status Operacional</label>
+              <label htmlFor="client-status" className="font-medium text-[#B8B8C0]">Status Operacional</label>
               <select id="client-status"
-                className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as 'active' | 'inactive')}
               >
@@ -438,14 +438,14 @@ export const ClientsPage: React.FC = () => {
         >
           <SheetHeader onClose={() => setSelectedClientHub(null)}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7952FF]/20 to-[#B8FF65]/20 border border-[#7952FF]/30 flex items-center justify-center font-bold text-sm text-[#F8F9FC]">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C74410]/20 to-[#FF8759]/20 border border-[#C74410]/30 flex items-center justify-center font-bold text-sm text-[#F8F9FC]">
                 {selectedClientHub.name.slice(0, 2).toUpperCase()}
               </div>
               <div>
                 <SheetTitle className="text-base font-bold text-[#F8F9FC]">
                   {selectedClientHub.name}
                 </SheetTitle>
-                <p className="text-xs text-[#A1A1B0]">Client Hub & Central da Marca</p>
+                <p className="text-xs text-[#B8B8C0]">Client Hub & Central da Marca</p>
               </div>
             </div>
           </SheetHeader>
@@ -455,13 +455,13 @@ export const ClientsPage: React.FC = () => {
                 <TabsList className="bg-[#1C1C24] border border-[#30303B] p-1 rounded-xl flex gap-1 w-full">
                   <TabsTrigger
                     value="briefings"
-                    className="flex-1 text-xs py-1.5 data-[state=active]:bg-[#7952FF] data-[state=active]:text-white"
+                    className="flex-1 text-xs py-1.5 data-[state=active]:bg-[#C74410] data-[state=active]:text-white"
                   >
                     Briefings
                   </TabsTrigger>
                   <TabsTrigger
                     value="overview"
-                    className="flex-1 text-xs py-1.5 data-[state=active]:bg-[#7952FF] data-[state=active]:text-white"
+                    className="flex-1 text-xs py-1.5 data-[state=active]:bg-[#C74410] data-[state=active]:text-white"
                   >
                     Dados da Conta
                   </TabsTrigger>
@@ -478,11 +478,11 @@ export const ClientsPage: React.FC = () => {
                   <Card className="bg-[#1C1C24] border-[#30303B]">
                     <CardContent className="p-4 space-y-3">
                       <div>
-                        <span className="text-[#717182] font-semibold block">Identificador Slug:</span>
+                        <span className="text-[#98989F] font-semibold block">Identificador Slug:</span>
                         <span className="text-[#F8F9FC] font-mono">{selectedClientHub.slug}</span>
                       </div>
                       <div>
-                        <span className="text-[#717182] font-semibold block">Status da Parceria:</span>
+                        <span className="text-[#98989F] font-semibold block">Status da Parceria:</span>
                         <Badge
                           variant={selectedClientHub.status === 'active' ? 'success' : 'neutral'}
                           className="mt-1"
@@ -491,8 +491,8 @@ export const ClientsPage: React.FC = () => {
                         </Badge>
                       </div>
                       <div>
-                        <span className="text-[#717182] font-semibold block">Cadastrado em:</span>
-                        <span className="text-[#A1A1B0]">
+                        <span className="text-[#98989F] font-semibold block">Cadastrado em:</span>
+                        <span className="text-[#B8B8C0]">
                           {new Date(selectedClientHub.created_at).toLocaleDateString('pt-BR')}
                         </span>
                       </div>

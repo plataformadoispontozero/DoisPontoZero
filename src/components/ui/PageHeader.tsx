@@ -27,7 +27,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     >
       {/* Breadcrumbs opcionais */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-[#717182]">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-[#98989F]">
           {breadcrumbs.map((crumb, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && <span className="text-[#30303B]">/</span>}
@@ -39,7 +39,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                   {crumb.label}
                 </a>
               ) : (
-                <span className="text-[#A1A1B0] font-medium">{crumb.label}</span>
+                <span className="text-[#B8B8C0] font-medium">{crumb.label}</span>
               )}
             </React.Fragment>
           ))}
@@ -56,7 +56,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             {badge && <div>{badge}</div>}
           </div>
           {subtitle && (
-            <p className="text-sm text-[#A1A1B0] mt-1 max-w-2xl leading-relaxed">
+            <p className="text-sm text-[#B8B8C0] mt-1 max-w-2xl leading-relaxed">
               {subtitle}
             </p>
           )}

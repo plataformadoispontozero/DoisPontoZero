@@ -109,7 +109,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#1C1C24] border border-[#30303B]">
         <div>
           <h3 className="text-sm font-semibold text-[#F8F9FC]">Diagnóstico & Diretrizes Estratégicas</h3>
-          <p className="text-xs text-[#A1A1B0] mt-0.5">
+          <p className="text-xs text-[#B8B8C0] mt-0.5">
             Orientações de posicionamento, linguagem, público e canais que norteiam toda a criação de conteúdo.
           </p>
         </div>
@@ -122,7 +122,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
               onClick={onOpenBriefingSync}
               className="gap-1.5 text-xs border-[#30303B]"
             >
-              <FileText className="w-3.5 h-3.5 text-[#7952FF]" />
+              <FileText className="w-3.5 h-3.5 text-[#C74410]" />
               <span>Sincronizar Briefing</span>
             </Button>
           )}
@@ -140,10 +140,10 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-[#F8F9FC] flex items-center gap-1.5">
-                <Layers className="w-4 h-4 text-[#7952FF]" />
+                <Layers className="w-4 h-4 text-[#C74410]" />
                 Composição dos Pilares Editoriais ({pillars.length})
               </span>
-              <span className="text-[#A1A1B0]">
+              <span className="text-[#B8B8C0]">
                 {pillars.reduce((acc, p) => acc + (p.percentage || 0), 0)}% alocado
               </span>
             </div>
@@ -167,7 +167,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                 <div key={p.id} className="flex items-center gap-1.5 text-xs">
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
                   <span className="text-[#F8F9FC] font-medium">{p.name}</span>
-                  <span className="text-[#717182]">({p.percentage}%)</span>
+                  <span className="text-[#98989F]">({p.percentage}%)</span>
                 </div>
               ))}
             </div>
@@ -180,7 +180,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
         {/* Objective */}
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-4 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#7952FF]">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#C74410]">
               <Target className="w-4 h-4" />
               <span>OBJETIVO PRINCIPAL</span>
             </div>
@@ -235,8 +235,8 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
         {/* Active Channels */}
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-4 space-y-2.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#A1A1B0]">
-              <Globe className="w-4 h-4 text-[#7952FF]" />
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#B8B8C0]">
+              <Globe className="w-4 h-4 text-[#C74410]" />
               <span>CANAIS ATIVOS DE VEICULAÇÃO</span>
             </div>
             {strategy.channels && strategy.channels.length > 0 ? (
@@ -250,7 +250,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                     >
                       <span
                         className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: cfg?.color || '#7952FF' }}
+                        style={{ backgroundColor: cfg?.color || '#C74410' }}
                       />
                       <span>{cfg?.label || ch}</span>
                     </span>
@@ -258,7 +258,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                 })}
               </div>
             ) : (
-              <p className="text-xs text-[#717182]">Nenhum canal ativo selecionado.</p>
+              <p className="text-xs text-[#98989F]">Nenhum canal ativo selecionado.</p>
             )}
           </CardContent>
         </Card>
@@ -266,13 +266,13 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
         {/* Strategic Period */}
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-4 space-y-2.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#A1A1B0]">
-              <Calendar className="w-4 h-4 text-[#7952FF]" />
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#B8B8C0]">
+              <Calendar className="w-4 h-4 text-[#C74410]" />
               <span>CICLO DE VIGÊNCIA E PLANEJAMENTO</span>
             </div>
             <div className="text-xs text-[#F8F9FC] space-y-1">
               <div>
-                <span className="text-[#717182]">Data de Início:</span>{' '}
+                <span className="text-[#98989F]">Data de Início:</span>{' '}
                 <span className="font-medium">
                   {strategy.period_start
                     ? new Date(strategy.period_start + 'T00:00:00').toLocaleDateString('pt-BR')
@@ -280,7 +280,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                 </span>
               </div>
               <div>
-                <span className="text-[#717182]">Data de Término:</span>{' '}
+                <span className="text-[#98989F]">Data de Término:</span>{' '}
                 <span className="font-medium">
                   {strategy.period_end
                     ? new Date(strategy.period_end + 'T00:00:00').toLocaleDateString('pt-BR')
@@ -297,7 +297,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
         {/* Key Messages */}
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-4 space-y-2.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#7952FF]">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#C74410]">
               <Zap className="w-4 h-4" />
               <span>MENSAGENS-CHAVE</span>
             </div>
@@ -306,15 +306,15 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                 {strategy.key_messages.map((m, i) => (
                   <div
                     key={i}
-                    className="text-xs text-[#A1A1B0] bg-[#13131A] px-2.5 py-1.5 rounded border border-[#30303B]/60 flex items-start gap-1.5"
+                    className="text-xs text-[#B8B8C0] bg-[#13131A] px-2.5 py-1.5 rounded border border-[#30303B]/60 flex items-start gap-1.5"
                   >
-                    <span className="text-[#7952FF] font-bold">•</span>
+                    <span className="text-[#C74410] font-bold">•</span>
                     <span>{m}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-[#717182]">Nenhuma mensagem-chave registrada.</p>
+              <p className="text-xs text-[#98989F]">Nenhuma mensagem-chave registrada.</p>
             )}
           </CardContent>
         </Card>
@@ -322,7 +322,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
         {/* Competitors */}
         <Card className="bg-[#1C1C24] border-[#30303B]">
           <CardContent className="p-4 space-y-2.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#A1A1B0]">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#B8B8C0]">
               <Target className="w-4 h-4 text-amber-400" />
               <span>CONCORRENTES MAPEADOS</span>
             </div>
@@ -331,14 +331,14 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                 {strategy.competitors.map((c, i) => (
                   <span
                     key={i}
-                    className="px-2 py-0.5 rounded bg-[#13131A] text-xs text-[#A1A1B0] border border-[#30303B]"
+                    className="px-2 py-0.5 rounded bg-[#13131A] text-xs text-[#B8B8C0] border border-[#30303B]"
                   >
                     {c}
                   </span>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-[#717182]">Nenhum concorrente cadastrado.</p>
+              <p className="text-xs text-[#98989F]">Nenhum concorrente cadastrado.</p>
             )}
           </CardContent>
         </Card>
@@ -362,7 +362,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-[#717182]">Nenhuma restrição registrada.</p>
+              <p className="text-xs text-[#98989F]">Nenhuma restrição registrada.</p>
             )}
           </CardContent>
         </Card>
@@ -379,7 +379,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
 
           <div className="space-y-4 py-2 text-xs">
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Objetivo Estratégico</label>
+              <label className="font-medium text-[#B8B8C0]">Objetivo Estratégico</label>
               <Textarea
                 value={objective}
                 onChange={(e) => setObjective(e.target.value)}
@@ -388,7 +388,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Público-Alvo & ICP</label>
+              <label className="font-medium text-[#B8B8C0]">Público-Alvo & ICP</label>
               <Textarea
                 value={targetAudience}
                 onChange={(e) => setTargetAudience(e.target.value)}
@@ -397,7 +397,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Tom de Voz</label>
+              <label className="font-medium text-[#B8B8C0]">Tom de Voz</label>
               <Textarea
                 value={toneOfVoice}
                 onChange={(e) => setToneOfVoice(e.target.value)}
@@ -406,7 +406,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Posicionamento de Marca</label>
+              <label className="font-medium text-[#B8B8C0]">Posicionamento de Marca</label>
               <Textarea
                 value={brandPositioning}
                 onChange={(e) => setBrandPositioning(e.target.value)}
@@ -416,7 +416,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Data Início</label>
+                <label className="font-medium text-[#B8B8C0]">Data Início</label>
                 <Input
                   type="date"
                   value={periodStart}
@@ -424,7 +424,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Data Fim</label>
+                <label className="font-medium text-[#B8B8C0]">Data Fim</label>
                 <Input
                   type="date"
                   value={periodEnd}
@@ -435,7 +435,7 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
 
             {/* Channels */}
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Canais Ativos</label>
+              <label className="font-medium text-[#B8B8C0]">Canais Ativos</label>
               <div className="flex flex-wrap gap-1.5">
                 {Object.entries(SOCIAL_CHANNEL_CONFIG).map(([k, cfg]) => {
                   const sel = channels.includes(k)
@@ -446,8 +446,8 @@ export const StrategyOverviewTab: React.FC<StrategyOverviewTabProps> = ({
                       onClick={() => toggleChannel(k)}
                       className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors border ${
                         sel
-                          ? 'bg-[#7952FF]/20 text-[#7952FF] border-[#7952FF]/40'
-                          : 'bg-[#13131A] text-[#A1A1B0] border-[#30303B]'
+                          ? 'bg-[#C74410]/20 text-[#C74410] border-[#C74410]/40'
+                          : 'bg-[#13131A] text-[#B8B8C0] border-[#30303B]'
                       }`}
                     >
                       {cfg.label}

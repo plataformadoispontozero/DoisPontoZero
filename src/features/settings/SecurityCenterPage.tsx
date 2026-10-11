@@ -32,10 +32,10 @@ export const SecurityCenterPage: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div>
         <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-          <ShieldAlert className="w-5 h-5 text-[#7952FF]" />
+          <ShieldAlert className="w-5 h-5 text-[#C74410]" />
           Centro de Segurança & Sessão
         </h3>
-        <p className="text-xs text-[#A1A1B0]">
+        <p className="text-xs text-[#B8B8C0]">
           Monitore o estado de autenticação, encerre sessões ativas e consulte logs de auditoria.
         </p>
       </div>
@@ -52,14 +52,14 @@ export const SecurityCenterPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-[#A1A1B0]">Estado da Autenticação:</span>
+                <span className="text-[#B8B8C0]">Estado da Autenticação:</span>
                 <Badge variant={isSupabaseConfigured ? 'default' : 'neutral'}>
                   {isSupabaseConfigured ? 'Supabase Auth Efetivo' : 'Sessão Local / Modo Demo'}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-[#A1A1B0]">Token de Sessão:</span>
+                <span className="text-[#B8B8C0]">Token de Sessão:</span>
                 <span className="font-mono text-[#F8F9FC] text-[11px]">
                   {isSupabaseConfigured ? 'JWT Validado (SHA-256)' : 'Local Session Mock'}
                 </span>
@@ -93,17 +93,17 @@ export const SecurityCenterPage: React.FC = () => {
               <ShieldCheck className="w-5 h-5 text-[#34D399] shrink-0" />
               <div>
                 <span className="font-bold text-[#F8F9FC] block">Row Level Security (RLS)</span>
-                <span className="text-[11px] text-[#A1A1B0]">
+                <span className="text-[11px] text-[#B8B8C0]">
                   Políticas ativas em todas as 25+ tabelas PostgreSQL para garantia multi-tenant.
                 </span>
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-[#101014] border border-[#30303B] flex items-center gap-3">
-              <Key className="w-5 h-5 text-[#7952FF] shrink-0" />
+              <Key className="w-5 h-5 text-[#C74410] shrink-0" />
               <div>
                 <span className="font-bold text-[#F8F9FC] block">Convites Hashing SHA-256</span>
-                <span className="text-[11px] text-[#A1A1B0]">
+                <span className="text-[11px] text-[#B8B8C0]">
                   Tokens de convite de colaboradores expiráveis sem credenciais expostas.
                 </span>
               </div>

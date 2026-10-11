@@ -186,7 +186,7 @@ export const SPECIALTY_OPTIONS = [
 ]
 
 export const AVATAR_COLORS = [
-  '#7952FF', '#EC4899', '#3B82F6', '#10B981',
+  '#C74410', '#EC4899', '#3B82F6', '#10B981',
   '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4',
   '#84CC16', '#F97316',
 ]

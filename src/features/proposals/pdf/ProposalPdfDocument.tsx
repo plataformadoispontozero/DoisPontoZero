@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginTop: 16,
     borderLeftWidth: 4,
-    borderLeftColor: '#7952FF',
+    borderLeftColor: '#C74410',
   },
   summaryRow: {
     flexDirection: 'row',
@@ -184,7 +184,7 @@ export const ProposalPdfDocument: React.FC<Props> = ({ model }) => {
 
             <View style={styles.summaryTotal}>
               <Text style={{ color: '#0F172A' }}>Investimento Total do Projeto:</Text>
-              <Text style={{ color: '#7952FF' }}>
+              <Text style={{ color: '#C74410' }}>
                 {formatCurrencyCents(model.pricing.total_cents, model.pricing.currency)}
               </Text>
             </View>

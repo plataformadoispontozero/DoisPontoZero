@@ -68,14 +68,14 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({
       {/* Calendar Header Controls */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-[#1C1C24] p-4 rounded-2xl border border-[#30303B]">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-[#7952FF]/10 text-[#7952FF] rounded-xl">
+          <div className="p-2 bg-[#C74410]/10 text-[#C74410] rounded-xl">
             <CalendarIcon className="w-5 h-5" />
           </div>
           <div>
             <h3 className="font-heading text-base font-bold text-[#F8F9FC] capitalize">
               {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
             </h3>
-            <p className="text-xs text-[#717182]">Visualização de prazos e entregas criativas</p>
+            <p className="text-xs text-[#98989F]">Visualização de prazos e entregas criativas</p>
           </div>
         </div>
 
@@ -86,7 +86,7 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({
           <div className="flex items-center border border-[#30303B] rounded-lg overflow-hidden">
             <button
               onClick={prevMonth}
-              className="p-1.5 hover:bg-[#252530] text-[#A1A1B0] hover:text-[#F8F9FC] transition-colors"
+              className="p-1.5 hover:bg-[#252530] text-[#B8B8C0] hover:text-[#F8F9FC] transition-colors"
               aria-label="Mês anterior"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -94,7 +94,7 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({
             <div className="w-[1px] h-4 bg-[#30303B]" />
             <button
               onClick={nextMonth}
-              className="p-1.5 hover:bg-[#252530] text-[#A1A1B0] hover:text-[#F8F9FC] transition-colors"
+              className="p-1.5 hover:bg-[#252530] text-[#B8B8C0] hover:text-[#F8F9FC] transition-colors"
               aria-label="Próximo mês"
             >
               <ChevronRight className="w-4 h-4" />
@@ -115,7 +115,7 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({
           {WEEKDAYS.map((day) => (
             <div
               key={day}
-              className="py-2.5 text-center text-xs font-semibold text-[#717182] uppercase tracking-wider"
+              className="py-2.5 text-center text-xs font-semibold text-[#98989F] uppercase tracking-wider"
             >
               {day}
             </div>
@@ -142,16 +142,16 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({
                   <span
                     className={`inline-flex items-center justify-center text-xs font-semibold rounded-full w-6 h-6 ${
                       isCurrentDay
-                        ? 'bg-[#7952FF] text-white shadow-lg shadow-[#7952FF]/30'
+                        ? 'bg-[#C74410] text-white shadow-lg shadow-[#C74410]/30'
                         : isCurrentMonth
                         ? 'text-[#F8F9FC]'
-                        : 'text-[#717182]'
+                        : 'text-[#98989F]'
                     }`}
                   >
                     {format(day, 'd')}
                   </span>
                   {dayTasks.length > 0 && (
-                    <span className="text-[10px] text-[#717182] font-mono">
+                    <span className="text-[10px] text-[#98989F] font-mono">
                       {dayTasks.length} {dayTasks.length === 1 ? 'item' : 'itens'}
                     </span>
                   )}
@@ -172,9 +172,9 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({
                       >
                         <span
                           className="w-1.5 h-1.5 rounded-full shrink-0"
-                          style={{ backgroundColor: col?.color || '#7952FF' }}
+                          style={{ backgroundColor: col?.color || '#C74410' }}
                         />
-                        <span className="truncate group-hover:text-[#7952FF]">{t.title}</span>
+                        <span className="truncate group-hover:text-[#C74410]">{t.title}</span>
                       </div>
                     )
                   })}

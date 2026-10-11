@@ -166,7 +166,7 @@ export const BriefingExportPage: React.FC = () => {
 
   // Custom White Label options for PDF
   const [agencyName, setAgencyName] = useState(appBranding.company.legalName || 'Dois.Zero Creative Agency')
-  const [primaryColor, setPrimaryColor] = useState(appBranding.colors.primary || '#7952FF')
+  const [primaryColor, setPrimaryColor] = useState(appBranding.colors.primary || '#C74410')
   const [footerText, setFooterText] = useState('Documento confidencial gerado por Creative Agency OS.')
   const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -247,7 +247,7 @@ export const BriefingExportPage: React.FC = () => {
             <CardContent className="p-5 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-[#30303B]">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-[#7952FF]" />
+                  <FileText className="w-4 h-4 text-[#C74410]" />
                   <h3 className="text-sm font-bold text-[#F8F9FC]">Especificações do Documento</h3>
                 </div>
                 <Badge variant="outline">A4 Vertical</Badge>
@@ -255,33 +255,33 @@ export const BriefingExportPage: React.FC = () => {
 
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between py-1 border-b border-[#30303B]/60">
-                  <span className="text-[#717182]">Identificador:</span>
+                  <span className="text-[#98989F]">Identificador:</span>
                   <span className="font-mono text-[#F8F9FC] font-semibold">{model.documentId}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-[#30303B]/60">
-                  <span className="text-[#717182]">Título:</span>
+                  <span className="text-[#98989F]">Título:</span>
                   <span className="text-[#F8F9FC] font-medium text-right max-w-[200px] truncate">
                     {model.title}
                   </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-[#30303B]/60">
-                  <span className="text-[#717182]">Cliente / Conta:</span>
+                  <span className="text-[#98989F]">Cliente / Conta:</span>
                   <span className="font-bold text-[#F8F9FC]">{model.clientName}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-[#30303B]/60">
-                  <span className="text-[#717182]">Categoria:</span>
-                  <span className="text-[#7952FF] font-semibold">{model.categoryLabel}</span>
+                  <span className="text-[#98989F]">Categoria:</span>
+                  <span className="text-[#C74410] font-semibold">{model.categoryLabel}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-[#30303B]/60">
-                  <span className="text-[#717182]">Total de Perguntas:</span>
+                  <span className="text-[#98989F]">Total de Perguntas:</span>
                   <span className="text-[#F8F9FC]">
                     {model.metadata.answeredQuestions} de {model.metadata.totalQuestions} respondidas (
                     {model.metadata.completionRate}%)
                   </span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-[#717182]">Margens A4:</span>
-                  <span className="text-[#A1A1B0]">Sup. 25mm • Inf. 20mm • Lat. 20mm</span>
+                  <span className="text-[#98989F]">Margens A4:</span>
+                  <span className="text-[#B8B8C0]">Sup. 25mm • Inf. 20mm • Lat. 20mm</span>
                 </div>
               </div>
             </CardContent>
@@ -291,13 +291,13 @@ export const BriefingExportPage: React.FC = () => {
           <Card>
             <CardContent className="p-5 space-y-4">
               <div className="flex items-center gap-2 pb-3 border-b border-[#30303B]">
-                <Settings2 className="w-4 h-4 text-[#7952FF]" />
+                <Settings2 className="w-4 h-4 text-[#C74410]" />
                 <h3 className="text-sm font-bold text-[#F8F9FC]">Personalização White Label</h3>
               </div>
 
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                  <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                     Nome da Agência no Cabeçalho e Rodapé
                   </label>
                   <Input
@@ -308,7 +308,7 @@ export const BriefingExportPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                  <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                     Cor Principal de Destaque
                   </label>
                   <div className="flex items-center gap-2">
@@ -327,7 +327,7 @@ export const BriefingExportPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                  <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                     Texto de Rodapé (Disclaimer)
                   </label>
                   <Input
@@ -337,9 +337,9 @@ export const BriefingExportPage: React.FC = () => {
                   />
                 </div>
 
-                <div className="p-3 bg-[#1C1C24] rounded-lg border border-[#30303B] text-[11px] text-[#A1A1B0] space-y-1">
+                <div className="p-3 bg-[#1C1C24] rounded-lg border border-[#30303B] text-[11px] text-[#B8B8C0] space-y-1">
                   <div className="font-semibold text-[#F8F9FC] flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-[#7952FF]" /> Marca-d'água Editorial
+                    <Sparkles className="w-3.5 h-3.5 text-[#C74410]" /> Marca-d'água Editorial
                   </div>
                   <p>
                     O símbolo da agência é aplicado centralizado com opacidade sutil (5%) em todas
@@ -391,12 +391,12 @@ export const BriefingExportPage: React.FC = () => {
                 />
               ) : (
                 <div className="p-12 text-center max-w-sm space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-[#1C1C24] border border-[#30303B] flex items-center justify-center text-[#7952FF] mx-auto shadow-xl">
+                  <div className="w-16 h-16 rounded-2xl bg-[#1C1C24] border border-[#30303B] flex items-center justify-center text-[#C74410] mx-auto shadow-xl">
                     <Sparkles className="w-8 h-8" />
                   </div>
                   <div>
                     <h4 className="text-base font-bold text-[#F8F9FC]">Pronto para Renderizar</h4>
-                    <p className="text-xs text-[#A1A1B0] mt-1 leading-relaxed">
+                    <p className="text-xs text-[#B8B8C0] mt-1 leading-relaxed">
                       Clique em <strong>Visualizar Prévia</strong> para renderizar o PDF real
                       diretamente no navegador ou em <strong>Baixar PDF Oficial</strong> para
                       fazer o download do arquivo A4 formatado.

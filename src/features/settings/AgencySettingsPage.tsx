@@ -57,10 +57,10 @@ export const AgencySettingsPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-[#7952FF]" />
+            <Building2 className="w-5 h-5 text-[#C74410]" />
             Dados da Agência & Operação
           </h3>
-          <p className="text-xs text-[#A1A1B0]">
+          <p className="text-xs text-[#B8B8C0]">
             Gerencie os dados cadastrais, informações institucionais e parâmetros operacionais.
           </p>
         </div>
@@ -81,7 +81,7 @@ export const AgencySettingsPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Nome Comercial da Agência <span className="text-red-400">*</span>
               </label>
               <Input
@@ -93,7 +93,7 @@ export const AgencySettingsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Razão Social <span className="text-red-400">*</span>
               </label>
               <Input
@@ -105,7 +105,7 @@ export const AgencySettingsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Slogan Institucional
               </label>
               <Input
@@ -117,7 +117,7 @@ export const AgencySettingsPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                   E-mail Oficial
                 </label>
                 <Input
@@ -128,7 +128,7 @@ export const AgencySettingsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                   Telefone / WhatsApp
                 </label>
                 <Input
@@ -139,7 +139,7 @@ export const AgencySettingsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Website da Agência
               </label>
               <Input
@@ -162,8 +162,8 @@ export const AgencySettingsPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                  <Globe className="w-3.5 h-3.5 text-[#7952FF]" />
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                  <Globe className="w-3.5 h-3.5 text-[#C74410]" />
                   Idioma do Sistema
                 </label>
                 <Select
@@ -178,8 +178,8 @@ export const AgencySettingsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-[#7952FF]" />
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-[#C74410]" />
                   Fuso Horário (Timezone)
                 </label>
                 <Select
@@ -197,8 +197,8 @@ export const AgencySettingsPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                  <DollarSign className="w-3.5 h-3.5 text-[#B8FF65]" />
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                  <DollarSign className="w-3.5 h-3.5 text-[#FF8759]" />
                   Moeda Padrão
                 </label>
                 <Select
@@ -213,7 +213,7 @@ export const AgencySettingsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                   Formato de Data
                 </label>
                 <Select
@@ -229,7 +229,7 @@ export const AgencySettingsPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Horário de Funcionamento
               </label>
               <Input
@@ -239,7 +239,7 @@ export const AgencySettingsPage: React.FC = () => {
               />
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs space-y-1 text-[#A1A1B0]">
+            <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs space-y-1 text-[#B8B8C0]">
               <div className="flex items-center gap-2 font-semibold text-[#F8F9FC]">
                 <CheckCircle2 className="w-4 h-4 text-[#34D399]" />
                 Isolamento Multiagência Ativo

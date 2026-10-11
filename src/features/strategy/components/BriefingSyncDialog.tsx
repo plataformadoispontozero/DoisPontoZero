@@ -109,14 +109,14 @@ export const BriefingSyncDialog: React.FC<BriefingSyncDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-xl bg-[#1C1C24] border-[#30303B] text-[#F8F9FC] max-h-[85vh] flex flex-col">
         <DialogHeader>
-          <div className="flex items-center gap-2 text-[#7952FF] mb-1">
+          <div className="flex items-center gap-2 text-[#C74410] mb-1">
             <Sparkles className="w-5 h-5" />
             <span className="text-xs font-semibold tracking-wider uppercase">Briefing Intelligence</span>
           </div>
           <DialogTitle className="text-base font-semibold text-[#F8F9FC]">
             Sincronizar Dados do Briefing
           </DialogTitle>
-          <p className="text-xs text-[#A1A1B0] mt-0.5">
+          <p className="text-xs text-[#B8B8C0] mt-0.5">
             Mapeia deterministicamente respostas de briefings aprovados diretamente para os campos da estratégia.
           </p>
         </DialogHeader>
@@ -124,9 +124,9 @@ export const BriefingSyncDialog: React.FC<BriefingSyncDialogProps> = ({
         <div className="space-y-4 py-2 flex-1 overflow-y-auto pr-1 text-xs">
           {/* Select Briefing */}
           <div className="space-y-1.5">
-            <label className="font-medium text-[#A1A1B0]">Selecione o Briefing de Origem</label>
+            <label className="font-medium text-[#B8B8C0]">Selecione o Briefing de Origem</label>
             <select
-              className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-3 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+              className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-3 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
               value={selectedBriefingId}
               onChange={(e) => handleSelectBriefing(e.target.value)}
             >
@@ -148,13 +148,13 @@ export const BriefingSyncDialog: React.FC<BriefingSyncDialogProps> = ({
                   <h4 className="font-semibold text-[#F8F9FC] text-xs">
                     Cobertura de Dados Estratégicos
                   </h4>
-                  <p className="text-[11px] text-[#A1A1B0]">
+                  <p className="text-[11px] text-[#B8B8C0]">
                     {coverage.mappedFields.length} campos estratégicos mapeados
                   </p>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-sm font-bold text-[#7952FF]">
+                  <span className="text-sm font-bold text-[#C74410]">
                     {coverage.score}%
                   </span>
                 </div>
@@ -168,38 +168,38 @@ export const BriefingSyncDialog: React.FC<BriefingSyncDialogProps> = ({
 
                 {extractedData.objective && (
                   <div className="text-xs">
-                    <span className="text-[#717182] font-semibold block">Objetivo:</span>
-                    <span className="text-[#A1A1B0]">{extractedData.objective}</span>
+                    <span className="text-[#98989F] font-semibold block">Objetivo:</span>
+                    <span className="text-[#B8B8C0]">{extractedData.objective}</span>
                   </div>
                 )}
 
                 {extractedData.target_audience && (
                   <div className="text-xs">
-                    <span className="text-[#717182] font-semibold block">Público-Alvo:</span>
-                    <span className="text-[#A1A1B0]">{extractedData.target_audience}</span>
+                    <span className="text-[#98989F] font-semibold block">Público-Alvo:</span>
+                    <span className="text-[#B8B8C0]">{extractedData.target_audience}</span>
                   </div>
                 )}
 
                 {extractedData.tone_of_voice && (
                   <div className="text-xs">
-                    <span className="text-[#717182] font-semibold block">Tom de Voz:</span>
-                    <span className="text-[#A1A1B0]">{extractedData.tone_of_voice}</span>
+                    <span className="text-[#98989F] font-semibold block">Tom de Voz:</span>
+                    <span className="text-[#B8B8C0]">{extractedData.tone_of_voice}</span>
                   </div>
                 )}
 
                 {extractedData.brand_positioning && (
                   <div className="text-xs">
-                    <span className="text-[#717182] font-semibold block">Posicionamento:</span>
-                    <span className="text-[#A1A1B0]">{extractedData.brand_positioning}</span>
+                    <span className="text-[#98989F] font-semibold block">Posicionamento:</span>
+                    <span className="text-[#B8B8C0]">{extractedData.brand_positioning}</span>
                   </div>
                 )}
 
                 {extractedData.channels && extractedData.channels.length > 0 && (
                   <div className="text-xs">
-                    <span className="text-[#717182] font-semibold block">Canais Identificados:</span>
+                    <span className="text-[#98989F] font-semibold block">Canais Identificados:</span>
                     <div className="flex flex-wrap gap-1 mt-0.5">
                       {extractedData.channels.map((c: string) => (
-                        <span key={c} className="px-1.5 py-0.2 rounded bg-[#1C1C24] text-[#A1A1B0] text-[10px]">
+                        <span key={c} className="px-1.5 py-0.2 rounded bg-[#1C1C24] text-[#B8B8C0] text-[10px]">
                           {c}
                         </span>
                       ))}
@@ -211,7 +211,7 @@ export const BriefingSyncDialog: React.FC<BriefingSyncDialogProps> = ({
           )}
 
           {!selectedBriefing && (
-            <div className="py-6 text-center text-xs text-[#717182]">
+            <div className="py-6 text-center text-xs text-[#98989F]">
               Selecione um briefing acima para visualizar o mapeamento automático de respostas.
             </div>
           )}

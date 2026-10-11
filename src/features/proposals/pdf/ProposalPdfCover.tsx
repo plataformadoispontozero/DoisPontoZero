@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     fontSize: 10,
-    color: '#7952FF',
+    color: '#C74410',
     textTransform: 'uppercase',
     fontWeight: 'bold',
     letterSpacing: 1.2,
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
     borderLeftWidth: 4,
-    borderLeftColor: '#7952FF',
+    borderLeftColor: '#C74410',
   },
   metaRow: {
     flexDirection: 'row',
@@ -89,7 +89,7 @@ export const ProposalPdfCover: React.FC<Props> = ({ model }) => {
         {model.branding.logoUrl ? (
           <Image src={model.branding.logoUrl} style={styles.logo} />
         ) : (
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#7952FF', marginBottom: 24 }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#C74410', marginBottom: 24 }}>
             {model.branding.agencyName}
           </Text>
         )}

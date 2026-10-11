@@ -10,12 +10,12 @@ describe('White Label Branding Configuration - Phase 01', () => {
 
   it('should match the design system color specifications', () => {
     expect(defaultBranding.colors.background).toBe('#101014')
-    expect(defaultBranding.colors.primary).toBe('#7952FF')
+    expect(defaultBranding.colors.primary).toBe('#C74410')
     expect(defaultBranding.colors.surface).toBe('#1C1C24')
     expect(defaultBranding.colors.surfaceElevated).toBe('#252530')
     expect(defaultBranding.colors.textPrimary).toBe('#F8F9FC')
-    expect(defaultBranding.colors.textSecondary).toBe('#A1A1B0')
-    expect(defaultBranding.colors.accent).toBe('#B8FF65')
+    expect(defaultBranding.colors.textSecondary).toBe('#B8B8C0')
+    expect(defaultBranding.colors.accent).toBe('#FF8759')
     expect(defaultBranding.colors.border).toBe('#30303B')
     expect(defaultBranding.colors.success).toBe('#34D399')
     expect(defaultBranding.colors.warning).toBe('#FBBF24')

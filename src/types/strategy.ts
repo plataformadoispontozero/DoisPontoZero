@@ -348,14 +348,14 @@ export const SOCIAL_CHANNEL_CONFIG: Record<
   youtube: { label: 'YouTube', color: '#FF0000', iconName: 'Youtube' },
   twitter: { label: 'X / Twitter', color: '#1DA1F2', iconName: 'Twitter' },
   facebook: { label: 'Facebook', color: '#1877F2', iconName: 'Facebook' },
-  blog: { label: 'Blog', color: '#7952FF', iconName: 'Globe' },
+  blog: { label: 'Blog', color: '#C74410', iconName: 'Globe' },
   pinterest: { label: 'Pinterest', color: '#BD081C', iconName: 'Pin' },
   spotify: { label: 'Spotify', color: '#1DB954', iconName: 'Music' },
   newsletter: { label: 'Newsletter', color: '#14B8A6', iconName: 'Mail' },
 }
 
 export const DEFAULT_PILLAR_COLORS = [
-  '#7952FF',
+  '#C74410',
   '#10B981',
   '#F59E0B',
   '#EC4899',

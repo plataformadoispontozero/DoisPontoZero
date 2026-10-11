@@ -1,3 +1,4 @@
+import { OfficialBrandLogo } from './OfficialBrandLogo'
 import React from 'react'
 import { useBranding } from '@/hooks/useBranding'
 import { cn } from '@/lib/utils'
@@ -26,9 +27,9 @@ export const BrandSymbol: React.FC<{ size?: number; className?: string }> = ({
       <rect width="36" height="36" rx="9" fill="#1C1C24" />
       <rect x="0.5" y="0.5" width="35" height="35" rx="8.5" stroke="#282834" />
       {/* Círculo 1 com gradiente Primary */}
-      <circle cx="13" cy="18" r="6" stroke="#7952FF" strokeWidth="2.5" />
+      <circle cx="13" cy="18" r="6" stroke="#C74410" strokeWidth="2.5" />
       {/* Círculo 2 com Accent */}
-      <circle cx="23" cy="18" r="6" stroke="#B8FF65" strokeWidth="2.5" />
+      <circle cx="23" cy="18" r="6" stroke="#FF8759" strokeWidth="2.5" />
       {/* Ponto de convergência central */}
       <circle cx="18" cy="18" r="2" fill="#F8F9FC" />
     </svg>
@@ -49,6 +50,9 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
     lg: 40,
   }
 
+  if (!collapsed && branding.name.toLowerCase().replace(/[^a-z]/g, '') === 'doiszero') {
+    return <div className={cn('select-none', className)}><OfficialBrandLogo src="/agency/official-logo.webp" name={branding.name} />{showSlogan && <p className="text-xs text-[#B8B8C0] mt-2">{branding.slogan}</p>}</div>
+  }
   return (
     <div className={cn('flex items-center gap-2.5 select-none', className)}>
       <BrandSymbol size={symbolSizes[size]} />
@@ -58,7 +62,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             <span className="font-heading font-bold text-base tracking-tight text-[#F8F9FC] truncate">
               {branding.name}
             </span>
-            <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#7952FF]/20 text-[#B89EFF] border border-[#7952FF]/30">
+            <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#C74410]/20 text-[#FFAC8A] border border-[#C74410]/30">
               OS
             </span>
           </div>

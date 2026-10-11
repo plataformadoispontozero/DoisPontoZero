@@ -112,7 +112,7 @@ export const DropdownItem: React.FC<{
         'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-left transition-colors duration-150',
         danger
           ? 'text-[#FB7185] hover:bg-rose-500/15'
-          : 'text-[#A1A1B0] hover:text-[#F8F9FC] hover:bg-[#252530]',
+          : 'text-[#B8B8C0] hover:text-[#F8F9FC] hover:bg-[#252530]',
         disabled && 'opacity-50 cursor-not-allowed',
         className
       )}

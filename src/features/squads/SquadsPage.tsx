@@ -79,7 +79,7 @@ const Field: React.FC<{ label: string; children: React.ReactNode; className?: st
   className,
 }) => (
   <div className={cn('space-y-1.5', className)}>
-    <label className="block text-xs font-medium text-[#A1A1B0]">{label}</label>
+    <label className="block text-xs font-medium text-[#B8B8C0]">{label}</label>
     {children}
   </div>
 )
@@ -90,7 +90,7 @@ const NativeSelect: React.FC<
 > = ({ children, className, ...props }) => (
   <select
     className={cn(
-      'w-full h-9 rounded-xl bg-[#252530] border border-[#30303B] text-[#F8F9FC] text-xs px-3 outline-none focus:ring-1 focus:ring-[#7952FF] focus:border-[#7952FF] transition-all',
+      'w-full h-9 rounded-xl bg-[#252530] border border-[#30303B] text-[#F8F9FC] text-xs px-3 outline-none focus:ring-1 focus:ring-[#C74410] focus:border-[#C74410] transition-all',
       className
     )}
     {...props}
@@ -186,7 +186,7 @@ const StatCard: React.FC<{
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] text-[#717182] truncate">{label}</p>
+        <p className="text-[10px] text-[#98989F] truncate">{label}</p>
         <p className="text-lg font-black text-[#F8F9FC] tabular-nums leading-none mt-0.5">
           {value}
         </p>
@@ -248,7 +248,7 @@ const CreateSquadDialog: React.FC<{
           <div className="flex items-center gap-4 p-3 rounded-xl bg-[#111116] border border-[#30303B]">
             <SquadAvatar emoji={emoji} color={color} size="lg" />
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-[#A1A1B0] mb-2">Emoji</p>
+              <p className="text-xs text-[#B8B8C0] mb-2">Emoji</p>
               <div className="flex flex-wrap gap-1">
                 {AVATAR_EMOJIS.map((e) => (
                   <button
@@ -258,7 +258,7 @@ const CreateSquadDialog: React.FC<{
                     className={cn(
                       'w-7 h-7 flex items-center justify-center rounded-lg text-base transition-all',
                       emoji === e
-                        ? 'bg-[#7952FF]/20 ring-1 ring-[#7952FF]'
+                        ? 'bg-[#C74410]/20 ring-1 ring-[#C74410]'
                         : 'bg-[#1C1C24] hover:bg-[#252530]'
                     )}
                   >
@@ -571,7 +571,7 @@ const PerformanceDialog: React.FC<{
           </div>
 
           <div className="p-3 rounded-xl bg-[#111116] border border-[#30303B] space-y-2">
-            <p className="text-xs font-medium text-[#A1A1B0]">Tarefas do Período</p>
+            <p className="text-xs font-medium text-[#B8B8C0]">Tarefas do Período</p>
             <div className="grid grid-cols-3 gap-2">
               <Field label="Total">
                 <Input type="number" placeholder="0" value={total} onChange={(e) => setTotal(e.target.value)} />
@@ -586,7 +586,7 @@ const PerformanceDialog: React.FC<{
           </div>
 
           <div className="p-3 rounded-xl bg-[#111116] border border-[#30303B] space-y-2">
-            <p className="text-xs font-medium text-[#A1A1B0]">Scores de Avaliação (0–100)</p>
+            <p className="text-xs font-medium text-[#B8B8C0]">Scores de Avaliação (0–100)</p>
             <div className="grid grid-cols-2 gap-2">
               <Field label="Qualidade">
                 <Input type="number" step="0.1" min="0" max="100" placeholder="Ex: 85" value={quality} onChange={(e) => setQuality(e.target.value)} />
@@ -650,11 +650,11 @@ const SquadsTabContent: React.FC<{
   if (squads.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-[#7952FF]/10 flex items-center justify-center mb-4">
-          <Users2 className="w-8 h-8 text-[#7952FF]" />
+        <div className="w-16 h-16 rounded-2xl bg-[#C74410]/10 flex items-center justify-center mb-4">
+          <Users2 className="w-8 h-8 text-[#C74410]" />
         </div>
         <h3 className="text-base font-bold text-[#F8F9FC] mb-1">Nenhum squad configurado</h3>
-        <p className="text-xs text-[#A1A1B0] mb-4 max-w-xs">
+        <p className="text-xs text-[#B8B8C0] mb-4 max-w-xs">
           Agrupe especialistas em squads ágeis com metas claras e capacidade balanceada.
         </p>
         <Button variant="primary" size="sm" onClick={onCreateSquad}>
@@ -692,7 +692,7 @@ const SquadCard: React.FC<{
   const specialty = SPECIALTY_OPTIONS.find((s) => s.value === squad.specialty)
 
   return (
-    <Card className="group hover:border-[#7952FF]/40 hover:shadow-lg hover:shadow-[#7952FF]/5 transition-all duration-200">
+    <Card className="group hover:border-[#C74410]/40 hover:shadow-lg hover:shadow-[#C74410]/5 transition-all duration-200">
       <CardContent className="p-5 space-y-4">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
@@ -701,7 +701,7 @@ const SquadCard: React.FC<{
             <div className="min-w-0">
               <h3 className="text-sm font-bold text-[#F8F9FC] truncate">{squad.name}</h3>
               {specialty && (
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#A1A1B0] mt-0.5">
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#B8B8C0] mt-0.5">
                   <span>{specialty.emoji}</span><span>{specialty.label}</span>
                 </span>
               )}
@@ -711,14 +711,14 @@ const SquadCard: React.FC<{
             <button
               onClick={onPerformance}
               title="Registrar performance"
-              className="w-7 h-7 flex items-center justify-center rounded-lg text-[#A1A1B0] hover:text-[#F8F9FC] hover:bg-[#252530] transition-all"
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-[#B8B8C0] hover:text-[#F8F9FC] hover:bg-[#252530] transition-all"
             >
               <BarChart3 className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={onArchive}
               title="Arquivar squad"
-              className="w-7 h-7 flex items-center justify-center rounded-lg text-[#A1A1B0] hover:text-[#EF4444] hover:bg-[#EF4444]/10 transition-all"
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-[#B8B8C0] hover:text-[#EF4444] hover:bg-[#EF4444]/10 transition-all"
             >
               <Archive className="w-3.5 h-3.5" />
             </button>
@@ -726,7 +726,7 @@ const SquadCard: React.FC<{
         </div>
 
         {squad.description && (
-          <p className="text-xs text-[#717182] leading-relaxed line-clamp-2">{squad.description}</p>
+          <p className="text-xs text-[#98989F] leading-relaxed line-clamp-2">{squad.description}</p>
         )}
 
         {/* Member avatars */}
@@ -743,24 +743,24 @@ const SquadCard: React.FC<{
                 />
               ))}
               {members.length > 5 && (
-                <div className="w-7 h-7 rounded-full bg-[#252530] border-2 border-[#1C1C24] flex items-center justify-center text-[9px] font-bold text-[#A1A1B0]">
+                <div className="w-7 h-7 rounded-full bg-[#252530] border-2 border-[#1C1C24] flex items-center justify-center text-[9px] font-bold text-[#B8B8C0]">
                   +{members.length - 5}
                 </div>
               )}
             </div>
-            <span className="text-xs text-[#A1A1B0]">
+            <span className="text-xs text-[#B8B8C0]">
               {members.length} {members.length === 1 ? 'membro' : 'membros'}
             </span>
           </div>
           {squad.capacity > 0 && (
-            <span className="text-[10px] text-[#717182]">cap. {squad.capacity}/mês</span>
+            <span className="text-[10px] text-[#98989F]">cap. {squad.capacity}/mês</span>
           )}
         </div>
 
         {leader?.profile && (
           <div className="flex items-center gap-2 pt-1 border-t border-[#30303B]">
             <Crown className="w-3 h-3 text-[#F59E0B]" />
-            <span className="text-[10px] text-[#A1A1B0]">
+            <span className="text-[10px] text-[#B8B8C0]">
               Liderado por{' '}
               <span className="text-[#F8F9FC] font-medium">{leader.profile.full_name}</span>
             </span>
@@ -848,8 +848,8 @@ const RankingTabContent: React.FC<{ agencyId: string }> = ({ agencyId }) => {
       ) : (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <Trophy className="w-10 h-10 text-[#30303B] mb-3" />
-          <p className="text-sm text-[#717182]">Nenhum dado para este período.</p>
-          <p className="text-xs text-[#717182] mt-1">
+          <p className="text-sm text-[#98989F]">Nenhum dado para este período.</p>
+          <p className="text-xs text-[#98989F] mt-1">
             Registre performances nos squads para ver o ranking.
           </p>
         </div>
@@ -885,9 +885,9 @@ const PodiumCard: React.FC<{
         <span className={cn('text-lg font-black tabular-nums', getScoreColor(entry.overall_score))}>
           {entry.overall_score.toFixed(1)}
         </span>
-        <span className="text-[10px] text-[#717182]">pts</span>
+        <span className="text-[10px] text-[#98989F]">pts</span>
       </div>
-      <span className="text-[10px] text-[#717182]">{entry.member_count} membros</span>
+      <span className="text-[10px] text-[#98989F]">{entry.member_count} membros</span>
     </div>
   )
 }
@@ -897,8 +897,8 @@ const RankingRow: React.FC<{ entry: SquadRankingEntry }> = ({ entry }) => {
   const scoreColor = getScoreColor(entry.overall_score)
 
   return (
-    <div className="flex items-center gap-4 p-4 rounded-2xl border border-[#30303B] bg-[#1C1C24] hover:border-[#7952FF]/30 transition-all">
-      <span className="w-8 text-center text-sm font-bold text-[#717182] shrink-0">{medal}</span>
+    <div className="flex items-center gap-4 p-4 rounded-2xl border border-[#30303B] bg-[#1C1C24] hover:border-[#C74410]/30 transition-all">
+      <span className="w-8 text-center text-sm font-bold text-[#98989F] shrink-0">{medal}</span>
       <div
         className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
         style={{ backgroundColor: `${entry.squad_color}20`, border: `1px solid ${entry.squad_color}40` }}
@@ -909,12 +909,12 @@ const RankingRow: React.FC<{ entry: SquadRankingEntry }> = ({ entry }) => {
         <div className="flex items-center gap-2 mb-1">
           <span className="text-sm font-bold text-[#F8F9FC] truncate">{entry.squad_name}</span>
           {entry.specialty && (
-            <span className="text-[10px] text-[#717182]">
+            <span className="text-[10px] text-[#98989F]">
               {SPECIALTY_OPTIONS.find((s) => s.value === entry.specialty)?.label}
             </span>
           )}
         </div>
-        <div className="flex items-center gap-3 text-[10px] text-[#717182]">
+        <div className="flex items-center gap-3 text-[10px] text-[#98989F]">
           <span className="flex items-center gap-1">
             <CheckCircle2 className="w-2.5 h-2.5 text-[#10B981]" />
             {entry.tasks_completed}/{entry.tasks_total} tarefas
@@ -938,7 +938,7 @@ const RankingRow: React.FC<{ entry: SquadRankingEntry }> = ({ entry }) => {
           { label: 'Collab', value: entry.collaboration_score },
         ].map(({ label, value }) => (
           <div key={label} className="text-center w-16">
-            <p className="text-[10px] text-[#717182] mb-0.5">{label}</p>
+            <p className="text-[10px] text-[#98989F] mb-0.5">{label}</p>
             <ScoreBar value={value} />
             <p className="text-[10px] font-medium text-[#F8F9FC] mt-0.5">{value.toFixed(0)}</p>
           </div>
@@ -955,7 +955,7 @@ const RankingRow: React.FC<{ entry: SquadRankingEntry }> = ({ entry }) => {
             </span>
           </div>
         </div>
-        <span className="text-[9px] text-[#717182] mt-0.5">score</span>
+        <span className="text-[9px] text-[#98989F] mt-0.5">score</span>
       </div>
     </div>
   )
@@ -983,7 +983,7 @@ const GoalsTabContent: React.FC<{
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <Target className="w-10 h-10 text-[#30303B] mb-3" />
-        <p className="text-sm text-[#717182]">Nenhuma meta criada ainda.</p>
+        <p className="text-sm text-[#98989F]">Nenhuma meta criada ainda.</p>
         <Button variant="primary" size="sm" onClick={onCreateGoal} className="mt-4">
           <Plus className="w-3.5 h-3.5" />
           Nova Meta
@@ -1011,7 +1011,7 @@ const GoalsTabContent: React.FC<{
                   <SquadAvatar emoji={squad.avatar_emoji} color={squad.avatar_color} size="sm" />
                   <span className="text-sm font-bold text-[#F8F9FC]">{squad.name}</span>
                 </>
-                : <span className="text-sm font-bold text-[#A1A1B0]">Squad</span>
+                : <span className="text-sm font-bold text-[#B8B8C0]">Squad</span>
               }
               <Badge variant="outline">
                 {squadGoals.length} meta{squadGoals.length !== 1 ? 's' : ''}
@@ -1026,11 +1026,11 @@ const GoalsTabContent: React.FC<{
                     ? (goal.metric_label ?? 'Customizado')
                     : GOAL_METRIC_LABELS[goal.metric]
                 const barColor =
-                  progress >= 80 ? '#10B981' : progress >= 60 ? '#F59E0B' : '#7952FF'
+                  progress >= 80 ? '#10B981' : progress >= 60 ? '#F59E0B' : '#C74410'
                 return (
                   <div
                     key={goal.id}
-                    className="flex items-center gap-4 p-3.5 rounded-xl border border-[#30303B] bg-[#1C1C24] hover:border-[#7952FF]/30 transition-all"
+                    className="flex items-center gap-4 p-3.5 rounded-xl border border-[#30303B] bg-[#1C1C24] hover:border-[#C74410]/30 transition-all"
                   >
                     <div className="flex-1 min-w-0 space-y-2">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -1038,20 +1038,20 @@ const GoalsTabContent: React.FC<{
                         <span className={cn('text-[10px] font-medium px-1.5 py-0.5 rounded-full', statusCfg.color)}>
                           {statusCfg.label}
                         </span>
-                        <span className="text-[10px] text-[#717182]">{metricLabel}</span>
+                        <span className="text-[10px] text-[#98989F]">{metricLabel}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="flex-1">
                           <ScoreBar value={goal.current_value} max={goal.target_value} color={barColor} />
                         </div>
-                        <span className="text-[10px] font-medium text-[#A1A1B0] tabular-nums shrink-0">
+                        <span className="text-[10px] font-medium text-[#B8B8C0] tabular-nums shrink-0">
                           {goal.current_value}/{goal.target_value}
                         </span>
                         <span className={cn('text-[10px] font-bold tabular-nums shrink-0', progress >= 100 ? 'text-[#10B981]' : 'text-[#F8F9FC]')}>
                           {progress}%
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-[10px] text-[#717182]">
+                      <div className="flex items-center gap-2 text-[10px] text-[#98989F]">
                         <Calendar className="w-2.5 h-2.5" />
                         <span>{goal.period_start} → {goal.period_end}</span>
                         <span className="ml-1">
@@ -1085,7 +1085,7 @@ const PerformanceTabContent: React.FC<{
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <BarChart3 className="w-10 h-10 text-[#30303B] mb-3" />
-        <p className="text-sm text-[#717182]">Crie squads para visualizar o histórico.</p>
+        <p className="text-sm text-[#98989F]">Crie squads para visualizar o histórico.</p>
       </div>
     )
   }
@@ -1102,8 +1102,8 @@ const PerformanceTabContent: React.FC<{
               className={cn(
                 'flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all border',
                 selectedSquadId === s.id
-                  ? 'border-[#7952FF] bg-[#7952FF]/10 text-[#7952FF]'
-                  : 'border-[#30303B] text-[#A1A1B0] hover:border-[#7952FF]/30 hover:text-[#F8F9FC]'
+                  ? 'border-[#C74410] bg-[#C74410]/10 text-[#C74410]'
+                  : 'border-[#30303B] text-[#B8B8C0] hover:border-[#C74410]/30 hover:text-[#F8F9FC]'
               )}
             >
               <span>{s.avatar_emoji}</span>
@@ -1127,7 +1127,7 @@ const PerformanceTabContent: React.FC<{
       ) : snapshots.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <Activity className="w-8 h-8 text-[#30303B] mb-3" />
-          <p className="text-sm text-[#717182]">Nenhum dado registrado para este squad.</p>
+          <p className="text-sm text-[#98989F]">Nenhum dado registrado para este squad.</p>
           {selectedSquad && (
             <Button variant="ghost" size="sm" onClick={() => onRecord(selectedSquad)} className="mt-3">
               <Plus className="w-3 h-3" />
@@ -1148,14 +1148,14 @@ const PerformanceTabContent: React.FC<{
               <div key={snap.id} className="flex items-center gap-4 p-4 rounded-xl border border-[#30303B] bg-[#1C1C24]">
                 <div className="w-28 shrink-0">
                   <p className="text-xs font-bold text-[#F8F9FC]">{MONTH_NAMES[snap.period_month - 1]}</p>
-                  <p className="text-[10px] text-[#717182]">{snap.period_year}</p>
+                  <p className="text-[10px] text-[#98989F]">{snap.period_year}</p>
                 </div>
                 <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3">
                   <div>
-                    <p className="text-[10px] text-[#717182] mb-1">Tarefas</p>
+                    <p className="text-[10px] text-[#98989F] mb-1">Tarefas</p>
                     <p className="text-sm font-bold text-[#F8F9FC]">
                       {snap.tasks_completed}
-                      <span className="text-[10px] text-[#717182] font-normal">/{snap.tasks_total}</span>
+                      <span className="text-[10px] text-[#98989F] font-normal">/{snap.tasks_total}</span>
                     </p>
                   </div>
                   {[
@@ -1164,7 +1164,7 @@ const PerformanceTabContent: React.FC<{
                     { label: 'Colaboração', value: snap.collaboration_score },
                   ].map(({ label, value, suffix }) => (
                     <div key={label}>
-                      <p className="text-[10px] text-[#717182] mb-0.5">{label}</p>
+                      <p className="text-[10px] text-[#98989F] mb-0.5">{label}</p>
                       <p className={cn('text-sm font-bold tabular-nums', getScoreColor(value ?? 0))}>
                         {value != null ? `${value.toFixed(1)}${suffix ?? ''}` : '—'}
                       </p>
@@ -1181,7 +1181,7 @@ const PerformanceTabContent: React.FC<{
                       </span>
                     </div>
                   </div>
-                  <span className="text-[9px] text-[#717182] mt-0.5">score</span>
+                  <span className="text-[9px] text-[#98989F] mt-0.5">score</span>
                 </div>
               </div>
             )
@@ -1255,10 +1255,10 @@ export const SquadsPage: React.FC = () => {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard
-          icon={<Users2 className="w-4 h-4 text-[#7952FF]" />}
+          icon={<Users2 className="w-4 h-4 text-[#C74410]" />}
           label="Squads Ativos"
           value={squads.length}
-          color="#7952FF"
+          color="#C74410"
         />
         <StatCard
           icon={<Crown className="w-4 h-4 text-[#F59E0B]" />}

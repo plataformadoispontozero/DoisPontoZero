@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   agencySubtitle: {
     fontSize: 9,
-    color: '#717182',
+    color: '#98989F',
     letterSpacing: 1.5,
     marginTop: 4,
     textTransform: 'uppercase',
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   categoryBadge: {
     backgroundColor: '#F3F0FF',
-    color: '#7952FF',
+    color: '#C74410',
     fontSize: 9,
     fontWeight: 'bold',
     paddingVertical: 5,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   divider: {
     width: 60,
     height: 3,
-    backgroundColor: '#7952FF',
+    backgroundColor: '#C74410',
     borderRadius: 2,
     marginBottom: 24,
   },
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   clientLabel: {
     fontSize: 9,
-    color: '#717182',
+    color: '#98989F',
     textTransform: 'uppercase',
     letterSpacing: 1.5,
     marginBottom: 4,
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   metaLabel: {
     fontSize: 8,
-    color: '#717182',
+    color: '#98989F',
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 2,

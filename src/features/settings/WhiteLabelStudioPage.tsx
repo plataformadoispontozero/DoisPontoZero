@@ -58,9 +58,9 @@ export const WhiteLabelStudioPage: React.FC = () => {
       ...branding,
       display_name: 'Dois.Zero',
       tagline: 'Sua agência. Tudo conectado.',
-      primary_color: '#7952FF',
-      secondary_color: '#A1A1B0',
-      accent_color: '#B8FF65',
+      primary_color: '#C74410',
+      secondary_color: '#B8B8C0',
+      accent_color: '#FF8759',
       background_color: '#101014',
       surface_color: '#1C1C24',
       text_color: '#F8F9FC',
@@ -98,10 +98,10 @@ export const WhiteLabelStudioPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-            <Palette className="w-5 h-5 text-[#7952FF]" />
+            <Palette className="w-5 h-5 text-[#C74410]" />
             White Label Studio
           </h3>
-          <p className="text-xs text-[#A1A1B0]">
+          <p className="text-xs text-[#B8B8C0]">
             Personalize a identidade da sua agência em toda a plataforma, documentos e portais.
           </p>
         </div>
@@ -112,7 +112,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
             variant="ghost"
             size="sm"
             onClick={handleResetToDefault}
-            className="text-[#A1A1B0] hover:text-[#F8F9FC]"
+            className="text-[#B8B8C0] hover:text-[#F8F9FC]"
           >
             <RotateCcw className="w-4 h-4" />
             <span>Restaurar Padrão</span>
@@ -149,7 +149,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
           type="button"
           onClick={() => setActiveTab('identity')}
           className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
-            activeTab === 'identity' ? 'bg-[#7952FF] text-white' : 'text-[#A1A1B0] hover:bg-[#1C1C24]'
+            activeTab === 'identity' ? 'bg-[#C74410] text-white' : 'text-[#B8B8C0] hover:bg-[#1C1C24]'
           }`}
         >
           Identidade & Logos
@@ -158,7 +158,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
           type="button"
           onClick={() => setActiveTab('colors')}
           className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
-            activeTab === 'colors' ? 'bg-[#7952FF] text-white' : 'text-[#A1A1B0] hover:bg-[#1C1C24]'
+            activeTab === 'colors' ? 'bg-[#C74410] text-white' : 'text-[#B8B8C0] hover:bg-[#1C1C24]'
           }`}
         >
           Editor de Cores & WCAG
@@ -167,7 +167,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
           type="button"
           onClick={() => setActiveTab('typography')}
           className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
-            activeTab === 'typography' ? 'bg-[#7952FF] text-white' : 'text-[#A1A1B0] hover:bg-[#1C1C24]'
+            activeTab === 'typography' ? 'bg-[#C74410] text-white' : 'text-[#B8B8C0] hover:bg-[#1C1C24]'
           }`}
         >
           Tipografia do Sistema
@@ -183,7 +183,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4 text-[#7952FF]" />
+                  <ImageIcon className="w-4 h-4 text-[#C74410]" />
                   Logotipos & Identidade de Marca
                 </CardTitle>
                 <CardDescription className="text-xs">
@@ -193,7 +193,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                    <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                       Nome da Agência
                     </label>
                     <Input
@@ -203,7 +203,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                    <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                       Slogan / Tagline
                     </label>
                     <Input
@@ -223,12 +223,12 @@ export const WhiteLabelStudioPage: React.FC = () => {
                       {draft.symbol_path ? (
                         <img src={draft.symbol_path} alt="Symbol" className="w-10 h-10 object-contain rounded bg-[#1C1C24] p-1" />
                       ) : (
-                        <div className="w-10 h-10 rounded bg-[#7952FF]/20 text-[#7952FF] flex items-center justify-center font-bold">
+                        <div className="w-10 h-10 rounded bg-[#C74410]/20 text-[#C74410] flex items-center justify-center font-bold">
                           {draft.display_name.charAt(0)}
                         </div>
                       )}
                       <label className="cursor-pointer px-3 py-1.5 rounded-lg border border-[#30303B] bg-[#1C1C24] hover:bg-[#252530] text-xs font-medium text-[#F8F9FC] flex items-center gap-1.5">
-                        <UploadCloud className="w-3.5 h-3.5 text-[#B8FF65]" />
+                        <UploadCloud className="w-3.5 h-3.5 text-[#FF8759]" />
                         <span>Upload</span>
                         <input
                           type="file"
@@ -248,10 +248,10 @@ export const WhiteLabelStudioPage: React.FC = () => {
                       {draft.logo_light_path ? (
                         <img src={draft.logo_light_path} alt="Logo" className="h-8 object-contain rounded bg-[#1C1C24] p-1" />
                       ) : (
-                        <span className="text-xs text-[#717182]">Usando texto padrão</span>
+                        <span className="text-xs text-[#98989F]">Usando texto padrão</span>
                       )}
                       <label className="cursor-pointer px-3 py-1.5 rounded-lg border border-[#30303B] bg-[#1C1C24] hover:bg-[#252530] text-xs font-medium text-[#F8F9FC] flex items-center gap-1.5">
-                        <UploadCloud className="w-3.5 h-3.5 text-[#B8FF65]" />
+                        <UploadCloud className="w-3.5 h-3.5 text-[#FF8759]" />
                         <span>Upload</span>
                         <input
                           type="file"
@@ -272,7 +272,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-[#B8FF65]" />
+                  <Palette className="w-4 h-4 text-[#FF8759]" />
                   Editor de Cores & Acessibilidade WCAG 2.2 AA
                 </CardTitle>
                 <CardDescription className="text-xs">
@@ -312,7 +312,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                   <div className="p-3 rounded-xl bg-[#101014] border border-[#30303B] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-[#F8F9FC]">Cor Principal (Primary)</span>
-                      <span className="text-[10px] text-[#A1A1B0] font-mono">{draft.primary_color}</span>
+                      <span className="text-[10px] text-[#B8B8C0] font-mono">{draft.primary_color}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <input
@@ -327,7 +327,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                         className="font-mono text-xs uppercase"
                       />
                     </div>
-                    <div className="text-[10px] text-[#A1A1B0] flex items-center justify-between">
+                    <div className="text-[10px] text-[#B8B8C0] flex items-center justify-between">
                       <span>Contraste no Fundo:</span>
                       <span className="font-semibold text-[#F8F9FC]">{primaryBgContrast.formattedRatio}</span>
                     </div>
@@ -337,7 +337,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                   <div className="p-3 rounded-xl bg-[#101014] border border-[#30303B] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-[#F8F9FC]">Cor de Destaque (Accent)</span>
-                      <span className="text-[10px] text-[#A1A1B0] font-mono">{draft.accent_color}</span>
+                      <span className="text-[10px] text-[#B8B8C0] font-mono">{draft.accent_color}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <input
@@ -352,7 +352,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                         className="font-mono text-xs uppercase"
                       />
                     </div>
-                    <div className="text-[10px] text-[#A1A1B0] flex items-center justify-between">
+                    <div className="text-[10px] text-[#B8B8C0] flex items-center justify-between">
                       <span>Contraste no Fundo:</span>
                       <span className="font-semibold text-[#F8F9FC]">{accentBgContrast.formattedRatio}</span>
                     </div>
@@ -362,7 +362,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                   <div className="p-3 rounded-xl bg-[#101014] border border-[#30303B] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-[#F8F9FC]">Background da Plataforma</span>
-                      <span className="text-[10px] text-[#A1A1B0] font-mono">{draft.background_color}</span>
+                      <span className="text-[10px] text-[#B8B8C0] font-mono">{draft.background_color}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <input
@@ -383,7 +383,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                   <div className="p-3 rounded-xl bg-[#101014] border border-[#30303B] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-[#F8F9FC]">Cor dos Cards & Surface</span>
-                      <span className="text-[10px] text-[#A1A1B0] font-mono">{draft.surface_color}</span>
+                      <span className="text-[10px] text-[#B8B8C0] font-mono">{draft.surface_color}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <input
@@ -409,7 +409,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm flex items-center gap-2">
-                  <Type className="w-4 h-4 text-[#7952FF]" />
+                  <Type className="w-4 h-4 text-[#C74410]" />
                   Tipografia Oficial
                 </CardTitle>
                 <CardDescription className="text-xs">
@@ -419,7 +419,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                    <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                       Fonte dos Títulos (Headings)
                     </label>
                     <Select
@@ -433,7 +433,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                    <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                       Fonte do Corpo (Body & UI)
                     </label>
                     <Select
@@ -448,7 +448,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#101014] border border-[#30303B] space-y-2">
-                  <span className="text-[10px] text-[#A1A1B0] font-semibold uppercase tracking-wider block">
+                  <span className="text-[10px] text-[#B8B8C0] font-semibold uppercase tracking-wider block">
                     Amostra em Tempo Real
                   </span>
                   <h4
@@ -458,7 +458,7 @@ export const WhiteLabelStudioPage: React.FC = () => {
                     Dois.Zero — Creative Agency OS
                   </h4>
                   <p
-                    className="text-xs text-[#A1A1B0] leading-relaxed"
+                    className="text-xs text-[#B8B8C0] leading-relaxed"
                     style={{ fontFamily: draft.body_font }}
                   >
                     Sistema operacional completo para gestão de agências, squads multidisciplinares e produção de conteúdo de alto impacto.
@@ -471,12 +471,12 @@ export const WhiteLabelStudioPage: React.FC = () => {
 
         {/* Painel Direito: Live Preview Interativo (Col 5 - Oculto em Mobile) */}
         <div className="hidden lg:block lg:col-span-5 space-y-3 sticky top-20">
-          <div className="flex items-center justify-between text-xs font-semibold text-[#A1A1B0] px-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#B8B8C0] px-1">
             <span className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#B8FF65]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#FF8759]" />
               Live Preview da Agência
             </span>
-            <span className="text-[10px] text-[#717182] font-mono">
+            <span className="text-[10px] text-[#98989F] font-mono">
               Atualização Automática
             </span>
           </div>

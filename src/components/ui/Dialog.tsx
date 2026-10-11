@@ -61,7 +61,7 @@ export const DialogHeader: React.FC<{
         size="sm"
         aria-label="Fechar diálogo"
         onClick={onClose}
-        className="text-[#A1A1B0] hover:text-[#F8F9FC] shrink-0"
+        className="text-[#B8B8C0] hover:text-[#F8F9FC] shrink-0"
       >
         <X className="w-4 h-4" />
       </IconButton>
@@ -82,7 +82,7 @@ export const DialogDescription: React.FC<{
   children: React.ReactNode
   className?: string
 }> = ({ children, className }) => (
-  <p className={cn('text-xs text-[#A1A1B0]', className)}>{children}</p>
+  <p className={cn('text-xs text-[#B8B8C0]', className)}>{children}</p>
 )
 
 export const DialogBody: React.FC<{

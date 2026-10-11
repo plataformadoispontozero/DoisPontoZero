@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="h-16 flex items-center justify-between px-3.5 border-b border-[#30303B]/80">
         <NavLink
           to="/dashboard"
-          className="flex items-center gap-2 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7952FF] rounded-lg"
+          className="flex items-center gap-2 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C74410] rounded-lg"
           title={branding.name}
         >
           {collapsed ? (
@@ -63,7 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           size="sm"
           onClick={onToggleCollapse}
           aria-label={collapsed ? 'Expandir barra lateral' : 'Recolher barra lateral'}
-          className="text-[#A1A1B0] hover:text-[#F8F9FC] shrink-0"
+          className="text-[#B8B8C0] hover:text-[#F8F9FC] shrink-0"
         >
           {collapsed ? (
             <ChevronRight className="w-4 h-4" />
@@ -77,15 +77,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="px-3 py-2 border-b border-[#30303B]/60">
         <div
           className={cn(
-            'flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-[#101014]/60 border border-[#30303B]/60 text-xs text-[#A1A1B0]',
+            'flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-[#101014]/60 border border-[#30303B]/60 text-xs text-[#B8B8C0]',
             collapsed ? 'justify-center px-0' : ''
           )}
           title={`Workspace: ${auth.activeAgency?.agencyName || branding.company.workspaceName}`}
         >
-          <Building2 className="w-4 h-4 text-[#7952FF] shrink-0" />
+          <Building2 className="w-4 h-4 text-[#C74410] shrink-0" />
           {!collapsed && (
             <div className="flex flex-col min-w-0">
-              <span className="text-[10px] text-[#717182] uppercase tracking-wider font-semibold">
+              <span className="text-[10px] text-[#98989F] uppercase tracking-wider font-semibold">
                 Workspace
               </span>
               <span className="font-medium text-[#F8F9FC] truncate">
@@ -101,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Menu Principal */}
         <div>
           {!collapsed && (
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#717182] px-3 mb-1.5 block">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#98989F] px-3 mb-1.5 block">
               Menu Principal
             </span>
           )}
@@ -114,8 +114,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     cn(
                       'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-[background-color,color] duration-150 group relative',
                       isActive
-                        ? 'bg-[#7952FF] text-[#F8F9FC] shadow-sm shadow-[#7952FF]/20 font-semibold'
-                        : 'text-[#A1A1B0] hover:bg-[#252530] hover:text-[#F8F9FC]',
+                        ? 'bg-[#C74410] text-[#F8F9FC] shadow-sm shadow-[#C74410]/20 font-semibold'
+                        : 'text-[#B8B8C0] hover:bg-[#252530] hover:text-[#F8F9FC]',
                       collapsed && 'justify-center px-0'
                     )
                   }
@@ -143,7 +143,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Ferramentas */}
         <div>
           {!collapsed && (
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#717182] px-3 mb-1.5 block">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#98989F] px-3 mb-1.5 block">
               Ferramentas
             </span>
           )}
@@ -156,8 +156,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     cn(
                       'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-[background-color,color] duration-150 group relative',
                       isActive
-                        ? 'bg-[#7952FF] text-[#F8F9FC] shadow-sm shadow-[#7952FF]/20 font-semibold'
-                        : 'text-[#A1A1B0] hover:bg-[#252530] hover:text-[#F8F9FC]',
+                        ? 'bg-[#C74410] text-[#F8F9FC] shadow-sm shadow-[#C74410]/20 font-semibold'
+                        : 'text-[#B8B8C0] hover:bg-[#252530] hover:text-[#F8F9FC]',
                       collapsed && 'justify-center px-0'
                     )
                   }
@@ -185,7 +185,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Sistema */}
         <div>
           {!collapsed && (
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#717182] px-3 mb-1.5 block">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#98989F] px-3 mb-1.5 block">
               Sistema
             </span>
           )}
@@ -198,8 +198,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     cn(
                       'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-[background-color,color] duration-150 group relative',
                       isActive
-                        ? 'bg-[#7952FF] text-[#F8F9FC] shadow-sm shadow-[#7952FF]/20 font-semibold'
-                        : 'text-[#A1A1B0] hover:bg-[#252530] hover:text-[#F8F9FC]',
+                        ? 'bg-[#C74410] text-[#F8F9FC] shadow-sm shadow-[#C74410]/20 font-semibold'
+                        : 'text-[#B8B8C0] hover:bg-[#252530] hover:text-[#F8F9FC]',
                       collapsed && 'justify-center px-0'
                     )
                   }
@@ -239,7 +239,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="text-xs font-semibold text-[#F8F9FC] truncate">
                 {auth.name || 'Usuário'}
               </span>
-              <span className="text-[10px] text-[#A1A1B0] truncate">
+              <span className="text-[10px] text-[#B8B8C0] truncate">
                 {auth.user?.email || 'Demonstração local'}
               </span>
             </div>
@@ -249,7 +249,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               variant="ghost"
               size="sm"
               aria-label="Sair do sistema"
-              className="text-[#717182] hover:text-[#FB7185] shrink-0"
+              className="text-[#98989F] hover:text-[#FB7185] shrink-0"
               onClick={logout}
             >
               <LogOut className="w-3.5 h-3.5" />

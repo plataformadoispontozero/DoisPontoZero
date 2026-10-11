@@ -7,12 +7,12 @@ import { Activity, Clock, ShieldCheck, FileCheck2, FolderKanban, FileText, Compa
 
 // Icon mapper for event types
 const getEventIcon = (type: string) => {
-  if (type.startsWith('proposals')) return <FileCheck2 className="w-4 h-4 text-[#B8FF65]" />
-  if (type.startsWith('projects') || type.startsWith('tasks')) return <FolderKanban className="w-4 h-4 text-[#7952FF]" />
+  if (type.startsWith('proposals')) return <FileCheck2 className="w-4 h-4 text-[#FF8759]" />
+  if (type.startsWith('projects') || type.startsWith('tasks')) return <FolderKanban className="w-4 h-4 text-[#C74410]" />
   if (type.startsWith('briefings')) return <FileText className="w-4 h-4 text-blue-400" />
   if (type.startsWith('strategy')) return <Compass className="w-4 h-4 text-amber-400" />
   if (type.startsWith('meetings')) return <Calendar className="w-4 h-4 text-emerald-400" />
-  return <Settings className="w-4 h-4 text-[#A1A1B0]" />
+  return <Settings className="w-4 h-4 text-[#B8B8C0]" />
 }
 
 export const ActivityCenterPage: React.FC = () => {
@@ -22,10 +22,10 @@ export const ActivityCenterPage: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div>
         <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-          <Activity className="w-5 h-5 text-[#7952FF]" />
+          <Activity className="w-5 h-5 text-[#C74410]" />
           Central de Atividades Operacionais
         </h3>
-        <p className="text-xs text-[#A1A1B0]">
+        <p className="text-xs text-[#B8B8C0]">
           Trilha de auditoria em tempo real das ações e modificações realizadas no workspace.
         </p>
       </div>
@@ -33,7 +33,7 @@ export const ActivityCenterPage: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#B8FF65]" />
+            <Clock className="w-4 h-4 text-[#FF8759]" />
             Feed de Eventos Auditados
           </CardTitle>
           <CardDescription className="text-xs">
@@ -42,9 +42,9 @@ export const ActivityCenterPage: React.FC = () => {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="p-8 text-center text-xs text-[#717182]">Carregando histórico...</div>
+            <div className="p-8 text-center text-xs text-[#98989F]">Carregando histórico...</div>
           ) : events.length === 0 ? (
-            <div className="p-8 text-center text-xs text-[#717182]">
+            <div className="p-8 text-center text-xs text-[#98989F]">
               Nenhuma atividade recente registrada.
             </div>
           ) : (
@@ -56,7 +56,7 @@ export const ActivityCenterPage: React.FC = () => {
                     {getEventIcon(event.event_type)}
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-[#101014]/80 border border-[#30303B] hover:border-[#7952FF]/50 transition-colors text-xs space-y-2">
+                  <div className="p-3.5 rounded-xl bg-[#101014]/80 border border-[#30303B] hover:border-[#C74410]/50 transition-colors text-xs space-y-2">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <Avatar src={event.actor_avatar} name={event.actor_name} size="sm" />
@@ -66,12 +66,12 @@ export const ActivityCenterPage: React.FC = () => {
                         </Badge>
                       </div>
 
-                      <span className="text-[10px] text-[#717182] font-mono">
+                      <span className="text-[10px] text-[#98989F] font-mono">
                         {new Date(event.created_at).toLocaleString('pt-BR')}
                       </span>
                     </div>
 
-                    <p className="text-[#A1A1B0] leading-relaxed text-xs">{event.summary}</p>
+                    <p className="text-[#B8B8C0] leading-relaxed text-xs">{event.summary}</p>
                   </div>
                 </div>
               ))}

@@ -45,7 +45,7 @@ export const MobileNav: React.FC = () => {
         </NavLink>
 
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-[#101014] text-[#A1A1B0] border border-[#30303B] truncate max-w-[120px]">
+          <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-[#101014] text-[#B8B8C0] border border-[#30303B] truncate max-w-[120px]">
             {auth.activeAgency?.agencyName || branding.company.workspaceName}
           </span>
           <IconButton
@@ -69,14 +69,14 @@ export const MobileNav: React.FC = () => {
           </div>
         </SheetHeader>
 
-        <div className="px-5 py-2.5 bg-[#101014]/60 border-b border-[#30303B] flex items-center gap-2 text-xs text-[#A1A1B0]">
-          <Building2 className="w-4 h-4 text-[#7952FF]" />
+        <div className="px-5 py-2.5 bg-[#101014]/60 border-b border-[#30303B] flex items-center gap-2 text-xs text-[#B8B8C0]">
+          <Building2 className="w-4 h-4 text-[#C74410]" />
           <span>{auth.activeAgency?.agencyName || branding.company.workspaceName}</span>
         </div>
 
         <SheetContent className="space-y-4 py-4 px-3">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#717182] px-3 block mb-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#98989F] px-3 block mb-2">
               Menu da Agência
             </span>
             <div className="grid grid-cols-1 gap-1">
@@ -88,8 +88,8 @@ export const MobileNav: React.FC = () => {
                     cn(
                       'flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium transition-colors min-h-[44px]',
                       isActive
-                        ? 'bg-[#7952FF] text-[#F8F9FC] font-semibold'
-                        : 'text-[#A1A1B0] hover:bg-[#252530] hover:text-[#F8F9FC]'
+                        ? 'bg-[#C74410] text-[#F8F9FC] font-semibold'
+                        : 'text-[#B8B8C0] hover:bg-[#252530] hover:text-[#F8F9FC]'
                     )
                   }
                 >
@@ -106,14 +106,14 @@ export const MobileNav: React.FC = () => {
             <Avatar name={auth.name || 'Usuário'} size="sm" status="online" />
             <div className="flex flex-col text-xs">
               <span className="font-semibold text-[#F8F9FC]">{auth.name || 'Usuário'}</span>
-              <span className="text-[10px] text-[#A1A1B0]">{auth.isDemo ? 'Demonstração local' : auth.user?.email || ''}</span>
+              <span className="text-[10px] text-[#B8B8C0]">{auth.isDemo ? 'Demonstração local' : auth.user?.email || ''}</span>
             </div>
           </div>
           <IconButton
             variant="ghost"
             size="sm"
             aria-label="Encerrar sessão"
-            className="text-[#717182] hover:text-[#FB7185] min-h-[44px] min-w-[44px]"
+            className="text-[#98989F] hover:text-[#FB7185] min-h-[44px] min-w-[44px]"
             onClick={logout}
           >
             <LogOut className="w-4 h-4" />
@@ -131,7 +131,7 @@ export const MobileNav: React.FC = () => {
           className={({ isActive }) =>
             cn(
               'flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors py-1 min-w-[60px] min-h-[44px]',
-              isActive ? 'text-[#B8FF65]' : 'text-[#A1A1B0] hover:text-[#F8F9FC]'
+              isActive ? 'text-[#FF8759]' : 'text-[#B8B8C0] hover:text-[#F8F9FC]'
             )
           }
         >
@@ -144,7 +144,7 @@ export const MobileNav: React.FC = () => {
           className={({ isActive }) =>
             cn(
               'flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors py-1 min-w-[60px] min-h-[44px]',
-              isActive ? 'text-[#B8FF65]' : 'text-[#A1A1B0] hover:text-[#F8F9FC]'
+              isActive ? 'text-[#FF8759]' : 'text-[#B8B8C0] hover:text-[#F8F9FC]'
             )
           }
         >
@@ -157,7 +157,7 @@ export const MobileNav: React.FC = () => {
           className={({ isActive }) =>
             cn(
               'flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors py-1 min-w-[60px] min-h-[44px]',
-              isActive ? 'text-[#B8FF65]' : 'text-[#A1A1B0] hover:text-[#F8F9FC]'
+              isActive ? 'text-[#FF8759]' : 'text-[#B8B8C0] hover:text-[#F8F9FC]'
             )
           }
         >
@@ -170,7 +170,7 @@ export const MobileNav: React.FC = () => {
           className={({ isActive }) =>
             cn(
               'flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors py-1 min-w-[60px] min-h-[44px]',
-              isActive ? 'text-[#B8FF65]' : 'text-[#A1A1B0] hover:text-[#F8F9FC]'
+              isActive ? 'text-[#FF8759]' : 'text-[#B8B8C0] hover:text-[#F8F9FC]'
             )
           }
         >
@@ -180,7 +180,7 @@ export const MobileNav: React.FC = () => {
 
         <button
           onClick={() => setDrawerOpen(true)}
-          className="flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-[#A1A1B0] hover:text-[#F8F9FC] py-1 min-w-[60px] min-h-[44px] cursor-pointer"
+          className="flex flex-col items-center justify-center gap-1 text-[11px] font-medium text-[#B8B8C0] hover:text-[#F8F9FC] py-1 min-w-[60px] min-h-[44px] cursor-pointer"
           aria-label="Abrir todos os módulos"
         >
           <MoreHorizontal className="w-5 h-5" />

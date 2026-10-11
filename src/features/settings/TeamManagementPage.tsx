@@ -70,16 +70,16 @@ export const TeamManagementPage: React.FC = () => {
       <section className="space-y-2 rounded-xl border border-[#30303B] p-4" aria-label="Papéis disponíveis">
         <h2 className="font-semibold">Papéis de acesso disponíveis</h2>
         {rolesLoading ? <p role="status">Carregando papéis…</p> : rolesError ? <p role="alert">Não foi possível carregar os papéis da agência.</p> : roleOptions.length === 0 ? <p>Nenhum papel disponível para atribuição.</p> : <ul className="space-y-1 text-sm">{roleOptions.map(role => <li key={role.value}>{role.label}</li>)}</ul>}
-        <p className="text-xs text-[#A1A1B0]">Especialidades profissionais não concedem permissões. OWNER é reservado ao proprietário.</p>
+        <p className="text-xs text-[#B8B8C0]">Especialidades profissionais não concedem permissões. OWNER é reservado ao proprietário.</p>
       </section>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-            <Users className="w-5 h-5 text-[#7952FF]" />
+            <Users className="w-5 h-5 text-[#C74410]" />
             Gestão de Equipe & Colaboradores
           </h3>
-          <p className="text-xs text-[#A1A1B0]">
+          <p className="text-xs text-[#B8B8C0]">
             Administre os membros ativos da agência, convites pendentes e atribuição de cargos.
           </p>
         </div>
@@ -95,18 +95,18 @@ export const TeamManagementPage: React.FC = () => {
           <DialogBody className="bg-[#1C1C24] border-[#30303B] text-[#F8F9FC]">
             <DialogHeader>
               <DialogTitle className="text-base font-bold flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-[#B8FF65]" />
+                <UserPlus className="w-5 h-5 text-[#FF8759]" />
                 Convidar Colaborador para a Agência
               </DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSendInvite} className="space-y-4 pt-2">
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                   Endereço de E-mail do Convidado <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-[#717182] absolute left-3 top-2.5" />
+                  <Mail className="w-4 h-4 text-[#98989F] absolute left-3 top-2.5" />
                   <Input
                     type="email"
                     value={inviteEmail}
@@ -119,7 +119,7 @@ export const TeamManagementPage: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="invite-role" className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                <label htmlFor="invite-role" className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                   Papel de acesso atribuído
                 </label>
                 <Select
@@ -132,9 +132,9 @@ export const TeamManagementPage: React.FC = () => {
                 />
               </div>
 
-              <div className="p-3 rounded-xl bg-[#101014] border border-[#30303B] text-[11px] text-[#A1A1B0] space-y-1">
+              <div className="p-3 rounded-xl bg-[#101014] border border-[#30303B] text-[11px] text-[#B8B8C0] space-y-1">
                 <span className="font-semibold text-[#F8F9FC] block flex items-center gap-1">
-                  <Shield className="w-3.5 h-3.5 text-[#7952FF]" />
+                  <Shield className="w-3.5 h-3.5 text-[#C74410]" />
                   Convite com Hash Seguro de 7 Dias
                 </span>
                 <p>
@@ -178,12 +178,12 @@ export const TeamManagementPage: React.FC = () => {
                         </Badge>
                       )}
                     </div>
-                    <span className="text-[#A1A1B0] text-xs">{member.email}</span>
+                    <span className="text-[#B8B8C0] text-xs">{member.email}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="text-[#717182] text-[11px] hidden md:inline">
+                  <span className="text-[#98989F] text-[11px] hidden md:inline">
                     Entrou em {new Date(member.joined_at).toLocaleDateString('pt-BR')}
                   </span>
 
@@ -228,13 +228,13 @@ export const TeamManagementPage: React.FC = () => {
                 <div key={inv.id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                   <div>
                     <span className="font-medium text-[#F8F9FC] text-sm block">{inv.email}</span>
-                    <span className="text-[11px] text-[#A1A1B0]">
-                      Convidado como <strong className="text-[#7952FF]">{inv.role_name}</strong> por {inv.invited_by_name}
+                    <span className="text-[11px] text-[#B8B8C0]">
+                      Convidado como <strong className="text-[#C74410]">{inv.role_name}</strong> por {inv.invited_by_name}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-[11px] text-[#717182]">
+                    <span className="text-[11px] text-[#98989F]">
                       Expira em {new Date(inv.expires_at).toLocaleDateString('pt-BR')}
                     </span>
                     <Button

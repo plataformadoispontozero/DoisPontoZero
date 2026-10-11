@@ -73,7 +73,7 @@ export const SheetHeader: React.FC<{
         size="sm"
         aria-label="Fechar painel"
         onClick={onClose}
-        className="text-[#A1A1B0] hover:text-[#F8F9FC]"
+        className="text-[#B8B8C0] hover:text-[#F8F9FC]"
       >
         <X className="w-5 h-5" />
       </IconButton>
@@ -94,7 +94,7 @@ export const SheetDescription: React.FC<{
   children: React.ReactNode
   className?: string
 }> = ({ children, className }) => (
-  <p className={cn('text-xs text-[#A1A1B0]', className)}>{children}</p>
+  <p className={cn('text-xs text-[#B8B8C0]', className)}>{children}</p>
 )
 
 export const SheetContent: React.FC<{

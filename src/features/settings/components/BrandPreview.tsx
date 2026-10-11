@@ -32,7 +32,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
           <div className="w-3 h-3 rounded-full bg-red-500/80" />
           <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
           <div className="w-3 h-3 rounded-full bg-green-500/80" />
-          <span className="ml-2 font-mono text-[11px] text-[#A1A1B0]">
+          <span className="ml-2 font-mono text-[11px] text-[#B8B8C0]">
             https://app.agencia.com.br
           </span>
         </div>
@@ -42,7 +42,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
               Pré-visualização (não salva)
             </span>
           )}
-          <span className="text-[10px] text-[#717182] font-mono">
+          <span className="text-[10px] text-[#98989F] font-mono">
             {branding.display_name} Studio
           </span>
         </div>
@@ -77,7 +77,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
               >
                 {branding.display_name}
               </h4>
-              <span className="text-[9px] text-[#A1A1B0] block truncate">
+              <span className="text-[9px] text-[#B8B8C0] block truncate">
                 {branding.tagline}
               </span>
             </div>
@@ -92,15 +92,15 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
               <Building2 className="w-3.5 h-3.5" />
               <span>Dashboard</span>
             </div>
-            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[#A1A1B0]">
+            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[#B8B8C0]">
               <FolderKanban className="w-3.5 h-3.5" />
               <span>Projetos</span>
             </div>
-            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[#A1A1B0]">
+            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[#B8B8C0]">
               <CheckSquare className="w-3.5 h-3.5" />
               <span>Tarefas</span>
             </div>
-            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[#A1A1B0]">
+            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[#B8B8C0]">
               <Users2 className="w-3.5 h-3.5" />
               <span>Squads</span>
             </div>
@@ -114,12 +114,12 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
             className="h-12 border-b border-[#30303B] px-4 flex items-center justify-between"
             style={{ backgroundColor: branding.surface_color }}
           >
-            <div className="flex items-center gap-2 text-[#A1A1B0]">
+            <div className="flex items-center gap-2 text-[#B8B8C0]">
               <Search className="w-3.5 h-3.5" />
               <span className="text-[11px]">Buscar demandas, marcas ou tarefas...</span>
             </div>
             <div className="flex items-center gap-2">
-              <Bell className="w-3.5 h-3.5 text-[#A1A1B0]" />
+              <Bell className="w-3.5 h-3.5 text-[#B8B8C0]" />
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px] text-white"
                 style={{ backgroundColor: branding.primary_color }}
@@ -143,7 +143,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
                 >
                   Visão Geral Operacional
                 </h3>
-                <p className="text-[11px] text-[#A1A1B0]">
+                <p className="text-[11px] text-[#B8B8C0]">
                   Bem-vindo ao workspace da {branding.display_name}.
                 </p>
               </div>
@@ -162,7 +162,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
                 className="p-3 rounded-xl border border-[#30303B] space-y-1"
                 style={{ backgroundColor: branding.surface_color }}
               >
-                <span className="text-[10px] text-[#A1A1B0]">Projetos em Produção</span>
+                <span className="text-[10px] text-[#B8B8C0]">Projetos em Produção</span>
                 <div className="flex items-baseline justify-between">
                   <span
                     className="text-lg font-bold"
@@ -186,7 +186,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
                 className="p-3 rounded-xl border border-[#30303B] space-y-1"
                 style={{ backgroundColor: branding.surface_color }}
               >
-                <span className="text-[10px] text-[#A1A1B0]">Entregas da Semana</span>
+                <span className="text-[10px] text-[#B8B8C0]">Entregas da Semana</span>
                 <div className="flex items-baseline justify-between">
                   <span
                     className="text-lg font-bold"
@@ -219,7 +219,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
                 <span className="font-semibold text-xs text-[#F8F9FC]">
                   Fila Prioritária
                 </span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#A1A1B0]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#B8B8C0]" />
               </div>
               <div className="divide-y divide-[#30303B]/60 text-[11px]">
                 <div className="p-2.5 flex items-center justify-between">
@@ -227,7 +227,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
                     <span className="font-medium text-[#F8F9FC] block">
                       Rebranding Vanguarda Tech
                     </span>
-                    <span className="text-[10px] text-[#A1A1B0]">
+                    <span className="text-[10px] text-[#B8B8C0]">
                       Squad Brand Strategy
                     </span>
                   </div>
@@ -246,7 +246,7 @@ export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = 
                     <span className="font-medium text-[#F8F9FC] block">
                       Motion Reel Outubro
                     </span>
-                    <span className="text-[10px] text-[#A1A1B0]">
+                    <span className="text-[10px] text-[#B8B8C0]">
                       Squad Audiovisual
                     </span>
                   </div>

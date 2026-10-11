@@ -13,10 +13,10 @@ export const DiagnosticsPage: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div>
         <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-          <Cpu className="w-5 h-5 text-[#7952FF]" />
+          <Cpu className="w-5 h-5 text-[#C74410]" />
           Painel Técnico & Diagnóstico do Sistema
         </h3>
-        <p className="text-xs text-[#A1A1B0]">
+        <p className="text-xs text-[#B8B8C0]">
           Verificação auditada da infraestrutura, estado dos módulos e conformidade das Fases 01 a 11.
         </p>
       </div>
@@ -26,33 +26,33 @@ export const DiagnosticsPage: React.FC = () => {
         <Card>
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-[#A1A1B0] uppercase font-bold block">
+              <span className="text-[10px] text-[#B8B8C0] uppercase font-bold block">
                 Ambiente Frontend
               </span>
               <span className="text-sm font-bold text-[#F8F9FC]">Vite + React 18</span>
             </div>
-            <Terminal className="w-5 h-5 text-[#B8FF65]" />
+            <Terminal className="w-5 h-5 text-[#FF8759]" />
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-[#A1A1B0] uppercase font-bold block">
+              <span className="text-[10px] text-[#B8B8C0] uppercase font-bold block">
                 Supabase Engine
               </span>
               <span className="text-sm font-bold text-[#F8F9FC]">
                 {isSupabaseActive ? 'Conectado Remote' : 'Modo Local / Demo'}
               </span>
             </div>
-            <Database className="w-5 h-5 text-[#7952FF]" />
+            <Database className="w-5 h-5 text-[#C74410]" />
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-[#A1A1B0] uppercase font-bold block">
+              <span className="text-[10px] text-[#B8B8C0] uppercase font-bold block">
                 Segurança RLS
               </span>
               <span className="text-sm font-bold text-[#34D399]">Auditado & Ativo</span>
@@ -64,14 +64,14 @@ export const DiagnosticsPage: React.FC = () => {
         <Card>
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-[#A1A1B0] uppercase font-bold block">
+              <span className="text-[10px] text-[#B8B8C0] uppercase font-bold block">
                 Fases Concluídas
               </span>
               <span className="text-sm font-bold text-[#F8F9FC]">
                 11 / 11 Fases
               </span>
             </div>
-            <Layers className="w-5 h-5 text-[#B8FF65]" />
+            <Layers className="w-5 h-5 text-[#FF8759]" />
           </CardContent>
         </Card>
       </div>
@@ -108,7 +108,7 @@ export const DiagnosticsPage: React.FC = () => {
                     </Badge>
                   </div>
 
-                  <span className="text-[10px] text-[#717182] font-mono">
+                  <span className="text-[10px] text-[#98989F] font-mono">
                     Última Verificação: {phase.last_verified_at || '10/10/2026'}
                   </span>
                 </div>
@@ -119,7 +119,7 @@ export const DiagnosticsPage: React.FC = () => {
                     <span className="text-[10px] font-bold text-[#34D399] uppercase tracking-wider block">
                       Evidências & Entregáveis Verificados ({phase.completed_requirements.length})
                     </span>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-1 text-[11px] text-[#A1A1B0]">
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-1 text-[11px] text-[#B8B8C0]">
                       {phase.completed_requirements.map((req: string, idx: number) => (
                         <li key={idx} className="flex items-center gap-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5 text-[#34D399] shrink-0" />

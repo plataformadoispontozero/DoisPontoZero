@@ -27,12 +27,12 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
 }) => {
   const statusColors: Record<StatusType, { dot: string; text: string }> = {
     active: { dot: 'bg-[#34D399]', text: 'text-[#34D399]' },
-    in_progress: { dot: 'bg-[#7952FF]', text: 'text-[#B89EFF]' },
-    completed: { dot: 'bg-[#B8FF65]', text: 'text-[#B8FF65]' },
+    in_progress: { dot: 'bg-[#C74410]', text: 'text-[#FFAC8A]' },
+    completed: { dot: 'bg-[#FF8759]', text: 'text-[#FF8759]' },
     waiting: { dot: 'bg-[#FBBF24]', text: 'text-[#FBBF24]' },
     warning: { dot: 'bg-[#FBBF24]', text: 'text-[#FBBF24]' },
     error: { dot: 'bg-[#FB7185]', text: 'text-[#FB7185]' },
-    draft: { dot: 'bg-[#717182]', text: 'text-[#A1A1B0]' },
+    draft: { dot: 'bg-[#98989F]', text: 'text-[#B8B8C0]' },
   }
 
   const dotSizes = {

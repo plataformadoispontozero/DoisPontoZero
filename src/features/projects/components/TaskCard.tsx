@@ -51,8 +51,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
       style={style}
       className={cn(
         'group relative bg-[#1C1C24] border border-[#30303B] rounded-xl p-3 cursor-pointer',
-        'hover:border-[#7952FF]/40 hover:shadow-lg hover:shadow-[#7952FF]/5 transition-all duration-200',
-        isDragging && 'shadow-2xl shadow-black/40 border-[#7952FF]/60 rotate-1 scale-105',
+        'hover:border-[#C74410]/40 hover:shadow-lg hover:shadow-[#C74410]/5 transition-all duration-200',
+        isDragging && 'shadow-2xl shadow-black/40 border-[#C74410]/60 rotate-1 scale-105',
         isSortableDragging && 'pointer-events-none'
       )}
       onClick={() => !isSortableDragging && onClick(task)}
@@ -61,7 +61,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
       <div
         {...attributes}
         {...listeners}
-        className="absolute top-2 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing text-[#717182] hover:text-[#A1A1B0]"
+        className="absolute top-2 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing text-[#98989F] hover:text-[#B8B8C0]"
         onClick={(e) => e.stopPropagation()}
         aria-label="Arrastar tarefa"
       >
@@ -78,7 +78,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
 
       {/* Client / context label */}
       {(task.client?.name || task.project?.name) && (
-        <p className="text-[10px] text-[#717182] mb-2 ml-3.5 truncate">
+        <p className="text-[10px] text-[#98989F] mb-2 ml-3.5 truncate">
           {task.client?.name ?? task.project?.name}
         </p>
       )}
@@ -89,7 +89,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
           {task.assignees.slice(0, 4).map((a) => (
             <div
               key={a.id}
-              className="w-5 h-5 rounded-full bg-[#252530] border border-[#424252] flex items-center justify-center text-[8px] font-bold text-[#A1A1B0] uppercase overflow-hidden shrink-0"
+              className="w-5 h-5 rounded-full bg-[#252530] border border-[#424252] flex items-center justify-center text-[8px] font-bold text-[#B8B8C0] uppercase overflow-hidden shrink-0"
               title={a.profile?.full_name}
             >
               {a.profile?.avatar_url ? (
@@ -104,7 +104,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
             </div>
           ))}
           {task.assignees.length > 4 && (
-            <span className="text-[10px] text-[#717182]">+{task.assignees.length - 4}</span>
+            <span className="text-[10px] text-[#98989F]">+{task.assignees.length - 4}</span>
           )}
         </div>
       )}
@@ -127,7 +127,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
           <span
             className={cn(
               'inline-flex items-center gap-1 text-[10px] font-medium',
-              overdue ? 'text-red-400' : 'text-[#717182]'
+              overdue ? 'text-red-400' : 'text-[#98989F]'
             )}
           >
             {overdue ? (
@@ -141,7 +141,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
 
         {/* Checklist progress */}
         {checklistTotal > 0 && (
-          <span className="inline-flex items-center gap-1 text-[10px] text-[#717182]">
+          <span className="inline-flex items-center gap-1 text-[10px] text-[#98989F]">
             <CheckSquare className="w-3 h-3" />
             {checklistDone}/{checklistTotal}
           </span>
@@ -149,7 +149,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
 
         {/* Comments count */}
         {(task.comments_count ?? 0) > 0 && (
-          <span className="inline-flex items-center gap-1 text-[10px] text-[#717182]">
+          <span className="inline-flex items-center gap-1 text-[10px] text-[#98989F]">
             <MessageSquare className="w-3 h-3" />
             {task.comments_count}
           </span>
@@ -157,7 +157,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
 
         {/* Attachments count */}
         {(task.attachments_count ?? 0) > 0 && (
-          <span className="inline-flex items-center gap-1 text-[10px] text-[#717182]">
+          <span className="inline-flex items-center gap-1 text-[10px] text-[#98989F]">
             <Paperclip className="w-3 h-3" />
             {task.attachments_count}
           </span>
@@ -181,7 +181,7 @@ export const TaskCardOverlay: React.FC<{ task: Task }> = ({ task }) => {
   const priority = PRIORITY_CONFIG[task.priority]
 
   return (
-    <div className="bg-[#1C1C24] border border-[#7952FF]/60 rounded-xl p-3 shadow-2xl shadow-black/50 rotate-2 scale-105 w-64">
+    <div className="bg-[#1C1C24] border border-[#C74410]/60 rounded-xl p-3 shadow-2xl shadow-black/50 rotate-2 scale-105 w-64">
       <div className="flex items-start gap-2 mb-1.5">
         <div className={cn('w-1.5 h-1.5 rounded-full mt-1.5 shrink-0', priority.dotColor)} />
         <h4 className="text-xs font-medium text-[#F8F9FC] leading-snug line-clamp-2">
@@ -199,7 +199,7 @@ export const TaskCardOverlay: React.FC<{ task: Task }> = ({ task }) => {
           {priority.label}
         </span>
         {task.due_date && (
-          <span className="inline-flex items-center gap-1 text-[10px] text-[#717182]">
+          <span className="inline-flex items-center gap-1 text-[10px] text-[#98989F]">
             <Calendar className="w-3 h-3" />
             {formatDate(task.due_date)}
           </span>

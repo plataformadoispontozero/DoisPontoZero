@@ -78,7 +78,7 @@ export const DashboardPage: React.FC = () => {
               onClick={() => navigate('/briefings')}
               className="text-xs"
             >
-              <Compass className="w-3.5 h-3.5 text-[#A1A1B0]" />
+              <Compass className="w-3.5 h-3.5 text-[#B8B8C0]" />
               <span>Novo Briefing</span>
             </Button>
             <Button
@@ -112,10 +112,10 @@ export const DashboardPage: React.FC = () => {
           {/* Card 1: Projetos Ativos */}
           <Card className="hover:border-[#424252] transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-xs font-medium text-[#A1A1B0]">
+              <CardTitle className="text-xs font-medium text-[#B8B8C0]">
                 Projetos ativos
               </CardTitle>
-              <div className="p-2 rounded-lg bg-[#7952FF]/10 text-[#7952FF]">
+              <div className="p-2 rounded-lg bg-[#C74410]/10 text-[#C74410]">
                 <FolderKanban className="w-4 h-4" />
               </div>
             </CardHeader>
@@ -123,7 +123,7 @@ export const DashboardPage: React.FC = () => {
               <div className="text-2xl font-bold font-heading text-[#F8F9FC]">
                 {indicators.activeProjects}
               </div>
-              <p className="text-[11px] text-[#717182] mt-1">
+              <p className="text-[11px] text-[#98989F] mt-1">
                 Nenhum projeto em andamento
               </p>
             </CardContent>
@@ -132,7 +132,7 @@ export const DashboardPage: React.FC = () => {
           {/* Card 2: Tarefas Pendentes */}
           <Card className="hover:border-[#424252] transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-xs font-medium text-[#A1A1B0]">
+              <CardTitle className="text-xs font-medium text-[#B8B8C0]">
                 Tarefas pendentes
               </CardTitle>
               <div className="p-2 rounded-lg bg-amber-500/10 text-[#FBBF24]">
@@ -143,7 +143,7 @@ export const DashboardPage: React.FC = () => {
               <div className="text-2xl font-bold font-heading text-[#F8F9FC]">
                 {indicators.pendingTasks}
               </div>
-              <p className="text-[11px] text-[#717182] mt-1">
+              <p className="text-[11px] text-[#98989F] mt-1">
                 Fila de produção limpa
               </p>
             </CardContent>
@@ -152,10 +152,10 @@ export const DashboardPage: React.FC = () => {
           {/* Card 3: Entregas da Semana */}
           <Card className="hover:border-[#424252] transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-xs font-medium text-[#A1A1B0]">
+              <CardTitle className="text-xs font-medium text-[#B8B8C0]">
                 Entregas da semana
               </CardTitle>
-              <div className="p-2 rounded-lg bg-[#B8FF65]/10 text-[#B8FF65]">
+              <div className="p-2 rounded-lg bg-[#FF8759]/10 text-[#FF8759]">
                 <Clock className="w-4 h-4" />
               </div>
             </CardHeader>
@@ -163,7 +163,7 @@ export const DashboardPage: React.FC = () => {
               <div className="text-2xl font-bold font-heading text-[#F8F9FC]">
                 {indicators.weekDeliveries}
               </div>
-              <p className="text-[11px] text-[#717182] mt-1">
+              <p className="text-[11px] text-[#98989F] mt-1">
                 Sem prazos críticos nesta semana
               </p>
             </CardContent>
@@ -172,7 +172,7 @@ export const DashboardPage: React.FC = () => {
           {/* Card 4: Aprovações Aguardando */}
           <Card className="hover:border-[#424252] transition-colors">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-xs font-medium text-[#A1A1B0]">
+              <CardTitle className="text-xs font-medium text-[#B8B8C0]">
                 Aprovações aguardando
               </CardTitle>
               <div className="p-2 rounded-lg bg-[#34D399]/10 text-[#34D399]">
@@ -183,7 +183,7 @@ export const DashboardPage: React.FC = () => {
               <div className="text-2xl font-bold font-heading text-[#F8F9FC]">
                 {indicators.pendingApprovals}
               </div>
-              <p className="text-[11px] text-[#717182] mt-1">
+              <p className="text-[11px] text-[#98989F] mt-1">
                 Sem peças pendentes de aceite
               </p>
             </CardContent>
@@ -201,7 +201,7 @@ export const DashboardPage: React.FC = () => {
               variant="ghost"
               size="sm"
               onClick={() => navigate('/tasks')}
-              className="text-xs text-[#A1A1B0] hover:text-[#F8F9FC]"
+              className="text-xs text-[#B8B8C0] hover:text-[#F8F9FC]"
             >
               <span>Ver todas as tarefas</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -218,7 +218,7 @@ export const DashboardPage: React.FC = () => {
                     <h4 className="text-xs font-semibold text-[#F8F9FC]">
                       {task.title}
                     </h4>
-                    <span className="text-[11px] text-[#A1A1B0]">
+                    <span className="text-[11px] text-[#B8B8C0]">
                       {task.projectName} • {task.clientName}
                     </span>
                   </div>
@@ -230,13 +230,13 @@ export const DashboardPage: React.FC = () => {
         ) : (
           <Card className="border-dashed border-[#30303B] bg-[#1C1C24]/40">
             <CardContent className="p-8 text-center flex flex-col items-center">
-              <div className="w-12 h-12 rounded-xl bg-[#252530] flex items-center justify-center text-[#A1A1B0] mb-3">
+              <div className="w-12 h-12 rounded-xl bg-[#252530] flex items-center justify-center text-[#B8B8C0] mb-3">
                 <CheckCircle2 className="w-6 h-6 text-[#34D399]" />
               </div>
               <h4 className="font-heading text-sm font-semibold text-[#F8F9FC]">
                 Nenhuma tarefa atribuída ainda.
               </h4>
-              <p className="text-xs text-[#A1A1B0] max-w-sm mt-1 mb-4">
+              <p className="text-xs text-[#B8B8C0] max-w-sm mt-1 mb-4">
                 Você não possui demandas alocadas para hoje. Explore os projetos da agência para visualizar o backlog operacional.
               </p>
               <Button
@@ -265,7 +265,7 @@ export const DashboardPage: React.FC = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/projects')}
-                className="text-xs text-[#A1A1B0] hover:text-[#F8F9FC]"
+                className="text-xs text-[#B8B8C0] hover:text-[#F8F9FC]"
               >
                 <span>Ver projetos</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -282,23 +282,23 @@ export const DashboardPage: React.FC = () => {
                       <h4 className="text-sm font-semibold text-[#F8F9FC]">
                         {project.name}
                       </h4>
-                      <p className="text-xs text-[#A1A1B0]">{project.client}</p>
+                      <p className="text-xs text-[#B8B8C0]">{project.client}</p>
                     </div>
                     <StatusIndicator status="in_progress" label={project.status} />
                   </div>
                   <div className="space-y-1">
-                    <div className="flex justify-between text-xs text-[#A1A1B0]">
+                    <div className="flex justify-between text-xs text-[#B8B8C0]">
                       <span>Progresso</span>
                       <span>{project.progress}%</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-[#252530] overflow-hidden">
                       <div
-                        className="h-full bg-[#7952FF] rounded-full"
+                        className="h-full bg-[#C74410] rounded-full"
                         style={{ width: `${project.progress}%` }}
                       />
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#717182] pt-2 border-t border-[#30303B]">
+                  <div className="flex items-center justify-between text-[11px] text-[#98989F] pt-2 border-t border-[#30303B]">
                     <span>Resp: {project.owner.name}</span>
                     <span>Prazo: {project.deadline}</span>
                   </div>
@@ -308,13 +308,13 @@ export const DashboardPage: React.FC = () => {
           ) : (
             <Card className="border-dashed border-[#30303B] bg-[#1C1C24]/40">
               <CardContent className="p-8 text-center flex flex-col items-center">
-                <div className="w-12 h-12 rounded-xl bg-[#252530] flex items-center justify-center text-[#A1A1B0] mb-3">
-                  <FolderKanban className="w-6 h-6 text-[#7952FF]" />
+                <div className="w-12 h-12 rounded-xl bg-[#252530] flex items-center justify-center text-[#B8B8C0] mb-3">
+                  <FolderKanban className="w-6 h-6 text-[#C74410]" />
                 </div>
                 <h4 className="font-heading text-sm font-semibold text-[#F8F9FC]">
                   Nenhum projeto registrado no workspace
                 </h4>
-                <p className="text-xs text-[#A1A1B0] max-w-sm mt-1 mb-4">
+                <p className="text-xs text-[#B8B8C0] max-w-sm mt-1 mb-4">
                   Os projetos criados com squads, clientes e prazos de entrega aparecerão aqui com progresso dinâmico.
                 </p>
                 <Button
@@ -353,7 +353,7 @@ export const DashboardPage: React.FC = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate('/meetings')}
-                  className="text-xs text-[#A1A1B0] hover:text-[#F8F9FC]"
+                  className="text-xs text-[#B8B8C0] hover:text-[#F8F9FC]"
                 >
                   <span>Agenda</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -374,11 +374,11 @@ export const DashboardPage: React.FC = () => {
                       </Badge>
                     </div>
                     {meeting.client && (
-                      <p className="text-[11px] text-[#A1A1B0]">{meeting.client}</p>
+                      <p className="text-[11px] text-[#B8B8C0]">{meeting.client}</p>
                     )}
-                    <div className="flex items-center gap-3 text-[10px] text-[#717182]">
+                    <div className="flex items-center gap-3 text-[10px] text-[#98989F]">
                       <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-[#7952FF]" />
+                        <Clock className="w-3 h-3 text-[#C74410]" />
                         {meeting.time}
                       </span>
                       <span>{meeting.attendees.length} participantes</span>
@@ -389,13 +389,13 @@ export const DashboardPage: React.FC = () => {
             ) : (
               <Card className="border-dashed border-[#30303B] bg-[#1C1C24]/40">
                 <CardContent className="p-6 text-center flex flex-col items-center">
-                  <div className="w-10 h-10 rounded-xl bg-[#252530] flex items-center justify-center text-[#A1A1B0] mb-2.5">
-                    <Calendar className="w-5 h-5 text-[#B8FF65]" />
+                  <div className="w-10 h-10 rounded-xl bg-[#252530] flex items-center justify-center text-[#B8B8C0] mb-2.5">
+                    <Calendar className="w-5 h-5 text-[#FF8759]" />
                   </div>
                   <h4 className="font-heading text-xs font-semibold text-[#F8F9FC]">
                     Nenhuma reunião agendada para hoje
                   </h4>
-                  <p className="text-[11px] text-[#A1A1B0] mt-1 mb-3">
+                  <p className="text-[11px] text-[#B8B8C0] mt-1 mb-3">
                     Sincronize com Google Calendar ou crie pautas de alinhamento com clientes.
                   </p>
                   <Button
@@ -416,20 +416,20 @@ export const DashboardPage: React.FC = () => {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#7952FF]" />
+                  <Sparkles className="w-4 h-4 text-[#C74410]" />
                   <CardTitle className="text-xs font-semibold text-[#F8F9FC]">
                     Status do Workspace
                   </CardTitle>
                 </div>
-                <span className="text-[10px] text-[#A1A1B0] font-mono">
+                <span className="text-[10px] text-[#B8B8C0] font-mono">
                   {branding.company.workspaceName}
                 </span>
               </div>
             </CardHeader>
-            <CardContent className="text-xs space-y-2 pt-1 text-[#A1A1B0]">
+            <CardContent className="text-xs space-y-2 pt-1 text-[#B8B8C0]">
               {/* Seção 1: STATUS OPERACIONAL */}
               <div className="space-y-1.5 pb-2 border-b border-[#30303B]">
-                <span className="text-[10px] text-[#717182] font-bold uppercase tracking-wider block">
+                <span className="text-[10px] text-[#98989F] font-bold uppercase tracking-wider block">
                   Status Operacional
                 </span>
                 <div className="flex justify-between py-0.5">
@@ -445,8 +445,8 @@ export const DashboardPage: React.FC = () => {
                 <div className="flex justify-between py-0.5">
                   <span>Conectividade:</span>
                   {healthStatus === null ? (
-                    <span className="text-[#A1A1B0] font-medium flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#A1A1B0] animate-pulse" />
+                    <span className="text-[#B8B8C0] font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#B8B8C0] animate-pulse" />
                       Verificando...
                     </span>
                   ) : healthStatus.connected ? (
@@ -477,23 +477,23 @@ export const DashboardPage: React.FC = () => {
               {/* Seção 2: STATUS DE DESENVOLVIMENTO */}
               <div className="pt-2 space-y-1.5">
                 <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-[#717182] font-bold uppercase tracking-wider text-[10px]">
+                  <span className="text-[#98989F] font-bold uppercase tracking-wider text-[10px]">
                     Status de Desenvolvimento
                   </span>
-                  <span className="text-[#B8FF65] font-semibold">
+                  <span className="text-[#FF8759] font-semibold">
                     Homologação operacional pendente
                   </span>
                 </div>
                 <div className="h-1.5 w-full bg-[#101014] rounded-full overflow-hidden flex border border-[#30303B]">
-                  <div className="bg-[#B8FF65] h-full w-full" title="Consulte os bloqueadores no diagnóstico" />
+                  <div className="bg-[#FF8759] h-full w-full" title="Consulte os bloqueadores no diagnóstico" />
                 </div>
                 <div className="flex items-center justify-between pt-1">
-                  <p className="text-[10px] text-[#717182] leading-tight">
+                  <p className="text-[10px] text-[#98989F] leading-tight">
                     Consulte os testes e bloqueadores por módulo.
                   </p>
                   <button
                     onClick={() => navigate('/settings/diagnostics')}
-                    className="text-[10px] text-[#7952FF] font-semibold hover:underline"
+                    className="text-[10px] text-[#C74410] font-semibold hover:underline"
                   >
                     Diagnóstico
                   </button>

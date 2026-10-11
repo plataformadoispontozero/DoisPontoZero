@@ -55,7 +55,7 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#1C1C24] p-3 rounded-xl border border-[#30303B]">
         <div className="flex items-center gap-2 flex-1 max-w-md">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-[#717182] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#98989F] absolute left-3 top-1/2 -translate-y-1/2" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -66,7 +66,7 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
           <select
             value={selectedColumn}
             onChange={(e) => setSelectedColumn(e.target.value)}
-            className="h-9 px-3 text-xs bg-[#14141A] border border-[#30303B] rounded-xl text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+            className="h-9 px-3 text-xs bg-[#14141A] border border-[#30303B] rounded-xl text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
           >
             <option value="all">Todas as colunas</option>
             {columns.map((c) => (
@@ -88,9 +88,9 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
       {/* Task List / Table */}
       {filteredTasks.length === 0 ? (
         <div className="p-12 text-center bg-[#1C1C24] rounded-2xl border border-[#30303B]">
-          <CheckCircle2 className="w-10 h-10 text-[#717182] mx-auto mb-3 opacity-60" />
+          <CheckCircle2 className="w-10 h-10 text-[#98989F] mx-auto mb-3 opacity-60" />
           <h4 className="text-sm font-semibold text-[#F8F9FC] mb-1">Nenhuma tarefa encontrada</h4>
-          <p className="text-xs text-[#717182] max-w-sm mx-auto">
+          <p className="text-xs text-[#98989F] max-w-sm mx-auto">
             {search
               ? 'Tente ajustar sua busca ou limpar os filtros para ver mais resultados.'
               : 'Crie uma nova tarefa para começar a gerenciar o fluxo deste projeto.'}
@@ -99,7 +99,7 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
       ) : (
         <div className="bg-[#1C1C24] rounded-2xl border border-[#30303B] overflow-hidden">
           {/* Desktop Table Header */}
-          <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-3 border-b border-[#30303B] text-[11px] font-semibold text-[#717182] uppercase tracking-wider bg-[#14141A]/50">
+          <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-3 border-b border-[#30303B] text-[11px] font-semibold text-[#98989F] uppercase tracking-wider bg-[#14141A]/50">
             <div className="col-span-5">Tarefa</div>
             <div className="col-span-2">Coluna</div>
             <div className="col-span-2">Prioridade</div>
@@ -133,12 +133,12 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
                   <div className="hidden md:grid grid-cols-12 gap-4 items-center">
                     {/* Task Title & Details */}
                     <div className="col-span-5 flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full shrink-0 bg-[#7952FF]" />
+                      <div className="w-2 h-2 rounded-full shrink-0 bg-[#C74410]" />
                       <div className="min-w-0">
-                        <p className="text-xs font-medium text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors truncate">
+                        <p className="text-xs font-medium text-[#F8F9FC] group-hover:text-[#C74410] transition-colors truncate">
                           {t.title}
                         </p>
-                        <div className="flex items-center gap-3 text-[11px] text-[#717182] mt-0.5">
+                        <div className="flex items-center gap-3 text-[11px] text-[#98989F] mt-0.5">
                           {totalItems > 0 && (
                             <span className="flex items-center gap-1">
                               <CheckSquare className="w-3 h-3" />
@@ -166,14 +166,14 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
                       <span
                         className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border"
                         style={{
-                          backgroundColor: `${column?.color || '#7952FF'}15`,
-                          borderColor: `${column?.color || '#7952FF'}30`,
-                          color: column?.color || '#7952FF',
+                          backgroundColor: `${column?.color || '#C74410'}15`,
+                          borderColor: `${column?.color || '#C74410'}30`,
+                          color: column?.color || '#C74410',
                         }}
                       >
                         <span
                           className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: column?.color || '#7952FF' }}
+                          style={{ backgroundColor: column?.color || '#C74410' }}
                         />
                         {column?.name || 'A Fazer'}
                       </span>
@@ -194,7 +194,7 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
                       {t.due_date ? (
                         <span
                           className={`flex items-center gap-1.5 ${
-                            overdue ? 'text-red-400 font-medium' : 'text-[#A1A1B0]'
+                            overdue ? 'text-red-400 font-medium' : 'text-[#B8B8C0]'
                           }`}
                         >
                           <Calendar className="w-3.5 h-3.5" />
@@ -202,7 +202,7 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
                           {overdue && <span className="text-[10px] uppercase font-bold">(Atrasada)</span>}
                         </span>
                       ) : (
-                        <span className="text-[#717182]">—</span>
+                        <span className="text-[#98989F]">—</span>
                       )}
                     </div>
 
@@ -220,7 +220,7 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
                             />
                           ))
                         ) : (
-                          <div className="w-6 h-6 rounded-full border border-dashed border-[#424252] flex items-center justify-center text-[#717182]">
+                          <div className="w-6 h-6 rounded-full border border-dashed border-[#424252] flex items-center justify-center text-[#98989F]">
                             <Users className="w-3 h-3" />
                           </div>
                         )}
@@ -231,21 +231,21 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
                   {/* Mobile Stacked Card Layout */}
                   <div className="md:hidden space-y-2">
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-xs font-semibold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors leading-snug">
+                      <p className="text-xs font-semibold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors leading-snug">
                         {t.title}
                       </p>
                       <span
                         className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium shrink-0"
                         style={{
-                          backgroundColor: `${column?.color || '#7952FF'}20`,
-                          color: column?.color || '#7952FF',
+                          backgroundColor: `${column?.color || '#C74410'}20`,
+                          color: column?.color || '#C74410',
                         }}
                       >
                         {column?.name || 'A Fazer'}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-[#717182] pt-1">
+                    <div className="flex items-center justify-between text-xs text-[#98989F] pt-1">
                       <span className={`inline-flex items-center gap-1 ${priorityCfg.color}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${priorityCfg.dotColor}`} />
                         {priorityCfg.label}
@@ -254,7 +254,7 @@ export const TaskListView: React.FC<TaskListViewProps> = ({
                       {t.due_date && (
                         <span
                           className={`flex items-center gap-1 text-[11px] ${
-                            overdue ? 'text-red-400 font-medium' : 'text-[#A1A1B0]'
+                            overdue ? 'text-red-400 font-medium' : 'text-[#B8B8C0]'
                           }`}
                         >
                           <Calendar className="w-3 h-3" />

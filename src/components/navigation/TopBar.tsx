@@ -76,7 +76,7 @@ export const TopBar: React.FC = () => {
       <header className="hidden md:flex h-14 items-center justify-between px-6 border-b border-[#30303B] bg-[#101014]/80 backdrop-blur-md sticky top-0 z-20">
         {/* ESQUERDA: Breadcrumb & Título Contextual */}
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-[#717182] font-medium">Dois.Zero</span>
+          <span className="text-[#98989F] font-medium">Dois.Zero</span>
           <span className="text-[#30303B]">/</span>
           <span className="text-[#F8F9FC] font-semibold">{currentTitle}</span>
         </div>
@@ -86,12 +86,12 @@ export const TopBar: React.FC = () => {
           {/* Busca com Atalho */}
           <button
             onClick={() => setSearchDialogOpen(true)}
-            className="flex items-center gap-2.5 h-8 px-3 rounded-lg bg-[#1C1C24] border border-[#30303B] text-xs text-[#717182] hover:border-[#424252] hover:text-[#A1A1B0] transition-colors cursor-pointer w-56 lg:w-64"
+            className="flex items-center gap-2.5 h-8 px-3 rounded-lg bg-[#1C1C24] border border-[#30303B] text-xs text-[#98989F] hover:border-[#424252] hover:text-[#B8B8C0] transition-colors cursor-pointer w-56 lg:w-64"
             aria-label="Abrir busca global"
           >
-            <Search className="w-3.5 h-3.5 text-[#A1A1B0]" />
+            <Search className="w-3.5 h-3.5 text-[#B8B8C0]" />
             <span className="truncate flex-1 text-left">Buscar na agência...</span>
-            <span className="flex items-center gap-0.5 text-[10px] text-[#717182] bg-[#101014] px-1 py-0.5 rounded border border-[#30303B]">
+            <span className="flex items-center gap-0.5 text-[10px] text-[#98989F] bg-[#101014] px-1 py-0.5 rounded border border-[#30303B]">
               <Command className="w-2.5 h-2.5" />
               <span>K</span>
             </span>
@@ -103,7 +103,7 @@ export const TopBar: React.FC = () => {
             size="sm"
             aria-label="Acesso rápido às tarefas"
             onClick={() => setTasksSheetOpen(true)}
-            className="text-[#A1A1B0] hover:text-[#F8F9FC]"
+            className="text-[#B8B8C0] hover:text-[#F8F9FC]"
           >
             <CheckSquare className="w-4 h-4" />
           </IconButton>
@@ -115,11 +115,11 @@ export const TopBar: React.FC = () => {
                 variant="ghost"
                 size="sm"
                 aria-label="Notificações do sistema"
-                className="relative text-[#A1A1B0] hover:text-[#F8F9FC]"
+                className="relative text-[#B8B8C0] hover:text-[#F8F9FC]"
               >
                 <Bell className="w-4 h-4" />
                 {unreadNotifications.length > 0 && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#B8FF65] animate-pulse" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#FF8759] animate-pulse" />
                 )}
               </IconButton>
             </DropdownTrigger>
@@ -131,9 +131,9 @@ export const TopBar: React.FC = () => {
                 <Badge variant="accent" className="text-[10px] py-0">{unreadNotifications.length} novas</Badge>
               </div>
               {unreadNotifications.length === 0 ? (
-                <div className="p-6 text-center text-xs text-[#A1A1B0]">
+                <div className="p-6 text-center text-xs text-[#B8B8C0]">
                   <p className="font-medium text-[#F8F9FC] mb-1">Tudo em dia!</p>
-                  <p className="text-[11px] text-[#717182]">
+                  <p className="text-[11px] text-[#98989F]">
                     Nenhum alerta pendente para a sua equipe no momento.
                   </p>
                 </div>
@@ -174,16 +174,16 @@ export const TopBar: React.FC = () => {
             <DropdownContent align="right" className="w-56">
               <div className="p-2 border-b border-[#30303B] mb-1">
                 <p className="text-xs font-semibold text-[#F8F9FC]">{auth.name || 'Usuário'}</p>
-                <p className="text-[11px] text-[#A1A1B0] truncate">
+                <p className="text-[11px] text-[#B8B8C0] truncate">
                   {auth.activeAgency?.agencyName || branding.company.workspaceName}
                 </p>
               </div>
               <DropdownItem onClick={() => navigate('/settings')}>
-                <Settings className="w-3.5 h-3.5 text-[#7952FF]" />
+                <Settings className="w-3.5 h-3.5 text-[#C74410]" />
                 <span>Configurações do Workspace</span>
               </DropdownItem>
               <DropdownItem onClick={() => navigate('/projects')}>
-                <FolderKanban className="w-3.5 h-3.5 text-[#B8FF65]" />
+                <FolderKanban className="w-3.5 h-3.5 text-[#FF8759]" />
                 <span>Meus Projetos</span>
               </DropdownItem>
               <DropdownSeparator />
@@ -212,13 +212,13 @@ export const TopBar: React.FC = () => {
             placeholder="Digite o nome de um projeto, cliente ou tarefa..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            leftIcon={<Search className="w-4 h-4 text-[#A1A1B0]" />}
+            leftIcon={<Search className="w-4 h-4 text-[#B8B8C0]" />}
             autoFocus
           />
-          <div className="p-4 rounded-xl bg-[#101014] border border-[#30303B] text-center text-xs text-[#A1A1B0]">
-            <Sparkles className="w-5 h-5 text-[#B8FF65] mx-auto mb-2" />
+          <div className="p-4 rounded-xl bg-[#101014] border border-[#30303B] text-center text-xs text-[#B8B8C0]">
+            <Sparkles className="w-5 h-5 text-[#FF8759] mx-auto mb-2" />
             <p className="font-semibold text-[#F8F9FC]">Busca Rápida de Projetos & Demandas</p>
-            <p className="text-[11px] text-[#717182] mt-1 max-w-xs mx-auto">
+            <p className="text-[11px] text-[#98989F] mt-1 max-w-xs mx-auto">
               Navegue pelos módulos de Projetos e Tarefas para pesquisar e filtrar entregáveis em tempo real.
             </p>
           </div>
@@ -249,7 +249,7 @@ export const TopBar: React.FC = () => {
           <h4 className="font-heading text-sm font-semibold text-[#F8F9FC]">
             Nenhuma tarefa pendente
           </h4>
-          <p className="text-xs text-[#A1A1B0] max-w-xs mt-1 mb-5">
+          <p className="text-xs text-[#B8B8C0] max-w-xs mt-1 mb-5">
             Sua fila pessoal está zerada. Novas tarefas atribuídas aparecerão aqui para checklist rápido.
           </p>
           <Button

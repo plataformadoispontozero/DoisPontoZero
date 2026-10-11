@@ -48,10 +48,10 @@ export const ClientExperiencePage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-            <MonitorCheck className="w-5 h-5 text-[#7952FF]" />
+            <MonitorCheck className="w-5 h-5 text-[#C74410]" />
             Client Experience & Portais Públicos
           </h3>
-          <p className="text-xs text-[#A1A1B0]">
+          <p className="text-xs text-[#B8B8C0]">
             Personalize a identidade dos links compartilhados de briefings, propostas e apresentações.
           </p>
         </div>
@@ -71,7 +71,7 @@ export const ClientExperiencePage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Título Oficial do Portal
               </label>
               <Input
@@ -82,7 +82,7 @@ export const ClientExperiencePage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Mensagem de Boas-Vindas Inicial
               </label>
               <Textarea
@@ -95,8 +95,8 @@ export const ClientExperiencePage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                  <Mail className="w-3.5 h-3.5 text-[#7952FF]" />
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                  <Mail className="w-3.5 h-3.5 text-[#C74410]" />
                   E-mail de Suporte ao Cliente
                 </label>
                 <Input
@@ -107,8 +107,8 @@ export const ClientExperiencePage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                  <Globe className="w-3.5 h-3.5 text-[#B8FF65]" />
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                  <Globe className="w-3.5 h-3.5 text-[#FF8759]" />
                   Website Institucional
                 </label>
                 <Input
@@ -120,7 +120,7 @@ export const ClientExperiencePage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Rodapé dos Portais
               </label>
               <Input
@@ -145,11 +145,11 @@ export const ClientExperiencePage: React.FC = () => {
                 <span className="font-semibold text-xs text-[#F8F9FC] block">
                   Formulário Público de Briefing
                 </span>
-                <span className="text-[10px] text-[#A1A1B0] font-mono">
+                <span className="text-[10px] text-[#B8B8C0] font-mono">
                   /b/:publicToken
                 </span>
               </div>
-              <span className="text-[10px] font-bold text-[#B8FF65] uppercase px-2 py-0.5 rounded bg-[#B8FF65]/10">
+              <span className="text-[10px] font-bold text-[#FF8759] uppercase px-2 py-0.5 rounded bg-[#FF8759]/10">
                 Ativo
               </span>
             </div>
@@ -159,11 +159,11 @@ export const ClientExperiencePage: React.FC = () => {
                 <span className="font-semibold text-xs text-[#F8F9FC] block">
                   Propostas Comerciais Interativas
                 </span>
-                <span className="text-[10px] text-[#A1A1B0] font-mono">
+                <span className="text-[10px] text-[#B8B8C0] font-mono">
                   /p/:publicToken
                 </span>
               </div>
-              <span className="text-[10px] font-bold text-[#B8FF65] uppercase px-2 py-0.5 rounded bg-[#B8FF65]/10">
+              <span className="text-[10px] font-bold text-[#FF8759] uppercase px-2 py-0.5 rounded bg-[#FF8759]/10">
                 Ativo
               </span>
             </div>
@@ -173,16 +173,16 @@ export const ClientExperiencePage: React.FC = () => {
                 <span className="font-semibold text-xs text-[#F8F9FC] block">
                   Apresentações Executivas & Showcase
                 </span>
-                <span className="text-[10px] text-[#A1A1B0] font-mono">
+                <span className="text-[10px] text-[#B8B8C0] font-mono">
                   /showcase/:publicToken
                 </span>
               </div>
-              <span className="text-[10px] font-bold text-[#B8FF65] uppercase px-2 py-0.5 rounded bg-[#B8FF65]/10">
+              <span className="text-[10px] font-bold text-[#FF8759] uppercase px-2 py-0.5 rounded bg-[#FF8759]/10">
                 Ativo
               </span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs text-[#A1A1B0] space-y-1">
+            <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs text-[#B8B8C0] space-y-1">
               <span className="font-semibold text-[#F8F9FC] block flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-[#34D399]" />
                 Proteção de Marca White Label

@@ -145,7 +145,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
       agency_id: agencyId,
       board_id: 'default',
       name: 'A Fazer',
-      color: '#717182',
+      color: '#98989F',
       position: 1000,
       category: 'backlog',
       wip_limit: null,
@@ -312,7 +312,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
         <SheetHeader onClose={onClose} className="border-b border-[#30303B] px-6 py-4">
           <div className="flex items-center justify-between w-full pr-8">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-[#717182]">#{task.id.slice(0, 8)}</span>
+              <span className="text-xs font-mono text-[#98989F]">#{task.id.slice(0, 8)}</span>
               <span className="text-[#30303B]">•</span>
               <Badge variant="outline" className={priorityCfg.color}>
                 <span className={`w-1.5 h-1.5 rounded-full ${priorityCfg.dotColor} mr-1.5`} />
@@ -323,7 +323,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
               variant="ghost"
               size="sm"
               onClick={handleArchive}
-              className="text-[#717182] hover:text-red-400 hover:bg-red-500/10"
+              className="text-[#98989F] hover:text-red-400 hover:bg-red-500/10"
               title="Arquivar tarefa"
             >
               <Archive className="w-3.5 h-3.5 mr-1" />
@@ -340,7 +340,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
               onChange={(e) => setTitle(e.target.value)}
               onBlur={handleTitleBlur}
               placeholder="Título da tarefa..."
-              className="text-lg font-bold bg-transparent border-transparent hover:border-[#30303B] focus:border-[#7952FF] px-2 -mx-2 rounded-lg"
+              className="text-lg font-bold bg-transparent border-transparent hover:border-[#30303B] focus:border-[#C74410] px-2 -mx-2 rounded-lg"
             />
           </div>
 
@@ -348,7 +348,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3.5 bg-[#14141A] rounded-xl border border-[#30303B]">
             {/* Status / Column */}
             <div>
-              <span className="text-[11px] font-medium text-[#717182] block mb-1">Coluna</span>
+              <span className="text-[11px] font-medium text-[#98989F] block mb-1">Coluna</span>
               <Select
                 value={task.column_id}
                 onChange={(e) => handleColumnChange(e.target.value)}
@@ -359,7 +359,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
             {/* Priority */}
             <div>
-              <span className="text-[11px] font-medium text-[#717182] block mb-1">Prioridade</span>
+              <span className="text-[11px] font-medium text-[#98989F] block mb-1">Prioridade</span>
               <Select
                 value={task.priority}
                 onChange={(e) => handlePriorityChange(e.target.value as Priority)}
@@ -370,7 +370,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
             {/* Due Date */}
             <div>
-              <span className="text-[11px] font-medium text-[#717182] block mb-1 flex items-center gap-1">
+              <span className="text-[11px] font-medium text-[#98989F] block mb-1 flex items-center gap-1">
                 <Calendar className="w-3 h-3" /> Prazo
               </span>
               <Input
@@ -385,7 +385,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
           {/* Assignees */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-[#A1A1B0] flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-[#B8B8C0] flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5" /> Responsáveis
               </span>
             </div>
@@ -408,21 +408,21 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                   </div>
                 ))
               ) : (
-                <span className="text-xs text-[#717182] italic">Nenhum responsável atribuído.</span>
+                <span className="text-xs text-[#98989F] italic">Nenhum responsável atribuído.</span>
               )}
             </div>
           </div>
 
           {/* Description */}
           <div>
-            <span className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">Descrição</span>
+            <span className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">Descrição</span>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               onBlur={handleDescriptionBlur}
               placeholder="Adicione detalhes, requisitos criativos ou observações..."
               rows={4}
-              className="text-xs bg-[#14141A] border-[#30303B] focus:border-[#7952FF] resize-y"
+              className="text-xs bg-[#14141A] border-[#30303B] focus:border-[#C74410] resize-y"
             />
           </div>
 
@@ -430,10 +430,10 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CheckSquare className="w-4 h-4 text-[#7952FF]" />
+                <CheckSquare className="w-4 h-4 text-[#C74410]" />
                 <span className="text-xs font-semibold text-[#F8F9FC]">Checklist</span>
                 {totalItems > 0 && (
-                  <span className="text-[11px] text-[#717182]">
+                  <span className="text-[11px] text-[#98989F]">
                     ({completedItems}/{totalItems} • {checklistPercent}%)
                   </span>
                 )}
@@ -442,7 +442,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowAddChecklist(!showAddChecklist)}
-                className="text-xs text-[#7952FF] hover:bg-[#7952FF]/10 h-7"
+                className="text-xs text-[#C74410] hover:bg-[#C74410]/10 h-7"
               >
                 <Plus className="w-3 h-3 mr-1" />
                 Novo grupo
@@ -452,7 +452,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
             {totalItems > 0 && (
               <div className="w-full bg-[#252530] rounded-full h-1.5 overflow-hidden">
                 <div
-                  className="bg-[#7952FF] h-1.5 rounded-full transition-all duration-300"
+                  className="bg-[#C74410] h-1.5 rounded-full transition-all duration-300"
                   style={{ width: `${checklistPercent}%` }}
                 />
               </div>
@@ -486,7 +486,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                     onClick={() =>
                       setActiveChecklistId(activeChecklistId === checklist.id ? null : checklist.id)
                     }
-                    className="text-[11px] text-[#A1A1B0] hover:text-[#F8F9FC] h-6 px-1.5"
+                    className="text-[11px] text-[#B8B8C0] hover:text-[#F8F9FC] h-6 px-1.5"
                   >
                     <Plus className="w-3 h-3 mr-0.5" /> Item
                   </Button>
@@ -511,12 +511,12 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                         type="checkbox"
                         checked={item.is_completed}
                         onChange={() => {}}
-                        className="rounded border-[#424252] bg-[#1C1C24] text-[#7952FF] focus:ring-0 cursor-pointer"
+                        className="rounded border-[#424252] bg-[#1C1C24] text-[#C74410] focus:ring-0 cursor-pointer"
                       />
                       <span
                         className={`flex-1 transition-all ${
                           item.is_completed
-                            ? 'line-through text-[#717182]'
+                            ? 'line-through text-[#98989F]'
                             : 'text-[#F8F9FC] group-hover:text-white'
                         }`}
                       >
@@ -557,7 +557,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
           {/* Subtasks */}
           {subtasks.length > 0 && (
             <div className="space-y-2">
-              <span className="text-xs font-semibold text-[#A1A1B0]">Subtarefas</span>
+              <span className="text-xs font-semibold text-[#B8B8C0]">Subtarefas</span>
               <div className="space-y-1.5">
                 {subtasks.map((sub) => (
                   <div
@@ -634,25 +634,25 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                             <span className="font-medium text-[#F8F9FC]">
                               {c.author?.full_name || 'Membro da equipe'}
                             </span>
-                            <span className="text-[11px] text-[#717182]">
+                            <span className="text-[11px] text-[#98989F]">
                               {formatDateTime(c.created_at)}
                             </span>
                           </div>
                           <button
                             onClick={() => deleteComment.mutate({ commentId: c.id, taskId })}
-                            className="text-[#717182] hover:text-red-400"
+                            className="text-[#98989F] hover:text-red-400"
                             title="Excluir comentário"
                           >
                             <Trash2 className="w-3 h-3" />
                           </button>
                         </div>
-                        <p className="text-xs text-[#A1A1B0] leading-relaxed whitespace-pre-wrap">
+                        <p className="text-xs text-[#B8B8C0] leading-relaxed whitespace-pre-wrap">
                           {c.content}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <p className="text-xs text-[#717182] text-center py-4 italic">
+                    <p className="text-xs text-[#98989F] text-center py-4 italic">
                       Nenhum comentário registrado ainda.
                     </p>
                   )}
@@ -662,14 +662,14 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
               {/* Links Tab */}
               <TabsContent value="links" className="space-y-3 pt-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-medium text-[#A1A1B0]">
+                  <span className="text-xs font-medium text-[#B8B8C0]">
                     Links externos de design e assets
                   </span>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowAddLinkForm(!showAddLinkForm)}
-                    className="text-xs text-[#7952FF] h-7"
+                    className="text-xs text-[#C74410] h-7"
                   >
                     <Plus className="w-3 h-3 mr-1" />
                     Adicionar link
@@ -726,20 +726,20 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                           <div className="flex items-center gap-2">
                             <span className="text-sm">{detected.icon}</span>
                             <div>
-                              <p className="font-medium text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors">
+                              <p className="font-medium text-[#F8F9FC] group-hover:text-[#C74410] transition-colors">
                                 {link.title}
                               </p>
-                              <p className="text-[10px] text-[#717182] truncate max-w-xs">
+                              <p className="text-[10px] text-[#98989F] truncate max-w-xs">
                                 {link.url}
                               </p>
                             </div>
                           </div>
-                          <ExternalLink className="w-3.5 h-3.5 text-[#717182] group-hover:text-[#F8F9FC]" />
+                          <ExternalLink className="w-3.5 h-3.5 text-[#98989F] group-hover:text-[#F8F9FC]" />
                         </a>
                       )
                     })
                   ) : (
-                    <p className="text-xs text-[#717182] text-center py-4 italic">
+                    <p className="text-xs text-[#98989F] text-center py-4 italic">
                       Nenhum link anexado a esta tarefa.
                     </p>
                   )}
@@ -749,11 +749,11 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
               {/* Attachments Tab */}
               <TabsContent value="attachments" className="space-y-3 pt-3">
                 <div className="p-6 border-2 border-dashed border-[#30303B] rounded-xl text-center space-y-2">
-                  <Paperclip className="w-6 h-6 text-[#717182] mx-auto" />
-                  <p className="text-xs text-[#A1A1B0]">
+                  <Paperclip className="w-6 h-6 text-[#98989F] mx-auto" />
+                  <p className="text-xs text-[#B8B8C0]">
                     Arraste arquivos ou clique para fazer upload
                   </p>
-                  <p className="text-[11px] text-[#717182]">
+                  <p className="text-[11px] text-[#98989F]">
                     Imagens, PDFs, vídeos ou briefs criativos até 50MB.
                   </p>
                 </div>
@@ -765,12 +765,12 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                       className="flex items-center justify-between p-2.5 bg-[#14141A] border border-[#30303B] rounded-xl text-xs"
                     >
                       <div className="flex items-center gap-2">
-                        <Paperclip className="w-3.5 h-3.5 text-[#7952FF]" />
+                        <Paperclip className="w-3.5 h-3.5 text-[#C74410]" />
                         <span className="text-[#F8F9FC] font-medium">
                           {file.name || file.file_name || 'Arquivo'}
                         </span>
                       </div>
-                      <span className="text-[11px] text-[#717182]">
+                      <span className="text-[11px] text-[#98989F]">
                         {Math.round((file.size_bytes || file.file_size || 0) / 1024)} KB
                       </span>
                     </div>
@@ -784,22 +784,22 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                   {activities.length > 0 ? (
                     activities.map((act) => (
                       <div key={act.id} className="flex items-start gap-2 text-xs">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#7952FF] mt-1.5 shrink-0" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#C74410] mt-1.5 shrink-0" />
                         <div>
                           <p className="text-[#F8F9FC]">
-                            <span className="font-medium text-[#7952FF]">
+                            <span className="font-medium text-[#C74410]">
                               {act.actor?.full_name || 'Usuário'}
                             </span>{' '}
                             {act.action} a tarefa
                           </p>
-                          <span className="text-[10px] text-[#717182]">
+                          <span className="text-[10px] text-[#98989F]">
                             {formatDateTime(act.created_at)}
                           </span>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <p className="text-xs text-[#717182] text-center py-4 italic">
+                    <p className="text-xs text-[#98989F] text-center py-4 italic">
                       Nenhuma atividade registrada ainda.
                     </p>
                   )}

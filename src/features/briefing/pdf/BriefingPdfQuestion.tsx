@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
     borderRadius: 4,
     borderLeftWidth: 2,
-    borderLeftColor: '#7952FF',
+    borderLeftColor: '#C74410',
   },
   answerText: {
     fontSize: 9.5,

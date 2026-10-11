@@ -29,7 +29,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
         </h3>
         {badge}
         {subtitle && (
-          <span className="text-xs text-[#717182] hidden md:inline">
+          <span className="text-xs text-[#98989F] hidden md:inline">
             • {subtitle}
           </span>
         )}

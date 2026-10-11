@@ -104,7 +104,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
         <DialogContent className="space-y-4">
           {/* Title */}
           <div>
-            <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+            <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
               Título <span className="text-red-400">*</span>
             </label>
             <Input
@@ -123,7 +123,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
           {/* Description */}
           <div>
-            <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+            <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
               Descrição
             </label>
             <Textarea
@@ -138,7 +138,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           {/* Column + Priority */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+              <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                 Coluna
               </label>
               <Select
@@ -149,7 +149,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+              <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                 Prioridade
               </label>
               <Select
@@ -166,7 +166,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           {/* Dates */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+              <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                 Início
               </label>
               <Input
@@ -179,7 +179,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+              <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                 Prazo
               </label>
               <Input

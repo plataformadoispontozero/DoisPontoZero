@@ -188,7 +188,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="flex flex-1 items-center gap-2">
           <div className="relative flex-1 max-w-sm">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#717182]" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#98989F]" />
             <Input
               placeholder="Buscar ideias no banco..."
               value={search}
@@ -200,7 +200,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
           {/* Pillar Filter */}
           {pillars.length > 0 && (
             <select
-              className="h-9 rounded-md bg-[#1C1C24] border border-[#30303B] px-3 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+              className="h-9 rounded-md bg-[#1C1C24] border border-[#30303B] px-3 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
               value={selectedPillarId}
               onChange={(e) => setSelectedPillarId(e.target.value)}
             >
@@ -234,14 +234,14 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
               onClick={() => setSelectedStatus(f.id)}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
                 active
-                  ? 'bg-[#7952FF] text-white shadow-sm'
-                  : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC] border border-[#30303B]'
+                  ? 'bg-[#C74410] text-white shadow-sm'
+                  : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC] border border-[#30303B]'
               }`}
             >
               <span>{f.label}</span>
               <span
                 className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                  active ? 'bg-white/20 text-white' : 'bg-[#13131A] text-[#717182]'
+                  active ? 'bg-white/20 text-white' : 'bg-[#13131A] text-[#98989F]'
                 }`}
               >
                 {count}
@@ -279,7 +279,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
             return (
               <Card
                 key={idea.id}
-                className="bg-[#1C1C24] border-[#30303B] hover:border-[#7952FF]/40 transition-colors flex flex-col justify-between group"
+                className="bg-[#1C1C24] border-[#30303B] hover:border-[#C74410]/40 transition-colors flex flex-col justify-between group"
               >
                 <CardContent className="p-4 space-y-3">
                   {/* Top Badges */}
@@ -294,12 +294,12 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
                         </span>
                       )}
                       {formatConfig && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#A1A1B0] border border-[#30303B]">
+                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#B8B8C0] border border-[#30303B]">
                           {formatConfig.label}
                         </span>
                       )}
                       {channelConfig && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#A1A1B0] border border-[#30303B]">
+                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#B8B8C0] border border-[#30303B]">
                           {channelConfig.label}
                         </span>
                       )}
@@ -312,11 +312,11 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
 
                   {/* Title & Description */}
                   <div>
-                    <h4 className="text-sm font-semibold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors leading-snug">
+                    <h4 className="text-sm font-semibold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors leading-snug">
                       {idea.title}
                     </h4>
                     {idea.description && (
-                      <p className="text-xs text-[#A1A1B0] mt-1 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-[#B8B8C0] mt-1 line-clamp-2 leading-relaxed">
                         {idea.description}
                       </p>
                     )}
@@ -326,13 +326,13 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
                   {(idea.hook || idea.cta) && (
                     <div className="space-y-1 bg-[#13131A]/60 p-2.5 rounded-lg border border-[#30303B]/60 text-[11px]">
                       {idea.hook && (
-                        <p className="text-[#A1A1B0]">
-                          <span className="text-[#7952FF] font-semibold">Gancho:</span>{' '}
+                        <p className="text-[#B8B8C0]">
+                          <span className="text-[#C74410] font-semibold">Gancho:</span>{' '}
                           <span className="italic">{idea.hook}</span>
                         </p>
                       )}
                       {idea.cta && (
-                        <p className="text-[#A1A1B0]">
+                        <p className="text-[#B8B8C0]">
                           <span className="text-emerald-400 font-semibold">CTA:</span> {idea.cta}
                         </p>
                       )}
@@ -343,12 +343,12 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
                   {idea.hashtags && idea.hashtags.length > 0 && (
                     <div className="flex flex-wrap gap-1">
                       {idea.hashtags.slice(0, 3).map((tag, i) => (
-                        <span key={i} className="text-[10px] text-[#717182]">
+                        <span key={i} className="text-[10px] text-[#98989F]">
                           {tag}
                         </span>
                       ))}
                       {idea.hashtags.length > 3 && (
-                        <span className="text-[10px] text-[#717182]">
+                        <span className="text-[10px] text-[#98989F]">
                           +{idea.hashtags.length - 3}
                         </span>
                       )}
@@ -357,7 +357,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
 
                   {/* Origin */}
                   {idea.suggested_by && idea.suggested_by !== 'manual' && (
-                    <div className="flex items-center gap-1 text-[10px] text-[#7952FF]">
+                    <div className="flex items-center gap-1 text-[10px] text-[#C74410]">
                       <Sparkles className="w-3 h-3" />
                       <span>
                         {idea.suggested_by === 'editorial_engine'
@@ -373,7 +373,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleOpenEdit(idea)}
-                      className="p-1 rounded-md text-[#717182] hover:text-[#F8F9FC] hover:bg-[#30303B]/60"
+                      className="p-1 rounded-md text-[#98989F] hover:text-[#F8F9FC] hover:bg-[#30303B]/60"
                       title="Editar ideia"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -381,7 +381,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
                     {idea.status !== 'approved' && (
                       <button
                         onClick={() => handleStatusChange(idea.id, 'approved')}
-                        className="p-1 rounded-md text-[#717182] hover:text-emerald-400 hover:bg-emerald-500/10"
+                        className="p-1 rounded-md text-[#98989F] hover:text-emerald-400 hover:bg-emerald-500/10"
                         title="Aprovar ideia"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
@@ -390,7 +390,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
                     {idea.status !== 'discarded' && (
                       <button
                         onClick={() => handleStatusChange(idea.id, 'discarded')}
-                        className="p-1 rounded-md text-[#717182] hover:text-red-400 hover:bg-red-500/10"
+                        className="p-1 rounded-md text-[#98989F] hover:text-red-400 hover:bg-red-500/10"
                         title="Descartar ideia"
                       >
                         <XCircle className="w-3.5 h-3.5" />
@@ -403,7 +403,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
                       variant="secondary"
                       size="sm"
                       onClick={() => onConvertToEditorialItem(idea)}
-                      className="text-[11px] h-7 gap-1 px-2.5 hover:text-[#7952FF]"
+                      className="text-[11px] h-7 gap-1 px-2.5 hover:text-[#C74410]"
                     >
                       <span>Gerar Pauta</span>
                       <ArrowRight className="w-3 h-3" />
@@ -427,7 +427,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
 
           <div className="space-y-4 py-2 text-xs">
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Título da Ideia *</label>
+              <label className="font-medium text-[#B8B8C0]">Título da Ideia *</label>
               <Input
                 placeholder="Ex: 5 erros fatais ao precificar serviços criativos"
                 value={title}
@@ -437,9 +437,9 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Pilar Editorial</label>
+                <label className="font-medium text-[#B8B8C0]">Pilar Editorial</label>
                 <select
-                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={pillarId}
                   onChange={(e) => setPillarId(e.target.value)}
                 >
@@ -453,9 +453,9 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Canal Principal</label>
+                <label className="font-medium text-[#B8B8C0]">Canal Principal</label>
                 <select
-                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={channel}
                   onChange={(e) => setChannel(e.target.value)}
                 >
@@ -470,9 +470,9 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Formato de Conteúdo</label>
+                <label className="font-medium text-[#B8B8C0]">Formato de Conteúdo</label>
                 <select
-                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={contentFormat}
                   onChange={(e) => setContentFormat(e.target.value)}
                 >
@@ -485,9 +485,9 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Prioridade</label>
+                <label className="font-medium text-[#B8B8C0]">Prioridade</label>
                 <select
-                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
                 >
@@ -499,7 +499,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Descrição / Linha de Raciocínio</label>
+              <label className="font-medium text-[#B8B8C0]">Descrição / Linha de Raciocínio</label>
               <Textarea
                 placeholder="Qual o desdobramento deste conteúdo?"
                 value={description}
@@ -510,7 +510,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Gancho de Abertura (Hook)</label>
+                <label className="font-medium text-[#B8B8C0]">Gancho de Abertura (Hook)</label>
                 <Input
                   placeholder="Ex: Pare de perder margem de lucro..."
                   value={hook}
@@ -519,7 +519,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Chamada para Ação (CTA)</label>
+                <label className="font-medium text-[#B8B8C0]">Chamada para Ação (CTA)</label>
                 <Input
                   placeholder="Ex: Comente 'PROPOSTA' para receber..."
                   value={cta}
@@ -529,7 +529,7 @@ export const IdeasBankTab: React.FC<IdeasBankTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Hashtags (separadas por espaço)</label>
+              <label className="font-medium text-[#B8B8C0]">Hashtags (separadas por espaço)</label>
               <Input
                 placeholder="#marketing #design #agencia"
                 value={hashtagsStr}

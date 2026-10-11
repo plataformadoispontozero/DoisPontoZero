@@ -188,13 +188,12 @@ test('team invitation route explains the server blocker without inventing an aut
   await expect(page.getByRole('alert').filter({hasText:'Profissional não encontrado nesta agência.'})).toBeVisible()
 })
 
-test('Google login reports a disabled provider without creating a session or bypassing agency access', async ({page}) => {
+test('team-only login hides Google and keeps workspace protected', async ({ page }) => {
   await api(page)
-  await page.route('**/auth/v1/settings', route => route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({external:{google:false}})}))
   await page.goto('/login')
-  await page.getByRole('button',{name:'Continuar com Google'}).click()
-  await expect(page.getByRole('alert')).toContainText('ainda não foi ativado')
-  await expect(page.getByRole('button',{name:'Continuar com Google'})).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Continuar com Google' })).toHaveCount(0)
+  await expect(page.getByText('ACESSO RESTRITO À EQUIPE', { exact: true })).toBeVisible()
+  await expect(page.locator('.dz-auth-intro .dz-brand-logo')).toBeVisible()
   await page.goto('/dashboard')
   await expect(page).toHaveURL(/\/login$/)
 })

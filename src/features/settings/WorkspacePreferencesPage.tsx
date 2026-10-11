@@ -50,10 +50,10 @@ export const WorkspacePreferencesPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-            <Globe2 className="w-5 h-5 text-[#7952FF]" />
+            <Globe2 className="w-5 h-5 text-[#C74410]" />
             Preferências Gerais do Workspace
           </h3>
-          <p className="text-xs text-[#A1A1B0]">
+          <p className="text-xs text-[#B8B8C0]">
             Configure os padrões de exibição, fuso horário, visualizações iniciais de projetos e tarefas.
           </p>
         </div>
@@ -74,7 +74,7 @@ export const WorkspacePreferencesPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                 Idioma Principal da Interface
               </label>
               <Select
@@ -86,14 +86,14 @@ export const WorkspacePreferencesPage: React.FC = () => {
                   { value: 'es-ES', label: 'Español' },
                 ]}
               />
-              <span className="text-[10px] text-[#717182] mt-1 block">
+              <span className="text-[10px] text-[#98989F] mt-1 block">
                 Toda a interface atual está 100% pronta e adaptada para pt-BR.
               </span>
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-[#7952FF]" />
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-[#C74410]" />
                 Fuso Horário Padrão do Workspace
               </label>
               <Select
@@ -109,8 +109,8 @@ export const WorkspacePreferencesPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                  <DollarSign className="w-3.5 h-3.5 text-[#B8FF65]" />
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                  <DollarSign className="w-3.5 h-3.5 text-[#FF8759]" />
                   Moeda Oficial
                 </label>
                 <Select
@@ -125,8 +125,8 @@ export const WorkspacePreferencesPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-[#7952FF]" />
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-[#C74410]" />
                   Primeiro Dia da Semana
                 </label>
                 <Select
@@ -153,8 +153,8 @@ export const WorkspacePreferencesPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                <Layout className="w-3.5 h-3.5 text-[#7952FF]" />
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                <Layout className="w-3.5 h-3.5 text-[#C74410]" />
                 Visualização Padrão de Projetos (/projects)
               </label>
               <Select
@@ -169,8 +169,8 @@ export const WorkspacePreferencesPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5 flex items-center gap-1">
-                <Layout className="w-3.5 h-3.5 text-[#B8FF65]" />
+              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
+                <Layout className="w-3.5 h-3.5 text-[#FF8759]" />
                 Visualização Padrão de Tarefas (/tasks)
               </label>
               <Select
@@ -184,7 +184,7 @@ export const WorkspacePreferencesPage: React.FC = () => {
               />
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs text-[#A1A1B0] space-y-1">
+            <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs text-[#B8B8C0] space-y-1">
               <span className="font-semibold text-[#F8F9FC] block flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-[#34D399]" />
                 Persistência em Supabase

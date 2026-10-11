@@ -13,10 +13,10 @@ export const IntegrationsCenterPage: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div>
         <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-          <Layers className="w-5 h-5 text-[#7952FF]" />
+          <Layers className="w-5 h-5 text-[#C74410]" />
           Central de Integrações & Conexões
         </h3>
-        <p className="text-xs text-[#A1A1B0]">
+        <p className="text-xs text-[#B8B8C0]">
           Monitore o estado real de autenticação e conexões com serviços externos.
         </p>
       </div>
@@ -26,7 +26,7 @@ export const IntegrationsCenterPage: React.FC = () => {
         <Card className="flex flex-col justify-between">
           <CardHeader>
             <div className="flex items-center justify-between mb-2">
-              <div className="p-2 rounded-xl bg-[#7952FF]/10 text-[#7952FF]">
+              <div className="p-2 rounded-xl bg-[#C74410]/10 text-[#C74410]">
                 <Database className="w-5 h-5" />
               </div>
               <Badge variant={isSupabaseActive ? 'default' : 'neutral'}>
@@ -39,7 +39,7 @@ export const IntegrationsCenterPage: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 pt-0">
-            <div className="text-xs text-[#A1A1B0] space-y-1">
+            <div className="text-xs text-[#B8B8C0] space-y-1">
               <div className="flex justify-between">
                 <span>Projeto:</span>
                 <span className="font-mono text-[#F8F9FC]">pvkhlobsiszrjtblpruu</span>
@@ -49,7 +49,7 @@ export const IntegrationsCenterPage: React.FC = () => {
                 <span className="text-[#34D399] font-bold">Ativo (RLS)</span>
               </div>
             </div>
-            <div className="p-2.5 rounded-lg bg-[#101014] border border-[#30303B] text-[11px] text-[#717182]">
+            <div className="p-2.5 rounded-lg bg-[#101014] border border-[#30303B] text-[11px] text-[#98989F]">
               {isSupabaseActive
                 ? 'Conexão remota ativa verificada com sucesso.'
                 : 'Rodando com fallback seguro e persistência em memória/localStorage.'}
@@ -72,7 +72,7 @@ export const IntegrationsCenterPage: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 pt-0">
-            <p className="text-xs text-[#A1A1B0]">
+            <p className="text-xs text-[#B8B8C0]">
               Gerencie pastas conectadas e sincronize arquivos diretamente pelo Drive Browser.
             </p>
             <a
@@ -100,7 +100,7 @@ export const IntegrationsCenterPage: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 pt-0">
-            <p className="text-xs text-[#A1A1B0]">
+            <p className="text-xs text-[#B8B8C0]">
               Conecte sua conta do Google Workspace para importar pautas e horários.
             </p>
             <a

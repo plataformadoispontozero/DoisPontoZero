@@ -168,7 +168,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
       {
         name: 'Autoridade & Conteúdo Técnico',
         description: 'Conteúdos densos, cases, análises e dados de mercado para gerar respeito e posicionamento líder.',
-        color: '#7952FF',
+        color: '#C74410',
         percentage: 35,
         posting_frequency: '3x por semana',
         content_formats: ['carrossel', 'artigo', 'video'],
@@ -216,10 +216,10 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <div>
               <h3 className="text-sm font-semibold text-[#F8F9FC] flex items-center gap-2">
-                <Percent className="w-4 h-4 text-[#7952FF]" />
+                <Percent className="w-4 h-4 text-[#C74410]" />
                 Distribuição Editorial por Pilares
               </h3>
-              <p className="text-xs text-[#A1A1B0] mt-0.5">
+              <p className="text-xs text-[#B8B8C0] mt-0.5">
                 O equilíbrio percentual define a frequência e o volume de sugestões na grade de conteúdo.
               </p>
             </div>
@@ -280,13 +280,13 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                       style={{ backgroundColor: pillar.color }}
                     />
                     <span className="font-medium text-[#F8F9FC]">{pillar.name}</span>
-                    <span className="text-[#A1A1B0]">({pillar.percentage}%)</span>
+                    <span className="text-[#B8B8C0]">({pillar.percentage}%)</span>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="text-center py-4 text-xs text-[#717182]">
+            <div className="text-center py-4 text-xs text-[#98989F]">
               Nenhum pilar cadastrado ainda. Crie pilares para distribuir seu conteúdo.
             </div>
           )}
@@ -307,7 +307,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
           {pillars.map((pillar) => (
             <Card
               key={pillar.id}
-              className="bg-[#1C1C24] border-[#30303B] hover:border-[#7952FF]/40 transition-colors group relative overflow-hidden"
+              className="bg-[#1C1C24] border-[#30303B] hover:border-[#C74410]/40 transition-colors group relative overflow-hidden"
             >
               <div
                 className="absolute top-0 left-0 right-0 h-1"
@@ -324,12 +324,12 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                       {pillar.percentage}%
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors">
+                      <h4 className="text-sm font-semibold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors">
                         {pillar.name}
                       </h4>
                       {pillar.posting_frequency && (
-                        <p className="text-[11px] text-[#A1A1B0] flex items-center gap-1 mt-0.5">
-                          <Calendar className="w-3 h-3 text-[#717182]" />
+                        <p className="text-[11px] text-[#B8B8C0] flex items-center gap-1 mt-0.5">
+                          <Calendar className="w-3 h-3 text-[#98989F]" />
                           {pillar.posting_frequency}
                         </p>
                       )}
@@ -339,14 +339,14 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                   <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleOpenEdit(pillar)}
-                      className="p-1.5 rounded-lg text-[#A1A1B0] hover:text-[#F8F9FC] hover:bg-[#30303B]/60 transition-colors"
+                      className="p-1.5 rounded-lg text-[#B8B8C0] hover:text-[#F8F9FC] hover:bg-[#30303B]/60 transition-colors"
                       title="Editar pilar"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDelete(pillar.id)}
-                      className="p-1.5 rounded-lg text-[#A1A1B0] hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      className="p-1.5 rounded-lg text-[#B8B8C0] hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       title="Excluir pilar"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -355,7 +355,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                 </div>
 
                 {pillar.description && (
-                  <p className="text-xs text-[#A1A1B0] leading-relaxed mb-4">
+                  <p className="text-xs text-[#B8B8C0] leading-relaxed mb-4">
                     {pillar.description}
                   </p>
                 )}
@@ -363,7 +363,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                 {/* Formats Badges */}
                 {pillar.content_formats && pillar.content_formats.length > 0 && (
                   <div className="mb-3">
-                    <span className="text-[10px] uppercase font-bold text-[#717182] tracking-wider block mb-1.5">
+                    <span className="text-[10px] uppercase font-bold text-[#98989F] tracking-wider block mb-1.5">
                       Formatos recomendados:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
@@ -372,7 +372,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                         return (
                           <span
                             key={fmt}
-                            className="text-[11px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#A1A1B0] border border-[#30303B]"
+                            className="text-[11px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#B8B8C0] border border-[#30303B]"
                           >
                             {config ? config.label : fmt}
                           </span>
@@ -385,16 +385,16 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                 {/* Example Topics */}
                 {pillar.example_topics && pillar.example_topics.length > 0 && (
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-[#717182] tracking-wider block mb-1.5">
+                    <span className="text-[10px] uppercase font-bold text-[#98989F] tracking-wider block mb-1.5">
                       Tópicos & Ideias de Exemplo:
                     </span>
                     <div className="space-y-1">
                       {pillar.example_topics.map((topic, i) => (
                         <div
                           key={i}
-                          className="text-xs text-[#A1A1B0] bg-[#13131A]/60 px-2.5 py-1 rounded-md border border-[#30303B]/60 flex items-center gap-1.5"
+                          className="text-xs text-[#B8B8C0] bg-[#13131A]/60 px-2.5 py-1 rounded-md border border-[#30303B]/60 flex items-center gap-1.5"
                         >
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#7952FF]" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C74410]" />
                           <span className="truncate">{topic}</span>
                         </div>
                       ))}
@@ -418,7 +418,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
 
           <div className="space-y-4 py-2 text-xs">
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Nome do Pilar *</label>
+              <label className="font-medium text-[#B8B8C0]">Nome do Pilar *</label>
               <Input
                 placeholder="Ex: Autoridade & Conteúdo Técnico"
                 value={name}
@@ -427,7 +427,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Descrição & Objetivo</label>
+              <label className="font-medium text-[#B8B8C0]">Descrição & Objetivo</label>
               <Textarea
                 placeholder="Qual o propósito deste pilar na estratégia?"
                 value={description}
@@ -438,7 +438,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Porcentagem na Grade (%)</label>
+                <label className="font-medium text-[#B8B8C0]">Porcentagem na Grade (%)</label>
                 <div className="flex items-center gap-2">
                   <Input
                     type="number"
@@ -447,14 +447,14 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                     value={percentage}
                     onChange={(e) => setPercentage(Number(e.target.value))}
                   />
-                  <span className="text-[#A1A1B0] font-semibold">%</span>
+                  <span className="text-[#B8B8C0] font-semibold">%</span>
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Frequência Desejada</label>
+                <label className="font-medium text-[#B8B8C0]">Frequência Desejada</label>
                 <select
-                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={postingFrequency}
                   onChange={(e) => setPostingFrequency(e.target.value)}
                 >
@@ -469,7 +469,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
 
             {/* Color Picker */}
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Cor de Identificação</label>
+              <label className="font-medium text-[#B8B8C0]">Cor de Identificação</label>
               <div className="flex items-center gap-2">
                 {DEFAULT_PILLAR_COLORS.map((c) => (
                   <button
@@ -487,7 +487,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
 
             {/* Content Formats */}
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Formatos Recomendados</label>
+              <label className="font-medium text-[#B8B8C0]">Formatos Recomendados</label>
               <div className="flex flex-wrap gap-1.5">
                 {Object.entries(CONTENT_FORMAT_CONFIG).slice(0, 8).map(([key, cfg]) => {
                   const selected = contentFormats.includes(key)
@@ -498,8 +498,8 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                       onClick={() => toggleFormat(key)}
                       className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors border ${
                         selected
-                          ? 'bg-[#7952FF]/20 text-[#7952FF] border-[#7952FF]/40'
-                          : 'bg-[#13131A] text-[#A1A1B0] border-[#30303B] hover:text-[#F8F9FC]'
+                          ? 'bg-[#C74410]/20 text-[#C74410] border-[#C74410]/40'
+                          : 'bg-[#13131A] text-[#B8B8C0] border-[#30303B] hover:text-[#F8F9FC]'
                       }`}
                     >
                       {cfg.label}
@@ -511,7 +511,7 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
 
             {/* Example Topics */}
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Tópicos & Ideias de Exemplo</label>
+              <label className="font-medium text-[#B8B8C0]">Tópicos & Ideias de Exemplo</label>
               <div className="flex gap-2">
                 <Input
                   placeholder="Adicionar tema exemplo..."
@@ -533,13 +533,13 @@ export const PillarsTab: React.FC<PillarsTabProps> = ({
                   {exampleTopics.map((top, i) => (
                     <span
                       key={i}
-                      className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#13131A] text-[11px] text-[#A1A1B0] border border-[#30303B]"
+                      className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#13131A] text-[11px] text-[#B8B8C0] border border-[#30303B]"
                     >
                       {top}
                       <button
                         type="button"
                         onClick={() => handleRemoveTopic(i)}
-                        className="text-[#717182] hover:text-red-400"
+                        className="text-[#98989F] hover:text-red-400"
                       >
                         <X className="w-3 h-3" />
                       </button>

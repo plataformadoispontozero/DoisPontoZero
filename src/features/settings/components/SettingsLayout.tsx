@@ -80,8 +80,8 @@ export const SettingsLayout: React.FC = () => {
                 className={cn(
                   'flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium transition-all duration-150 select-none whitespace-nowrap',
                   isActive
-                    ? 'bg-[#7952FF] text-white shadow-sm shadow-[#7952FF]/30'
-                    : 'text-[#A1A1B0] hover:text-[#F8F9FC] hover:bg-[#1C1C24]'
+                    ? 'bg-[#C74410] text-white shadow-sm shadow-[#C74410]/30'
+                    : 'text-[#B8B8C0] hover:text-[#F8F9FC] hover:bg-[#1C1C24]'
                 )}
               >
                 <Icon className="w-4 h-4 shrink-0" />
@@ -90,7 +90,7 @@ export const SettingsLayout: React.FC = () => {
                   <span
                     className={cn(
                       'text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider',
-                      isActive ? 'bg-white/20 text-white' : 'bg-[#B8FF65]/20 text-[#B8FF65]'
+                      isActive ? 'bg-white/20 text-white' : 'bg-[#FF8759]/20 text-[#FF8759]'
                     )}
                   >
                     {tab.badge}

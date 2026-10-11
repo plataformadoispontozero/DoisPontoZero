@@ -50,10 +50,10 @@ export const DocumentBrandingPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-            <FileSpreadsheet className="w-5 h-5 text-[#7952FF]" />
+            <FileSpreadsheet className="w-5 h-5 text-[#C74410]" />
             Branding de Documentos PDF
           </h3>
-          <p className="text-xs text-[#A1A1B0]">
+          <p className="text-xs text-[#B8B8C0]">
             Defina o layout, cabeçalhos, marca-d'água e rodapé aplicados nos relatórios e exportações da agência.
           </p>
         </div>
@@ -75,7 +75,7 @@ export const DocumentBrandingPage: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                   Estilo de Cabeçalho do Documento
                 </label>
                 <Select
@@ -91,7 +91,7 @@ export const DocumentBrandingPage: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                  <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                     Formato de Página
                   </label>
                   <Select
@@ -105,7 +105,7 @@ export const DocumentBrandingPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                  <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                     Fonte dos Documentos (@react-pdf)
                   </label>
                   <Select
@@ -129,13 +129,13 @@ export const DocumentBrandingPage: React.FC = () => {
                       id="showWatermark"
                       checked={formData.showWatermark}
                       onChange={(e) => setFormData({ ...formData, showWatermark: e.target.checked })}
-                      className="w-4 h-4 rounded border-[#30303B] bg-[#1C1C24] text-[#7952FF]"
+                      className="w-4 h-4 rounded border-[#30303B] bg-[#1C1C24] text-[#C74410]"
                     />
                     <label htmlFor="showWatermark" className="text-xs font-semibold text-[#F8F9FC] cursor-pointer">
                       Exibir Símbolo como Marca-d'Água no Fundo
                     </label>
                   </div>
-                  <span className="text-xs font-mono text-[#B8FF65]">
+                  <span className="text-xs font-mono text-[#FF8759]">
                     {Math.round(formData.watermarkOpacity * 100)}% Opacidade
                   </span>
                 </div>
@@ -149,9 +149,9 @@ export const DocumentBrandingPage: React.FC = () => {
                       step="0.01"
                       value={formData.watermarkOpacity}
                       onChange={(e) => setFormData({ ...formData, watermarkOpacity: parseFloat(e.target.value) })}
-                      className="w-full accent-[#7952FF] cursor-pointer"
+                      className="w-full accent-[#C74410] cursor-pointer"
                     />
-                    <div className="flex justify-between text-[10px] text-[#717182]">
+                    <div className="flex justify-between text-[10px] text-[#98989F]">
                       <span>1% (Discreto)</span>
                       <span>Sugerido (4% a 8%)</span>
                       <span>20% (Visível)</span>
@@ -161,7 +161,7 @@ export const DocumentBrandingPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
                   Texto do Rodapé Oficial
                 </label>
                 <Input
@@ -176,8 +176,8 @@ export const DocumentBrandingPage: React.FC = () => {
 
         {/* Painel Direito de Previsualização da Folha PDF (Col 5) */}
         <div className="lg:col-span-5 space-y-3">
-          <span className="text-xs font-semibold text-[#A1A1B0] flex items-center gap-1.5 px-1">
-            <Eye className="w-3.5 h-3.5 text-[#B8FF65]" />
+          <span className="text-xs font-semibold text-[#B8B8C0] flex items-center gap-1.5 px-1">
+            <Eye className="w-3.5 h-3.5 text-[#FF8759]" />
             Simulação da Folha PDF ({formData.pageFormat})
           </span>
 

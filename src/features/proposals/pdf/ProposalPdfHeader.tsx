@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   proposalBadge: {
     fontSize: 9,
-    color: '#7952FF',
+    color: '#C74410',
     textTransform: 'uppercase',
     fontWeight: 'bold',
     letterSpacing: 0.8,

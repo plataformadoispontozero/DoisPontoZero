@@ -75,9 +75,9 @@ const VARIANT_CONFIG: Record<
     text: 'text-red-400',
   },
   info: {
-    icon: <Info className="w-4 h-4 text-[#7952FF]" />,
-    border: 'border-[#7952FF]/30',
-    text: 'text-[#7952FF]',
+    icon: <Info className="w-4 h-4 text-[#C74410]" />,
+    border: 'border-[#C74410]/30',
+    text: 'text-[#C74410]',
   },
   warning: {
     icon: <AlertCircle className="w-4 h-4 text-amber-400" />,
@@ -106,7 +106,7 @@ const ToastItem: React.FC<{
       <p className="flex-1 text-sm text-[#F8F9FC] leading-snug">{t.message}</p>
       <button
         onClick={() => onDismiss(t.id)}
-        className="shrink-0 text-[#717182] hover:text-[#F8F9FC] transition-colors"
+        className="shrink-0 text-[#98989F] hover:text-[#F8F9FC] transition-colors"
         aria-label="Fechar"
       >
         <X className="w-3.5 h-3.5" />

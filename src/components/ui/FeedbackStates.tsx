@@ -20,12 +20,12 @@ export const LoadingState: React.FC<{
     role="status"
     aria-live="polite"
   >
-    <div className="w-10 h-10 rounded-xl bg-[#7952FF]/15 border border-[#7952FF]/30 flex items-center justify-center text-[#7952FF] mb-3">
+    <div className="w-10 h-10 rounded-xl bg-[#C74410]/15 border border-[#C74410]/30 flex items-center justify-center text-[#C74410] mb-3">
       <Loader2 className="w-5 h-5 animate-spin" />
     </div>
     <h4 className="font-heading text-sm font-semibold text-[#F8F9FC]">{message}</h4>
     {description && (
-      <p className="text-xs text-[#A1A1B0] max-w-sm mt-1">{description}</p>
+      <p className="text-xs text-[#B8B8C0] max-w-sm mt-1">{description}</p>
     )}
   </div>
 )

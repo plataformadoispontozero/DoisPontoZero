@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   sectionAccentBar: {
     width: 4,
     height: 14,
-    backgroundColor: '#7952FF',
+    backgroundColor: '#C74410',
     borderRadius: 2,
     marginRight: 8,
   },

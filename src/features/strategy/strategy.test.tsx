@@ -203,7 +203,7 @@ describe('Strategy Studio — Editorial Engine (Deterministic Suggestion Generat
       strategy_id: 'strat-1',
       name: 'Autoridade Técnica',
       description: 'Cases e frameworks.',
-      color: '#7952FF',
+      color: '#C74410',
       icon: 'Award',
       percentage: 50,
       position: 0,

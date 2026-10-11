@@ -39,7 +39,7 @@ const mockColumn: BoardColumn = {
   agency_id: 'agency-1',
   board_id: 'board-1',
   name: 'Em Produção',
-  color: '#7952FF',
+  color: '#C74410',
   position: 1000,
   category: 'in_progress',
   wip_limit: 5,

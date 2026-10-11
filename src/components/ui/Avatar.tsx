@@ -31,7 +31,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       online: 'bg-[#34D399]',
       busy: 'bg-[#FB7185]',
       away: 'bg-[#FBBF24]',
-      offline: 'bg-[#717182]',
+      offline: 'bg-[#98989F]',
     }
 
     const getInitials = (str: string) => {

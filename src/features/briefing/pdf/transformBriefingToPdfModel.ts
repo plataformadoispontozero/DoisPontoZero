@@ -20,9 +20,9 @@ export function transformBriefingToPdfModel(
     agencyName: brandingConfig?.agencyName || 'Dois.Zero Creative Agency',
     logoUrl: brandingConfig?.logoUrl,
     symbolUrl: brandingConfig?.symbolUrl,
-    primaryColor: brandingConfig?.primaryColor || '#7952FF',
+    primaryColor: brandingConfig?.primaryColor || '#C74410',
     secondaryColor: brandingConfig?.secondaryColor || '#1C1C24',
-    accentColor: brandingConfig?.accentColor || '#B8FF65',
+    accentColor: brandingConfig?.accentColor || '#FF8759',
     footerText: brandingConfig?.footerText || 'Documento confidencial gerado por Creative Agency OS.',
   }
 

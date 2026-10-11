@@ -12,14 +12,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="relative flex items-center w-full">
         {leftIcon && (
-          <div className="absolute left-3 text-[#A1A1B0] pointer-events-none flex items-center justify-center">
+          <div className="absolute left-3 text-[#B8B8C0] pointer-events-none flex items-center justify-center">
             {leftIcon}
           </div>
         )}
         <input
           type={type}
           className={cn(
-            'flex h-9 w-full rounded-lg border border-[#30303B] bg-[#1C1C24] px-3 py-1.5 text-xs text-[#F8F9FC] placeholder-[#717182] transition-colors focus-visible:outline-none focus-visible:border-[#7952FF] focus-visible:ring-1 focus-visible:ring-[#7952FF] disabled:cursor-not-allowed disabled:opacity-50',
+            'flex h-9 w-full rounded-lg border border-[#30303B] bg-[#1C1C24] px-3 py-1.5 text-xs text-[#F8F9FC] placeholder-[#98989F] transition-colors focus-visible:outline-none focus-visible:border-[#C74410] focus-visible:ring-1 focus-visible:ring-[#C74410] disabled:cursor-not-allowed disabled:opacity-50',
             leftIcon && 'pl-9',
             rightIcon && 'pr-9',
             error && 'border-[#FB7185] focus-visible:border-[#FB7185] focus-visible:ring-[#FB7185]',
@@ -29,7 +29,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {rightIcon && (
-          <div className="absolute right-3 text-[#A1A1B0] flex items-center justify-center">
+          <div className="absolute right-3 text-[#B8B8C0] flex items-center justify-center">
             {rightIcon}
           </div>
         )}

@@ -29,10 +29,10 @@ export const AppearanceSettingsPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
-            <SunMoon className="w-5 h-5 text-[#7952FF]" />
+            <SunMoon className="w-5 h-5 text-[#C74410]" />
             Aparência & Temas Visuais
           </h3>
-          <p className="text-xs text-[#A1A1B0]">
+          <p className="text-xs text-[#B8B8C0]">
             Defina o tema padrão da agência e gerencie os modos de contraste da interface.
           </p>
         </div>
@@ -56,20 +56,20 @@ export const AppearanceSettingsPage: React.FC = () => {
               onClick={() => setSelectedTheme('dark')}
               className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                 selectedTheme === 'dark'
-                  ? 'border-[#7952FF] bg-[#1C1C24] shadow-lg shadow-[#7952FF]/10'
-                  : 'border-[#30303B] bg-[#101014]/60 hover:border-[#7952FF]/50'
+                  ? 'border-[#C74410] bg-[#1C1C24] shadow-lg shadow-[#C74410]/10'
+                  : 'border-[#30303B] bg-[#101014]/60 hover:border-[#C74410]/50'
               }`}
             >
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 rounded-lg bg-[#7952FF]/10 text-[#7952FF]">
+                <div className="p-2 rounded-lg bg-[#C74410]/10 text-[#C74410]">
                   <Moon className="w-5 h-5" />
                 </div>
                 {selectedTheme === 'dark' && (
-                  <CheckCircle2 className="w-4 h-4 text-[#7952FF]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#C74410]" />
                 )}
               </div>
               <h4 className="text-sm font-bold text-[#F8F9FC]">Tema Escuro (Dark Mode)</h4>
-              <p className="text-xs text-[#A1A1B0] mt-1">
+              <p className="text-xs text-[#B8B8C0] mt-1">
                 Fundo escuro otimizado (#101014) com elementos contrastantes em neon e roxo. Padrão recomendado.
               </p>
             </div>
@@ -79,8 +79,8 @@ export const AppearanceSettingsPage: React.FC = () => {
               onClick={() => setSelectedTheme('light')}
               className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                 selectedTheme === 'light'
-                  ? 'border-[#7952FF] bg-[#1C1C24] shadow-lg shadow-[#7952FF]/10'
-                  : 'border-[#30303B] bg-[#101014]/60 hover:border-[#7952FF]/50'
+                  ? 'border-[#C74410] bg-[#1C1C24] shadow-lg shadow-[#C74410]/10'
+                  : 'border-[#30303B] bg-[#101014]/60 hover:border-[#C74410]/50'
               }`}
             >
               <div className="flex items-center justify-between mb-3">
@@ -88,11 +88,11 @@ export const AppearanceSettingsPage: React.FC = () => {
                   <Sun className="w-5 h-5" />
                 </div>
                 {selectedTheme === 'light' && (
-                  <CheckCircle2 className="w-4 h-4 text-[#7952FF]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#C74410]" />
                 )}
               </div>
               <h4 className="text-sm font-bold text-[#F8F9FC]">Tema Claro (Light Mode)</h4>
-              <p className="text-xs text-[#A1A1B0] mt-1">
+              <p className="text-xs text-[#B8B8C0] mt-1">
                 Interface com fundos limpos em alta luminosidade para ambientes muito iluminados.
               </p>
             </div>
@@ -102,8 +102,8 @@ export const AppearanceSettingsPage: React.FC = () => {
               onClick={() => setSelectedTheme('system')}
               className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                 selectedTheme === 'system'
-                  ? 'border-[#7952FF] bg-[#1C1C24] shadow-lg shadow-[#7952FF]/10'
-                  : 'border-[#30303B] bg-[#101014]/60 hover:border-[#7952FF]/50'
+                  ? 'border-[#C74410] bg-[#1C1C24] shadow-lg shadow-[#C74410]/10'
+                  : 'border-[#30303B] bg-[#101014]/60 hover:border-[#C74410]/50'
               }`}
             >
               <div className="flex items-center justify-between mb-3">
@@ -111,17 +111,17 @@ export const AppearanceSettingsPage: React.FC = () => {
                   <Monitor className="w-5 h-5" />
                 </div>
                 {selectedTheme === 'system' && (
-                  <CheckCircle2 className="w-4 h-4 text-[#7952FF]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#C74410]" />
                 )}
               </div>
               <h4 className="text-sm font-bold text-[#F8F9FC]">Sincronizado com Sistema</h4>
-              <p className="text-xs text-[#A1A1B0] mt-1">
+              <p className="text-xs text-[#B8B8C0] mt-1">
                 Acompanha automaticamente as preferências do sistema operacional do usuário (macOS/Windows).
               </p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs text-[#A1A1B0] space-y-1">
+          <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs text-[#B8B8C0] space-y-1">
             <span className="font-semibold text-[#F8F9FC] block">
               Regra de Hierarquia de Aparência
             </span>

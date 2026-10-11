@@ -14,7 +14,7 @@ export function transformPresentationToPdfModel(
 ): PresentationPdfModel {
   const agencyName = customBranding?.agencyName || defaultBranding.company?.legalName || defaultBranding.name || 'Matriz Criativa Agência OS'
   const logoUrl = customBranding?.logoUrl || ''
-  const primaryColor = customBranding?.primaryColor || defaultBranding.colors.primary || '#7952FF'
+  const primaryColor = customBranding?.primaryColor || defaultBranding.colors.primary || '#C74410'
   const website = customBranding?.website || 'https://doiszero.com'
 
   const dateFormatted = new Date(presentation.created_at || Date.now()).toLocaleDateString('pt-BR', {

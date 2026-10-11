@@ -14,7 +14,7 @@ export function transformProposalToPdfModel(
 ): ProposalPdfModel {
   const agencyName = customBranding?.agencyName || defaultBranding.company?.legalName || defaultBranding.name || 'Matriz Criativa Agência OS'
   const logoUrl = customBranding?.logoUrl || ''
-  const primaryColor = customBranding?.primaryColor || defaultBranding.colors.primary || '#7952FF'
+  const primaryColor = customBranding?.primaryColor || defaultBranding.colors.primary || '#C74410'
   const website = customBranding?.website || 'https://doiszero.com'
   const contactEmail = customBranding?.contactEmail || 'contato@doiszero.com'
   const contactPhone = customBranding?.contactPhone || '(11) 99999-0000'

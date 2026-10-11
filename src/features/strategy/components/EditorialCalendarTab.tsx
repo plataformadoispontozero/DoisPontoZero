@@ -250,7 +250,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="flex flex-1 items-center gap-2">
           <div className="relative flex-1 max-w-sm">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#717182]" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#98989F]" />
             <Input
               placeholder="Buscar pautas, temas, copies..."
               value={search}
@@ -261,7 +261,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
 
           {pillars.length > 0 && (
             <select
-              className="h-9 rounded-md bg-[#1C1C24] border border-[#30303B] px-3 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+              className="h-9 rounded-md bg-[#1C1C24] border border-[#30303B] px-3 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
               value={selectedPillarId}
               onChange={(e) => setSelectedPillarId(e.target.value)}
             >
@@ -280,8 +280,8 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
               onClick={() => setViewMode('list')}
               className={`p-1.5 rounded-md transition-colors ${
                 viewMode === 'list'
-                  ? 'bg-[#7952FF] text-white'
-                  : 'text-[#A1A1B0] hover:text-[#F8F9FC]'
+                  ? 'bg-[#C74410] text-white'
+                  : 'text-[#B8B8C0] hover:text-[#F8F9FC]'
               }`}
               title="Visualização em Lista"
             >
@@ -291,8 +291,8 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
               onClick={() => setViewMode('calendar')}
               className={`p-1.5 rounded-md transition-colors ${
                 viewMode === 'calendar'
-                  ? 'bg-[#7952FF] text-white'
-                  : 'text-[#A1A1B0] hover:text-[#F8F9FC]'
+                  ? 'bg-[#C74410] text-white'
+                  : 'text-[#B8B8C0] hover:text-[#F8F9FC]'
               }`}
               title="Visualização por Data"
             >
@@ -306,7 +306,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
             variant="secondary"
             size="sm"
             onClick={onOpenGenerator}
-            className="gap-1.5 text-[#7952FF] border-[#7952FF]/30 hover:bg-[#7952FF]/10"
+            className="gap-1.5 text-[#C74410] border-[#C74410]/30 hover:bg-[#C74410]/10"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Gerar Grade</span>
@@ -333,14 +333,14 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
               onClick={() => setSelectedStatus(f.id)}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
                 active
-                  ? 'bg-[#7952FF] text-white shadow-sm'
-                  : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC] border border-[#30303B]'
+                  ? 'bg-[#C74410] text-white shadow-sm'
+                  : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC] border border-[#30303B]'
               }`}
             >
               <span>{f.label}</span>
               <span
                 className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                  active ? 'bg-white/20 text-white' : 'bg-[#13131A] text-[#717182]'
+                  active ? 'bg-white/20 text-white' : 'bg-[#13131A] text-[#98989F]'
                 }`}
               >
                 {count}
@@ -379,13 +379,13 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
             return (
               <Card
                 key={item.id}
-                className="bg-[#1C1C24] border-[#30303B] hover:border-[#7952FF]/40 transition-colors group"
+                className="bg-[#1C1C24] border-[#30303B] hover:border-[#C74410]/40 transition-colors group"
               >
                 <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   {/* Left Column: Date / Channel / Format */}
                   <div className="flex items-start md:items-center gap-3.5 flex-1">
                     <div className="text-center p-2 rounded-lg bg-[#13131A] border border-[#30303B] min-w-[70px] flex-shrink-0">
-                      <span className="block text-[10px] uppercase font-bold text-[#717182]">
+                      <span className="block text-[10px] uppercase font-bold text-[#98989F]">
                         {item.scheduled_date
                           ? new Date(item.scheduled_date + 'T00:00:00').toLocaleDateString('pt-BR', {
                               weekday: 'short',
@@ -401,7 +401,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
                           : '--'}
                       </span>
                       {item.scheduled_time && (
-                        <span className="block text-[10px] text-[#A1A1B0]">
+                        <span className="block text-[10px] text-[#B8B8C0]">
                           {item.scheduled_time}
                         </span>
                       )}
@@ -418,23 +418,23 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
                           </span>
                         )}
                         {channelConfig && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#A1A1B0] border border-[#30303B]">
+                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#B8B8C0] border border-[#30303B]">
                             {channelConfig.label}
                           </span>
                         )}
                         {formatConfig && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#A1A1B0] border border-[#30303B]">
+                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#13131A] text-[#B8B8C0] border border-[#30303B]">
                             {formatConfig.label}
                           </span>
                         )}
                       </div>
 
-                      <h4 className="text-sm font-semibold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors truncate">
+                      <h4 className="text-sm font-semibold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors truncate">
                         {item.title}
                       </h4>
 
                       {item.copy_text && (
-                        <p className="text-xs text-[#A1A1B0] line-clamp-1">
+                        <p className="text-xs text-[#B8B8C0] line-clamp-1">
                           {item.copy_text}
                         </p>
                       )}
@@ -445,7 +445,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
                   <div className="flex items-center justify-between md:justify-end gap-3 pt-2 md:pt-0 border-t md:border-t-0 border-[#30303B]">
                     <div className="flex items-center gap-1.5">
                       <select
-                        className="h-7 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-[11px] text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                        className="h-7 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-[11px] text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                         value={item.status}
                         onChange={(e) =>
                           handleStatusChange(item.id, e.target.value as EditorialStatus)
@@ -462,14 +462,14 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleOpenEdit(item)}
-                        className="p-1.5 rounded-md text-[#717182] hover:text-[#F8F9FC] hover:bg-[#30303B]/60"
+                        className="p-1.5 rounded-md text-[#98989F] hover:text-[#F8F9FC] hover:bg-[#30303B]/60"
                         title="Editar pauta"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="p-1.5 rounded-md text-[#717182] hover:text-red-400 hover:bg-red-500/10"
+                        className="p-1.5 rounded-md text-[#98989F] hover:text-red-400 hover:bg-red-500/10"
                         title="Excluir pauta"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -498,10 +498,10 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
 
             return (
               <div key={dateStr} className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#A1A1B0] uppercase tracking-wider">
-                  <CalendarIcon className="w-3.5 h-3.5 text-[#7952FF]" />
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#B8B8C0] uppercase tracking-wider">
+                  <CalendarIcon className="w-3.5 h-3.5 text-[#C74410]" />
                   <span>{formattedDate}</span>
-                  <span className="text-[10px] text-[#717182]">({dateItems.length})</span>
+                  <span className="text-[10px] text-[#98989F]">({dateItems.length})</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -523,7 +523,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
                     return (
                       <Card
                         key={item.id}
-                        className="bg-[#1C1C24] border-[#30303B] hover:border-[#7952FF]/40 transition-colors"
+                        className="bg-[#1C1C24] border-[#30303B] hover:border-[#C74410]/40 transition-colors"
                       >
                         <CardContent className="p-3.5 space-y-2.5">
                           <div className="flex items-center justify-between gap-2">
@@ -537,7 +537,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
                                 </span>
                               )}
                               {channelConfig && (
-                                <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#13131A] text-[#A1A1B0] border border-[#30303B]">
+                                <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#13131A] text-[#B8B8C0] border border-[#30303B]">
                                   {channelConfig.label}
                                 </span>
                               )}
@@ -556,14 +556,14 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
                           </h5>
 
                           {item.copy_text && (
-                            <p className="text-[11px] text-[#A1A1B0] line-clamp-2 bg-[#13131A] p-2 rounded border border-[#30303B]/60 italic">
+                            <p className="text-[11px] text-[#B8B8C0] line-clamp-2 bg-[#13131A] p-2 rounded border border-[#30303B]/60 italic">
                               "{item.copy_text}"
                             </p>
                           )}
 
-                          <div className="flex items-center justify-between pt-1 border-t border-[#30303B]/60 text-[10px] text-[#717182]">
+                          <div className="flex items-center justify-between pt-1 border-t border-[#30303B]/60 text-[10px] text-[#98989F]">
                             <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3 text-[#7952FF]" />
+                              <Clock className="w-3 h-3 text-[#C74410]" />
                               {item.scheduled_time || '10:00'}
                             </span>
 
@@ -604,7 +604,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
 
           <div className="space-y-4 py-2 text-xs">
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Título da Pauta / Assunto *</label>
+              <label className="font-medium text-[#B8B8C0]">Título da Pauta / Assunto *</label>
               <Input
                 placeholder="Ex: Carrossel com 5 tendências de IA no design"
                 value={title}
@@ -614,9 +614,9 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Pilar Editorial</label>
+                <label className="font-medium text-[#B8B8C0]">Pilar Editorial</label>
                 <select
-                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={pillarId}
                   onChange={(e) => setPillarId(e.target.value)}
                 >
@@ -630,9 +630,9 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Canal de Veiculação</label>
+                <label className="font-medium text-[#B8B8C0]">Canal de Veiculação</label>
                 <select
-                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={channel}
                   onChange={(e) => setChannel(e.target.value)}
                 >
@@ -647,9 +647,9 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Formato de Conteúdo</label>
+                <label className="font-medium text-[#B8B8C0]">Formato de Conteúdo</label>
                 <select
-                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
+                  className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#C74410]"
                   value={contentFormat}
                   onChange={(e) => setContentFormat(e.target.value)}
                 >
@@ -663,7 +663,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
 
               <div className="grid grid-cols-2 gap-1.5">
                 <div className="space-y-1.5">
-                  <label className="font-medium text-[#A1A1B0]">Data</label>
+                  <label className="font-medium text-[#B8B8C0]">Data</label>
                   <Input
                     type="date"
                     value={scheduledDate}
@@ -671,7 +671,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="font-medium text-[#A1A1B0]">Hora</label>
+                  <label className="font-medium text-[#B8B8C0]">Hora</label>
                   <Input
                     type="time"
                     value={scheduledTime}
@@ -682,7 +682,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Copywriting / Legenda Completa</label>
+              <label className="font-medium text-[#B8B8C0]">Copywriting / Legenda Completa</label>
               <Textarea
                 placeholder="Insira o texto completo do post..."
                 value={copyText}
@@ -693,7 +693,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Gancho de Abertura (Hook)</label>
+                <label className="font-medium text-[#B8B8C0]">Gancho de Abertura (Hook)</label>
                 <Input
                   placeholder="Primeira frase impactante..."
                   value={hook}
@@ -702,7 +702,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-medium text-[#A1A1B0]">Chamada para Ação (CTA)</label>
+                <label className="font-medium text-[#B8B8C0]">Chamada para Ação (CTA)</label>
                 <Input
                   placeholder="Chamada de encerramento..."
                   value={cta}
@@ -712,7 +712,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Instruções Visuais / Direção de Arte</label>
+              <label className="font-medium text-[#B8B8C0]">Instruções Visuais / Direção de Arte</label>
               <Textarea
                 placeholder="Ex: Foto de fundo escura com tipografia bold em branco. Logo no canto inferior..."
                 value={visualNotes}
@@ -722,7 +722,7 @@ export const EditorialCalendarTab: React.FC<EditorialCalendarTabProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Hashtags</label>
+              <label className="font-medium text-[#B8B8C0]">Hashtags</label>
               <Input
                 placeholder="#estrategia #socialmedia #marketing"
                 value={hashtagsStr}

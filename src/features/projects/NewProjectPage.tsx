@@ -35,7 +35,7 @@ const STATUS_OPTIONS = [
 const PRIORITY_COLORS: Record<string, string> = {
   urgent: 'text-red-400',
   high: 'text-orange-400',
-  normal: 'text-[#A1A1B0]',
+  normal: 'text-[#B8B8C0]',
   low: 'text-sky-400',
 }
 
@@ -111,15 +111,15 @@ export const NewProjectPage: React.FC = () => {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-[#7952FF]/10">
-                <FolderKanban className="w-4 h-4 text-[#7952FF]" />
+              <div className="p-2 rounded-lg bg-[#C74410]/10">
+                <FolderKanban className="w-4 h-4 text-[#C74410]" />
               </div>
               <CardTitle className="text-sm">Informações do Projeto</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+              <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                 Nome do projeto <span className="text-red-400">*</span>
               </label>
               <Input
@@ -135,7 +135,7 @@ export const NewProjectPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+              <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                 Descrição
               </label>
               <Textarea
@@ -149,7 +149,7 @@ export const NewProjectPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block flex items-center gap-1.5">
+                <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block flex items-center gap-1.5">
                   <Flag className="w-3 h-3" /> Prioridade
                 </label>
                 <Select
@@ -163,7 +163,7 @@ export const NewProjectPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+                <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                   Status inicial
                 </label>
                 <Select
@@ -183,8 +183,8 @@ export const NewProjectPage: React.FC = () => {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-[#B8FF65]/10">
-                <Calendar className="w-4 h-4 text-[#B8FF65]" />
+              <div className="p-2 rounded-lg bg-[#FF8759]/10">
+                <Calendar className="w-4 h-4 text-[#FF8759]" />
               </div>
               <CardTitle className="text-sm">Prazos</CardTitle>
             </div>
@@ -192,7 +192,7 @@ export const NewProjectPage: React.FC = () => {
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+                <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                   Data de início
                 </label>
                 <Input
@@ -205,7 +205,7 @@ export const NewProjectPage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="text-xs font-medium text-[#A1A1B0] mb-1.5 block">
+                <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                   Prazo de entrega
                 </label>
                 <Input
@@ -237,10 +237,10 @@ export const NewProjectPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="p-4 rounded-xl border border-dashed border-[#30303B] text-center">
-              <p className="text-xs text-[#A1A1B0] mb-1">
+              <p className="text-xs text-[#B8B8C0] mb-1">
                 Seleção de responsável e participantes
               </p>
-              <p className="text-[11px] text-[#717182]">
+              <p className="text-[11px] text-[#98989F]">
                 Disponível após conectar ao Supabase e configurar membros da agência.
               </p>
             </div>

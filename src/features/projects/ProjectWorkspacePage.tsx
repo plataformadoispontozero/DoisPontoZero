@@ -95,7 +95,7 @@ export const ProjectWorkspacePage: React.FC = () => {
       agency_id: MOCK_AGENCY_ID,
       board_id: 'board-1',
       name: 'Backlog Criativo',
-      color: '#717182',
+      color: '#98989F',
       position: 1000,
       category: 'backlog',
       wip_limit: null,
@@ -134,7 +134,7 @@ export const ProjectWorkspacePage: React.FC = () => {
       agency_id: MOCK_AGENCY_ID,
       board_id: 'board-1',
       name: 'Em Produção',
-      color: '#7952FF',
+      color: '#C74410',
       position: 2000,
       category: 'in_progress',
       wip_limit: 4,
@@ -341,7 +341,7 @@ export const ProjectWorkspacePage: React.FC = () => {
       <div className="bg-[#1C1C24] border border-[#30303B] rounded-2xl p-5 md:p-6 shadow-xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#30303B]">
           <div className="space-y-1.5">
-            <div className="flex items-center gap-2 text-xs text-[#717182]">
+            <div className="flex items-center gap-2 text-xs text-[#98989F]">
               <button
                 onClick={() => navigate('/projects')}
                 className="hover:text-[#F8F9FC] transition-colors flex items-center gap-1"
@@ -352,7 +352,7 @@ export const ProjectWorkspacePage: React.FC = () => {
               <span>/</span>
               {project.client && (
                 <>
-                  <span className="text-[#A1A1B0] font-medium">{project.client.name}</span>
+                  <span className="text-[#B8B8C0] font-medium">{project.client.name}</span>
                   <span>/</span>
                 </>
               )}
@@ -374,7 +374,7 @@ export const ProjectWorkspacePage: React.FC = () => {
             </div>
 
             {project.description && (
-              <p className="text-xs text-[#A1A1B0] max-w-2xl pt-1">{project.description}</p>
+              <p className="text-xs text-[#B8B8C0] max-w-2xl pt-1">{project.description}</p>
             )}
           </div>
 
@@ -393,7 +393,7 @@ export const ProjectWorkspacePage: React.FC = () => {
               variant="outline"
               size="sm"
               onClick={() => navigate(`/projects/${project.id}/settings`)}
-              className="h-9 w-9 p-0 text-[#A1A1B0] hover:text-[#F8F9FC]"
+              className="h-9 w-9 p-0 text-[#B8B8C0] hover:text-[#F8F9FC]"
               title="Configurações do Projeto"
             >
               <Settings className="w-4 h-4" />
@@ -404,10 +404,10 @@ export const ProjectWorkspacePage: React.FC = () => {
         {/* Project Meta Bar: Dates, Progress, Team */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 items-center">
           {/* Dates */}
-          <div className="flex items-center gap-3 text-xs text-[#A1A1B0]">
-            <Calendar className="w-4 h-4 text-[#7952FF]" />
+          <div className="flex items-center gap-3 text-xs text-[#B8B8C0]">
+            <Calendar className="w-4 h-4 text-[#C74410]" />
             <div>
-              <span className="text-[#717182] block text-[10px] uppercase font-semibold">Prazo de Entrega</span>
+              <span className="text-[#98989F] block text-[10px] uppercase font-semibold">Prazo de Entrega</span>
               <span>{formatDate(project.due_date)}</span>
             </div>
           </div>
@@ -415,12 +415,12 @@ export const ProjectWorkspacePage: React.FC = () => {
           {/* Progress Bar */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <span className="text-[#717182] text-[10px] uppercase font-semibold">Progresso Geral</span>
+              <span className="text-[#98989F] text-[10px] uppercase font-semibold">Progresso Geral</span>
               <span className="text-[#F8F9FC] font-bold text-xs">{percentCompleted}%</span>
             </div>
             <div className="w-full bg-[#14141A] rounded-full h-2 overflow-hidden border border-[#30303B]/60">
               <div
-                className="bg-gradient-to-r from-[#7952FF] to-[#B8FF65] h-2 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-[#C74410] to-[#FF8759] h-2 rounded-full transition-all duration-300"
                 style={{ width: `${percentCompleted}%` }}
               />
             </div>
@@ -428,7 +428,7 @@ export const ProjectWorkspacePage: React.FC = () => {
 
           {/* Team Members */}
           <div className="flex items-center justify-start sm:justify-end gap-2">
-            <span className="text-[10px] uppercase font-semibold text-[#717182] mr-1">Equipe:</span>
+            <span className="text-[10px] uppercase font-semibold text-[#98989F] mr-1">Equipe:</span>
             <div className="flex -space-x-2">
               <Avatar name="Diretor de Arte" size="sm" className="w-7 h-7 text-[10px] ring-2 ring-[#1C1C24]" />
               <Avatar name="Copywriter" size="sm" className="w-7 h-7 text-[10px] ring-2 ring-[#1C1C24]" />
@@ -456,7 +456,7 @@ export const ProjectWorkspacePage: React.FC = () => {
             </TabsTrigger>
           </TabsList>
 
-          <div className="text-xs text-[#717182] hidden sm:block">
+          <div className="text-xs text-[#98989F] hidden sm:block">
             {allTasks.length} {allTasks.length === 1 ? 'tarefa no fluxo' : 'tarefas no fluxo'}
           </div>
         </div>

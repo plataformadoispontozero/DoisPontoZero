@@ -131,10 +131,10 @@ export const NewBriefingPage: React.FC = () => {
       {(clientQuery.isLoading || templateQuery.isLoading) && <p role="status">Carregando clientes e modelos…</p>}
       {(clientQuery.isError || templateQuery.isError) && <p role="alert">Não foi possível carregar clientes ou modelos. Tente novamente antes de criar o briefing.</p>}
       {!clientQuery.isLoading && !clientQuery.isError && availableClients.length === 0 && (
-        <p>Nenhum cliente cadastrado. <Link className="text-[#B8FF65]" to="/clients/new">Cadastrar cliente no CRM</Link></p>
+        <p>Nenhum cliente cadastrado. <Link className="text-[#FF8759]" to="/clients/new">Cadastrar cliente no CRM</Link></p>
       )}
       {!templateQuery.isLoading && !templateQuery.isError && templates.length === 0 && (
-        <p>Nenhum modelo cadastrado. <Link className="text-[#B8FF65]" to="/briefings/templates">Gerenciar modelos de briefing</Link></p>
+        <p>Nenhum modelo cadastrado. <Link className="text-[#FF8759]" to="/briefings/templates">Gerenciar modelos de briefing</Link></p>
       )}
       {/* Steps indicator */}
       {step < 5 && (
@@ -149,17 +149,17 @@ export const NewBriefingPage: React.FC = () => {
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
                   step === st.num
-                    ? 'bg-[#7952FF] text-white'
+                    ? 'bg-[#C74410] text-white'
                     : step > st.num
                     ? 'bg-[#10B981] text-white'
-                    : 'bg-[#252530] text-[#717182]'
+                    : 'bg-[#252530] text-[#98989F]'
                 }`}
               >
                 {step > st.num ? <Check className="w-3.5 h-3.5" /> : st.num}
               </div>
               <span
                 className={`text-xs font-medium hidden sm:inline ${
-                  step === st.num ? 'text-[#F8F9FC]' : 'text-[#717182]'
+                  step === st.num ? 'text-[#F8F9FC]' : 'text-[#98989F]'
                 }`}
               >
                 {st.label}
@@ -175,7 +175,7 @@ export const NewBriefingPage: React.FC = () => {
           <CardContent className="p-6 space-y-4">
             <div>
               <h2 className="text-base font-bold text-[#F8F9FC]">Passo 1: Selecione o Cliente</h2>
-              <p className="text-xs text-[#A1A1B0] mt-0.5">
+              <p className="text-xs text-[#B8B8C0] mt-0.5">
                 Vincule o briefing a uma conta existente no seu CRM.
               </p>
             </div>
@@ -189,19 +189,19 @@ export const NewBriefingPage: React.FC = () => {
                     onClick={() => setSelectedClientId(client.id)}
                     className={`p-4 rounded-xl border cursor-pointer transition-all ${
                       isSelected
-                        ? 'bg-[#252530] border-[#7952FF] shadow-md shadow-[#7952FF]/10'
-                        : 'bg-[#1C1C24] border-[#30303B] hover:border-[#7952FF]/40'
+                        ? 'bg-[#252530] border-[#C74410] shadow-md shadow-[#C74410]/10'
+                        : 'bg-[#1C1C24] border-[#30303B] hover:border-[#C74410]/40'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-[#7952FF]/20 text-[#7952FF] flex items-center justify-center font-bold text-sm">
+                      <div className="w-9 h-9 rounded-lg bg-[#C74410]/20 text-[#C74410] flex items-center justify-center font-bold text-sm">
                         {client.name.slice(0, 2).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-bold text-[#F8F9FC] truncate">{client.name}</div>
-                        <div className="text-xs text-[#717182]">@{client.slug}</div>
+                        <div className="text-xs text-[#98989F]">@{client.slug}</div>
                       </div>
-                      {isSelected && <Check className="w-4 h-4 text-[#7952FF]" />}
+                      {isSelected && <Check className="w-4 h-4 text-[#C74410]" />}
                     </div>
                   </div>
                 )
@@ -217,7 +217,7 @@ export const NewBriefingPage: React.FC = () => {
           <CardContent className="p-6 space-y-4">
             <div>
               <h2 className="text-base font-bold text-[#F8F9FC]">Passo 2: Selecione o Modelo de Briefing</h2>
-              <p className="text-xs text-[#A1A1B0] mt-0.5">
+              <p className="text-xs text-[#B8B8C0] mt-0.5">
                 Escolha o template com as perguntas específicas para este escopo.
               </p>
             </div>
@@ -237,8 +237,8 @@ export const NewBriefingPage: React.FC = () => {
                     }}
                     className={`p-4 rounded-xl border cursor-pointer transition-all ${
                       isSelected
-                        ? 'bg-[#252530] border-[#7952FF] shadow-md shadow-[#7952FF]/10'
-                        : 'bg-[#1C1C24] border-[#30303B] hover:border-[#7952FF]/40'
+                        ? 'bg-[#252530] border-[#C74410] shadow-md shadow-[#C74410]/10'
+                        : 'bg-[#1C1C24] border-[#30303B] hover:border-[#C74410]/40'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -248,17 +248,17 @@ export const NewBriefingPage: React.FC = () => {
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: catCfg.color }}
                           />
-                          <span className="text-[11px] font-semibold uppercase text-[#A1A1B0]">
+                          <span className="text-[11px] font-semibold uppercase text-[#B8B8C0]">
                             {catCfg.label}
                           </span>
                           <Badge variant="outline">V{tpl.version}.0</Badge>
                         </div>
                         <h3 className="text-sm font-bold text-[#F8F9FC]">{tpl.name}</h3>
                         {tpl.description && (
-                          <p className="text-xs text-[#A1A1B0]">{tpl.description}</p>
+                          <p className="text-xs text-[#B8B8C0]">{tpl.description}</p>
                         )}
                       </div>
-                      {isSelected && <Check className="w-4 h-4 text-[#7952FF] shrink-0 mt-1" />}
+                      {isSelected && <Check className="w-4 h-4 text-[#C74410] shrink-0 mt-1" />}
                     </div>
                   </div>
                 )
@@ -274,14 +274,14 @@ export const NewBriefingPage: React.FC = () => {
           <CardContent className="p-6 space-y-4">
             <div>
               <h2 className="text-base font-bold text-[#F8F9FC]">Passo 3: Identificação do Briefing</h2>
-              <p className="text-xs text-[#A1A1B0] mt-0.5">
+              <p className="text-xs text-[#B8B8C0] mt-0.5">
                 Defina o título do documento e orientações internas.
               </p>
             </div>
 
             <div className="space-y-3 pt-2">
               <div>
-                <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                   Título do Briefing <span className="text-red-400">*</span>
                 </label>
                 <Input
@@ -292,7 +292,7 @@ export const NewBriefingPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-[#A1A1B0] block mb-1">
+                <label className="text-xs font-medium text-[#B8B8C0] block mb-1">
                   Instruções e Observações Iniciais
                 </label>
                 <Textarea
@@ -313,28 +313,28 @@ export const NewBriefingPage: React.FC = () => {
           <CardContent className="p-6 space-y-5">
             <div>
               <h2 className="text-base font-bold text-[#F8F9FC]">Passo 4: Revisar e Criar</h2>
-              <p className="text-xs text-[#A1A1B0] mt-0.5">
+              <p className="text-xs text-[#B8B8C0] mt-0.5">
                 Confirme as informações antes de inicializar o briefing no banco de dados.
               </p>
             </div>
 
             <div className="space-y-3 p-4 bg-[#1C1C24] rounded-xl border border-[#30303B]">
               <div className="flex justify-between items-center text-xs pb-2 border-b border-[#30303B]">
-                <span className="text-[#717182]">Cliente Selecionado:</span>
+                <span className="text-[#98989F]">Cliente Selecionado:</span>
                 <span className="font-bold text-[#F8F9FC]">{selectedClient?.name}</span>
               </div>
               <div className="flex justify-between items-center text-xs pb-2 border-b border-[#30303B]">
-                <span className="text-[#717182]">Modelo Escolhido:</span>
-                <span className="font-bold text-[#7952FF]">{selectedTemplate?.name}</span>
+                <span className="text-[#98989F]">Modelo Escolhido:</span>
+                <span className="font-bold text-[#C74410]">{selectedTemplate?.name}</span>
               </div>
               <div className="flex justify-between items-center text-xs pb-2 border-b border-[#30303B]">
-                <span className="text-[#717182]">Título:</span>
+                <span className="text-[#98989F]">Título:</span>
                 <span className="font-bold text-[#F8F9FC]">{title}</span>
               </div>
               {description && (
                 <div className="text-xs pt-1">
-                  <span className="text-[#717182] block mb-1">Observações:</span>
-                  <p className="text-[#A1A1B0] bg-[#111116] p-2.5 rounded-lg">{description}</p>
+                  <span className="text-[#98989F] block mb-1">Observações:</span>
+                  <p className="text-[#B8B8C0] bg-[#111116] p-2.5 rounded-lg">{description}</p>
                 </div>
               )}
             </div>
@@ -352,7 +352,7 @@ export const NewBriefingPage: React.FC = () => {
 
             <div className="space-y-1">
               <h2 className="text-xl font-bold text-[#F8F9FC]">Briefing Criado com Sucesso!</h2>
-              <p className="text-xs text-[#A1A1B0]">
+              <p className="text-xs text-[#B8B8C0]">
                 O briefing foi registrado e está pronto para ser preenchido ou enviado.
               </p>
             </div>

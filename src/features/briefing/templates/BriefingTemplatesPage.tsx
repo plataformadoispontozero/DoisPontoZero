@@ -82,7 +82,7 @@ export const BriefingTemplatesPage: React.FC = () => {
       <Card>
         <CardContent className="p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-[#717182] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-[#98989F] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <div className="pl-9">
               <Input
                 placeholder="Buscar modelo por título ou descrição..."
@@ -97,8 +97,8 @@ export const BriefingTemplatesPage: React.FC = () => {
               onClick={() => setSelectedCategory('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
                 selectedCategory === 'all'
-                  ? 'bg-[#7952FF] text-white'
-                  : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC]'
+                  ? 'bg-[#C74410] text-white'
+                  : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC]'
               }`}
             >
               Todos ({templates.length})
@@ -113,8 +113,8 @@ export const BriefingTemplatesPage: React.FC = () => {
                   onClick={() => setSelectedCategory(catKey)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
                     selectedCategory === catKey
-                      ? 'bg-[#7952FF] text-white'
-                      : 'bg-[#1C1C24] text-[#A1A1B0] hover:text-[#F8F9FC]'
+                      ? 'bg-[#C74410] text-white'
+                      : 'bg-[#1C1C24] text-[#B8B8C0] hover:text-[#F8F9FC]'
                   }`}
                 >
                   {catCfg.label} ({count})
@@ -139,11 +139,11 @@ export const BriefingTemplatesPage: React.FC = () => {
       ) : filteredTemplates.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center flex flex-col items-center">
-            <div className="w-12 h-12 rounded-xl bg-[#252530] flex items-center justify-center text-[#7952FF] mb-3">
+            <div className="w-12 h-12 rounded-xl bg-[#252530] flex items-center justify-center text-[#C74410] mb-3">
               <Layers className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold text-[#F8F9FC]">Nenhum modelo encontrado</h3>
-            <p className="text-sm text-[#A1A1B0] max-w-md mt-1 mb-4">
+            <p className="text-sm text-[#B8B8C0] max-w-md mt-1 mb-4">
               {search
                 ? `Não encontramos templates correspondentes a "${search}".`
                 : 'Crie seu primeiro modelo personalizado no Form Builder ou utilize um dos modelos padrão.'}
@@ -166,7 +166,7 @@ export const BriefingTemplatesPage: React.FC = () => {
             return (
               <Card
                 key={template.id}
-                className="hover:border-[#7952FF]/50 transition-all flex flex-col justify-between group"
+                className="hover:border-[#C74410]/50 transition-all flex flex-col justify-between group"
               >
                 <CardContent className="p-5 space-y-4 flex-1 flex flex-col justify-between">
                   <div className="space-y-3">
@@ -176,7 +176,7 @@ export const BriefingTemplatesPage: React.FC = () => {
                           className="w-2.5 h-2.5 rounded-full shrink-0"
                           style={{ backgroundColor: catCfg.color }}
                         />
-                        <span className="text-xs font-semibold uppercase tracking-wider text-[#A1A1B0]">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-[#B8B8C0]">
                           {catCfg.label}
                         </span>
                       </div>
@@ -186,18 +186,18 @@ export const BriefingTemplatesPage: React.FC = () => {
                     </div>
 
                     <div>
-                      <h3 className="text-base font-bold text-[#F8F9FC] group-hover:text-[#7952FF] transition-colors leading-snug">
+                      <h3 className="text-base font-bold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors leading-snug">
                         {template.name}
                       </h3>
                       {template.description && (
-                        <p className="text-xs text-[#A1A1B0] mt-1.5 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-[#B8B8C0] mt-1.5 line-clamp-2 leading-relaxed">
                           {template.description}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-[#30303B]/60 flex items-center justify-between text-xs text-[#717182]">
+                  <div className="pt-3 border-t border-[#30303B]/60 flex items-center justify-between text-xs text-[#98989F]">
                     <div className="flex items-center gap-3">
                       <span>{totalSections} seções</span>
                       <span>•</span>

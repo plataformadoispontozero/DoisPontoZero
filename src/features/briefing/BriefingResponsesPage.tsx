@@ -241,7 +241,7 @@ export const BriefingResponsesPage: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <Badge variant={statusCfg.badgeVariant}>{statusCfg.label}</Badge>
-              <span className="text-xs text-[#717182]">V{briefing.template_version}.0</span>
+              <span className="text-xs text-[#98989F]">V{briefing.template_version}.0</span>
             </div>
             <h1 className="text-lg md:text-xl font-bold text-[#F8F9FC] mt-0.5">
               {briefing.title}
@@ -264,7 +264,7 @@ export const BriefingResponsesPage: React.FC = () => {
             size="sm"
             onClick={() => navigate(`/briefings/${briefing.id}/export`)}
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#7952FF]" />
+            <Sparkles className="w-3.5 h-3.5 text-[#C74410]" />
             <span>Exportar PDF</span>
           </Button>
 
@@ -281,22 +281,22 @@ export const BriefingResponsesPage: React.FC = () => {
       <Card>
         <CardContent className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
           <div>
-            <span className="text-[#717182] block mb-0.5">Cliente:</span>
+            <span className="text-[#98989F] block mb-0.5">Cliente:</span>
             <span className="font-bold text-[#F8F9FC]">{briefing.client?.name || 'Geral'}</span>
           </div>
           <div>
-            <span className="text-[#717182] block mb-0.5">Modelo:</span>
-            <span className="font-bold text-[#7952FF]">{briefing.template?.name}</span>
+            <span className="text-[#98989F] block mb-0.5">Modelo:</span>
+            <span className="font-bold text-[#C74410]">{briefing.template?.name}</span>
           </div>
           <div>
-            <span className="text-[#717182] block mb-0.5">Data de Envio:</span>
-            <span className="text-[#A1A1B0]">
+            <span className="text-[#98989F] block mb-0.5">Data de Envio:</span>
+            <span className="text-[#B8B8C0]">
               {new Date(briefing.created_at).toLocaleDateString('pt-BR')}
             </span>
           </div>
           <div>
-            <span className="text-[#717182] block mb-0.5">Recebido em:</span>
-            <span className="text-[#A1A1B0]">
+            <span className="text-[#98989F] block mb-0.5">Recebido em:</span>
+            <span className="text-[#B8B8C0]">
               {briefing.submitted_at
                 ? new Date(briefing.submitted_at).toLocaleDateString('pt-BR')
                 : 'Aguardando cliente'}
@@ -316,13 +316,13 @@ export const BriefingResponsesPage: React.FC = () => {
             <Card key={sec.id} className="border-[#30303B] overflow-hidden">
               <div className="p-4 bg-[#1C1C24] border-b border-[#30303B] flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <span className="w-6 h-6 rounded-md bg-[#7952FF]/20 text-[#7952FF] flex items-center justify-center font-bold text-xs">
+                  <span className="w-6 h-6 rounded-md bg-[#C74410]/20 text-[#C74410] flex items-center justify-center font-bold text-xs">
                     0{sIdx + 1}
                   </span>
                   <div>
                     <h3 className="text-sm font-bold text-[#F8F9FC]">{sec.title}</h3>
                     {sec.description && (
-                      <p className="text-[11px] text-[#717182]">{sec.description}</p>
+                      <p className="text-[11px] text-[#98989F]">{sec.description}</p>
                     )}
                   </div>
                 </div>
@@ -356,14 +356,14 @@ export const BriefingResponsesPage: React.FC = () => {
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-xs font-semibold text-[#F8F9FC]">{q.label}</span>
-                        <span className="text-[10px] text-[#717182] uppercase">{q.question_type}</span>
+                        <span className="text-[10px] text-[#98989F] uppercase">{q.question_type}</span>
                       </div>
 
                       <div
                         className={`text-xs p-2.5 rounded-lg border ${
                           hasAnswer
                             ? 'bg-[#111116] border-[#30303B] text-[#F8F9FC] leading-relaxed'
-                            : 'bg-transparent border-dashed border-[#30303B] text-[#717182] italic'
+                            : 'bg-transparent border-dashed border-[#30303B] text-[#98989F] italic'
                         }`}
                       >
                         {displayVal}
@@ -387,7 +387,7 @@ export const BriefingResponsesPage: React.FC = () => {
         </DialogHeader>
 
         <DialogBody className="space-y-3">
-          <label className="text-xs font-medium text-[#A1A1B0] block">
+          <label className="text-xs font-medium text-[#B8B8C0] block">
             Descreva o apontamento ou ajuste necessário:
           </label>
           <Textarea
@@ -396,7 +396,7 @@ export const BriefingResponsesPage: React.FC = () => {
             onChange={(e) => setInternalNotes(e.target.value)}
             placeholder="Ex: Cliente não informou as referências de concorrentes diretos..."
           />
-          <span className="text-[11px] text-[#717182] block">
+          <span className="text-[11px] text-[#98989F] block">
             Esta nota é estritamente confidencial para a equipe interna e não aparece no PDF do cliente.
           </span>
         </DialogBody>
