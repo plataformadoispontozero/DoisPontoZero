@@ -68,3 +68,9 @@ Scroll apresenta imagem antes da descrição, com um projeto visível por vez pa
 Hero preparada para carrossel contínuo horizontal de artes WebP em largura total, sem limite de três; conteúdo vem dos projetos marcados Hero no editor (limite total de 12 projetos). Loop duplicado sem salto, pausado com movimento desativado/reduzido. Imagens usam contain para preservar a arte completa.
 
 Entrega validada com build de produção, 18 E2E públicos existentes e 3 regressões novas de portfólio (21 verificações em três viewports). Conferência com Supabase real validou imagem antes da copy, rota de detalhes, estado inexistente, hero duplicada e logo no rodapé.
+
+
+## Transições suaves e leitura — 2026-10-11
+Entrada e saída com curva smoothstep e dissolução contínua nas fronteiras; descrição sai antes da troca de arte. Intervalo central mantém câmera, imagem e copy paradas para leitura. Extensão de scroll ajustada à quantidade de projetos (170svh por projeto + viewport de entrada). Último projeto permanece legível até saída da seção; mobile e movimento reduzido continuam estáticos.
+
+Transições validadas com build de produção, 108 testes unitários (incluindo continuidade, pausa de leitura e último painel), 21 E2E públicos e `git diff --check`.

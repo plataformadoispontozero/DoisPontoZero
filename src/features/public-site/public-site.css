@@ -1544,7 +1544,7 @@
 @media(max-width:767px) { .dz-brand-logo { width: 140px; } .dz-brand-hero { width: 230px; } .dz-brand-logo .dz-hero-logo { display:block; } }
 @media(prefers-reduced-motion:reduce) { .dz-site .dz-button, .dz-site a svg, .dz-site button svg { transition:none; } .dz-site .dz-button:hover, .dz-site a:hover svg, .dz-site button:hover svg { transform:none; } }
 
-.dz-gallery { height: 420svh; }
+.dz-gallery { height: var(--scene-height, 610svh); }
 .dz-scene-copy { transition: opacity .12s linear, transform .12s linear; }
 .dz-portfolio-page { min-height: 100svh; padding: 70px 0; }
 .dz-portfolio-page h1 { font-size: clamp(42px,7vw,90px); margin: 40px 0 20px; }

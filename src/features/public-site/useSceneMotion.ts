@@ -1,3 +1,4 @@
+import { sceneFrame } from "./sceneTimeline";
 import { useEffect, useRef } from "react";
 export function useSceneMotion(enabled: boolean, panelCount: number) {
   const ref = useRef<HTMLElement>(null);
@@ -7,6 +8,7 @@ export function useSceneMotion(enabled: boolean, panelCount: number) {
     const media = window.matchMedia(
       "(prefers-reduced-motion: reduce), (max-width: 767px)",
     );
+    node.style.setProperty("--scene-height", `${panelCount * 170 + 100}svh`);
     let frame = 0;
     const update = () => {
       frame = 0;
@@ -21,22 +23,16 @@ export function useSceneMotion(enabled: boolean, panelCount: number) {
       );
       node.style.setProperty("--progress", String(progress));
       const panels = node.querySelectorAll<HTMLElement>("[data-scene-panel]");
-      const travel = progress * panels.length;
-      const active = Math.min(panels.length - 1, Math.floor(travel));
-      const phase = Math.min(1, travel - active);
       panels.forEach((panel, i) => {
-        const selected = i === active;
-        panel.style.transform = selected
-          ? `translate3d(0, ${(1 - phase) * 8}%, ${-(1 - phase) * 240}px) rotateY(${(1 - phase) * -14}deg)`
-          : "translate3d(0, 0, -700px)";
-        panel.style.opacity = selected ? "1" : "0";
-        panel.style.pointerEvents = selected ? "auto" : "none";
-        panel.style.zIndex = selected ? "2" : "0";
-        const reveal = Math.min(1, Math.max(0, (phase - 0.25) / 0.3));
+        const state = sceneFrame(progress, i, panels.length);
+        panel.style.transform = `translate3d(0, ${state.y}%, ${state.depth}px) rotateY(${state.rotation}deg)`;
+        panel.style.opacity = String(state.opacity);
+        panel.style.pointerEvents = state.opacity > 0.6 ? "auto" : "none";
+        panel.style.zIndex = state.opacity > 0.6 ? "2" : "1";
         const copy = panel.querySelector<HTMLElement>(".dz-scene-copy");
         if (copy) {
-          copy.style.opacity = String(reveal);
-          copy.style.transform = `translateY(${(1 - reveal) * 28}px)`;
+          copy.style.opacity = String(state.copy);
+          copy.style.transform = `translateY(${(1 - state.copy) * 28}px)`;
         }
       });
     };
