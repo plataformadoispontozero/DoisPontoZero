@@ -59,7 +59,7 @@ export function useNotifications() {
     queryFn: async (): Promise<AppNotification[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data , error: backendError1 } = await supabase.from('notifications').select('*').eq('agency_id', agencyId).eq('user_id', auth.user?.id || '').order('created_at', { ascending: false })
+          const { data , error: backendError1 } = await supabase.from('notifications').select('*').eq('agency_id', agencyId).eq('recipient_id', auth.user?.id || '').order('created_at', { ascending: false })
           if (backendError1) throw backendError1
           return data ?? [] as AppNotification[]
         } catch (err) {
@@ -80,7 +80,7 @@ export function useMarkNotificationAsRead() {
   return useMutation({
     mutationFn: async (id: string) => {
       if (supabase && isSupabaseConfigured) {
-        const { error } = await supabase.from('notifications').update({ read_at: new Date().toISOString() }).eq('id',id).eq('agency_id',agencyId).eq('user_id',auth.user?.id || '').select('id').single()
+        const { error } = await supabase.from('notifications').update({ read_at: new Date().toISOString() }).eq('id',id).eq('agency_id',agencyId).eq('recipient_id',auth.user?.id || '').select('id').single()
         if (error) throw error
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
         return
@@ -103,7 +103,7 @@ export function useMarkAllNotificationsAsRead() {
   return useMutation({
     mutationFn: async () => {
       if (supabase && isSupabaseConfigured) {
-        const { error } = await supabase.from('notifications').update({ read_at: new Date().toISOString() }).eq('agency_id',agencyId).eq('user_id',auth.user?.id || '').is('read_at',null)
+        const { error } = await supabase.from('notifications').update({ read_at: new Date().toISOString() }).eq('agency_id',agencyId).eq('recipient_id',auth.user?.id || '').is('read_at',null)
         if (error) throw error
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
         return

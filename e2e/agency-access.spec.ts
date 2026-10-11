@@ -24,6 +24,11 @@ async function api(page: Page, options: { member?: boolean; owner?: boolean; fai
     if (table === 'profiles') return respond([{ full_name: 'Usuário de teste' }])
     if (table === 'agency_members') return respond(options.member === false || options.inactive ? [] : [agencyA,agencyB].map((id,index) => ({ agency_id: id, role_id: roleId, agencies: { id, name: `Agência ${index ? 'B':'A'}`, status: 'active' }, roles: { id: roleId, name: options.owner === false ? 'VIEWER':'OWNER' } })))
     if (table === 'role_permissions') return respond([{ allowed: true, permissions: { permission_key: 'dashboard.view' } }])
+    if (table === 'notifications') {
+      reads.push('notification:' + url.searchParams.get('recipient_id'))
+      if (url.searchParams.has('user_id')) return respond({code:'42703',message:'column user_id does not exist'},400)
+      return respond([])
+    }
     if (table === 'clients') {
       if (request.method() === 'POST') {
         savedClient = { ...request.postDataJSON(), id: '44444444-4444-4444-8444-444444444444', created_at:new Date().toISOString(), updated_at:new Date().toISOString() }
@@ -72,6 +77,7 @@ test('login preserves deep link and tenant switch clears client cache', async ({
   await page.getByLabel('Agência', {exact:true}).selectOption(agencyB)
   await expect(page.getByText('Cliente da agência B', {exact:true})).toBeVisible()
   await expect(page.getByText('Cliente da agência A', {exact:true})).toHaveCount(0)
+  expect(reads).toContain(`notification:eq.${userId}`)
   expect(reads).toContain(`eq.${agencyA}`); expect(reads).toContain(`eq.${agencyB}`)
   await page.reload(); await expect(page.getByText('Cliente da agência B', {exact:true})).toBeVisible()
 })
