@@ -118,11 +118,7 @@ export function useBriefingTemplates(agencyId: string) {
 
       if (error) throw error
 
-      if (!data || data.length === 0) {
-        return getInitialTemplatesMapped(agencyId)
-      }
-
-      return data as BriefingTemplate[]
+      return (data ?? []) as BriefingTemplate[]
     },
     staleTime: 1000 * 60 * 5,
   })
@@ -346,13 +342,16 @@ export function useCreateBriefing(agencyId: string) {
       }
 
       // Fetch template version
-      const { data: tpl } = await supabase
+      const { data: tpl, error: templateError } = await supabase
         .from('briefing_templates')
         .select('version')
         .eq('id', payload.template_id)
+        .eq('agency_id', agencyId)
         .single()
 
-      const template_version = tpl?.version ?? 1
+      if (templateError) throw templateError
+      if (!tpl) throw new Error('Modelo de briefing não encontrado nesta agência.')
+      const template_version = tpl.version
 
       const { data, error } = await supabase
         .from('briefings')

@@ -107,9 +107,14 @@ export const NewStrategyPage: React.FC = () => {
       return
     }
 
+    if (form.period_start && form.period_end && form.period_end < form.period_start) {
+      toast.error('O fim do período não pode ser anterior ao início.')
+      return
+    }
+    if (createStrategy.isPending) return
     try {
       const result = await createStrategy.mutateAsync({
-        name: form.name,
+        name: form.name.trim(),
         description: form.description || undefined,
         objective: form.objective || undefined,
         target_audience: form.target_audience || undefined,

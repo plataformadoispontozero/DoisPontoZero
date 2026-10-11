@@ -72,11 +72,12 @@ export const NewProjectPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validate()) return
+    if (!validate() || createProject.isPending) return
 
     try {
       const newProjectId = await createProject.mutateAsync({
         ...form,
+        name: form.name.trim(),
         agency_id: MOCK_AGENCY_ID,
       })
       toast.success('Projeto criado com sucesso!')

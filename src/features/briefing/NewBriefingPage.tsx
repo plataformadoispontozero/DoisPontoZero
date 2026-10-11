@@ -27,7 +27,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { useBriefingTemplates, useCreateBriefing, useCreatePublicLink } from './hooks/useBriefings'
-import { useProjects } from '@/features/projects/hooks/useProjects'
+import { useClients } from '@/features/clients/hooks/useClients'
 import { BRIEFING_CATEGORY_CONFIG } from '@/types/briefing'
 import { toast } from '@/components/ui/Toast'
 
@@ -40,34 +40,17 @@ export const NewBriefingPage: React.FC = () => {
   const [searchParams] = useSearchParams()
   const preselectedTemplateId = searchParams.get('templateId')
 
-  const { data: templates = [] } = useBriefingTemplates(DEMO_AGENCY_ID)
-  const { data: projects = [] } = useProjects(DEMO_AGENCY_ID)
+  const templateQuery = useBriefingTemplates(DEMO_AGENCY_ID)
+  const clientQuery = useClients(DEMO_AGENCY_ID)
+  const templates = templateQuery.data ?? []
+  const availableClients = clientQuery.data ?? []
   const createBriefing = useCreateBriefing(DEMO_AGENCY_ID)
-
-  // Deduplicate clients from projects or use mock clients
-  const clients = Array.from(
-    new Map(
-      projects
-        .filter((p) => p.client)
-        .map((p) => [p.client!.id, p.client!])
-    ).values()
-  )
-
-  // Fallback clients if empty
-  const availableClients =
-    clients.length > 0
-      ? clients
-      : [
-          { id: 'client-demo-1', name: 'Natura Cosméticos', slug: 'natura' },
-          { id: 'client-demo-2', name: 'Nubank Brasil', slug: 'nubank' },
-          { id: 'client-demo-3', name: 'Ambev Creative', slug: 'ambev' },
-        ]
 
   // Flow Step: 1 = Client, 2 = Template, 3 = Title & Info, 4 = Review, 5 = Created Success
   const [step, setStep] = useState<number>(preselectedTemplateId ? 1 : 1)
   const [selectedClientId, setSelectedClientId] = useState<string>(availableClients[0]?.id || '')
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>(
-    preselectedTemplateId || templates[0]?.id || 'tpl-branding-v1'
+    preselectedTemplateId || ''
   )
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -78,11 +61,11 @@ export const NewBriefingPage: React.FC = () => {
   const selectedTemplate = templates.find((t) => t.id === selectedTemplateId)
 
   const handleNext = () => {
-    if (step === 1 && !selectedClientId) {
+    if (step === 1 && !selectedClient) {
       toast.error('Selecione um cliente para vincular ao briefing.')
       return
     }
-    if (step === 2 && !selectedTemplateId) {
+    if (step === 2 && !selectedTemplate) {
       toast.error('Selecione um modelo de briefing.')
       return
     }
@@ -98,6 +81,10 @@ export const NewBriefingPage: React.FC = () => {
   }
 
   const handleCreate = async () => {
+    if (!selectedClient || !selectedTemplate || !title.trim() || createBriefing.isPending) {
+      toast.error('Selecione um cliente e um modelo existentes e informe o título.')
+      return
+    }
     try {
       const res = await createBriefing.mutateAsync({
         client_id: selectedClientId,
@@ -141,6 +128,14 @@ export const NewBriefingPage: React.FC = () => {
         ]}
       />
 
+      {(clientQuery.isLoading || templateQuery.isLoading) && <p role="status">Carregando clientes e modelos…</p>}
+      {(clientQuery.isError || templateQuery.isError) && <p role="alert">Não foi possível carregar clientes ou modelos. Tente novamente antes de criar o briefing.</p>}
+      {!clientQuery.isLoading && !clientQuery.isError && availableClients.length === 0 && (
+        <p>Nenhum cliente cadastrado. <Link className="text-[#B8FF65]" to="/clients/new">Cadastrar cliente no CRM</Link></p>
+      )}
+      {!templateQuery.isLoading && !templateQuery.isError && templates.length === 0 && (
+        <p>Nenhum modelo cadastrado. <Link className="text-[#B8FF65]" to="/briefings/templates">Gerenciar modelos de briefing</Link></p>
+      )}
       {/* Steps indicator */}
       {step < 5 && (
         <div className="flex items-center justify-between pb-2 border-b border-[#30303B]">
@@ -440,12 +435,12 @@ export const NewBriefingPage: React.FC = () => {
           )}
 
           {step < 4 ? (
-            <Button variant="primary" size="md" onClick={handleNext}>
+            <Button variant="primary" size="md" disabled={clientQuery.isLoading || templateQuery.isLoading || clientQuery.isError || templateQuery.isError || (step === 1 && !selectedClient) || (step === 2 && !selectedTemplate)} onClick={handleNext}>
               <span>Continuar</span>
               <ArrowRight className="w-4 h-4" />
             </Button>
           ) : (
-            <Button variant="primary" size="md" onClick={handleCreate}>
+            <Button variant="primary" size="md" disabled={createBriefing.isPending || !selectedClient || !selectedTemplate} onClick={handleCreate}>
               <Check className="w-4 h-4" />
               <span>Confirmar e Criar Briefing</span>
             </Button>
