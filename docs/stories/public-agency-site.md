@@ -32,3 +32,9 @@ Marca: Dois.Zero. Público: empresas que precisam de presença digital, identida
 
 ## Limite da entrega para revisão
 As respostas de Supabase nos E2E são controladas, sem homologação de RLS remoto. Schema, storage e Edge Function ativados no projeto existente em 2026-10-11. O recebimento de briefing no banco depende dessa ativação e do Turnstile; alternativa WhatsApp disponível. Sem fotos de equipe reais no material fornecido. Push e publicação autorizados pelo usuário em 2026-10-11. Turnstile continua pendente de configuração de chaves; nenhum envio ao banco é simulado.
+
+
+## Hotfix do scroll — 2026-10-11
+O carregamento remoto deixava a galeria ausente no primeiro efeito, sem reinstalar listeners quando o conteúdo aparecia. A inicialização agora depende da disponibilidade do site, do término do carregamento e da quantidade de painéis. Reproduzido no domínio publicado (progress vazio); validado com Supabase real em build corrigido (progress 0.3507 após scroll).
+
+Hotfix validado com 18/18 E2E públicos, build de produção e `git diff --check`.

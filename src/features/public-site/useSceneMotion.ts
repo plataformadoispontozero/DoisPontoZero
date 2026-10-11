@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-export function useSceneMotion(enabled: boolean) {
+export function useSceneMotion(enabled: boolean, panelCount: number) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const node = ref.current;
@@ -42,6 +42,6 @@ export function useSceneMotion(enabled: boolean) {
       media.removeEventListener("change", schedule);
       cancelAnimationFrame(frame);
     };
-  }, [enabled]);
+  }, [enabled, panelCount]);
   return ref;
 }

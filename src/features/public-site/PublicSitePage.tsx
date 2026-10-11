@@ -23,7 +23,7 @@ export function PublicSitePage() {
   const [motion, setMotion] = useState(true);
   const hero = c.projects.filter((p) => p.placement === "hero").slice(0, 3);
   const gallery = c.projects.filter((p) => p.placement === "gallery");
-  const scene = useSceneMotion(motion && gallery.length > 1);
+  const scene = useSceneMotion(motion && available && !pending && gallery.length > 1, gallery.length);
   useEffect(() => {
     const previous = document.title;
     document.title = `${c.name} — Estratégia, design e marketing`;
