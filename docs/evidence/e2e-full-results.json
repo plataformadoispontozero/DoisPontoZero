@@ -1,0 +1,3174 @@
+{
+  "config": {
+    "argv": [
+      "/usr/local/bin/node",
+      "/Users/designer/Documents/DoisPontoZero/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.audit.config.ts"
+    ],
+    "configFile": "/Users/designer/Documents/DoisPontoZero/playwright.audit.config.ts",
+    "rootDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Desktop Chrome",
+        "name": "Desktop Chrome",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Tablet iPad",
+        "name": "Tablet iPad",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Mobile iPhone 14",
+        "name": "Mobile iPhone 14",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Desktop Chrome",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "trace": "on-first-retry",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Desktop Chrome"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Tablet iPad",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "trace": "on-first-retry",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 768,
+            "height": 1024
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Tablet iPad"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Mobile iPhone 14",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "trace": "on-first-retry",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Mobile iPhone 14"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/audit-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 2,
+    "webServer": {
+      "command": "npm run preview -- --host 127.0.0.1 --port 4175 --strictPort",
+      "url": "http://127.0.0.1:4175",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "app.spec.ts",
+      "file": "app.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Dois.Zero Application Baseline",
+          "file": "app.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load dashboard and render branding",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 7210,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\u001b[22m\n\n    at /Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts:8:71",
+                        "location": {
+                          "file": "/Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts",
+                          "column": 71,
+                          "line": 8
+                        },
+                        "snippet": "   6 |     await expect(page).toHaveTitle(/Dois\\.Zero/i)\n   7 |     const shell = isMobile ? page.getByRole('banner') : page.getByRole('navigation', { name: 'Navegação Principal', exact: true })\n>  8 |     await expect(shell.getByText('Matriz Criativa', { exact: true })).toBeVisible()\n     |                                                                       ^\n   9 |     await expect(page.getByText(/Indicadores Operacionais/i)).toBeVisible()\n  10 |   })\n  11 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts",
+                            "column": 71,
+                            "line": 8
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\u001b[22m\n\n\n   6 |     await expect(page).toHaveTitle(/Dois\\.Zero/i)\n   7 |     const shell = isMobile ? page.getByRole('banner') : page.getByRole('navigation', { name: 'Navegação Principal', exact: true })\n>  8 |     await expect(shell.getByText('Matriz Criativa', { exact: true })).toBeVisible()\n     |                                                                       ^\n   9 |     await expect(page.getByText(/Indicadores Operacionais/i)).toBeVisible()\n  10 |   })\n  11 |\n    at /Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts:8:71"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:11.033Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/designer/Documents/DoisPontoZero/test-results/audit/app-Dois-Zero-Application--8b6a0-shboard-and-render-branding-Desktop-Chrome/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/designer/Documents/DoisPontoZero/test-results/audit/app-Dois-Zero-Application--8b6a0-shboard-and-render-branding-Desktop-Chrome/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts",
+                        "column": 71,
+                        "line": 8
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c31ff144dc4fee3acd0a-c8d68443a7439805696c",
+              "file": "app.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should navigate between modules",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2400,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:11.035Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c31ff144dc4fee3acd0a-b674cacba4aca609762a",
+              "file": "app.spec.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should load dashboard and render branding",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 7049,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\u001b[22m\n\n    at /Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts:8:71",
+                        "location": {
+                          "file": "/Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts",
+                          "column": 71,
+                          "line": 8
+                        },
+                        "snippet": "   6 |     await expect(page).toHaveTitle(/Dois\\.Zero/i)\n   7 |     const shell = isMobile ? page.getByRole('banner') : page.getByRole('navigation', { name: 'Navegação Principal', exact: true })\n>  8 |     await expect(shell.getByText('Matriz Criativa', { exact: true })).toBeVisible()\n     |                                                                       ^\n   9 |     await expect(page.getByText(/Indicadores Operacionais/i)).toBeVisible()\n  10 |   })\n  11 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts",
+                            "column": 71,
+                            "line": 8
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('navigation', { name: 'Navegação Principal', exact: true }).getByText('Matriz Criativa', { exact: true })\u001b[22m\n\n\n   6 |     await expect(page).toHaveTitle(/Dois\\.Zero/i)\n   7 |     const shell = isMobile ? page.getByRole('banner') : page.getByRole('navigation', { name: 'Navegação Principal', exact: true })\n>  8 |     await expect(shell.getByText('Matriz Criativa', { exact: true })).toBeVisible()\n     |                                                                       ^\n   9 |     await expect(page.getByText(/Indicadores Operacionais/i)).toBeVisible()\n  10 |   })\n  11 |\n    at /Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts:8:71"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:44.792Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/designer/Documents/DoisPontoZero/test-results/audit/app-Dois-Zero-Application--8b6a0-shboard-and-render-branding-Tablet-iPad/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/designer/Documents/DoisPontoZero/test-results/audit/app-Dois-Zero-Application--8b6a0-shboard-and-render-branding-Tablet-iPad/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/designer/Documents/DoisPontoZero/e2e/app.spec.ts",
+                        "column": 71,
+                        "line": 8
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c31ff144dc4fee3acd0a-2d646ada96cf74aedacd",
+              "file": "app.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should navigate between modules",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2261,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:44.791Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c31ff144dc4fee3acd0a-bed3550339946385c982",
+              "file": "app.spec.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should load dashboard and render branding",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2190,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:16.107Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c31ff144dc4fee3acd0a-80dd590844fe09ba7d6a",
+              "file": "app.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should navigate between modules",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2349,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:16.105Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c31ff144dc4fee3acd0a-182fb0a5f509c8329449",
+              "file": "app.spec.ts",
+              "line": 12,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "audit-routes.spec.ts",
+      "file": "audit-routes.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "render and refresh /dashboard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1219,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:14.116Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-e0b834b36f43c38469f0",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /calendar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1152,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:15.341Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-01cf534e576437bf9dcd",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /clients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1107,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:16.500Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-d4846337be619e8c78c4",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /projects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1197,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:17.614Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-35dcbeff8e9a942fa55a",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /tasks",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2131,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:18.818Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-8604530126e719fe3493",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /squads",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1479,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:19.320Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-3c18a31efe089f6b5b9d",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /briefings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2585,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:20.955Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-6453bd264675f8339e34",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /strategy",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2527,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:20.958Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-60a69c78996927a32085",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /proposals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2504,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:23.494Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-c01bca7a7a87f36d429a",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /drive",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2430,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:23.548Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-01728e2450fd92f931de",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /presentations",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2351,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:25.987Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-4d4a0c80824288fb44dd",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /meetings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2326,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:26.008Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-1426e4ffad02bb0bcacd",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /chat",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2159,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:28.347Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-2a2c17b9c32f317c3eee",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /notifications",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2137,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:28.347Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-3b3fecd79db35d9bfab3",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /settings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2690,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:30.493Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-25d5b411c4abbf248320",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "agenda alias preserves the existing calendar route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2470,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:30.514Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-c0e58e20820d2684c891",
+          "file": "audit-routes.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "permission preview cannot announce a persisted matrix",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2709,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:33.010Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-81cd51e96f6d5709fc8f",
+          "file": "audit-routes.spec.ts",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "render and refresh /dashboard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1201,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:47.316Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-d303fa3dd0582531acc4",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /calendar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1081,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:48.523Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-ce7ec25c565d41d9c2f1",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /clients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1135,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:49.609Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-ded6a2f5837a569b625f",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /projects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1169,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:50.751Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-986f075bd2de4637e0db",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /tasks",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2024,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:51.926Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-929b9d6fe1ad0969a614",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /squads",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1459,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:52.332Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-85a4e35f778a4584f400",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /briefings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2056,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:53.911Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-4a624c104578c1eedbc2",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /strategy",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1976,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:53.965Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-b4134e0b00b29f613cdd",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /proposals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2046,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:55.954Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-113991162ab4246738b3",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /drive",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2031,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:55.978Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-71657a09b6aa2595a989",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /presentations",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1972,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:58.007Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-0a1658dfc2be057a6ea0",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /meetings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1961,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:58.018Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-63940a5b59568ed19574",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /chat",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2447,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:59.986Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-da7b15c3f053c9bdbe40",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /notifications",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2406,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:29:59.986Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-97845f10deb347e108fd",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /settings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2223,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:02.405Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-1bb90c3916a5419962c6",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "agenda alias preserves the existing calendar route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2046,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:02.442Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-dfb4d5c8ce01ad767ef6",
+          "file": "audit-routes.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "permission preview cannot announce a persisted matrix",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2363,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:04.498Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-38ae6e0c278ecfa5c069",
+          "file": "audit-routes.spec.ts",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "render and refresh /dashboard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2237,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:18.581Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-540badfa1645d86225f6",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /calendar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2099,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:18.711Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-568a020b7e059fe1cd22",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /clients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2863,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:20.822Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-93de0473c964a47d0a86",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /projects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2872,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:20.836Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-6ed487bacb40c882f8df",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /tasks",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2256,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:23.693Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-51aa71267cf2434e7775",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /squads",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2212,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:23.719Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-6132a216bf26f77e7dde",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /briefings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2098,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:25.942Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-144af899df4aa2d7a4d2",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /strategy",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2119,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:25.956Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-dcd84c9c9dfb314e9311",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /proposals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2312,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:28.056Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-c57de70182b08ba33abd",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /drive",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2370,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:28.086Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-f6d453b8797280cfb66b",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /presentations",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2296,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:30.381Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-0eae747c36b74a8fc23e",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /meetings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2180,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:30.473Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-9db6ba8d38e211fb79a7",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /chat",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2359,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:32.663Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-4c9e8e2bc1c5d7b2434b",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /notifications",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2294,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:32.689Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-2e1456497604401719cc",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "render and refresh /settings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2306,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:34.993Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-cb8fca94b8cf46111575",
+          "file": "audit-routes.spec.ts",
+          "line": 6,
+          "column": 3
+        },
+        {
+          "title": "agenda alias preserves the existing calendar route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2097,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:35.031Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-283ef1a64e2fff097296",
+          "file": "audit-routes.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "permission preview cannot announce a persisted matrix",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2264,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:30:37.157Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-520bd1305712108d355b",
+          "file": "audit-routes.spec.ts",
+          "line": 28,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "critical-flows.spec.ts",
+      "file": "critical-flows.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais",
+          "file": "critical-flows.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Fluxo 01: Visão Geral do Dashboard & Navegação Operacional",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2547,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:33.210Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-29d8ebeee864541c1293",
+              "file": "critical-flows.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 02: Módulo de Projetos & Tarefas",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2503,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:35.733Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-b56d1923615e909caa4f",
+              "file": "critical-flows.spec.ts",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 03: Briefing Studio & Templates Oficiais",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2447,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:35.766Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-12710f939e02d7a97ea4",
+              "file": "critical-flows.spec.ts",
+              "line": 20,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 04: Strategy Studio & Grade Editorial",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2042,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:38.221Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-d6a4a6cf54731782ee46",
+              "file": "critical-flows.spec.ts",
+              "line": 25,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 05: Proposal Studio & Motor Comercial",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2002,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:38.258Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-7b67e48982515a5d9881",
+              "file": "critical-flows.spec.ts",
+              "line": 30,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 06: Meeting Hub & Pautas Operacionais",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1921,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:40.272Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-4d53601135981d7be4ed",
+              "file": "critical-flows.spec.ts",
+              "line": 35,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 07: Team Chat & Canais Internos",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1918,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:40.273Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-abfdd51bbcd8f807dc3e",
+              "file": "critical-flows.spec.ts",
+              "line": 40,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 08: Presentation Studio & Decks Criativos",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2074,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:42.202Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-62c4e687753abe93bb7b",
+              "file": "critical-flows.spec.ts",
+              "line": 45,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 09: White Label Studio, Cores & Painel de Diagnóstico",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2164,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:29:42.202Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-4bd8c51d3482fa6a1fdd",
+              "file": "critical-flows.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 01: Visão Geral do Dashboard & Navegação Operacional",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2221,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:04.646Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-c0675b83a34064a2e277",
+              "file": "critical-flows.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 02: Módulo de Projetos & Tarefas",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2120,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:06.875Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-ac7731aed31df44f2ed0",
+              "file": "critical-flows.spec.ts",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 03: Briefing Studio & Templates Oficiais",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2080,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:06.882Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-12bb5af9c601487df028",
+              "file": "critical-flows.spec.ts",
+              "line": 20,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 04: Strategy Studio & Grade Editorial",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2080,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:08.975Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-e252e6f418fbea80d758",
+              "file": "critical-flows.spec.ts",
+              "line": 25,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 05: Proposal Studio & Motor Comercial",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2008,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:09.028Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-175fe2c202793edcd9ba",
+              "file": "critical-flows.spec.ts",
+              "line": 30,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 06: Meeting Hub & Pautas Operacionais",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2356,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:11.066Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-7b3f83fd44fa859bb65f",
+              "file": "critical-flows.spec.ts",
+              "line": 35,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 07: Team Chat & Canais Internos",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2380,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:11.066Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-02c144845d1e6c209671",
+              "file": "critical-flows.spec.ts",
+              "line": 40,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 08: Presentation Studio & Decks Criativos",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2238,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:13.433Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-f0ff44c2f0b32d34ca7c",
+              "file": "critical-flows.spec.ts",
+              "line": 45,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 09: White Label Studio, Cores & Painel de Diagnóstico",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet iPad",
+                  "projectName": "Tablet iPad",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2322,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:13.458Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-a49faf56dbfec49f1fdd",
+              "file": "critical-flows.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 01: Visão Geral do Dashboard & Navegação Operacional",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2106,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:37.325Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-ec1cf2ddbfc202a0e74b",
+              "file": "critical-flows.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 02: Módulo de Projetos & Tarefas",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2129,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:39.446Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-c4c67addff64c5dd5800",
+              "file": "critical-flows.spec.ts",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 03: Briefing Studio & Templates Oficiais",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2036,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:39.462Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-19efc45290977fdff0cb",
+              "file": "critical-flows.spec.ts",
+              "line": 20,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 04: Strategy Studio & Grade Editorial",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2105,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:41.507Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-c1b6f1b469d49874fb10",
+              "file": "critical-flows.spec.ts",
+              "line": 25,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 05: Proposal Studio & Motor Comercial",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2008,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:41.607Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-c7f9995c3810977df44e",
+              "file": "critical-flows.spec.ts",
+              "line": 30,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 06: Meeting Hub & Pautas Operacionais",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2025,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:43.624Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-64eb3d6ac87787a6aa69",
+              "file": "critical-flows.spec.ts",
+              "line": 35,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 07: Team Chat & Canais Internos",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2008,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:43.627Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-598e5040a5de794503e9",
+              "file": "critical-flows.spec.ts",
+              "line": 40,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 08: Presentation Studio & Decks Criativos",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1923,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:45.643Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-c13aca43fe9a11f35012",
+              "file": "critical-flows.spec.ts",
+              "line": 45,
+              "column": 3
+            },
+            {
+              "title": "Fluxo 09: White Label Studio, Cores & Painel de Diagnóstico",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile iPhone 14",
+                  "projectName": "Mobile iPhone 14",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1978,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-11T04:30:45.657Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "542ce40c4d5a94d1bfd5-1630ddc113645b64708b",
+              "file": "critical-flows.spec.ts",
+              "line": 50,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-11T04:29:10.352Z",
+    "duration": 97327.592,
+    "expected": 82,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

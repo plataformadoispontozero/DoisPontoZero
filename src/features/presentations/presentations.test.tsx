@@ -1,3 +1,4 @@
+import { AuthProvider } from '@/features/auth/AuthProvider'
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -15,9 +16,9 @@ const queryClient = new QueryClient({
 });
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
+  <AuthProvider><QueryClientProvider client={queryClient}>
     <MemoryRouter>{children}</MemoryRouter>
-  </QueryClientProvider>
+  </QueryClientProvider></AuthProvider>
 );
 
 describe('Presentation Studio Feature Suite', () => {

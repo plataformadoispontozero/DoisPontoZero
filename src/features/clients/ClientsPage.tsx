@@ -1,9 +1,13 @@
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useClient } from '@/features/clients/hooks/useClients'
+import { toast } from '@/components/ui/Toast'
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS — FASE 03
 // Clients & CRM Management Page (/clients)
 // ============================================================
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Users,
   Plus,
@@ -54,6 +58,12 @@ import type { Client } from '@/types/projects'
 const DEMO_AGENCY_ID = 'demo-agency'
 
 export const ClientsPage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+  const { clientId } = useParams<{ clientId?: string }>()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { data: routeClient, isError: routeError } = useClient(clientId)
+
   const [search, setSearch] = useState('')
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'inactive'>('all')
 
@@ -77,6 +87,17 @@ export const ClientsPage: React.FC = () => {
   const [logoUrl, setLogoUrl] = useState('')
   const [status, setStatus] = useState<'active' | 'inactive'>('active')
 
+  useEffect(() => {
+    if (location.pathname === '/clients/new') {
+      setEditingClient(null); setName(''); setSlug(''); setLogoUrl(''); setStatus('active'); setIsCreateOpen(true)
+    } else if (routeClient && clientId) {
+      if (location.pathname.endsWith('/edit')) {
+        setSelectedClientHub(null); setEditingClient(routeClient); setName(routeClient.name); setSlug(routeClient.slug)
+        setLogoUrl(routeClient.logo_url || ''); setStatus(routeClient.status === 'active' ? 'active' : 'inactive'); setIsCreateOpen(true)
+      } else { setIsCreateOpen(false); setSelectedClientHub(routeClient) }
+    }
+  }, [location.pathname, clientId, routeClient])
+
   const handleOpenCreate = () => {
     setEditingClient(null)
     setName('')
@@ -84,6 +105,7 @@ export const ClientsPage: React.FC = () => {
     setLogoUrl('')
     setStatus('active')
     setIsCreateOpen(true)
+    navigate('/clients/new')
   }
 
   const handleOpenEdit = (client: Client) => {
@@ -93,11 +115,13 @@ export const ClientsPage: React.FC = () => {
     setLogoUrl(client.logo_url || '')
     setStatus(client.status === 'active' ? 'active' : 'inactive')
     setIsCreateOpen(true)
+    navigate(`/clients/${client.id}/edit`)
   }
 
   const handleSave = async () => {
     if (!name.trim()) return
 
+    try {
     if (editingClient) {
       await updateClient.mutateAsync({
         id: editingClient.id,
@@ -116,16 +140,20 @@ export const ClientsPage: React.FC = () => {
     }
 
     setIsCreateOpen(false)
+    if (location.pathname !== '/clients') navigate('/clients')
+    } catch { toast.error('Não foi possível salvar o cliente. Confira o acesso à agência e tente novamente.') }
   }
 
   const handleDelete = async (clientId: string) => {
     if (window.confirm('Tem certeza que deseja arquivar este cliente?')) {
-      await deleteClient.mutateAsync(clientId)
+      try { await deleteClient.mutateAsync(clientId) } catch { toast.error('Não foi possível arquivar o cliente.') }
     }
   }
 
   const activeCount = clients.filter((c) => c.status === 'active').length
   const inactiveCount = clients.filter((c) => c.status === 'inactive').length
+
+  if (clientId && routeError) return <div role="alert">Cliente indisponível ou sem acesso nesta agência.</div>
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200 pb-12">
@@ -307,7 +335,7 @@ export const ClientsPage: React.FC = () => {
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => setSelectedClientHub(client)}
+                    onClick={() => navigate(`/clients/${client.id}`)}
                     className="text-xs h-7 gap-1 px-2.5 text-[#7952FF] hover:bg-[#7952FF]/10"
                   >
                     <span>Client Hub</span>
@@ -321,7 +349,7 @@ export const ClientsPage: React.FC = () => {
       )}
 
       {/* Create / Edit Dialog */}
-      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+      <Dialog open={isCreateOpen} onOpenChange={open => { setIsCreateOpen(open); if (!open && location.pathname !== '/clients') navigate('/clients') }}>
         <DialogContent className="max-w-md bg-[#1C1C24] border-[#30303B] text-[#F8F9FC]">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold text-[#F8F9FC]">
@@ -331,9 +359,9 @@ export const ClientsPage: React.FC = () => {
 
           <div className="space-y-4 py-2 text-xs">
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Nome da Marca / Razão Social *</label>
+              <label htmlFor="client-name" className="font-medium text-[#A1A1B0]">Nome da Marca / Razão Social *</label>
               <Input
-                placeholder="Ex: Studio Vertex Design"
+                id="client-name" placeholder="Ex: Studio Vertex Design"
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value)
@@ -352,26 +380,26 @@ export const ClientsPage: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Identificador Único (Slug)</label>
+              <label htmlFor="client-slug" className="font-medium text-[#A1A1B0]">Identificador Único (Slug)</label>
               <Input
-                placeholder="studio-vertex"
+                id="client-slug" placeholder="studio-vertex"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">URL do Logotipo (Opcional)</label>
+              <label htmlFor="client-logo" className="font-medium text-[#A1A1B0]">URL do Logotipo (Opcional)</label>
               <Input
-                placeholder="https://exemplo.com/logo.png"
+                id="client-logo" placeholder="https://exemplo.com/logo.png"
                 value={logoUrl}
                 onChange={(e) => setLogoUrl(e.target.value)}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-medium text-[#A1A1B0]">Status Operacional</label>
-              <select
+              <label htmlFor="client-status" className="font-medium text-[#A1A1B0]">Status Operacional</label>
+              <select id="client-status"
                 className="w-full h-9 rounded-md bg-[#13131A] border border-[#30303B] px-2 text-xs text-[#F8F9FC] focus:outline-none focus:border-[#7952FF]"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as 'active' | 'inactive')}
@@ -405,7 +433,7 @@ export const ClientsPage: React.FC = () => {
           side="right"
           className="max-w-xl"
           onOpenChange={(open) => {
-            if (!open) setSelectedClientHub(null)
+            if (!open) { setSelectedClientHub(null); if (clientId) navigate('/clients') }
           }}
         >
           <SheetHeader onClose={() => setSelectedClientHub(null)}>

@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // useProjects — TanStack Query hooks for project management
 // ============================================================
@@ -49,7 +50,7 @@ async function fetchProjects(agencyId: string): Promise<Project[]> {
 // -------------------------
 // Fetch single project
 // -------------------------
-async function fetchProject(projectId: string): Promise<Project | null> {
+async function fetchProject(projectId: string, agencyId: string): Promise<Project | null> {
   if (!supabase) return null
 
   const { data, error } = await supabase
@@ -60,7 +61,7 @@ async function fetchProject(projectId: string): Promise<Project | null> {
       owner:profiles!projects_owner_id_fkey(id, full_name, avatar_url),
       members:project_members(id, user_id, created_at, profile:profiles(id, full_name, avatar_url))
     `)
-    .eq('id', projectId)
+    .eq('id', projectId).eq('agency_id', agencyId)
     .single()
 
   if (error) throw error
@@ -70,14 +71,14 @@ async function fetchProject(projectId: string): Promise<Project | null> {
 // -------------------------
 // Fetch project board with columns and tasks
 // -------------------------
-async function fetchProjectBoard(projectId: string): Promise<ProjectBoard | null> {
+async function fetchProjectBoard(projectId: string, agencyId: string): Promise<ProjectBoard | null> {
   if (!supabase) return null
 
   // Get default board
   const { data: board, error: boardErr } = await supabase
     .from('project_boards')
     .select('*')
-    .eq('project_id', projectId)
+    .eq('project_id', projectId).eq('agency_id', agencyId)
     .eq('is_default', true)
     .single()
 
@@ -155,18 +156,20 @@ export function useProjects(agencyId?: string) {
 }
 
 export function useProject(projectId?: string) {
+  const agencyId = useAgencyId()
   return useQuery({
     queryKey: projectKeys.detail(projectId ?? ''),
-    queryFn: () => fetchProject(projectId!),
+    queryFn: () => fetchProject(projectId!, agencyId),
     enabled: isSupabaseConfigured && !!projectId,
     staleTime: 30_000,
   })
 }
 
 export function useProjectBoard(projectId?: string) {
+  const agencyId = useAgencyId()
   return useQuery({
     queryKey: projectKeys.board(projectId ?? ''),
-    queryFn: () => fetchProjectBoard(projectId!),
+    queryFn: () => fetchProjectBoard(projectId!, agencyId),
     enabled: isSupabaseConfigured && !!projectId,
     staleTime: 10_000,
   })

@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 10: MEETING HUB HOOKS
@@ -175,19 +176,23 @@ const DEMO_MEETINGS: Meeting[] = [
 let demoMeetingsStore = [...DEMO_MEETINGS]
 
 export function useMeetings(filters?: { search?: string; status?: string; type?: string }) {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['meetings', filters],
     queryFn: async (): Promise<Meeting[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          let query = supabase.from('meetings').select('*').order('starts_at', { ascending: true })
+          let query = supabase.from('meetings').select('*, meeting_participants(*), meeting_agenda_items(*), meeting_minutes(*), meeting_decisions(*), meeting_action_items(*)').eq('agency_id', agencyId).order('starts_at', { ascending: true })
           if (filters?.status) query = query.eq('status', filters.status)
           if (filters?.type) query = query.eq('meeting_type', filters.type)
           if (filters?.search) query = query.ilike('title', `%${filters.search}%`)
-          const { data } = await query
-          if (data && data.length > 0) return data as Meeting[]
+          const { data , error: backendError1 } = await query
+          if (backendError1) throw backendError1
+          return (data ?? []).map((m: any) => ({ ...m, participants: m.meeting_participants || [], agenda: m.meeting_agenda_items || [], minutes: m.meeting_minutes?.[0] || null, decisions: m.meeting_decisions || [], actions: m.meeting_action_items || [] })) as Meeting[]
         } catch (err) {
-          console.warn('Supabase fetch meetings error:', err)
+          throw err
         }
       }
 
@@ -202,6 +207,9 @@ export function useMeetings(filters?: { search?: string; status?: string; type?:
 }
 
 export function useSingleMeeting(meetingId?: string) {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   const meetingQuery = useQuery({
@@ -212,10 +220,11 @@ export function useSingleMeeting(meetingId?: string) {
 
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data } = await supabase.from('meetings').select('*').eq('id', meetingId).single()
-          if (data) return data as Meeting
+          const { data , error: backendError2 } = await supabase.from('meetings').select('*, meeting_participants(*), meeting_agenda_items(*), meeting_minutes(*), meeting_decisions(*), meeting_action_items(*)').eq('agency_id', agencyId).eq('id', meetingId).single()
+          if (backendError2) throw backendError2
+          if (data) return { ...data, participants: data.meeting_participants || [], agenda: data.meeting_agenda_items || [], minutes: data.meeting_minutes?.[0] || null, decisions: data.meeting_decisions || [], actions: data.meeting_action_items || [] } as Meeting
         } catch (err) {
-          console.warn('Supabase fetch single meeting error:', err)
+          throw err
         }
       }
 
@@ -227,7 +236,16 @@ export function useSingleMeeting(meetingId?: string) {
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<Meeting>) => {
-      if (!meetingId) return
+      if (!meetingId) throw new Error('Reunião não encontrada.')
+      if (supabase && isSupabaseConfigured) {
+        if (updates.agenda || updates.minutes || updates.decisions || updates.actions) throw new Error('Conteúdo relacionado da reunião exige persistência transacional no backend; integração pendente.')
+        const allowed = ['title', 'description', 'status', 'starts_at', 'ends_at', 'timezone', 'location_type', 'location_text', 'meeting_url']
+        const fields = Object.fromEntries(Object.entries(updates).filter(([key]) => allowed.includes(key)))
+        const { error } = await supabase.from('meetings').update(fields).eq('agency_id', agencyId).eq('id', meetingId).select('id').single()
+        if (error) throw error
+        queryClient.invalidateQueries({ queryKey: ['meetings'] }); queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] })
+        return
+      }
       const idx = demoMeetingsStore.findIndex((m) => m.id === meetingId)
       if (idx !== -1) {
         demoMeetingsStore[idx] = {
@@ -330,6 +348,12 @@ export function useSingleMeeting(meetingId?: string) {
 
   const convertActionToTask = async (actionId: string, projectId: string) => {
     if (!meeting) return
+    if (supabase && isSupabaseConfigured) {
+      const { data, error } = await supabase.rpc('convert_action_item_to_task', { p_action_item_id: actionId, p_project_id: projectId })
+      if (error) throw error
+      queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] }); queryClient.invalidateQueries({ queryKey: ['projects'] }); queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      return data as string
+    }
     const taskId = `task-conv-${Date.now()}`
     const updatedActions = (meeting.actions || []).map((a) =>
       a.id === actionId ? { ...a, status: 'converted' as const, task_id: taskId } : a
@@ -354,6 +378,9 @@ export function useSingleMeeting(meetingId?: string) {
 }
 
 export function useCreateMeeting() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -373,10 +400,17 @@ export function useCreateMeeting() {
       meeting_url?: string
       participants?: Partial<MeetingParticipant>[]
     }): Promise<Meeting> => {
+      if (supabase && isSupabaseConfigured) {
+        if (!auth.user || !agencyId) throw new Error('Sessão e agência são obrigatórias.')
+        const { data, error } = await supabase.rpc('create_agency_meeting', { p_agency_id: agencyId, p_meeting: payload })
+        if (error) throw error
+        queryClient.invalidateQueries({ queryKey: ['meetings'] })
+        return data as Meeting
+      }
       const newId = `meet-${Date.now()}`
       const newMeeting: Meeting = {
         id: newId,
-        agency_id: 'demo-agency',
+        agency_id: agencyId,
         client_id: payload.client_id || null,
         client_name: payload.client_name,
         project_id: payload.project_id || null,
@@ -391,13 +425,13 @@ export function useCreateMeeting() {
         location_type: payload.location_type,
         location_text: payload.location_text || '',
         meeting_url: payload.meeting_url || '',
-        organizer_id: 'user-001',
+        organizer_id: auth.user?.id || 'demo-user',
         organizer_name: 'Lucas Mendes',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         participants: (payload.participants || []).map((p, i) => ({
           id: `part-${newId}-${i}`,
-          agency_id: 'demo-agency',
+          agency_id: agencyId,
           meeting_id: newId,
           user_id: p.user_id || null,
           user_name: p.user_name || 'Membro Agência',

@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // useTasks — TanStack Query hooks for task management
 // ============================================================
@@ -34,7 +35,7 @@ export const taskKeys = {
 // -------------------------
 // Fetch task detail
 // -------------------------
-async function fetchTask(taskId: string): Promise<Task | null> {
+async function fetchTask(taskId: string, agencyId: string): Promise<Task | null> {
   if (!supabase) return null
 
   const { data, error } = await supabase
@@ -54,7 +55,7 @@ async function fetchTask(taskId: string): Promise<Task | null> {
       column:board_columns(id, name, color, category),
       project:projects(id, name, client_id, client:clients(id, name))
     `)
-    .eq('id', taskId)
+    .eq('id', taskId).eq('agency_id', agencyId)
     .single()
 
   if (error) throw error
@@ -64,7 +65,7 @@ async function fetchTask(taskId: string): Promise<Task | null> {
 // -------------------------
 // Fetch tasks (list with filters)
 // -------------------------
-async function fetchTasks(filters: TaskFilters): Promise<Task[]> {
+async function fetchTasks(filters: TaskFilters, agencyId: string): Promise<Task[]> {
   if (!supabase) return []
 
   let query = supabase
@@ -82,6 +83,7 @@ async function fetchTasks(filters: TaskFilters): Promise<Task[]> {
     .is('parent_task_id', null)
     .order('position', { ascending: true })
 
+  query = query.eq('agency_id', agencyId)
   if (filters.projectId) query = query.eq('project_id', filters.projectId)
   if (filters.status) query = query.eq('status', filters.status)
   if (filters.priority) query = query.eq('priority', filters.priority)
@@ -196,17 +198,19 @@ async function fetchTaskActivity(taskId: string): Promise<TaskActivity[]> {
 // Hooks
 // -------------------------
 export function useTask(taskId?: string) {
+  const agencyId = useAgencyId()
   return useQuery({
     queryKey: taskKeys.detail(taskId ?? ''),
-    queryFn: () => fetchTask(taskId!),
+    queryFn: () => fetchTask(taskId!, agencyId),
     enabled: isSupabaseConfigured && !!taskId,
   })
 }
 
 export function useTasks(filters: TaskFilters) {
+  const agencyId = useAgencyId()
   return useQuery({
-    queryKey: taskKeys.list(filters),
-    queryFn: () => fetchTasks(filters),
+    queryKey: [...taskKeys.list(filters), agencyId],
+    queryFn: () => fetchTasks(filters, agencyId),
     enabled: isSupabaseConfigured,
     staleTime: 15_000,
   })

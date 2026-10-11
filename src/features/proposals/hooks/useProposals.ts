@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 08: PROPOSAL STUDIO HOOKS
@@ -99,6 +100,9 @@ let demoTemplatesStore = [...INITIAL_PROPOSAL_TEMPLATES]
 
 // 1. Hook: Fetch All Proposals
 export function useProposals() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['proposals'],
     queryFn: async (): Promise<Proposal[]> => {
@@ -108,14 +112,16 @@ export function useProposals() {
             .from('proposals')
             .select(`
               *,
-              clients (name, company_name, logo_url),
+              clients (name, logo_url),
               proposal_sections (*),
               proposal_items (*),
               proposal_pricing (*)
             `)
+            .eq('agency_id', agencyId)
             .order('created_at', { ascending: false })
 
-          if (!error && data && data.length > 0) {
+          if (error) throw error
+          if (data) {
             return data.map((p: any) => ({
               ...p,
               client_name: p.clients?.name,
@@ -127,7 +133,7 @@ export function useProposals() {
             }))
           }
         } catch (err) {
-          console.warn('Supabase fetch proposals error, using demo store:', err)
+          throw err
         }
       }
       return demoProposalsStore
@@ -137,6 +143,9 @@ export function useProposals() {
 
 // 2. Hook: Fetch Single Proposal by ID
 export function useProposal(proposalId?: string) {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['proposal', proposalId],
     enabled: Boolean(proposalId),
@@ -148,7 +157,7 @@ export function useProposal(proposalId?: string) {
             .from('proposals')
             .select(`
               *,
-              clients (name, company_name, logo_url),
+              clients (name, logo_url),
               proposal_sections (*),
               proposal_items (*),
               proposal_pricing (*)
@@ -156,7 +165,8 @@ export function useProposal(proposalId?: string) {
             .eq('id', proposalId)
             .single()
 
-          if (!error && data) {
+          if (error) throw error
+          if (data) {
             return {
               ...data,
               client_name: data.clients?.name,
@@ -168,7 +178,7 @@ export function useProposal(proposalId?: string) {
             }
           }
         } catch (err) {
-          console.warn('Supabase fetch single proposal error, using demo store:', err)
+          throw err
         }
       }
       const found = demoProposalsStore.find((p) => p.id === proposalId)
@@ -179,6 +189,9 @@ export function useProposal(proposalId?: string) {
 
 // 3. Hook: Fetch Catalog Services
 export function useAgencyServices() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['agency_services'],
     queryFn: async (): Promise<AgencyService[]> => {
@@ -190,11 +203,12 @@ export function useAgencyServices() {
             .eq('is_active', true)
             .order('name', { ascending: true })
 
-          if (!error && data && data.length > 0) {
+          if (error) throw error
+          if (data) {
             return data
           }
         } catch (err) {
-          console.warn('Supabase fetch services error, using demo store:', err)
+          throw err
         }
       }
       return demoServicesStore
@@ -204,6 +218,9 @@ export function useAgencyServices() {
 
 // 4. Hook: Fetch Commercial Templates
 export function useProposalTemplates() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['proposal_templates'],
     queryFn: async (): Promise<ProposalTemplate[]> => {
@@ -212,13 +229,15 @@ export function useProposalTemplates() {
           const { data, error } = await supabase
             .from('proposal_templates')
             .select('*')
+            .eq('agency_id', agencyId)
             .order('created_at', { ascending: false })
 
-          if (!error && data && data.length > 0) {
+          if (error) throw error
+          if (data) {
             return data
           }
         } catch (err) {
-          console.warn('Supabase fetch templates error, using demo store:', err)
+          throw err
         }
       }
       return demoTemplatesStore
@@ -228,6 +247,9 @@ export function useProposalTemplates() {
 
 // 5. Hook: Create New Proposal
 export function useCreateProposal() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -241,6 +263,19 @@ export function useCreateProposal() {
       template_id?: string
       description?: string
     }): Promise<Proposal> => {
+      if (supabase && isSupabaseConfigured) {
+        if (!auth.user || !agencyId) throw new Error('Sessão e agência são obrigatórias.')
+        if (payload.template_id) throw new Error('Aplicação de modelo exige transação de seções e itens no backend; integração pendente.')
+        const { data, error } = await supabase.from('proposals').insert({
+          agency_id: agencyId, client_id: payload.client_id, title: payload.title.trim(),
+          description: payload.description || null, briefing_id: payload.briefing_id || null,
+          strategy_id: payload.strategy_id || null, created_by: auth.user.id, owner_id: auth.user.id,
+          proposal_number: `PROP-${new Date().getFullYear()}-${crypto.randomUUID().slice(0, 8)}`, status: 'draft',
+        }).select('*').single()
+        if (error) throw error
+        queryClient.invalidateQueries({ queryKey: ['proposals'] })
+        return { ...data, sections: [], items: [] } as Proposal
+      }
       const newId = `prop-${Date.now()}`
       const propNumber = `PROP-2026-${Math.floor(100 + Math.random() * 900)}`
 
@@ -253,7 +288,7 @@ export function useCreateProposal() {
         if (foundTmpl) {
           templateSections = foundTmpl.sections_snapshot.map((s, idx) => ({
             id: `sec-${newId}-${idx}`,
-            agency_id: 'demo-agency',
+            agency_id: agencyId,
             proposal_id: newId,
             section_type: s.section_type || 'custom',
             title: s.title || 'Seção',
@@ -265,7 +300,7 @@ export function useCreateProposal() {
           }))
           templateItems = foundTmpl.items_snapshot.map((i, idx) => ({
             id: `item-${newId}-${idx}`,
-            agency_id: 'demo-agency',
+            agency_id: agencyId,
             proposal_id: newId,
             service_id: i.service_id || null,
             name: i.name || 'Serviço',
@@ -287,7 +322,7 @@ export function useCreateProposal() {
 
       const newProposal: Proposal = {
         id: newId,
-        agency_id: 'demo-agency',
+        agency_id: agencyId,
         client_id: payload.client_id,
         client_name: payload.client_name || 'Cliente Selecionado',
         client_company: payload.client_company || payload.client_name || 'Empresa Cliente',
@@ -305,7 +340,7 @@ export function useCreateProposal() {
         items: templateItems,
         pricing: {
           id: `price-${newId}`,
-          agency_id: 'demo-agency',
+          agency_id: agencyId,
           proposal_id: newId,
           subtotal_cents: pricingResult.subtotal_cents,
           discount_cents: pricingResult.discount_cents,
@@ -336,7 +371,7 @@ export function useCreateProposal() {
             valid_until: newProposal.valid_until,
           })
         } catch (err) {
-          console.warn('Could not insert proposal in Supabase:', err)
+          throw err
         }
       }
 
@@ -349,6 +384,9 @@ export function useCreateProposal() {
 
 // 6. Hook: Update Proposal Status & Content
 export function useUpdateProposal() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -360,6 +398,16 @@ export function useUpdateProposal() {
       title?: string
       description?: string
     }): Promise<Proposal> => {
+      if (supabase && isSupabaseConfigured) {
+        if (payload.items || payload.sections) throw new Error('Salvar itens e seções exige transação e cálculo de preço no backend; integração pendente.')
+        if (payload.status && !['draft', 'internal_review', 'archived'].includes(payload.status)) throw new Error('Essa transição exige o fluxo autorizado de aprovação/publicação no backend.')
+        const { data, error } = await supabase.from('proposals').update({
+          title: payload.title, description: payload.description, status: payload.status,
+        }).eq('agency_id', agencyId).eq('id', payload.id).select('*').single()
+        if (error) throw error
+        queryClient.invalidateQueries({ queryKey: ['proposals'] }); queryClient.invalidateQueries({ queryKey: ['proposal', payload.id] })
+        return data as Proposal
+      }
       const foundIdx = demoProposalsStore.findIndex((p) => p.id === payload.id)
       if (foundIdx === -1) throw new Error('Proposta não encontrada')
 
@@ -413,7 +461,7 @@ export function useUpdateProposal() {
             archived_at: updated.archived_at,
           }).eq('id', payload.id)
         } catch (err) {
-          console.warn('Could not update proposal in Supabase:', err)
+          throw err
         }
       }
 
@@ -426,6 +474,9 @@ export function useUpdateProposal() {
 
 // 7. Hook: Save Service to Catalog
 export function useSaveService() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -435,7 +486,7 @@ export function useSaveService() {
 
       const service: AgencyService = {
         id: serviceId,
-        agency_id: 'demo-agency',
+        agency_id: agencyId,
         name: serviceData.name || 'Novo Serviço',
         description: serviceData.description || '',
         category: serviceData.category || 'Geral',
@@ -458,7 +509,7 @@ export function useSaveService() {
         try {
           await supabase.from('agency_services').upsert(service)
         } catch (err) {
-          console.warn('Could not upsert agency_service in Supabase:', err)
+          throw err
         }
       }
 

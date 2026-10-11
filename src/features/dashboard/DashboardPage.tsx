@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -26,6 +27,7 @@ import { StatusIndicator } from '@/components/ui/StatusIndicator'
 import { isSupabaseConfigured, checkSupabaseHealth, type SupabaseHealthStatus } from '@/lib/supabase/client'
 
 export const DashboardPage: React.FC = () => {
+  const auth = useAuth()
   const { branding } = useBranding()
   const navigate = useNavigate()
   const [healthStatus, setHealthStatus] = React.useState<SupabaseHealthStatus | null>(null)
@@ -40,6 +42,7 @@ export const DashboardPage: React.FC = () => {
     upcomingMeetings,
     activities,
     isInitialEnvironment,
+    error,
   } = useDashboardData()
 
   // Data formatada em português brasileiro (pt-BR)
@@ -53,6 +56,8 @@ export const DashboardPage: React.FC = () => {
   // Capitaliza a primeira letra do dia da semana
   const capitalizedDate =
     formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)
+
+  if (isSupabaseConfigured && error) return <div role="alert">Não foi possível carregar os indicadores da agência. Verifique a conexão e o acesso.</div>
 
   return (
     <div className="space-y-8 animate-in fade-in duration-200">
@@ -464,7 +469,7 @@ export const DashboardPage: React.FC = () => {
                 <div className="flex justify-between py-0.5">
                   <span>Autenticação:</span>
                   <span className="text-[#F8F9FC] font-medium">
-                    {isSupabaseConfigured ? 'Supabase Auth' : 'Sessão Local (RBAC)'}
+                    {auth.user ? 'Sessão Supabase verificada' : 'Demonstração local'}
                   </span>
                 </div>
               </div>
@@ -476,15 +481,15 @@ export const DashboardPage: React.FC = () => {
                     Status de Desenvolvimento
                   </span>
                   <span className="text-[#B8FF65] font-semibold">
-                    Fases 01 a 11 (Auditado)
+                    Homologação operacional pendente
                   </span>
                 </div>
                 <div className="h-1.5 w-full bg-[#101014] rounded-full overflow-hidden flex border border-[#30303B]">
-                  <div className="bg-[#B8FF65] h-full w-full" title="Fases 01 a 11 com código funcional, RLS e testes" />
+                  <div className="bg-[#B8FF65] h-full w-full" title="Consulte os bloqueadores no diagnóstico" />
                 </div>
                 <div className="flex items-center justify-between pt-1">
                   <p className="text-[10px] text-[#717182] leading-tight">
-                    11 Módulos operacionais com RLS e White Label.
+                    Consulte os testes e bloqueadores por módulo.
                   </p>
                   <button
                     onClick={() => navigate('/settings/diagnostics')}

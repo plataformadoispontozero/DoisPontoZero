@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 import React, { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
@@ -21,6 +22,9 @@ import { toast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 
 export const MobileNav: React.FC = () => {
+  const auth = useAuth()
+  const logout = () => void auth.signOut().catch(() => toast.error('Não foi possível encerrar a sessão. Tente novamente.'))
+
   const [drawerOpen, setDrawerOpen] = useState(false)
   const location = useLocation()
   const { branding } = useBranding()
@@ -40,7 +44,7 @@ export const MobileNav: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-[#101014] text-[#A1A1B0] border border-[#30303B] truncate max-w-[120px]">
-            {branding.company.workspaceName}
+            {auth.activeAgency?.agencyName || branding.company.workspaceName}
           </span>
           <IconButton
             variant="ghost"
@@ -65,7 +69,7 @@ export const MobileNav: React.FC = () => {
 
         <div className="px-5 py-2.5 bg-[#101014]/60 border-b border-[#30303B] flex items-center gap-2 text-xs text-[#A1A1B0]">
           <Building2 className="w-4 h-4 text-[#7952FF]" />
-          <span>{branding.company.workspaceName}</span>
+          <span>{auth.activeAgency?.agencyName || branding.company.workspaceName}</span>
         </div>
 
         <SheetContent className="space-y-4 py-4 px-3">
@@ -97,10 +101,10 @@ export const MobileNav: React.FC = () => {
 
         <div className="p-4 border-t border-[#30303B] flex items-center justify-between bg-[#1C1C24]">
           <div className="flex items-center gap-2.5">
-            <Avatar name="Admin Operações" size="sm" status="online" />
+            <Avatar name={auth.name || 'Usuário'} size="sm" status="online" />
             <div className="flex flex-col text-xs">
-              <span className="font-semibold text-[#F8F9FC]">Admin Operações</span>
-              <span className="text-[10px] text-[#A1A1B0]">Modo Local</span>
+              <span className="font-semibold text-[#F8F9FC]">{auth.name || 'Usuário'}</span>
+              <span className="text-[10px] text-[#A1A1B0]">{auth.isDemo ? 'Demonstração local' : auth.user?.email || ''}</span>
             </div>
           </div>
           <IconButton
@@ -108,7 +112,7 @@ export const MobileNav: React.FC = () => {
             size="sm"
             aria-label="Encerrar sessão"
             className="text-[#717182] hover:text-[#FB7185] min-h-[44px] min-w-[44px]"
-            onClick={() => toast.info('Sessão administrativa local ativa.')}
+            onClick={logout}
           >
             <LogOut className="w-4 h-4" />
           </IconButton>

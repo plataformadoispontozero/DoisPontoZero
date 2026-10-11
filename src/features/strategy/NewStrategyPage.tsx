@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 07: STRATEGY STUDIO — NEW STRATEGY
@@ -67,6 +68,8 @@ const initialForm: FormData = {
 }
 
 export const NewStrategyPage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+
   const navigate = useNavigate()
   const createStrategy = useCreateStrategy(DEMO_AGENCY_ID)
 

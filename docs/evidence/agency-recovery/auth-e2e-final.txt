@@ -1,0 +1,57 @@
+[WebServer] (node:89431) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:89469) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 36 tests using 2 workers
+
+(node:89477) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89476) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [Desktop Chrome] › e2e/agency-access.spec.ts:54:1 › unauthenticated deep route and reload require login (3.4s)
+  ✓   3 [Desktop Chrome] › e2e/agency-access.spec.ts:78:1 › user with no active agency cannot enter the workspace (3.1s)
+  ✓   1 [Desktop Chrome] › e2e/agency-access.spec.ts:64:1 › login preserves deep link and tenant switch clears client cache (6.7s)
+  ✓   4 [Desktop Chrome] › e2e/agency-access.spec.ts:83:1 › viewer cannot open the permission administration URL (4.0s)
+  ✓   5 [Desktop Chrome] › e2e/agency-access.spec.ts:89:1 › backend client error is visible and never replaced with demo clients (5.1s)
+  ✓   6 [Desktop Chrome] › e2e/agency-access.spec.ts:96:1 › logout ends the SDK session and protects a subsequent deep route (3.7s)
+  ✓   7 [Desktop Chrome] › e2e/agency-access.spec.ts:107:1 › client form uses active tenant and survives reload through the API contract (3.1s)
+  ✓   8 [Desktop Chrome] › e2e/agency-access.spec.ts:130:4 › invalid credentials never grants private access (3.7s)
+  ✓   9 [Desktop Chrome] › e2e/agency-access.spec.ts:130:4 › invalid or expired session never grants private access (3.9s)
+  ✓  10 [Desktop Chrome] › e2e/agency-access.spec.ts:130:4 › backend unavailable never grants private access (2.9s)
+  ✓  11 [Desktop Chrome] › e2e/agency-access.spec.ts:130:4 › inactive membership excluded by server never grants private access (2.0s)
+(node:89646) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  12 [Desktop Chrome] › e2e/agency-access.spec.ts:137:1 › public proposal without a verified token cannot show a fixture or require login (4.3s)
+  ✓  13 [Tablet iPad] › e2e/agency-access.spec.ts:54:1 › unauthenticated deep route and reload require login (3.8s)
+(node:89669) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 [Tablet iPad] › e2e/agency-access.spec.ts:78:1 › user with no active agency cannot enter the workspace (4.8s)
+  ✓  15 [Tablet iPad] › e2e/agency-access.spec.ts:64:1 › login preserves deep link and tenant switch clears client cache (4.6s)
+  ✓  16 [Tablet iPad] › e2e/agency-access.spec.ts:83:1 › viewer cannot open the permission administration URL (4.3s)
+  ✓  18 [Tablet iPad] › e2e/agency-access.spec.ts:96:1 › logout ends the SDK session and protects a subsequent deep route (3.7s)
+  ✓  17 [Tablet iPad] › e2e/agency-access.spec.ts:89:1 › backend client error is visible and never replaced with demo clients (8.8s)
+  ✓  20 [Tablet iPad] › e2e/agency-access.spec.ts:130:4 › invalid credentials never grants private access (5.3s)
+  ✓  19 [Tablet iPad] › e2e/agency-access.spec.ts:107:1 › client form uses active tenant and survives reload through the API contract (7.8s)
+  ✓  22 [Tablet iPad] › e2e/agency-access.spec.ts:130:4 › backend unavailable never grants private access (2.9s)
+  ✓  21 [Tablet iPad] › e2e/agency-access.spec.ts:130:4 › invalid or expired session never grants private access (4.3s)
+  ✓  24 [Tablet iPad] › e2e/agency-access.spec.ts:137:1 › public proposal without a verified token cannot show a fixture or require login (3.6s)
+  ✓  23 [Tablet iPad] › e2e/agency-access.spec.ts:130:4 › inactive membership excluded by server never grants private access (4.2s)
+(node:89789) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89787) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  25 [Mobile iPhone 14] › e2e/agency-access.spec.ts:54:1 › unauthenticated deep route and reload require login (3.3s)
+  ✓  26 [Mobile iPhone 14] › e2e/agency-access.spec.ts:64:1 › login preserves deep link and tenant switch clears client cache (5.8s)
+  ✓  27 [Mobile iPhone 14] › e2e/agency-access.spec.ts:78:1 › user with no active agency cannot enter the workspace (4.5s)
+  ✓  28 [Mobile iPhone 14] › e2e/agency-access.spec.ts:83:1 › viewer cannot open the permission administration URL (2.6s)
+  ✓  30 [Mobile iPhone 14] › e2e/agency-access.spec.ts:96:1 › logout ends the SDK session and protects a subsequent deep route (4.3s)
+  ✓  29 [Mobile iPhone 14] › e2e/agency-access.spec.ts:89:1 › backend client error is visible and never replaced with demo clients (5.9s)
+  ✓  32 [Mobile iPhone 14] › e2e/agency-access.spec.ts:130:4 › invalid credentials never grants private access (2.8s)
+  ✓  31 [Mobile iPhone 14] › e2e/agency-access.spec.ts:107:1 › client form uses active tenant and survives reload through the API contract (6.3s)
+  ✓  33 [Mobile iPhone 14] › e2e/agency-access.spec.ts:130:4 › invalid or expired session never grants private access (3.0s)
+  ✓  34 [Mobile iPhone 14] › e2e/agency-access.spec.ts:130:4 › backend unavailable never grants private access (2.3s)
+  ✓  35 [Mobile iPhone 14] › e2e/agency-access.spec.ts:130:4 › inactive membership excluded by server never grants private access (5.5s)
+  ✓  36 [Mobile iPhone 14] › e2e/agency-access.spec.ts:137:1 › public proposal without a verified token cannot show a fixture or require login (4.7s)
+
+  36 passed (1.5m)

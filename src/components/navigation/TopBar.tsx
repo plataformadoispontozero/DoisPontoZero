@@ -1,3 +1,5 @@
+import { toast } from '@/components/ui/Toast'
+import { useAuth } from '@/features/auth/AuthProvider'
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
@@ -46,6 +48,9 @@ import { Input } from '@/components/ui/Input'
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
 
 export const TopBar: React.FC = () => {
+  const auth = useAuth()
+  const logout = () => void auth.signOut().catch(() => toast.error('Não foi possível encerrar a sessão. Tente novamente.'))
+
   const { branding } = useBranding()
   const location = useLocation()
   const navigate = useNavigate()
@@ -163,14 +168,14 @@ export const TopBar: React.FC = () => {
           <Dropdown>
             <DropdownTrigger>
               <div className="flex items-center gap-2 cursor-pointer p-0.5 rounded-lg hover:bg-[#1C1C24] transition-colors">
-                <Avatar name="Admin Operações" size="sm" status="online" />
+                <Avatar name={auth.name || 'Usuário'} size="sm" status="online" />
               </div>
             </DropdownTrigger>
             <DropdownContent align="right" className="w-56">
               <div className="p-2 border-b border-[#30303B] mb-1">
-                <p className="text-xs font-semibold text-[#F8F9FC]">Admin Operações</p>
+                <p className="text-xs font-semibold text-[#F8F9FC]">{auth.name || 'Usuário'}</p>
                 <p className="text-[11px] text-[#A1A1B0] truncate">
-                  {branding.company.workspaceName}
+                  {auth.activeAgency?.agencyName || branding.company.workspaceName}
                 </p>
               </div>
               <DropdownItem onClick={() => navigate('/settings')}>
@@ -184,7 +189,7 @@ export const TopBar: React.FC = () => {
               <DropdownSeparator />
               <DropdownItem
                 danger
-                onClick={() => alert('Logout será ativado com a integração Supabase Auth.')}
+                onClick={logout}
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Encerrar Sessão</span>

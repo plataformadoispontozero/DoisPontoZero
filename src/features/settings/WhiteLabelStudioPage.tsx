@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -23,13 +23,15 @@ import {
 import type { AgencyBrandingData } from '@/types/whitelabel'
 
 export const WhiteLabelStudioPage: React.FC = () => {
-  const { branding, updateBranding } = useAgencyBranding()
+  const { branding, updateBranding, isLoading } = useAgencyBranding()
 
   // State local para rascunho de edições
   const [draft, setDraft] = useState<AgencyBrandingData>({ ...branding })
   const [activeTab, setActiveTab] = useState<'identity' | 'colors' | 'typography' | 'preview'>('identity')
   const [isSaving, setIsSaving] = useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+
+  useEffect(() => { if (!isLoading) setDraft({ ...branding }) }, [branding, isLoading])
 
   // Contrast validations
   const textBgContrast = calculateContrastRatio(draft.text_color, draft.background_color)

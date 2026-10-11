@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 10: TEAM CHAT MAIN PAGE
@@ -34,12 +35,13 @@ import { useProjects } from '../projects/hooks/useProjects'
 import type { ChatChannel, ChatMessage, ChannelType, ChannelVisibility } from '@/types/chat'
 
 export const ChatPage: React.FC = () => {
+  const agencyId = useAgencyId()
   const { channelId, conversationId } = useParams<{ channelId?: string; conversationId?: string }>()
   const navigate = useNavigate()
 
   const { data: channels, isLoading: isLoadingChannels } = useChannels()
   const { data: conversations } = useConversations()
-  const { data: squads = [] } = useSquads('agency-001')
+  const { data: squads = [] } = useSquads(agencyId)
   const { data: projects = [] } = useProjects()
 
   const safeChannels = channels || []

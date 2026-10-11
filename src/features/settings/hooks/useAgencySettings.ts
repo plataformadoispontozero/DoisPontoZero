@@ -1,3 +1,4 @@
+import { useAgencyId, useAuth } from '@/features/auth/AuthProvider'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { isSupabaseConfigured, supabase } from '@/lib/supabase/client'
 import { defaultBranding } from '@/config/branding'
@@ -247,7 +248,10 @@ export const initialActivityEvents: ActivityEvent[] = [
 ]
 
 // Custom Hooks for Querying & Mutating Settings Data
-export function useAgencyBranding(agencyId = DEMO_AGENCY_ID) {
+export function useAgencyBranding(agencyId?: string) {
+  const auth = useAuth()
+  const currentAgencyId = useAgencyId()
+  agencyId = currentAgencyId || agencyId || ''
   const queryClient = useQueryClient()
 
   const query = useQuery({
@@ -260,7 +264,8 @@ export function useAgencyBranding(agencyId = DEMO_AGENCY_ID) {
           .eq('agency_id', agencyId)
           .single()
 
-        if (!error && data) {
+        if (error) throw error
+        if (data) {
           return data as AgencyBrandingData
         }
       }
@@ -271,14 +276,17 @@ export function useAgencyBranding(agencyId = DEMO_AGENCY_ID) {
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<AgencyBrandingData>) => {
+      const { id: _id, agency_id: _tenant, created_at: _created, updated_at: _updated, ...fields } = updates
+      if (Object.values(fields).some(value => typeof value === 'string' && value.startsWith('blob:'))) throw new Error('Envie os assets ao Storage privado antes de salvar; URLs temporárias não persistem.')
+
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
           .from('agency_branding')
           .upsert({
+            ...fields,
             agency_id: agencyId,
-            ...updates,
             updated_at: new Date().toISOString(),
-          })
+          }, { onConflict: 'agency_id' })
           .select()
           .single()
 
@@ -300,7 +308,10 @@ export function useAgencyBranding(agencyId = DEMO_AGENCY_ID) {
   }
 }
 
-export function useAgencyPreferences(agencyId = DEMO_AGENCY_ID) {
+export function useAgencyPreferences(agencyId?: string) {
+  const auth = useAuth()
+  const currentAgencyId = useAgencyId()
+  agencyId = currentAgencyId || agencyId || ''
   const queryClient = useQueryClient()
 
   const query = useQuery({
@@ -313,7 +324,8 @@ export function useAgencyPreferences(agencyId = DEMO_AGENCY_ID) {
           .eq('agency_id', agencyId)
           .single()
 
-        if (!error && data) {
+        if (error) throw error
+        if (data) {
           return data as AgencyPreferencesData
         }
       }
@@ -324,14 +336,15 @@ export function useAgencyPreferences(agencyId = DEMO_AGENCY_ID) {
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<AgencyPreferencesData>) => {
+      const { id: _id, agency_id: _tenant, created_at: _created, updated_at: _updated, ...fields } = updates
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
           .from('agency_preferences')
           .upsert({
+            ...fields,
             agency_id: agencyId,
-            ...updates,
             updated_at: new Date().toISOString(),
-          })
+          }, { onConflict: 'agency_id' })
           .select()
           .single()
 
@@ -353,7 +366,10 @@ export function useAgencyPreferences(agencyId = DEMO_AGENCY_ID) {
   }
 }
 
-export function useAgencyDocumentSettings(agencyId = DEMO_AGENCY_ID) {
+export function useAgencyDocumentSettings(agencyId?: string) {
+  const auth = useAuth()
+  const currentAgencyId = useAgencyId()
+  agencyId = currentAgencyId || agencyId || ''
   const queryClient = useQueryClient()
 
   const query = useQuery({
@@ -366,7 +382,8 @@ export function useAgencyDocumentSettings(agencyId = DEMO_AGENCY_ID) {
           .eq('agency_id', agencyId)
           .single()
 
-        if (!error && data) {
+        if (error) throw error
+        if (data) {
           return data as AgencyDocumentSettingsData
         }
       }
@@ -377,14 +394,15 @@ export function useAgencyDocumentSettings(agencyId = DEMO_AGENCY_ID) {
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<AgencyDocumentSettingsData>) => {
+      const { id: _id, agency_id: _tenant, created_at: _created, updated_at: _updated, ...fields } = updates
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
           .from('agency_document_settings')
           .upsert({
+            ...fields,
             agency_id: agencyId,
-            ...updates,
             updated_at: new Date().toISOString(),
-          })
+          }, { onConflict: 'agency_id' })
           .select()
           .single()
 
@@ -406,7 +424,10 @@ export function useAgencyDocumentSettings(agencyId = DEMO_AGENCY_ID) {
   }
 }
 
-export function useAgencyPortalSettings(agencyId = DEMO_AGENCY_ID) {
+export function useAgencyPortalSettings(agencyId?: string) {
+  const auth = useAuth()
+  const currentAgencyId = useAgencyId()
+  agencyId = currentAgencyId || agencyId || ''
   const queryClient = useQueryClient()
 
   const query = useQuery({
@@ -419,7 +440,8 @@ export function useAgencyPortalSettings(agencyId = DEMO_AGENCY_ID) {
           .eq('agency_id', agencyId)
           .single()
 
-        if (!error && data) {
+        if (error) throw error
+        if (data) {
           return data as AgencyPortalSettingsData
         }
       }
@@ -430,14 +452,15 @@ export function useAgencyPortalSettings(agencyId = DEMO_AGENCY_ID) {
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<AgencyPortalSettingsData>) => {
+      const { id: _id, agency_id: _tenant, created_at: _created, updated_at: _updated, ...fields } = updates
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
           .from('agency_portal_settings')
           .upsert({
+            ...fields,
             agency_id: agencyId,
-            ...updates,
             updated_at: new Date().toISOString(),
-          })
+          }, { onConflict: 'agency_id' })
           .select()
           .single()
 
@@ -459,9 +482,22 @@ export function useAgencyPortalSettings(agencyId = DEMO_AGENCY_ID) {
   }
 }
 
-export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
+export function useAgencyTeam(agencyId?: string) {
+  const auth = useAuth()
+  const currentAgencyId = useAgencyId()
+  agencyId = currentAgencyId || agencyId || ''
   const queryClient = useQueryClient()
 
+  const rolesQuery = useQuery({
+    queryKey: ['agencyRoles', agencyId],
+    queryFn: async () => {
+      if (!supabase || !isSupabaseConfigured) return initialRoles
+      const { data, error } = await supabase.from('roles').select('*').eq('agency_id', agencyId).order('name')
+      if (error) throw error
+      return (data ?? []) as RoleDefinition[]
+    },
+    initialData: isSupabaseConfigured ? [] : initialRoles,
+  })
   const membersQuery = useQuery({
     queryKey: ['agencyMembers', agencyId],
     queryFn: async () => {
@@ -471,7 +507,8 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
           .select('*, profiles(full_name, avatar_url), roles(name)')
           .eq('agency_id', agencyId)
 
-        if (!error && data) {
+        if (error) throw error
+        if (data) {
           return data.map((m: any) => ({
             id: m.id,
             agency_id: m.agency_id,
@@ -480,7 +517,7 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
             role_name: m.roles?.name || 'MEMBER',
             status: m.status,
             full_name: m.profiles?.full_name || 'Usuário Sem Nome',
-            email: 'membro@agencia.com.br',
+            email: m.user_id === auth.user?.id ? auth.user?.email || '' : '',
             avatar_url: m.profiles?.avatar_url,
             joined_at: m.joined_at,
           })) as AgencyMemberUser[]
@@ -488,7 +525,7 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
       }
       return initialMembers
     },
-    initialData: initialMembers,
+    initialData: isSupabaseConfigured ? undefined : initialMembers,
   })
 
   const invitationsQuery = useQuery({
@@ -502,7 +539,8 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
           .is('accepted_at', null)
           .is('revoked_at', null)
 
-        if (!error && data) {
+        if (error) throw error
+        if (data) {
           return data.map((inv: any) => ({
             id: inv.id,
             agency_id: inv.agency_id,
@@ -518,19 +556,20 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
       }
       return initialInvitations
     },
-    initialData: initialInvitations,
+    initialData: isSupabaseConfigured ? undefined : initialInvitations,
   })
 
   const inviteMemberMutation = useMutation({
     mutationFn: async ({ email, roleId }: { email: string; roleId: string }) => {
-      const roleName = initialRoles.find((r) => r.id === roleId)?.name || 'MEMBER'
+      if (isSupabaseConfigured) throw new Error('Convites dependem do fluxo seguro de envio e aceite no backend. Integração pendente; nenhum convite foi enviado.')
+      const roleName = rolesQuery.data.find((r) => r.id === roleId)?.name || 'MEMBER'
       const newInv: AgencyInvitation = {
         id: `inv-${Date.now()}`,
         agency_id: agencyId,
         email,
         role_id: roleId,
         role_name: roleName,
-        invited_by: 'usr-001',
+        invited_by: auth.user?.id || '',
         invited_by_name: 'Lucas Silveira',
         expires_at: new Date(Date.now() + 86400000 * 7).toISOString(),
         created_at: new Date().toISOString(),
@@ -541,7 +580,7 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
           agency_id: agencyId,
           email,
           role_id: roleId,
-          invited_by: 'usr-001',
+          invited_by: auth.user?.id || '',
           token_hash: `token_${Math.random().toString(36).slice(2)}`,
           expires_at: newInv.expires_at,
         }).select().single()
@@ -563,7 +602,7 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
         await supabase
           .from('agency_invitations')
           .update({ revoked_at: new Date().toISOString() })
-          .eq('id', invitationId)
+          .eq('id', invitationId).eq('agency_id', agencyId)
       }
       return invitationId
     },
@@ -576,15 +615,15 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
 
   const updateMemberRoleMutation = useMutation({
     mutationFn: async ({ memberId, newRoleId }: { memberId: string; newRoleId: string }) => {
-      const member = membersQuery.data.find((m) => m.id === memberId)
+      const member = (membersQuery.data ?? []).find((m) => m.id === memberId)
       if (member?.role_name === 'OWNER') {
         throw new Error('O privilégio de OWNER é exclusivo e não pode ser alterado diretamente.')
       }
 
-      const roleName = initialRoles.find((r) => r.id === newRoleId)?.name || 'MEMBER'
+      const roleName = rolesQuery.data.find((r) => r.id === newRoleId)?.name || 'MEMBER'
 
       if (isSupabaseConfigured && supabase) {
-        await supabase.from('agency_members').update({ role_id: newRoleId }).eq('id', memberId)
+        await supabase.from('agency_members').update({ role_id: newRoleId }).eq('id', memberId).eq('agency_id', agencyId)
       }
 
       return { memberId, newRoleId, roleName }
@@ -597,8 +636,9 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
   })
 
   return {
-    members: membersQuery.data,
-    invitations: invitationsQuery.data,
+    roles: rolesQuery.data,
+    members: membersQuery.data ?? [],
+    invitations: invitationsQuery.data ?? [],
     isLoading: membersQuery.isLoading || invitationsQuery.isLoading,
     inviteMember: inviteMemberMutation.mutateAsync,
     revokeInvitation: revokeInvitationMutation.mutateAsync,
@@ -606,7 +646,10 @@ export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {
   }
 }
 
-export function useActivityFeed(agencyId = DEMO_AGENCY_ID) {
+export function useActivityFeed(agencyId?: string) {
+  const auth = useAuth()
+  const currentAgencyId = useAgencyId()
+  agencyId = currentAgencyId || agencyId || ''
   return useQuery({
     queryKey: ['activityFeed', agencyId],
     queryFn: async () => {
@@ -618,7 +661,8 @@ export function useActivityFeed(agencyId = DEMO_AGENCY_ID) {
           .order('created_at', { ascending: false })
           .limit(20)
 
-        if (!error && data && data.length > 0) {
+        if (error) throw error
+        if (data) {
           return data.map((log: any) => ({
             id: log.id,
             agency_id: log.agency_id,
@@ -634,8 +678,8 @@ export function useActivityFeed(agencyId = DEMO_AGENCY_ID) {
           })) as ActivityEvent[]
         }
       }
-      return initialActivityEvents
+      return isSupabaseConfigured ? [] : initialActivityEvents
     },
-    initialData: initialActivityEvents,
+    initialData: isSupabaseConfigured ? [] : initialActivityEvents,
   })
 }

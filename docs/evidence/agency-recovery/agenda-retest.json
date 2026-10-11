@@ -1,0 +1,324 @@
+{
+  "config": {
+    "argv": [
+      "/usr/local/bin/node",
+      "/Users/designer/Documents/DoisPontoZero/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.audit.config.ts",
+      "--grep",
+      "agenda alias"
+    ],
+    "configFile": "/Users/designer/Documents/DoisPontoZero/playwright.audit.config.ts",
+    "rootDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Desktop Chrome",
+        "name": "Desktop Chrome",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [
+          "agency-access.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Tablet iPad",
+        "name": "Tablet iPad",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [
+          "agency-access.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Mobile iPhone 14",
+        "name": "Mobile iPhone 14",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [
+          "agency-access.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Desktop Chrome",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": "agency-access.spec.ts",
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "trace": "on-first-retry",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Desktop Chrome"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Tablet iPad",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": "agency-access.spec.ts",
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "trace": "on-first-retry",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 768,
+            "height": 1024
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Tablet iPad"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Mobile iPhone 14",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": "agency-access.spec.ts",
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "trace": "on-first-retry",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Mobile iPhone 14"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/audit-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 2,
+    "webServer": {
+      "command": "VITE_SUPABASE_URL= VITE_SUPABASE_ANON_KEY= VITE_SUPABASE_PUBLISHABLE_KEY= VITE_ENABLE_LOCAL_DEMO=true npm run build -- --outDir dist-demo-test && npm run preview -- --outDir dist-demo-test --host 127.0.0.1 --port 4175 --strictPort",
+      "url": "http://127.0.0.1:4175",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "audit-routes.spec.ts",
+      "file": "audit-routes.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "agenda alias preserves the existing calendar route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2998,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T05:00:47.948Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-c0e58e20820d2684c891",
+          "file": "audit-routes.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "agenda alias preserves the existing calendar route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2999,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T05:00:47.944Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-dfb4d5c8ce01ad767ef6",
+          "file": "audit-routes.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "agenda alias preserves the existing calendar route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2905,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T05:00:52.333Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "93e262eddb466bf82067-283ef1a64e2fff097296",
+          "file": "audit-routes.spec.ts",
+          "line": 23,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-11T05:00:37.710Z",
+    "duration": 18021.101,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

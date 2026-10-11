@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 09: GOOGLE DRIVE INTEGRATION HOOKS
@@ -95,20 +96,24 @@ let demoClientFoldersStore: ClientDriveFolder[] = [
 
 // 1. Hook: Google Connection Status
 export function useDriveConnection() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['drive_connection'],
     queryFn: async (): Promise<GoogleConnection | null> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data } = await supabase
+          const { data , error: backendError1 } = await supabase
             .from('google_connections')
             .select('*')
-            .eq('agency_id', 'demo-agency')
-            .single()
+            .eq('agency_id', agencyId)
+            .maybeSingle()
+          if (backendError1) throw backendError1
 
-          if (data) return data
+          return data
         } catch (err) {
-          console.warn('Supabase fetch google connection error:', err)
+          throw err
         }
       }
       return demoConnectionStore
@@ -118,18 +123,22 @@ export function useDriveConnection() {
 
 // 2. Hook: Drive Files Browser
 export function useDriveFiles(search?: string, mimeType?: string) {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['drive_files', search, mimeType],
     queryFn: async (): Promise<DriveFileReference[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          let query = supabase.from('drive_file_references').select('*')
+          let query = supabase.from('drive_file_references').select('*').eq('agency_id', agencyId)
           if (search) query = query.ilike('name', `%${search}%`)
           if (mimeType) query = query.eq('mime_type', mimeType)
-          const { data } = await query
-          if (data && data.length > 0) return data
+          const { data , error: backendError2 } = await query
+          if (backendError2) throw backendError2
+          return data ?? []
         } catch (err) {
-          console.warn('Supabase fetch drive files error:', err)
+          throw err
         }
       }
 
@@ -144,20 +153,24 @@ export function useDriveFiles(search?: string, mimeType?: string) {
 
 // 3. Hook: Client Drive Folders
 export function useClientDriveFolders(clientId?: string) {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['client_drive_folders', clientId],
     enabled: Boolean(clientId),
     queryFn: async (): Promise<ClientDriveFolder[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data } = await supabase
+          const { data , error: backendError3 } = await supabase
             .from('client_drive_folders')
             .select('*')
             .eq('client_id', clientId)
+          if (backendError3) throw backendError3
 
-          if (data) return data
+          return data
         } catch (err) {
-          console.warn('Supabase fetch client folders error:', err)
+          throw err
         }
       }
       return demoClientFoldersStore.filter((f) => f.client_id === clientId)
@@ -167,13 +180,16 @@ export function useClientDriveFolders(clientId?: string) {
 
 // 4. Hook: Link Folder to Client
 export function useLinkClientDriveFolder() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (payload: { clientId: string; folderName: string; googleFolderId: string }) => {
       const newFolder: ClientDriveFolder = {
         id: `cfolder-${Date.now()}`,
-        agency_id: 'demo-agency',
+        agency_id: agencyId,
         client_id: payload.clientId,
         google_folder_id: payload.googleFolderId,
         folder_name: payload.folderName,
@@ -188,7 +204,7 @@ export function useLinkClientDriveFolder() {
         try {
           await supabase.from('client_drive_folders').insert(newFolder)
         } catch (err) {
-          console.warn('Could not insert client drive folder in Supabase:', err)
+          throw err
         }
       }
 
@@ -200,10 +216,14 @@ export function useLinkClientDriveFolder() {
 
 // 5. Hook: Toggle Connect/Disconnect Google Drive
 export function useToggleDriveConnection() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (connect: boolean) => {
+      if (isSupabaseConfigured) throw new Error('Integração OAuth ainda não configurada no backend. Nenhuma conexão foi criada ou revogada.')
       if (connect) {
         demoConnectionStore = DEMO_GOOGLE_CONNECTION
       } else {
@@ -215,10 +235,10 @@ export function useToggleDriveConnection() {
           if (connect) {
             await supabase.from('google_connections').upsert(DEMO_GOOGLE_CONNECTION)
           } else {
-            await supabase.from('google_connections').delete().eq('agency_id', 'demo-agency')
+            await supabase.from('google_connections').delete().eq('agency_id', agencyId)
           }
         } catch (err) {
-          console.warn('Could not update connection in Supabase:', err)
+          throw err
         }
       }
 
@@ -230,6 +250,9 @@ export function useToggleDriveConnection() {
 
 // 6. Hook: Composite Drive Hook
 export function useDrive() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const connectionQuery = useDriveConnection()
   const driveFilesQuery = useDriveFiles()
 

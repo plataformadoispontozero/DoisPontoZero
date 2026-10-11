@@ -116,10 +116,7 @@ export function useBriefingTemplates(agencyId: string) {
         .eq('agency_id', agencyId)
         .order('created_at', { ascending: false })
 
-      if (error) {
-        console.warn('Error fetching templates, falling back to defaults:', error.message)
-        return getInitialTemplatesMapped(agencyId)
-      }
+      if (error) throw error
 
       if (!data || data.length === 0) {
         return getInitialTemplatesMapped(agencyId)
@@ -285,10 +282,7 @@ export function useBriefings(agencyId: string, filters?: { status?: BriefingStat
       }
 
       const { data, error } = await query
-      if (error) {
-        console.warn('Error fetching briefings:', error.message)
-        return []
-      }
+      if (error) throw error
 
       return (data ?? []) as Briefing[]
     },

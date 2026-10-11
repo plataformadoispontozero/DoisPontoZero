@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 07: STRATEGY STUDIO
@@ -48,6 +49,8 @@ import { STRATEGY_STATUS_CONFIG } from '@/types/strategy'
 const DEMO_AGENCY_ID = 'demo-agency'
 
 export const StrategyWorkspacePage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+
   const { strategyId } = useParams<{ strategyId: string }>()
   const navigate = useNavigate()
 

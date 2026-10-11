@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 10: NOTIFICATION HOOKS
@@ -49,16 +50,20 @@ const DEMO_NOTIFICATIONS: AppNotification[] = [
 let demoNotificationsStore = [...DEMO_NOTIFICATIONS]
 
 export function useNotifications() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['notifications'],
-    initialData: demoNotificationsStore,
+    initialData: isSupabaseConfigured ? undefined : demoNotificationsStore,
     queryFn: async (): Promise<AppNotification[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data } = await supabase.from('notifications').select('*').order('created_at', { ascending: false })
-          if (data && data.length > 0) return data as AppNotification[]
+          const { data , error: backendError1 } = await supabase.from('notifications').select('*').eq('agency_id', agencyId).eq('user_id', auth.user?.id || '').order('created_at', { ascending: false })
+          if (backendError1) throw backendError1
+          return data ?? [] as AppNotification[]
         } catch (err) {
-          console.warn('Supabase fetch notifications error:', err)
+          throw err
         }
       }
       return demoNotificationsStore
@@ -67,10 +72,19 @@ export function useNotifications() {
 }
 
 export function useMarkNotificationAsRead() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (id: string) => {
+      if (supabase && isSupabaseConfigured) {
+        const { error } = await supabase.from('notifications').update({ read_at: new Date().toISOString() }).eq('id',id).eq('agency_id',agencyId).eq('user_id',auth.user?.id || '').select('id').single()
+        if (error) throw error
+        queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        return
+      }
       const idx = demoNotificationsStore.findIndex((n) => n.id === id)
       if (idx !== -1) {
         demoNotificationsStore[idx].read_at = new Date().toISOString()
@@ -81,10 +95,19 @@ export function useMarkNotificationAsRead() {
 }
 
 export function useMarkAllNotificationsAsRead() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async () => {
+      if (supabase && isSupabaseConfigured) {
+        const { error } = await supabase.from('notifications').update({ read_at: new Date().toISOString() }).eq('agency_id',agencyId).eq('user_id',auth.user?.id || '').is('read_at',null)
+        if (error) throw error
+        queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        return
+      }
       demoNotificationsStore = demoNotificationsStore.map((n) => ({
         ...n,
         read_at: n.read_at || new Date().toISOString(),

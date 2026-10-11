@@ -1,3 +1,4 @@
+import { toast } from '@/components/ui/Toast'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 08: PROPOSAL WORKSPACE & BUILDER PAGE
@@ -211,21 +212,25 @@ export const ProposalWorkspacePage: React.FC = () => {
 
   // Save changes
   const handleSave = async () => {
+    try {
     await updateProposalMutation.mutateAsync({
       id: proposal.id,
       sections,
       items,
     })
+    } catch { toast.error('Não foi possível salvar. A integração transacional do backend precisa estar disponível.') }
   }
 
   // Status transitions
   const handleStatusChange = async (newStatus: any) => {
+    try {
     await updateProposalMutation.mutateAsync({
       id: proposal.id,
       status: newStatus,
       sections,
       items,
     })
+    } catch { toast.error('Não foi possível salvar. A integração transacional do backend precisa estar disponível.') }
   }
 
   const activeSection = sections[selectedSectionIdx]

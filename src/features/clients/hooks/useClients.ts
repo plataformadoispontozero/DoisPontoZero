@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS — FASE 03
 // TanStack Query Hooks for Client Management (CRM)
@@ -129,8 +130,7 @@ export function useClients(agencyId: string = 'demo-agency', filters?: ClientFil
 
       const { data, error } = await query
       if (error) {
-        console.warn('Erro ao carregar clientes do Supabase:', error.message)
-        return demoClientsCache
+        throw error
       }
 
       return (data as Client[]) ?? []
@@ -139,6 +139,7 @@ export function useClients(agencyId: string = 'demo-agency', filters?: ClientFil
 }
 
 export function useClient(clientId?: string) {
+  const agencyId = useAgencyId()
   return useQuery<Client | null>({
     queryKey: ['client', clientId],
     queryFn: async () => {
@@ -151,7 +152,7 @@ export function useClient(clientId?: string) {
       const { data, error } = await supabase
         .from('clients')
         .select('*')
-        .eq('id', clientId)
+        .eq('id', clientId).eq('agency_id', agencyId)
         .single()
 
       if (error) throw error
@@ -236,7 +237,7 @@ export function useUpdateClient(agencyId: string) {
           logo_url: payload.logo_url,
           status: payload.status,
         })
-        .eq('id', payload.id)
+        .eq('id', payload.id).eq('agency_id', agencyId)
         .select()
         .single()
 

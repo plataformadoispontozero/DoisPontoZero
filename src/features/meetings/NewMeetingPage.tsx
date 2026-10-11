@@ -1,3 +1,5 @@
+import { useAuth } from '@/features/auth/AuthProvider'
+import { toast } from '@/components/ui/Toast'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 10: NEW MEETING WIZARD
@@ -16,6 +18,7 @@ import type { MeetingType, LocationType } from '@/types/meetings'
 import type { Client } from '@/types/projects'
 
 export const NewMeetingPage: React.FC = () => {
+  const auth = useAuth()
   const navigate = useNavigate()
   const { data: clients } = useClients()
   const { data: projects = [] } = useProjects()
@@ -54,12 +57,13 @@ export const NewMeetingPage: React.FC = () => {
       external_email?: string
       participant_type: 'internal' | 'external'
     }> = [
-      { user_id: 'user-001', user_name: 'Lucas Mendes (Organizador)', participant_type: 'internal' },
+      { user_id: auth.user?.id, user_name: auth.name, participant_type: 'internal' },
     ]
     if (externalEmail) {
       participants.push({ external_name: externalEmail, external_email: externalEmail, participant_type: 'external' })
     }
 
+    try {
     const created = await createMeetingMutation.mutateAsync({
       title,
       description,
@@ -77,6 +81,7 @@ export const NewMeetingPage: React.FC = () => {
     })
 
     navigate(`/meetings/${created.id}`)
+    } catch { toast.error('Não foi possível criar a reunião. Verifique o acesso e a integração do backend.') }
   }
 
   return (

@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 06: FORM BUILDER — VISUAL TEMPLATE EDITOR
@@ -79,6 +80,8 @@ const QUESTION_ICONS: Record<QuestionType, React.ElementType> = {
 }
 
 export const BriefingTemplateEditorPage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+
   const { templateId } = useParams<{ templateId: string }>()
   const navigate = useNavigate()
   const { data: existingTemplate, isLoading } = useBriefingTemplate(templateId)

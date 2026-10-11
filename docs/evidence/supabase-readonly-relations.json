@@ -1,0 +1,536 @@
+[
+  {
+    "table": "agencies",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_branding",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_document_settings",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_invitations",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_members",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_portal_settings",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_preferences",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_services",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_settings",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "agency_settings_history",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "audit_logs",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "board_columns",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_activity",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_answers",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_attachments",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_exports",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_public_links",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_questions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_sections",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_templates",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefing_versions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "briefings",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "calendar_connections",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "chat_attachments",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "chat_channel_members",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "chat_channels",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "chat_conversation_members",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "chat_conversations",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "chat_mentions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "chat_messages",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "chat_reactions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "client_drive_folders",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "clients",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "content_ideas",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "content_strategies",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "drive_file_references",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "editorial_items",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "editorial_pillars",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "google_connections",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "meeting_action_items",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "meeting_activity",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "meeting_agenda_items",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "meeting_calendar_events",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "meeting_decisions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "meeting_minutes",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "meeting_participants",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "meetings",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "notifications",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "permissions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "presentation_activity",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "presentation_assets",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "presentation_exports",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "presentation_public_links",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "presentation_sections",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "presentation_versions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "presentations",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "profiles",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "project_boards",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "project_drive_files",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "project_members",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "projects",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_approvals",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_events",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_exports",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_items",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_pricing",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_public_links",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_sections",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_templates",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposal_versions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "proposals",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "role_permissions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "roles",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "squad_goals",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "squad_members",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "squad_performance_snapshots",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "squad_projects",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "squads",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "strategy_activity",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "strategy_versions",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "task_activity",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "task_assignees",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "task_attachments",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "task_checklist_items",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "task_checklists",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "task_comments",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "task_links",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "task_reviews",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  },
+  {
+    "table": "tasks",
+    "status": "200",
+    "code": null,
+    "exists_visible": true
+  }
+]

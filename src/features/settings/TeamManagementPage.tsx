@@ -7,11 +7,11 @@ import { Badge } from '@/components/ui/Badge'
 import { Dialog, DialogBody, DialogHeader, DialogTitle } from '@/components/ui/Dialog'
 import { Avatar } from '@/components/ui/Avatar'
 import { toast } from '@/components/ui/Toast'
-import { useAgencyTeam, initialRoles } from './hooks/useAgencySettings'
+import { useAgencyTeam } from './hooks/useAgencySettings'
 import { Users, UserPlus, Mail, Shield, Trash2, Clock, CheckCircle, ShieldAlert } from 'lucide-react'
 
 export const TeamManagementPage: React.FC = () => {
-  const { members, invitations, inviteMember, revokeInvitation, updateMemberRole } = useAgencyTeam()
+  const { roles, members, invitations, inviteMember, revokeInvitation, updateMemberRole } = useAgencyTeam()
 
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
@@ -116,7 +116,7 @@ export const TeamManagementPage: React.FC = () => {
                 <Select
                   value={inviteRoleId}
                   onChange={(e) => setInviteRoleId(e.target.value)}
-                  options={initialRoles
+                  options={roles
                     .filter((r) => r.name !== 'OWNER') // Não permite convidar como OWNER
                     .map((r) => ({
                       value: r.id,
@@ -186,7 +186,7 @@ export const TeamManagementPage: React.FC = () => {
                       disabled={member.role_name === 'OWNER'}
                       value={member.role_id}
                       onChange={(e) => handleRoleChange(member.id, member.role_name, e.target.value)}
-                      options={initialRoles.map((r) => ({
+                      options={roles.map((r) => ({
                         value: r.id,
                         label: r.name,
                       }))}

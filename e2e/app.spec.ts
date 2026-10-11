@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Dois.Zero Application Baseline', () => {
-  test('should load dashboard and render branding', async ({ page }) => {
+  test('should load dashboard and render branding', async ({ page, isMobile }) => {
     await page.goto('/')
     await expect(page).toHaveTitle(/Dois\.Zero/i)
-    await expect(page.getByText(/Matriz Criativa/i).first()).toBeVisible()
+    const shell = isMobile ? page.getByRole('banner') : page.getByRole('complementary', { name: 'Navegação Principal', exact: true })
+    await expect(shell.getByText('Matriz Criativa', { exact: true })).toBeVisible()
     await expect(page.getByText(/Indicadores Operacionais/i)).toBeVisible()
   })
 

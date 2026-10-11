@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -231,6 +232,8 @@ const ProjectRow: React.FC<{ project: Project; onClick: () => void }> = ({
 // Main Page
 // -------------------------
 export const ProjectsPage: React.FC = () => {
+  const MOCK_AGENCY_ID = useAgencyId()
+
   const navigate = useNavigate()
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [search, setSearch] = useState('')

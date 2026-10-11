@@ -27,9 +27,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (id.includes('@react-pdf/renderer')) {
-            return 'vendor-pdf'
-          }
           if (id.includes('@supabase/')) {
             return 'vendor-supabase'
           }

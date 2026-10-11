@@ -1,3 +1,4 @@
+import { AuthProvider } from '@/features/auth/AuthProvider'
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
@@ -18,11 +19,11 @@ function renderWithProviders(ui: React.ReactElement) {
   })
 
   return render(
-    <QueryClientProvider client={queryClient}>
+    <AuthProvider><QueryClientProvider client={queryClient}>
       <BrandingProvider>
         <BrowserRouter>{ui}</BrowserRouter>
       </BrandingProvider>
-    </QueryClientProvider>
+    </QueryClientProvider></AuthProvider>
   )
 }
 
@@ -53,10 +54,11 @@ describe('Fase 11 — White Label Studio & Advanced Settings Suite', () => {
     expect(screen.getByDisplayValue('Dois.Zero')).toBeInTheDocument()
   })
 
-  it('renders PermissionStudioPage matrix with roles and modules', () => {
+  it('renders PermissionStudioPage matrix with roles and modules', async () => {
     renderWithProviders(<PermissionStudioPage />)
 
     expect(screen.getByText('Permission Studio & Matriz de Controle de Acesso')).toBeInTheDocument()
+    await screen.findByText('ADMIN')
     expect(screen.getAllByText('OWNER').length).toBeGreaterThan(0)
     expect(screen.getAllByText('ADMIN').length).toBeGreaterThan(0)
   })

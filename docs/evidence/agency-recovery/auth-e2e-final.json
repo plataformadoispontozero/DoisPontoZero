@@ -1,0 +1,1436 @@
+{
+  "config": {
+    "argv": [
+      "/usr/local/bin/node",
+      "/Users/designer/Documents/DoisPontoZero/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.agency.config.ts"
+    ],
+    "configFile": "/Users/designer/Documents/DoisPontoZero/playwright.agency.config.ts",
+    "rootDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/agency",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Desktop Chrome",
+        "name": "Desktop Chrome",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "agency-access.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/agency",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Tablet iPad",
+        "name": "Tablet iPad",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "agency-access.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/agency",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Mobile iPhone 14",
+        "name": "Mobile iPhone 14",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "agency-access.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/agency",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Desktop Chrome",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": "agency-access.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4176",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Desktop Chrome"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/agency",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Tablet iPad",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": "agency-access.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4176",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 768,
+            "height": 1024
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Tablet iPad"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/designer/Documents/DoisPontoZero/test-results/agency",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "Mobile iPhone 14",
+        "testDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "snapshotDir": "/Users/designer/Documents/DoisPontoZero/e2e",
+        "testIgnore": [],
+        "testMatch": "agency-access.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4176",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "Mobile iPhone 14"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/agency-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 2,
+    "webServer": {
+      "command": "VITE_SUPABASE_URL=https://audit-auth.supabase.co VITE_SUPABASE_ANON_KEY=sb_publishable_audit_only VITE_ENABLE_LOCAL_DEMO=false npm run build -- --outDir dist-auth-test && npm run preview -- --outDir dist-auth-test --host 127.0.0.1 --port 4176 --strictPort",
+      "url": "http://127.0.0.1:4176",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "agency-access.spec.ts",
+      "file": "agency-access.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "unauthenticated deep route and reload require login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3398,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:57:52.751Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-5b9464be2ad8dadd1709",
+          "file": "agency-access.spec.ts",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 6728,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:57:52.748Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-3a2d1b2906ef04b0a7a4",
+          "file": "agency-access.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "user with no active agency cannot enter the workspace",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3136,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:57:56.386Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-b5b49aafb3a90b6390c0",
+          "file": "agency-access.spec.ts",
+          "line": 78,
+          "column": 1
+        },
+        {
+          "title": "viewer cannot open the permission administration URL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3998,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:57:59.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-ecfe7fce1dc45155a737",
+          "file": "agency-access.spec.ts",
+          "line": 83,
+          "column": 1
+        },
+        {
+          "title": "backend client error is visible and never replaced with demo clients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 5140,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:57:59.714Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-1a79b79b4578c948509b",
+          "file": "agency-access.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "logout ends the SDK session and protects a subsequent deep route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3731,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:03.567Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-1a79e0ba6d69ad4bb0f5",
+          "file": "agency-access.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 3135,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:04.864Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-ce6c73c9c10778231e7b",
+          "file": "agency-access.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "invalid credentials never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3734,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:07.308Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-c6b4cbb8c5cf3e08c9ac",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "invalid or expired session never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 3922,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:08.007Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-00b6dd68694268fa7c50",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "backend unavailable never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2885,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:11.053Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-5bd940a3c7050b3f2505",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "inactive membership excluded by server never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1998,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:11.939Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-9cad997494305097bdc2",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "public proposal without a verified token cannot show a fixture or require login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Desktop Chrome",
+              "projectName": "Desktop Chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4262,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:13.946Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-60e1534b1e7096b09ba4",
+          "file": "agency-access.spec.ts",
+          "line": 137,
+          "column": 1
+        },
+        {
+          "title": "unauthenticated deep route and reload require login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 3765,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:14.313Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-9e2ae30fe0f312d61dbb",
+          "file": "agency-access.spec.ts",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4619,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:18.539Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-bf86eb97bb456e2b0d55",
+          "file": "agency-access.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "user with no active agency cannot enter the workspace",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4774,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:18.316Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-27d614516366556f3961",
+          "file": "agency-access.spec.ts",
+          "line": 78,
+          "column": 1
+        },
+        {
+          "title": "viewer cannot open the permission administration URL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4256,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:23.103Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-23bb64346de5a995f4f3",
+          "file": "agency-access.spec.ts",
+          "line": 83,
+          "column": 1
+        },
+        {
+          "title": "backend client error is visible and never replaced with demo clients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8832,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:23.417Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-07fc1db3eade8c33da46",
+          "file": "agency-access.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "logout ends the SDK session and protects a subsequent deep route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 3747,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:27.379Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-98605825acb6e0a47c5f",
+          "file": "agency-access.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 7845,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:31.143Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-b20492483185a4b7ec74",
+          "file": "agency-access.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "invalid credentials never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5315,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:32.298Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-f18b70d3d9f471020b11",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "invalid or expired session never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4273,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:37.649Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-6d6d3e370edaeb7b771e",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "backend unavailable never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2862,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:38.999Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-dbaa0a1cf96da3d58fa5",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "inactive membership excluded by server never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4177,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:41.878Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-2941f99f1bef7320ba48",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "public proposal without a verified token cannot show a fixture or require login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Tablet iPad",
+              "projectName": "Tablet iPad",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3628,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:41.933Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-eff6ffdf3339022eea9e",
+          "file": "agency-access.spec.ts",
+          "line": 137,
+          "column": 1
+        },
+        {
+          "title": "unauthenticated deep route and reload require login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3311,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:46.588Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-2971b1d47c9e3cc71350",
+          "file": "agency-access.spec.ts",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 5768,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:46.590Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-e713142673bf74b8b27d",
+          "file": "agency-access.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "user with no active agency cannot enter the workspace",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4530,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:50.221Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-fffb2ee74d09df05775c",
+          "file": "agency-access.spec.ts",
+          "line": 78,
+          "column": 1
+        },
+        {
+          "title": "viewer cannot open the permission administration URL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2551,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:52.685Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-12e8a15366d3a4e2f7d3",
+          "file": "agency-access.spec.ts",
+          "line": 83,
+          "column": 1
+        },
+        {
+          "title": "backend client error is visible and never replaced with demo clients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5897,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:54.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-d6a3324a515aff613b99",
+          "file": "agency-access.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "logout ends the SDK session and protects a subsequent deep route",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4284,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:55.258Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-d8e44f88f5058bfab577",
+          "file": "agency-access.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 6260,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:58:59.561Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-d2a273235cb34c5e1c27",
+          "file": "agency-access.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "invalid credentials never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2824,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:59:00.717Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-c451f9fe1d7da043dfe0",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "invalid or expired session never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3003,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:59:03.550Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-c119061d9792ba3a95f0",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "backend unavailable never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2324,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:59:05.827Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-d7f568d337d3e93623f0",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "inactive membership excluded by server never grants private access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5524,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:59:06.562Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-4e861fea9ca8fba84bfb",
+          "file": "agency-access.spec.ts",
+          "line": 130,
+          "column": 4
+        },
+        {
+          "title": "public proposal without a verified token cannot show a fixture or require login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "Mobile iPhone 14",
+              "projectName": "Mobile iPhone 14",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4680,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-11T04:59:08.180Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e370940ada2aa8489d3e-eb87ec5fdc0c20c917a8",
+          "file": "agency-access.spec.ts",
+          "line": 137,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-11T04:57:44.341Z",
+    "duration": 88667.264,
+    "expected": 36,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

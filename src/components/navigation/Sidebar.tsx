@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import {
@@ -24,6 +25,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   collapsed,
   onToggleCollapse,
 }) => {
+  const auth = useAuth()
+  const logout = () => void auth.signOut().catch(() => toast.error('Não foi possível encerrar a sessão. Tente novamente.'))
+
   const { branding } = useBranding()
 
   const mainItems = navItems.filter((i) => i.section === 'main')
@@ -74,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             'flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-[#101014]/60 border border-[#30303B]/60 text-xs text-[#A1A1B0]',
             collapsed ? 'justify-center px-0' : ''
           )}
-          title={`Workspace: ${branding.company.workspaceName}`}
+          title={`Workspace: ${auth.activeAgency?.agencyName || branding.company.workspaceName}`}
         >
           <Building2 className="w-4 h-4 text-[#7952FF] shrink-0" />
           {!collapsed && (
@@ -83,7 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 Workspace
               </span>
               <span className="font-medium text-[#F8F9FC] truncate">
-                {branding.company.workspaceName}
+                {auth.activeAgency?.agencyName || branding.company.workspaceName}
               </span>
             </div>
           )}
@@ -227,14 +231,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
             collapsed ? 'justify-center p-1.5' : ''
           )}
         >
-          <Avatar name="Admin Operações" size="sm" status="online" />
+          <Avatar name={auth.name || 'Usuário'} size="sm" status="online" />
           {!collapsed && (
             <div className="flex flex-col min-w-0 flex-1">
               <span className="text-xs font-semibold text-[#F8F9FC] truncate">
-                Admin Operações
+                {auth.name || 'Usuário'}
               </span>
               <span className="text-[10px] text-[#A1A1B0] truncate">
-                admin@doiszero.local
+                {auth.user?.email || 'Demonstração local'}
               </span>
             </div>
           )}
@@ -244,7 +248,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               size="sm"
               aria-label="Sair do sistema"
               className="text-[#717182] hover:text-[#FB7185] shrink-0"
-              onClick={() => toast.info('Sessão administrativa local ativa.')}
+              onClick={logout}
             >
               <LogOut className="w-3.5 h-3.5" />
             </IconButton>

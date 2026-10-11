@@ -1,0 +1,2456 @@
+[
+  {
+    "file": "src/components/navigation/MobileNav.tsx",
+    "line": 178,
+    "text": "aria-label=\"Abrir todos os módulos\"",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/components/shared/EmptyState.tsx",
+    "line": 71,
+    "text": "Escopo funcional previsto:",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/ClientsPage.tsx",
+    "line": 54,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/ClientsPage.tsx",
+    "line": 60,
+    "text": "const { data: clients = [], isLoading } = useClients(DEMO_AGENCY_ID, {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/ClientsPage.tsx",
+    "line": 65,
+    "text": "const createClient = useCreateClient(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/ClientsPage.tsx",
+    "line": 66,
+    "text": "const updateClient = useUpdateClient(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/ClientsPage.tsx",
+    "line": 67,
+    "text": "const deleteClient = useDeleteClient(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/ClientsPage.tsx",
+    "line": 221,
+    "text": "{st === 'all' ? 'Todos' : st === 'active' ? 'Ativos' : 'Inativos'}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/ClientsPage.tsx",
+    "line": 445,
+    "text": "agencyId={DEMO_AGENCY_ID}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/SettingsPage.tsx",
+    "line": 44,
+    "text": "Valores definidos em <code className=\"text-[#B8FF65]\">src/config/branding.ts</code> consumidos por todos os componentes do sistema.",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/SettingsPage.tsx",
+    "line": 203,
+    "text": "Modo: {isSupabaseConfigured ? 'Supabase Remoto Ativo' : 'Demonstração Local'}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/AppearanceSettingsPage.tsx",
+    "line": 19,
+    "text": "toast.success(`Modo de aparência '${selectedTheme}' salvo com sucesso!`)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/AppearanceSettingsPage.tsx",
+    "line": 49,
+    "text": "Esta configuração define o estilo visual padrão para todos os membros da equipe e portais.",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/AppearanceSettingsPage.tsx",
+    "line": 129,
+    "text": "O branding e as cores da agência permanecem ativos independentemente do tema selecionado. A preferência pessoal do usuário na sessão local pode alternar entre escuro/claro sem afetar a identidade global da marca.",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/DocumentBrandingPage.tsx",
+    "line": 40,
+    "text": "toast.success('Configurações de branding de documentos PDF atualizadas!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/WorkspacePreferencesPage.tsx",
+    "line": 40,
+    "text": "toast.success('Preferências do workspace salvas com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/WorkspacePreferencesPage.tsx",
+    "line": 193,
+    "text": "As preferências configuradas acima aplicam-se a todos os membros ativos da agência.",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/TeamManagementPage.tsx",
+    "line": 31,
+    "text": "toast.success(`Convite seguro enviado com sucesso para ${inviteEmail}!`)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/TeamManagementPage.tsx",
+    "line": 58,
+    "text": "toast.success('Cargo do membro atualizado com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/AgencySettingsPage.tsx",
+    "line": 47,
+    "text": "toast.success('Configurações da agência atualizadas com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/AgencySettingsPage.tsx",
+    "line": 248,
+    "text": "Todos os dados e parâmetros cadastrados acima são restritos exclusivamente aos membros autorizados do ID da sua agência.",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/IntegrationsCenterPage.tsx",
+    "line": 33,
+    "text": "{isSupabaseActive ? 'Conectado' : 'Modo Local / Demo'}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/ClientExperiencePage.tsx",
+    "line": 38,
+    "text": "toast.success('Configurações dos Portais Públicos atualizadas!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/DiagnosticsPage.tsx",
+    "line": 45,
+    "text": "{isSupabaseActive ? 'Conectado Remote' : 'Modo Local / Demo'}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/SecurityCenterPage.tsx",
+    "line": 19,
+    "text": "toast.success('Sessão encerrada com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/SecurityCenterPage.tsx",
+    "line": 22,
+    "text": "toast.info('Sessão local redefinida com sucesso.')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/SecurityCenterPage.tsx",
+    "line": 57,
+    "text": "{isSupabaseConfigured ? 'Supabase Auth Efetivo' : 'Sessão Local / Modo Demo'}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/WhiteLabelStudioPage.tsx",
+    "line": 46,
+    "text": "toast.success('Identidade de marca e temas White Label salvos com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/WhiteLabelStudioPage.tsx",
+    "line": 90,
+    "text": "toast.success(`Asset ${file.name} carregado no rascunho!`)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 25,
+    "text": "const MOCK_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 27,
+    "text": "// Fallback demo columns",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 28,
+    "text": "const DEMO_COLUMNS: BoardColumn[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 79,
+    "text": "// Fallback demo tasks",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 80,
+    "text": "const DEMO_TASKS: Task[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 242,
+    "text": "// Fallback to DEMO_TASKS when server query returns empty",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 243,
+    "text": "const tasksToDisplay = serverTasks.length > 0 ? serverTasks : DEMO_TASKS",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 329,
+    "text": "columns={DEMO_COLUMNS}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 339,
+    "text": "columns={DEMO_COLUMNS}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 350,
+    "text": "columns={DEMO_COLUMNS}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/tasks/TasksPage.tsx",
+    "line": 360,
+    "text": "columns={DEMO_COLUMNS}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/ProjectsPage.tsx",
+    "line": 35,
+    "text": "const MOCK_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/ProjectsPage.tsx",
+    "line": 297,
+    "text": "? 'Todos'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/ProjectsPage.tsx",
+    "line": 373,
+    "text": "statusBadge=\"Fluxo Operacional Ativo\"",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/NewProjectPage.tsx",
+    "line": 19,
+    "text": "const MOCK_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/NewProjectPage.tsx",
+    "line": 79,
+    "text": "toast.success('Projeto criado com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/ProjectWorkspacePage.tsx",
+    "line": 40,
+    "text": "const MOCK_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/ProjectWorkspacePage.tsx",
+    "line": 57,
+    "text": "// Fallback demo project if none returned from query",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/ProjectWorkspacePage.tsx",
+    "line": 59,
+    "text": "id: projectId || 'demo-project',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/ProjectWorkspacePage.tsx",
+    "line": 87,
+    "text": "// Fallback demo board with columns & sample creative tasks",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/dashboard/DashboardPage.tsx",
+    "line": 460,
+    "text": "Modo Local / Demo",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/dashboard/DashboardPage.tsx",
+    "line": 467,
+    "text": "{isSupabaseConfigured ? 'Supabase Auth' : 'Sessão Local (RBAC)'}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/PresentationsPage.tsx",
+    "line": 132,
+    "text": "{ value: 'all', label: 'Todos os Status' },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 33,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 40,
+    "text": "const { data: templates = [] } = useBriefingTemplates(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 41,
+    "text": "const { data: projects = [] } = useProjects(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 42,
+    "text": "const createBriefing = useCreateBriefing(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 58,
+    "text": "{ id: 'client-demo-1', name: 'Natura Cosméticos', slug: 'natura' },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 59,
+    "text": "{ id: 'client-demo-2', name: 'Nubank Brasil', slug: 'nubank' },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 60,
+    "text": "{ id: 'client-demo-3', name: 'Ambev Creative', slug: 'ambev' },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 109,
+    "text": "toast.success('Briefing criado com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 115,
+    "text": "const createPublicLinkMutation = useCreatePublicLink(DEMO_AGENCY_ID, createdBriefingId || '')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 123,
+    "text": "toast.success('Link público gerado e copiado para a área de transferência!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/NewBriefingPage.tsx",
+    "line": 375,
+    "text": "toast.success('Link copiado!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 36,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 43,
+    "text": "// Fallback demo briefing if empty",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 47,
+    "text": "id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 48,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 64,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 74,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 86,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 97,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 116,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 117,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 126,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 127,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 129,
+    "text": "answer_value: 'Democratizar a pureza botânica com zero crueldade e embalagens circulares.',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 135,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 136,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 144,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 145,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 153,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 154,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 182,
+    "text": "toast.success('PDF profissional gerado com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingExportPage.tsx",
+    "line": 196,
+    "text": "toast.success('Prévia do PDF renderizada no navegador!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingPage.tsx",
+    "line": 38,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingPage.tsx",
+    "line": 45,
+    "text": "const { data: briefings = [], isLoading, isError } = useBriefings(DEMO_AGENCY_ID, {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingPage.tsx",
+    "line": 153,
+    "text": "Todos ({briefings.length})",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 35,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 41,
+    "text": "const updateStatus = useUpdateBriefingStatus(DEMO_AGENCY_ID, briefingId || '')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 43,
+    "text": "// Fallback demo briefing if not in database",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 47,
+    "text": "id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 48,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 64,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 74,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 86,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 97,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 116,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 117,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 120,
+    "text": "'A empresa nasceu há 12 anos com o objetivo de conectar produtos naturais sustentáveis com o consumidor urbano. Hoje atendemos mais de 250k clientes.',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 126,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 127,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 130,
+    "text": "'Missão: Democratizar o consumo ético e ecológico. Valores: Transparência, pureza botânica e impacto positivo.',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 136,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 137,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 146,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 147,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 155,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 156,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 165,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 166,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 174,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 175,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 183,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 184,
+    "text": "briefing_id: briefingId || 'demo-briefing-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/BriefingResponsesPage.tsx",
+    "line": 209,
+    "text": "toast.success('Briefing aprovado com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/squads/SquadsPage.tsx",
+    "line": 66,
+    "text": "// Demo Agency ID",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/squads/SquadsPage.tsx",
+    "line": 68,
+    "text": "const MOCK_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/squads/SquadsPage.tsx",
+    "line": 231,
+    "text": "toast.success(`Squad \"${name}\" criado!`)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/squads/SquadsPage.tsx",
+    "line": 392,
+    "text": "toast.success(`Meta \"${title}\" criada!`)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/squads/SquadsPage.tsx",
+    "line": 542,
+    "text": "toast.success(`Performance registrada: ${squad.name} — ${MONTH_NAMES[month - 1]} ${year}`)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/squads/SquadsPage.tsx",
+    "line": 635,
+    "text": "toast.success(`Squad \"${squad.name}\" arquivado`)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/squads/SquadsPage.tsx",
+    "line": 1241,
+    "text": "{/* Demo mode banner */}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/squads/SquadsPage.tsx",
+    "line": 1246,
+    "text": "<strong>Modo demonstração</strong> — Configure o Supabase em{' '}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/MeetingsPage.tsx",
+    "line": 106,
+    "text": "<option value=\"all\">Todos os Status</option>",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/MeetingsPage.tsx",
+    "line": 118,
+    "text": "<option value=\"all\">Todos os Tipos</option>",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/DriveBrowserPage.tsx",
+    "line": 85,
+    "text": "{ value: 'all', label: 'Todos os Formatos' },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/NewProposalPage.tsx",
+    "line": 32,
+    "text": "const { data: clients = [] } = useClients('demo-agency')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/ProposalsPage.tsx",
+    "line": 184,
+    "text": "{ value: 'all', label: 'Todos os Status' },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyWorkspacePage.tsx",
+    "line": 48,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyWorkspacePage.tsx",
+    "line": 59,
+    "text": "const updateStrategy = useUpdateStrategy(DEMO_AGENCY_ID, strategyId || '')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyWorkspacePage.tsx",
+    "line": 266,
+    "text": "agencyId={DEMO_AGENCY_ID}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyWorkspacePage.tsx",
+    "line": 277,
+    "text": "agencyId={DEMO_AGENCY_ID}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyWorkspacePage.tsx",
+    "line": 287,
+    "text": "agencyId={DEMO_AGENCY_ID}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyWorkspacePage.tsx",
+    "line": 299,
+    "text": "agencyId={DEMO_AGENCY_ID}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyWorkspacePage.tsx",
+    "line": 315,
+    "text": "agencyId={DEMO_AGENCY_ID}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyWorkspacePage.tsx",
+    "line": 325,
+    "text": "agencyId={DEMO_AGENCY_ID}",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/NewStrategyPage.tsx",
+    "line": 35,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/NewStrategyPage.tsx",
+    "line": 71,
+    "text": "const createStrategy = useCreateStrategy(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/NewStrategyPage.tsx",
+    "line": 123,
+    "text": "toast.success('Estratégia criada com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyPage.tsx",
+    "line": 37,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/StrategyPage.tsx",
+    "line": 44,
+    "text": "const { data: strategies = [], isLoading, isError } = useStrategies(DEMO_AGENCY_ID, {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/components/EditorialGeneratorDialog.tsx",
+    "line": 204,
+    "text": "Selecionar Todos ({selectedIndices.length}/{suggestions.length})",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/components/PillarsTab.tsx",
+    "line": 184,
+    "text": "example_topics: ['Rotina do estúdio', 'Histórias de superação em projetos', 'Erros que cometemos e o que aprendemos'],",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/components/PillarsTab.tsx",
+    "line": 193,
+    "text": "example_topics: ['Antes e Depois de clientes', 'Depoimentos em vídeo', 'Demonstração de solução'],",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/components/IdeasBankTab.tsx",
+    "line": 207,
+    "text": "<option value=\"all\">Todos os Pilares</option>",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/components/EditorialCalendarTab.tsx",
+    "line": 268,
+    "text": "<option value=\"all\">Todos os Pilares</option>",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 23,
+    "text": "// DEMO DATA (used when Supabase is not configured)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 25,
+    "text": "function getDemoStrategies(agencyId: string): ContentStrategy[] {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 28,
+    "text": "id: 'demo-strategy-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 51,
+    "text": "pillars: getDemoPillars(agencyId, 'demo-strategy-1'),",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 57,
+    "text": "id: 'demo-strategy-2',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 88,
+    "text": "function getDemoPillars(agencyId: string, strategyId: string): EditorialPillar[] {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 91,
+    "text": "id: 'demo-pillar-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 107,
+    "text": "id: 'demo-pillar-2',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 123,
+    "text": "id: 'demo-pillar-3',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 139,
+    "text": "id: 'demo-pillar-4',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 157,
+    "text": "function getDemoIdeas(agencyId: string, strategyId: string): ContentIdea[] {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 160,
+    "text": "id: 'demo-idea-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 163,
+    "text": "pillar_id: 'demo-pillar-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 182,
+    "text": "id: 'demo-idea-2',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 185,
+    "text": "pillar_id: 'demo-pillar-2',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 204,
+    "text": "id: 'demo-idea-3',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 207,
+    "text": "pillar_id: 'demo-pillar-3',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 228,
+    "text": "function getDemoEditorialItems(agencyId: string, strategyId: string): EditorialItem[] {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 232,
+    "text": "id: 'demo-editorial-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 235,
+    "text": "pillar_id: 'demo-pillar-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 236,
+    "text": "idea_id: 'demo-idea-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 256,
+    "text": "id: 'demo-editorial-2',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 259,
+    "text": "pillar_id: 'demo-pillar-2',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 291,
+    "text": "let data = getDemoStrategies(agencyId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 317,
+    "text": "return getDemoStrategies(agencyId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 333,
+    "text": "return getDemoStrategies('demo-agency').find((s) => s.id === strategyId) ?? null",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 466,
+    "text": "return getDemoPillars('demo-agency', strategyId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 477,
+    "text": "return getDemoPillars('demo-agency', strategyId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 588,
+    "text": "let data = getDemoIdeas('demo-agency', strategyId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 609,
+    "text": "return getDemoIdeas('demo-agency', strategyId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 700,
+    "text": "let data = getDemoEditorialItems('demo-agency', strategyId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/strategy/hooks/useStrategy.ts",
+    "line": 721,
+    "text": "return getDemoEditorialItems('demo-agency', strategyId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialTemplates.ts",
+    "line": 12,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialTemplates.ts",
+    "line": 107,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialTemplates.ts",
+    "line": 162,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialTemplates.ts",
+    "line": 203,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialTemplates.ts",
+    "line": 237,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialTemplates.ts",
+    "line": 250,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialTemplates.ts",
+    "line": 263,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialServices.ts",
+    "line": 12,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialServices.ts",
+    "line": 26,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialServices.ts",
+    "line": 40,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialServices.ts",
+    "line": 54,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialServices.ts",
+    "line": 68,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialServices.ts",
+    "line": 82,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/constants/initialServices.ts",
+    "line": 96,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/pdf/transformProposalToPdfModel.ts",
+    "line": 50,
+    "text": "agency_id: proposal.agency_id || 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/pdf/generateProposalPdf.ts",
+    "line": 47,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/pdf/generateProposalPdf.ts",
+    "line": 54,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/public/PublicProposalViewPage.tsx",
+    "line": 39,
+    "text": "// Simulate fetching public proposal via token (RPC or local demo)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 23,
+    "text": "// Mock Initial Proposals for Demo Mode",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 24,
+    "text": "const DEMO_PROPOSALS: Proposal[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 27,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 39,
+    "text": "public_token: 'token_acme_2026_demo_secure',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 44,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 61,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 78,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 95,
+    "text": "// In-memory demo store",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 96,
+    "text": "let demoProposalsStore = [...DEMO_PROPOSALS]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 97,
+    "text": "let demoServicesStore = [...DEFAULT_AGENCY_SERVICES]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 98,
+    "text": "let demoTemplatesStore = [...INITIAL_PROPOSAL_TEMPLATES]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 130,
+    "text": "console.warn('Supabase fetch proposals error, using demo store:', err)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 133,
+    "text": "return demoProposalsStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 171,
+    "text": "console.warn('Supabase fetch single proposal error, using demo store:', err)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 174,
+    "text": "const found = demoProposalsStore.find((p) => p.id === proposalId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 197,
+    "text": "console.warn('Supabase fetch services error, using demo store:', err)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 200,
+    "text": "return demoServicesStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 221,
+    "text": "console.warn('Supabase fetch templates error, using demo store:', err)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 224,
+    "text": "return demoTemplatesStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 252,
+    "text": "const foundTmpl = demoTemplatesStore.find((t) => t.id === payload.template_id)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 256,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 268,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 290,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 308,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 343,
+    "text": "demoProposalsStore = [newProposal, ...demoProposalsStore]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 363,
+    "text": "const foundIdx = demoProposalsStore.findIndex((p) => p.id === payload.id)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 366,
+    "text": "const current = demoProposalsStore[foundIdx]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 401,
+    "text": "demoProposalsStore[foundIdx] = updated",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 438,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 452,
+    "text": "demoServicesStore = demoServicesStore.map((s) => (s.id === serviceId ? service : s))",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/proposals/hooks/useProposals.ts",
+    "line": 454,
+    "text": "demoServicesStore = [service, ...demoServicesStore]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 10,
+    "text": "const DEMO_NOTIFICATIONS: AppNotification[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 13,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 25,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 37,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 49,
+    "text": "let demoNotificationsStore = [...DEMO_NOTIFICATIONS]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 54,
+    "text": "initialData: demoNotificationsStore,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 64,
+    "text": "return demoNotificationsStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 74,
+    "text": "const idx = demoNotificationsStore.findIndex((n) => n.id === id)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 76,
+    "text": "demoNotificationsStore[idx].read_at = new Date().toISOString()",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/notifications/hooks/useNotifications.ts",
+    "line": 88,
+    "text": "demoNotificationsStore = demoNotificationsStore.map((n) => ({",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 4,
+    "text": "// TanStack Query hooks & local demo fallback for Drive Management",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 16,
+    "text": "// Mock Initial Connection & File References for Demo Mode",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 17,
+    "text": "const DEMO_GOOGLE_CONNECTION: GoogleConnection = {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 18,
+    "text": "id: 'gconn-demo-001',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 19,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 30,
+    "text": "const DEMO_DRIVE_FILES: DriveFileReference[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 33,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 34,
+    "text": "connection_id: 'gconn-demo-001',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 49,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 50,
+    "text": "connection_id: 'gconn-demo-001',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 65,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 66,
+    "text": "connection_id: 'gconn-demo-001',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 81,
+    "text": "let demoConnectionStore: GoogleConnection | null = DEMO_GOOGLE_CONNECTION",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 82,
+    "text": "let demoFilesStore: DriveFileReference[] = [...DEMO_DRIVE_FILES]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 83,
+    "text": "let demoClientFoldersStore: ClientDriveFolder[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 86,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 106,
+    "text": ".eq('agency_id', 'demo-agency')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 114,
+    "text": "return demoConnectionStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 136,
+    "text": "return demoFilesStore.filter((f) => {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 163,
+    "text": "return demoClientFoldersStore.filter((f) => f.client_id === clientId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 176,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 185,
+    "text": "demoClientFoldersStore = [newFolder, ...demoClientFoldersStore]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 208,
+    "text": "demoConnectionStore = DEMO_GOOGLE_CONNECTION",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 210,
+    "text": "demoConnectionStore = null",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 216,
+    "text": "await supabase.from('google_connections').upsert(DEMO_GOOGLE_CONNECTION)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 218,
+    "text": "await supabase.from('google_connections').delete().eq('agency_id', 'demo-agency')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/drive/hooks/useDrive.ts",
+    "line": 226,
+    "text": "return demoConnectionStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 20,
+    "text": "const DEMO_MEETINGS: Meeting[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 23,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 45,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 55,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 67,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 78,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 90,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 101,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 112,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 128,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 151,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 163,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 175,
+    "text": "let demoMeetingsStore = [...DEMO_MEETINGS]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 194,
+    "text": "return demoMeetingsStore.filter((m) => {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 222,
+    "text": "return demoMeetingsStore.find((m) => m.id === meetingId) || null",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 231,
+    "text": "const idx = demoMeetingsStore.findIndex((m) => m.id === meetingId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 233,
+    "text": "demoMeetingsStore[idx] = {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 234,
+    "text": "...demoMeetingsStore[idx],",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 379,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 400,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/meetings/hooks/useMeetings.ts",
+    "line": 416,
+    "text": "demoMeetingsStore = [newMeeting, ...demoMeetingsStore]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/constants/initialTemplates.ts",
+    "line": 102,
+    "text": "label: 'Perfil Demográfico e Comportamental',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/pdf/generateBriefingPdf.ts",
+    "line": 47,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/pdf/generateBriefingPdf.ts",
+    "line": 55,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/public/PublicBriefingFormPage.tsx",
+    "line": 104,
+    "text": "// Demo fallback: use template 01 (Branding) for demonstration",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/public/PublicBriefingFormPage.tsx",
+    "line": 108,
+    "text": "id: 'demo-briefing-public',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/hooks/useBriefings.ts",
+    "line": 21,
+    "text": "// Helper to convert initial templates to BriefingTemplate objects for demo mode",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/hooks/useBriefings.ts",
+    "line": 143,
+    "text": "return getInitialTemplatesMapped('demo-agency').find((t) => t.id === templateId) ?? null",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/templates/BriefingTemplatesPage.tsx",
+    "line": 32,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/templates/BriefingTemplatesPage.tsx",
+    "line": 36,
+    "text": "const { data: templates = [], isLoading } = useBriefingTemplates(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/templates/BriefingTemplatesPage.tsx",
+    "line": 101,
+    "text": "Todos ({templates.length})",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/templates/BriefingTemplateEditorPage.tsx",
+    "line": 49,
+    "text": "const DEMO_AGENCY_ID = 'demo-agency'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/templates/BriefingTemplateEditorPage.tsx",
+    "line": 85,
+    "text": "const createTemplate = useCreateTemplate(DEMO_AGENCY_ID)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/templates/BriefingTemplateEditorPage.tsx",
+    "line": 246,
+    "text": "toast.success('Pergunta duplicada!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/briefing/templates/BriefingTemplateEditorPage.tsx",
+    "line": 323,
+    "text": "toast.success(isPublishing ? 'Template publicado com sucesso!' : 'Rascunho salvo com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/pdf/generatePresentationPdf.ts",
+    "line": 46,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/pdf/generatePresentationPdf.ts",
+    "line": 53,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 97,
+    "text": "const DEMO_PRESENTATIONS: Presentation[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 100,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 116,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 132,
+    "text": "let demoPresentationsStore = [...DEMO_PRESENTATIONS]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 164,
+    "text": "return demoPresentationsStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 212,
+    "text": "return demoPresentationsStore.find((p) => p.id === presentationId) || null",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 230,
+    "text": "agency_id: presentation.agency_id || 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 283,
+    "text": "agency_id: presentation.agency_id || 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 317,
+    "text": "if (!presentation) return 'demo_public_token'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 318,
+    "text": "return presentation.public_token || 'demo_public_token'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 373,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 387,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 402,
+    "text": "demoPresentationsStore = [newPres, ...demoPresentationsStore]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 440,
+    "text": "const idx = demoPresentationsStore.findIndex((p) => p.id === payload.id)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 443,
+    "text": "const cur = demoPresentationsStore[idx]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/presentations/hooks/usePresentations.ts",
+    "line": 454,
+    "text": "demoPresentationsStore[idx] = updated",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/dashboard/types/index.ts",
+    "line": 15,
+    "text": "status: 'todo' | 'in_progress' | 'review' | 'done'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/components/TaskDetailPanel.tsx",
+    "line": 118,
+    "text": "// Fallback demo data if realTask is null (e.g. Supabase disconnected or mocked)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/components/TaskDetailPanel.tsx",
+    "line": 207,
+    "text": "toast.success('Tarefa arquivada.')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/components/TaskDetailPanel.tsx",
+    "line": 229,
+    "text": "toast.success('Comentário publicado!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/components/TaskDetailPanel.tsx",
+    "line": 252,
+    "text": "toast.success('Link adicionado com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/components/TaskDetailPanel.tsx",
+    "line": 272,
+    "text": "toast.success('Checklist criado!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/projects/components/CreateTaskDialog.tsx",
+    "line": 84,
+    "text": "toast.success('Tarefa criada com sucesso!')",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 18,
+    "text": "const DEMO_CHANNELS: ChatChannel[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 21,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 33,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 47,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 61,
+    "text": "const DEMO_CONVERSATIONS: ChatConversation[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 64,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 78,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 96,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 108,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 119,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 133,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 146,
+    "text": "let demoChannelsStore = [...DEMO_CHANNELS]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 147,
+    "text": "let demoConversationsStore = [...DEMO_CONVERSATIONS]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 148,
+    "text": "let demoMessagesStore: Record<string, ChatMessage[]> = { ...INITIAL_MESSAGES }",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 153,
+    "text": "initialData: demoChannelsStore,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 163,
+    "text": "return demoChannelsStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 171,
+    "text": "initialData: demoConversationsStore,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 181,
+    "text": "return demoConversationsStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 235,
+    "text": "return demoMessagesStore[targetId] || []",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 254,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 266,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 278,
+    "text": "if (!demoMessagesStore[payload.targetId]) {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 279,
+    "text": "demoMessagesStore[payload.targetId] = []",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 281,
+    "text": "demoMessagesStore[payload.targetId].push(newMsg)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 303,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 316,
+    "text": "demoChannelsStore.push(newChan)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 328,
+    "text": "const msgs = demoMessagesStore[targetId] || []",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/chat/hooks/useChat.ts",
+    "line": 338,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/calendar/hooks/useCalendarIntegration.ts",
+    "line": 10,
+    "text": "const DEMO_CALENDAR_CONNECTION: CalendarConnection = {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/calendar/hooks/useCalendarIntegration.ts",
+    "line": 12,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/calendar/hooks/useCalendarIntegration.ts",
+    "line": 22,
+    "text": "let demoCalendarStore: CalendarConnection | null = DEMO_CALENDAR_CONNECTION",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/calendar/hooks/useCalendarIntegration.ts",
+    "line": 36,
+    "text": "return demoCalendarStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/calendar/hooks/useCalendarIntegration.ts",
+    "line": 47,
+    "text": "demoCalendarStore = DEMO_CALENDAR_CONNECTION",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/calendar/hooks/useCalendarIntegration.ts",
+    "line": 49,
+    "text": "demoCalendarStore = null",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/calendar/hooks/useCalendarIntegration.ts",
+    "line": 52,
+    "text": "return demoCalendarStore",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 17,
+    "text": "const DEMO_AGENCY_ID = 'agency-001'",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 22,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 45,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 60,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 74,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 87,
+    "text": "{ id: 'role-owner', agency_id: DEMO_AGENCY_ID, name: 'OWNER', description: 'Proprietário com acesso total e irrevogável.', is_system: true },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 88,
+    "text": "{ id: 'role-admin', agency_id: DEMO_AGENCY_ID, name: 'ADMIN', description: 'Administrador geral do workspace.', is_system: true },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 89,
+    "text": "{ id: 'role-manager', agency_id: DEMO_AGENCY_ID, name: 'MANAGER', description: 'Gestor de projetos, squads e briefings.', is_system: true },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 90,
+    "text": "{ id: 'role-member', agency_id: DEMO_AGENCY_ID, name: 'MEMBER', description: 'Membro executor da equipe criativa.', is_system: true },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 91,
+    "text": "{ id: 'role-viewer', agency_id: DEMO_AGENCY_ID, name: 'VIEWER', description: 'Acesso apenas para leitura e acompanhamento.', is_system: true },",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 136,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 148,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 160,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 172,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 187,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 201,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 213,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 225,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 237,
+    "text": "agency_id: DEMO_AGENCY_ID,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 250,
+    "text": "export function useAgencyBranding(agencyId = DEMO_AGENCY_ID) {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 303,
+    "text": "export function useAgencyPreferences(agencyId = DEMO_AGENCY_ID) {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 356,
+    "text": "export function useAgencyDocumentSettings(agencyId = DEMO_AGENCY_ID) {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 409,
+    "text": "export function useAgencyPortalSettings(agencyId = DEMO_AGENCY_ID) {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 462,
+    "text": "export function useAgencyTeam(agencyId = DEMO_AGENCY_ID) {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/settings/hooks/useAgencySettings.ts",
+    "line": 609,
+    "text": "export function useActivityFeed(agencyId = DEMO_AGENCY_ID) {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/components/ClientBriefingsTab.tsx",
+    "line": 23,
+    "text": "agencyId = 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/components/ClientPresentationsTab.tsx",
+    "line": 47,
+    "text": "Crie apresentações editoriais para demonstrar a evolução das campanhas e mídias criadas.",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 37,
+    "text": "// Demo Data (Fallback when Supabase not configured)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 39,
+    "text": "let demoClientsCache: Client[] = [",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 41,
+    "text": "id: 'client-demo-1',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 42,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 51,
+    "text": "id: 'client-demo-2',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 52,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 61,
+    "text": "id: 'client-demo-3',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 62,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 71,
+    "text": "id: 'client-demo-4',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 72,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 81,
+    "text": "id: 'client-demo-5',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 82,
+    "text": "agency_id: 'demo-agency',",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 96,
+    "text": "export function useClients(agencyId: string = 'demo-agency', filters?: ClientFilters) {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 101,
+    "text": "let list = [...demoClientsCache]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 133,
+    "text": "return demoClientsCache",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 148,
+    "text": "return demoClientsCache.find((c) => c.id === clientId) ?? null",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 180,
+    "text": "id: `demo-client-${Date.now()}`,",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 189,
+    "text": "demoClientsCache = [newClient, ...demoClientsCache]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 220,
+    "text": "const index = demoClientsCache.findIndex((c) => c.id === payload.id)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 222,
+    "text": "demoClientsCache[index] = {",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 223,
+    "text": "...demoClientsCache[index],",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 228,
+    "text": "return demoClientsCache[index]",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  },
+  {
+    "file": "src/features/clients/hooks/useClients.ts",
+    "line": 261,
+    "text": "demoClientsCache = demoClientsCache.filter((c) => c.id !== clientId)",
+    "review": "candidate; fixtures/form placeholders are not automatically defects"
+  }
+]

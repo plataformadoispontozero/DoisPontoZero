@@ -1,3 +1,5 @@
+import { isSupabaseConfigured } from '@/lib/supabase/client'
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 06: PDF STUDIO — EXPORT & PREVIEW
@@ -36,6 +38,8 @@ import { toast } from '@/components/ui/Toast'
 const DEMO_AGENCY_ID = 'demo-agency'
 
 export const BriefingExportPage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+
   const { briefingId } = useParams<{ briefingId: string }>()
   const { branding: appBranding } = useBranding()
   const { data: realBriefing, isLoading } = useBriefing(briefingId)
@@ -200,6 +204,8 @@ export const BriefingExportPage: React.FC = () => {
       setIsGenerating(false)
     }
   }
+
+  if (isSupabaseConfigured && (!realBriefing)) return <div role="alert">Recurso indisponível, carregando ou sem permissão. Nenhum exemplo substitui o recurso da agência.</div>
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">

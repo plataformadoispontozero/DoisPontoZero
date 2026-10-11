@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 08: PUBLIC STANDALONE COMMERCIAL PROPOSAL PRESENTATION
@@ -22,6 +23,7 @@ import { defaultBranding } from '@/config/branding'
 import { formatCurrencyCents } from '../services/pricingEngine'
 
 export const PublicProposalViewPage: React.FC = () => {
+  const auth = useAuth()
   const { publicToken } = useParams<{ publicToken: string }>()
 
   const [loading, setLoading] = useState(true)
@@ -36,7 +38,8 @@ export const PublicProposalViewPage: React.FC = () => {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
 
   useEffect(() => {
-    // Simulate fetching public proposal via token (RPC or local demo)
+    if (!auth.isDemo) { setProposalData(null); setLoading(false); return }
+    // Explicit loopback demo only; real public RPC needs schema reconciliation.
     setTimeout(() => {
       setProposalData({
         title: 'Campanha de Posicionamento & Social Media',
@@ -81,7 +84,7 @@ export const PublicProposalViewPage: React.FC = () => {
       })
       setLoading(false)
     }, 600)
-  }, [publicToken])
+  }, [publicToken, auth.isDemo])
 
   const handleSubmitFeedback = (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,7 +109,7 @@ export const PublicProposalViewPage: React.FC = () => {
         <div className="text-center space-y-3 max-w-md">
           <XCircle className="w-12 h-12 text-red-400 mx-auto" />
           <h2 className="text-xl font-bold">Link Inválido ou Expirado</h2>
-          <p className="text-xs text-slate-400">Esta proposta não está mais disponível ou o link foi revogado pela agência.</p>
+          <p className="text-xs text-slate-400">Não foi possível validar este link. A visualização pública depende do contrato seguro de publicação no backend.</p>
         </div>
       </div>
     )

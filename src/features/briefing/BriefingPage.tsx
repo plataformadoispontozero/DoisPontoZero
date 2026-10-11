@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 06: BRIEFING STUDIO — MAIN DASHBOARD
@@ -38,6 +39,8 @@ import { toast } from '@/components/ui/Toast'
 const DEMO_AGENCY_ID = 'demo-agency'
 
 export const BriefingPage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+
   const navigate = useNavigate()
   const [statusFilter, setStatusFilter] = useState<BriefingStatus | 'all'>('all')
   const [searchTerm, setSearchTerm] = useState('')

@@ -1,0 +1,91 @@
+{
+  "at": "2026-10-11T04:53:02.631979+00:00",
+  "checks": [
+    {
+      "table": "profiles",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "agency_members",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "role_permissions",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "clients",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "projects",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "tasks",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "squads",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "briefings",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "content_strategies",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "proposals",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "presentations",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "meetings",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "chat_messages",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "notifications",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "agency_invitations",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "audit_logs",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    },
+    {
+      "table": "agency_branding",
+      "classification": "UNAVAILABLE",
+      "method": "HEAD"
+    }
+  ],
+  "limit": "Anonymous visibility only; does not prove tenant isolation or policies."
+}

@@ -1,0 +1,87 @@
+ M .env.example
+ M .gitignore
+ M docs/PHASE_STATUS.json
+ M e2e/app.spec.ts
+ M package.json
+ M public/_redirects
+ M src/app/layouts/AppLayout.tsx
+ M src/app/providers/AppProviders.tsx
+ M src/app/router/index.tsx
+ M src/components/navigation/MobileNav.tsx
+ M src/components/navigation/Sidebar.tsx
+ M src/components/navigation/TopBar.tsx
+ M src/features/briefing/BriefingExportPage.tsx
+ M src/features/briefing/BriefingPage.tsx
+ M src/features/briefing/BriefingResponsesPage.tsx
+ M src/features/briefing/NewBriefingPage.tsx
+ M src/features/briefing/hooks/useBriefings.ts
+ M src/features/briefing/public/PublicBriefingFormPage.tsx
+ M src/features/briefing/templates/BriefingTemplateEditorPage.tsx
+ M src/features/briefing/templates/BriefingTemplatesPage.tsx
+ M src/features/calendar/hooks/useCalendarIntegration.ts
+ M src/features/chat/ChatPage.tsx
+ M src/features/chat/chat.test.tsx
+ M src/features/chat/hooks/useChat.ts
+ M src/features/clients/ClientsPage.tsx
+ M src/features/clients/hooks/useClients.ts
+ M src/features/dashboard/DashboardPage.tsx
+ M src/features/dashboard/data/useDashboardData.ts
+ M src/features/drive/drive.test.tsx
+ M src/features/drive/hooks/useDrive.ts
+ M src/features/meetings/NewMeetingPage.tsx
+ M src/features/meetings/hooks/useMeetings.ts
+ M src/features/meetings/meetings.test.tsx
+ M src/features/notifications/hooks/useNotifications.ts
+ M src/features/notifications/notifications.test.tsx
+ M src/features/presentations/hooks/usePresentations.ts
+ M src/features/presentations/presentations.test.tsx
+ M src/features/projects/NewProjectPage.tsx
+ M src/features/projects/ProjectWorkspacePage.tsx
+ M src/features/projects/ProjectsPage.tsx
+ M src/features/projects/hooks/useProjects.ts
+ M src/features/proposals/ProposalWorkspacePage.tsx
+ M src/features/proposals/hooks/useProposals.ts
+ M src/features/proposals/public/PublicProposalViewPage.tsx
+ M src/features/settings/PermissionStudioPage.tsx
+ M src/features/settings/TeamManagementPage.tsx
+ M src/features/settings/WhiteLabelStudioPage.tsx
+ M src/features/settings/hooks/useAgencySettings.ts
+ M src/features/settings/settings.test.tsx
+ M src/features/squads/SquadsPage.tsx
+ M src/features/strategy/NewStrategyPage.tsx
+ M src/features/strategy/StrategyPage.tsx
+ M src/features/strategy/StrategyWorkspacePage.tsx
+ M src/features/strategy/hooks/useStrategy.ts
+ M src/features/tasks/TasksPage.tsx
+ M src/features/tasks/hooks/useTasks.ts
+ M src/lib/supabase/client.ts
+ M src/test/setup.ts
+ M vite.config.ts
+?? docs/AGENCY_RECOVERY_REPORT.md
+?? docs/CODEX_ARCHITECTURE_AUDIT.md
+?? docs/CODEX_CHANGELOG.md
+?? docs/CODEX_FEATURE_GAPS.md
+?? docs/CODEX_MASTER_AUDIT.md
+?? docs/CODEX_RECOVERY_ROADMAP.md
+?? docs/CODEX_ROUTE_AUDIT.md
+?? docs/CODEX_SECURITY_AUDIT.md
+?? docs/CODEX_TEST_REPORT.md
+?? docs/DEPLOY_BLOCKERS_REPORT.md
+?? docs/RECOVERY_02_CONTRACTS.md
+?? docs/RECOVERY_02_REPORT.md
+?? docs/RECOVERY_02_RLS_REVIEW.md
+?? docs/RECOVERY_02_TESTS.md
+?? docs/evidence/
+?? docs/stories/
+?? e2e/agency-access.spec.ts
+?? e2e/audit-routes.spec.ts
+?? playwright.agency.config.ts
+?? playwright.audit.config.ts
+?? src/features/auth/AuthPage.tsx
+?? src/features/auth/AuthProvider.tsx
+?? src/features/auth/ProtectedWorkspace.tsx
+?? src/features/auth/access.test.ts
+?? src/features/auth/access.ts
+?? src/lib/supabase/health.test.ts
+?? src/lib/supabase/health.ts
+?? supabase/pending/

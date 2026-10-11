@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "lint": "oxlint",
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -42,6 +44,7 @@
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "wrangler": "4.149.0"
   }
 }

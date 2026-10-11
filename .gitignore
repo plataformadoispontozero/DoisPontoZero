@@ -31,3 +31,11 @@ dist-ssr
 # Test artifacts
 test-results/
 playwright-report/
+
+.env.*
+!.env.example
+supabase/.temp/
+.wrangler/
+
+dist-auth-test/
+dist-demo-test/

@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 06: BRIEFING STUDIO — NEW BRIEFING FLOW
@@ -33,6 +34,8 @@ import { toast } from '@/components/ui/Toast'
 const DEMO_AGENCY_ID = 'demo-agency'
 
 export const NewBriefingPage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const preselectedTemplateId = searchParams.get('templateId')

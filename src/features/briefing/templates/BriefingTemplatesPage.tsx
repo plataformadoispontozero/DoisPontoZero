@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 06: BRIEFING STUDIO — TEMPLATES LIST
@@ -32,6 +33,8 @@ import { toast } from '@/components/ui/Toast'
 const DEMO_AGENCY_ID = 'demo-agency'
 
 export const BriefingTemplatesPage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+
   const navigate = useNavigate()
   const { data: templates = [], isLoading } = useBriefingTemplates(DEMO_AGENCY_ID)
   const [search, setSearch] = useState('')

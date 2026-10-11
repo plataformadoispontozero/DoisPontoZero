@@ -312,10 +312,7 @@ export function useStrategies(agencyId: string, filters?: { status?: StrategySta
       if (filters?.search) query = query.ilike('name', `%${filters.search}%`)
 
       const { data, error } = await query
-      if (error) {
-        console.warn('Error fetching strategies:', error.message)
-        return getDemoStrategies(agencyId)
-      }
+      if (error) throw error
 
       return (data ?? []) as ContentStrategy[]
     },
@@ -472,10 +469,7 @@ export function usePillars(strategyId?: string) {
         .eq('strategy_id', strategyId)
         .order('position', { ascending: true })
 
-      if (error) {
-        console.warn('Error fetching pillars:', error.message)
-        return getDemoPillars('demo-agency', strategyId)
-      }
+      if (error) throw error
       return (data ?? []) as EditorialPillar[]
     },
     enabled: Boolean(strategyId),
@@ -604,10 +598,7 @@ export function useContentIdeas(strategyId?: string, filters?: { status?: IdeaSt
       if (filters?.pillarId) query = query.eq('pillar_id', filters.pillarId)
 
       const { data, error } = await query
-      if (error) {
-        console.warn('Error fetching ideas:', error.message)
-        return getDemoIdeas('demo-agency', strategyId)
-      }
+      if (error) throw error
       return (data ?? []) as ContentIdea[]
     },
     enabled: Boolean(strategyId),
@@ -716,10 +707,7 @@ export function useEditorialItems(strategyId?: string, filters?: { status?: Edit
       if (filters?.pillarId) query = query.eq('pillar_id', filters.pillarId)
 
       const { data, error } = await query
-      if (error) {
-        console.warn('Error fetching editorial items:', error.message)
-        return getDemoEditorialItems('demo-agency', strategyId)
-      }
+      if (error) throw error
       return (data ?? []) as EditorialItem[]
     },
     enabled: Boolean(strategyId),

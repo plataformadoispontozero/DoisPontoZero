@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 06: PUBLIC BRIEFING FORM — MOBILE FIRST
@@ -60,6 +61,7 @@ interface PublicBriefingData {
 }
 
 export const PublicBriefingFormPage: React.FC = () => {
+  const auth = useAuth()
   const { publicToken } = useParams<{ publicToken: string }>()
 
   const [loading, setLoading] = useState(true)
@@ -101,7 +103,8 @@ export const PublicBriefingFormPage: React.FC = () => {
 
           setData(res as PublicBriefingData)
         } else {
-          // Demo fallback: use template 01 (Branding) for demonstration
+          if (!auth.isDemo) { setError('Servidor de dados indisponível.'); setLoading(false); return }
+          // Explicit local demo: use template 01 (Branding) for demonstration
           const fallbackTpl = INITIAL_BRIEFING_TEMPLATES[0]
           setData({
             briefing: {

@@ -1,0 +1,23 @@
+{
+  "full_run": {
+    "startTime": "2026-10-11T04:29:10.352Z",
+    "duration": 97327.592,
+    "expected": 82,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "retest_baseline": {
+    "startTime": "2026-10-11T04:31:35.444Z",
+    "duration": 12477.306999999999,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "unique_cases": 84,
+  "final_pass_after_retest": 84,
+  "note": "Full run 82 passed / 2 selector failures; all six baseline cases re-executed after fixing actual complementary role; 6 passed. No claim of 84 passing in one final invocation.",
+  "screenshots": 45,
+  "backend_CRUD_RLS": "BLOCKED"
+}

@@ -1,0 +1,137 @@
+[WebServer] (node:89141) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:89173) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 84 tests using 2 workers
+
+(node:89184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89185) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [Desktop Chrome] › e2e/app.spec.ts:4:3 › Dois.Zero Application Baseline › should load dashboard and render branding (5.0s)
+  ✓   2 [Desktop Chrome] › e2e/app.spec.ts:12:3 › Dois.Zero Application Baseline › should navigate between modules (5.6s)
+  ✓   4 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /calendar (3.9s)
+  ✓   3 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /dashboard (4.4s)
+  ✓   5 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /clients (3.9s)
+  ✓   6 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /projects (3.9s)
+  ✓   8 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /squads (4.0s)
+  ✓   7 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /tasks (4.1s)
+  ✓  10 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /strategy (2.1s)
+  ✓   9 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /briefings (2.2s)
+  ✓  11 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /proposals (1.9s)
+  ✓  12 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /drive (1.9s)
+  ✓  13 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /presentations (2.0s)
+  ✓  14 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /meetings (2.0s)
+  ✓  16 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /notifications (2.0s)
+  ✓  15 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /chat (2.1s)
+  ✓  17 [Desktop Chrome] › e2e/audit-routes.spec.ts:6:3 › render and refresh /settings (2.0s)
+  ✓  18 [Desktop Chrome] › e2e/audit-routes.spec.ts:23:1 › agenda alias preserves the existing calendar route (1.9s)
+  ✓  19 [Desktop Chrome] › e2e/audit-routes.spec.ts:28:1 › permission preview cannot announce a persisted matrix (1.9s)
+  ✓  20 [Desktop Chrome] › e2e/critical-flows.spec.ts:4:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 01: Visão Geral do Dashboard & Navegação Operacional (2.1s)
+  ✓  22 [Desktop Chrome] › e2e/critical-flows.spec.ts:20:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 03: Briefing Studio & Templates Oficiais (1.8s)
+  ✓  21 [Desktop Chrome] › e2e/critical-flows.spec.ts:13:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 02: Módulo de Projetos & Tarefas (2.1s)
+  ✓  24 [Desktop Chrome] › e2e/critical-flows.spec.ts:30:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 05: Proposal Studio & Motor Comercial (1.9s)
+  ✓  23 [Desktop Chrome] › e2e/critical-flows.spec.ts:25:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 04: Strategy Studio & Grade Editorial (1.9s)
+  ✓  26 [Desktop Chrome] › e2e/critical-flows.spec.ts:40:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 07: Team Chat & Canais Internos (1.9s)
+  ✓  25 [Desktop Chrome] › e2e/critical-flows.spec.ts:35:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 06: Meeting Hub & Pautas Operacionais (1.9s)
+  ✓  27 [Desktop Chrome] › e2e/critical-flows.spec.ts:45:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 08: Presentation Studio & Decks Criativos (1.9s)
+  ✓  28 [Desktop Chrome] › e2e/critical-flows.spec.ts:50:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 09: White Label Studio, Cores & Painel de Diagnóstico (1.9s)
+(node:89346) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89345) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  29 [Tablet iPad] › e2e/app.spec.ts:4:3 › Dois.Zero Application Baseline › should load dashboard and render branding (2.4s)
+  ✓  30 [Tablet iPad] › e2e/app.spec.ts:12:3 › Dois.Zero Application Baseline › should navigate between modules (2.4s)
+  ✓  31 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /dashboard (2.8s)
+  ✓  32 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /calendar (2.7s)
+  ✓  34 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /projects (2.1s)
+  ✓  33 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /clients (2.1s)
+  ✓  36 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /squads (2.1s)
+  ✓  35 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /tasks (2.2s)
+  ✓  38 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /strategy (3.9s)
+  ✓  37 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /briefings (4.0s)
+  ✓  39 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /proposals (3.1s)
+  ✓  40 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /drive (3.1s)
+  ✓  41 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /presentations (3.7s)
+  ✓  42 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /meetings (3.7s)
+  ✓  44 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /notifications (4.0s)
+  ✓  43 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /chat (4.1s)
+  ✘  46 [Tablet iPad] › e2e/audit-routes.spec.ts:23:1 › agenda alias preserves the existing calendar route (5.4s)
+(node:89618) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  45 [Tablet iPad] › e2e/audit-routes.spec.ts:6:3 › render and refresh /settings (6.7s)
+  ✓  47 [Tablet iPad] › e2e/audit-routes.spec.ts:28:1 › permission preview cannot announce a persisted matrix (4.8s)
+  ✓  48 [Tablet iPad] › e2e/critical-flows.spec.ts:4:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 01: Visão Geral do Dashboard & Navegação Operacional (4.3s)
+  ✓  50 [Tablet iPad] › e2e/critical-flows.spec.ts:20:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 03: Briefing Studio & Templates Oficiais (4.5s)
+  ✓  49 [Tablet iPad] › e2e/critical-flows.spec.ts:13:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 02: Módulo de Projetos & Tarefas (4.7s)
+  ✓  51 [Tablet iPad] › e2e/critical-flows.spec.ts:25:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 04: Strategy Studio & Grade Editorial (4.3s)
+  ✓  52 [Tablet iPad] › e2e/critical-flows.spec.ts:30:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 05: Proposal Studio & Motor Comercial (4.2s)
+  ✓  53 [Tablet iPad] › e2e/critical-flows.spec.ts:35:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 06: Meeting Hub & Pautas Operacionais (3.4s)
+  ✓  54 [Tablet iPad] › e2e/critical-flows.spec.ts:40:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 07: Team Chat & Canais Internos (3.6s)
+  ✓  55 [Tablet iPad] › e2e/critical-flows.spec.ts:45:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 08: Presentation Studio & Decks Criativos (6.4s)
+  ✓  56 [Tablet iPad] › e2e/critical-flows.spec.ts:50:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 09: White Label Studio, Cores & Painel de Diagnóstico (6.6s)
+(node:89760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89758) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  57 [Mobile iPhone 14] › e2e/app.spec.ts:4:3 › Dois.Zero Application Baseline › should load dashboard and render branding (5.4s)
+  ✓  58 [Mobile iPhone 14] › e2e/app.spec.ts:12:3 › Dois.Zero Application Baseline › should navigate between modules (5.4s)
+  ✓  59 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /dashboard (4.3s)
+  ✓  60 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /calendar (4.3s)
+  ✓  61 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /clients (4.3s)
+  ✓  62 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /projects (4.3s)
+  ✓  64 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /squads (4.4s)
+  ✓  63 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /tasks (4.4s)
+  ✓  66 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /strategy (4.5s)
+  ✓  65 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /briefings (4.5s)
+  ✓  67 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /proposals (6.1s)
+  ✓  69 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /presentations (3.4s)
+  ✓  68 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /drive (9.5s)
+  ✓  70 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /meetings (3.7s)
+  ✓  71 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /chat (3.7s)
+  ✓  72 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /notifications (3.1s)
+  ✓  73 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:6:3 › render and refresh /settings (3.2s)
+  ✓  74 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:23:1 › agenda alias preserves the existing calendar route (2.4s)
+  ✓  75 [Mobile iPhone 14] › e2e/audit-routes.spec.ts:28:1 › permission preview cannot announce a persisted matrix (2.3s)
+  ✓  76 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:4:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 01: Visão Geral do Dashboard & Navegação Operacional (2.6s)
+  ✓  77 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:13:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 02: Módulo de Projetos & Tarefas (2.6s)
+  ✓  79 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:25:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 04: Strategy Studio & Grade Editorial (2.5s)
+  ✓  78 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:20:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 03: Briefing Studio & Templates Oficiais (2.6s)
+  ✓  80 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:30:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 05: Proposal Studio & Motor Comercial (2.1s)
+  ✓  81 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:35:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 06: Meeting Hub & Pautas Operacionais (2.1s)
+  ✓  82 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:40:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 07: Team Chat & Canais Internos (1.9s)
+  ✓  83 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:45:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 08: Presentation Studio & Decks Criativos (1.9s)
+  ✓  84 [Mobile iPhone 14] › e2e/critical-flows.spec.ts:50:3 › Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais › Fluxo 09: White Label Studio, Cores & Painel de Diagnóstico (1.7s)
+
+
+  1) [Tablet iPad] › e2e/audit-routes.spec.ts:23:1 › agenda alias preserves the existing calendar route 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/calendar$/
+    Received string:  "http://127.0.0.1:4175/agenda"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+
+
+      23 | test('agenda alias preserves the existing calendar route', async ({ page }) => {
+      24 |   await page.goto('/agenda')
+    > 25 |   await expect(page).toHaveURL(/\/calendar$/)
+         |                      ^
+      26 | })
+      27 |
+      28 | test('permission preview cannot announce a persisted matrix', async ({ page }) => {
+        at /Users/designer/Documents/DoisPontoZero/e2e/audit-routes.spec.ts:25:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/audit/audit-routes-agenda-alias--5b8a1-the-existing-calendar-route-Tablet-iPad/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/audit/audit-routes-agenda-alias--5b8a1-the-existing-calendar-route-Tablet-iPad/error-context.md
+
+  1 failed
+    [Tablet iPad] › e2e/audit-routes.spec.ts:23:1 › agenda alias preserves the existing calendar route 
+  83 passed (2.6m)

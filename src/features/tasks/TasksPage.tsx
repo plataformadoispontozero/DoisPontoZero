@@ -1,3 +1,7 @@
+import { useTask } from '@/features/tasks/hooks/useTasks'
+import { useProjectBoard } from '@/features/projects/hooks/useProjects'
+import { isSupabaseConfigured } from '@/lib/supabase/client'
+import { useAgencyId } from '@/features/auth/AuthProvider'
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
@@ -206,6 +210,8 @@ const DEMO_TASKS: Task[] = [
 ]
 
 export const TasksPage: React.FC = () => {
+  const MOCK_AGENCY_ID = useAgencyId()
+
   const { taskId } = useParams<{ taskId?: string }>()
   const navigate = useNavigate()
 
@@ -239,8 +245,13 @@ export const TasksPage: React.FC = () => {
     priority: priorityFilter || undefined,
   })
 
+  const { data: selectedTaskData } = useTask(selectedTaskId ?? undefined)
+  const activeTask = selectedTaskData ?? serverTasks.find(task => task.id === selectedTaskId)
+  const { data: activeBoard } = useProjectBoard(activeTask?.project_id)
+  const openCreateTask = () => isSupabaseConfigured ? navigate('/projects') : setCreateTaskOpen(true)
+
   // Fallback to DEMO_TASKS when server query returns empty
-  const tasksToDisplay = serverTasks.length > 0 ? serverTasks : DEMO_TASKS
+  const tasksToDisplay = isSupabaseConfigured ? serverTasks : DEMO_TASKS
 
   const filteredTasks = tasksToDisplay.filter((t) => {
     if (search && !t.title.toLowerCase().includes(search.toLowerCase())) return false
@@ -263,7 +274,7 @@ export const TasksPage: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => setCreateTaskOpen(true)}
+              onClick={openCreateTask}
               className="h-9 px-4 text-xs font-semibold"
             >
               <Plus className="w-3.5 h-3.5 mr-1" />
@@ -326,9 +337,9 @@ export const TasksPage: React.FC = () => {
         <TabsContent value="list" className="pt-2">
           <TaskListView
             tasks={filteredTasks}
-            columns={DEMO_COLUMNS}
+            columns={isSupabaseConfigured ? activeBoard?.columns ?? [] : DEMO_COLUMNS}
             onSelectTask={(id) => handleSelectTask(id)}
-            onNewTask={() => setCreateTaskOpen(true)}
+            onNewTask={openCreateTask}
           />
         </TabsContent>
 
@@ -336,9 +347,9 @@ export const TasksPage: React.FC = () => {
         <TabsContent value="calendar" className="pt-2">
           <TaskCalendarView
             tasks={filteredTasks}
-            columns={DEMO_COLUMNS}
+            columns={isSupabaseConfigured ? activeBoard?.columns ?? [] : DEMO_COLUMNS}
             onSelectTask={(id) => handleSelectTask(id)}
-            onNewTask={() => setCreateTaskOpen(true)}
+            onNewTask={openCreateTask}
           />
         </TabsContent>
       </Tabs>
@@ -347,17 +358,17 @@ export const TasksPage: React.FC = () => {
       <CreateTaskDialog
         open={createTaskOpen}
         onOpenChange={setCreateTaskOpen}
-        columns={DEMO_COLUMNS}
-        projectId="proj-1"
-        boardId="board-1"
+        columns={isSupabaseConfigured ? activeBoard?.columns ?? [] : DEMO_COLUMNS}
+        projectId={isSupabaseConfigured ? activeTask?.project_id ?? '' : 'proj-1'}
+        boardId={isSupabaseConfigured ? activeTask?.board_id ?? '' : 'board-1'}
         agencyId={MOCK_AGENCY_ID}
       />
 
       <TaskDetailPanel
         taskId={selectedTaskId}
-        projectId="proj-1"
+        projectId={isSupabaseConfigured ? activeTask?.project_id ?? '' : 'proj-1'}
         agencyId={MOCK_AGENCY_ID}
-        columns={DEMO_COLUMNS}
+        columns={isSupabaseConfigured ? activeBoard?.columns ?? [] : DEMO_COLUMNS}
         open={!!selectedTaskId}
         onClose={() => handleSelectTask(null)}
       />

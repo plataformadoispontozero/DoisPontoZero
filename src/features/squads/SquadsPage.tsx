@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // SquadsPage — Fase 05: Squads, Metas & Gamificação
 // ============================================================
@@ -1195,6 +1196,8 @@ const PerformanceTabContent: React.FC<{
 // MAIN PAGE
 // ============================================================
 export const SquadsPage: React.FC = () => {
+  const MOCK_AGENCY_ID = useAgencyId()
+
   const agencyId = MOCK_AGENCY_ID
   const { data: squads = [] } = useSquads(agencyId)
 

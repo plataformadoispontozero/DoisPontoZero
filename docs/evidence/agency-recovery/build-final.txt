@@ -1,0 +1,99 @@
+
+> dois-zero@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 3108 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                          1.80 kB │ gzip:   0.77 kB
+dist/assets/index-CWfyj72B.css                          82.75 kB │ gzip:  13.90 kB
+dist/assets/Skeleton-DUA1oABY.js                         0.33 kB │ gzip:   0.25 kB
+dist/assets/branding-C_R2SYXD.js                         0.52 kB │ gzip:   0.39 kB
+dist/assets/rolldown-runtime-hePW80VL.js                 0.71 kB │ gzip:   0.42 kB
+dist/assets/Textarea-FxdQWqQS.js                         0.74 kB │ gzip:   0.45 kB
+dist/assets/pricingEngine-CwF9Fdjv.js                    0.83 kB │ gzip:   0.42 kB
+dist/assets/client-D3ltRHRI.js                           0.84 kB │ gzip:   0.55 kB
+dist/assets/Select-BFdG_JbK.js                           1.02 kB │ gzip:   0.59 kB
+dist/assets/Card-cOyyI4iy.js                             1.28 kB │ gzip:   0.54 kB
+dist/assets/Tabs--Iy8NOsi.js                             1.49 kB │ gzip:   0.76 kB
+dist/assets/CalendarPage-Bj7FwJWK.js                     1.53 kB │ gzip:   0.87 kB
+dist/assets/Button-B_uW2cZn.js                           1.62 kB │ gzip:   0.83 kB
+dist/assets/FeedbackStates-CLifN5ex.js                   1.80 kB │ gzip:   0.78 kB
+dist/assets/ProposalTemplatesPage-BTnYtYgh.js            1.81 kB │ gzip:   0.84 kB
+dist/assets/briefing-Bs8LlCwl.js                         2.28 kB │ gzip:   1.08 kB
+dist/assets/EmptyState-Dh3b3NcL.js                       2.30 kB │ gzip:   0.98 kB
+dist/assets/projectUtils-BlumdXvW.js                     2.47 kB │ gzip:   0.93 kB
+dist/assets/ProposalExportPage-CGVsWxTv.js               2.81 kB │ gzip:   1.04 kB
+dist/assets/ChatSettingsPage-D09aKjFj.js                 2.92 kB │ gzip:   1.00 kB
+dist/assets/NotificationsPage-DFSSY91R.js                3.06 kB │ gzip:   1.24 kB
+dist/assets/ActivityCenterPage-DcOLonx-.js               3.15 kB │ gzip:   1.23 kB
+dist/assets/SettingsOverviewPage-BKedjifU.js             3.20 kB │ gzip:   1.28 kB
+dist/assets/useProjects-Be2PTFc6.js                      3.34 kB │ gzip:   1.17 kB
+dist/assets/PermissionStudioPage-CTvPoOrL.js             3.38 kB │ gzip:   1.57 kB
+dist/assets/useClients-CbwqcJz5.js                       3.55 kB │ gzip:   1.16 kB
+dist/assets/useDrive-CMPjnBJL.js                         3.64 kB │ gzip:   1.30 kB
+dist/assets/SecurityCenterPage-aJD_3i2K.js               3.75 kB │ gzip:   1.40 kB
+dist/assets/useSquads-Cc59hnuJ.js                        3.76 kB │ gzip:   1.18 kB
+dist/assets/CalendarIntegrationPage-CWG-t2zi.js          3.83 kB │ gzip:   1.50 kB
+dist/assets/DriveConnectionsPage-CYQz_lIp.js             4.23 kB │ gzip:   1.53 kB
+dist/assets/DriveBrowserPage-nTJBt2yI.js                 4.32 kB │ gzip:   1.78 kB
+dist/assets/IntegrationsCenterPage-CE50O8j4.js           4.46 kB │ gzip:   1.38 kB
+dist/assets/AppearanceSettingsPage-C6rONAPf.js           4.74 kB │ gzip:   1.60 kB
+dist/assets/PublicShowcaseViewPage-DrK96IAS.js           5.71 kB │ gzip:   2.05 kB
+dist/assets/ServiceCatalogPage-BBD05Nme.js               5.78 kB │ gzip:   1.95 kB
+dist/assets/BriefingTemplatesPage--IcCQfur.js            5.90 kB │ gzip:   2.04 kB
+dist/assets/WorkspacePreferencesPage-BdFFppJ3.js         6.02 kB │ gzip:   2.01 kB
+dist/assets/NewProjectPage-CgEno4qo.js                   6.02 kB │ gzip:   2.03 kB
+dist/assets/ClientExperiencePage-DiEyW2Ar.js             6.22 kB │ gzip:   1.83 kB
+dist/assets/TeamManagementPage-CaGaIi5i.js               6.82 kB │ gzip:   2.39 kB
+dist/assets/AgencySettingsPage-BB8Si6UA.js               7.07 kB │ gzip:   2.16 kB
+dist/assets/DocumentBrandingPage-CTtkoKsZ.js             7.30 kB │ gzip:   2.43 kB
+dist/assets/MeetingsPage-Dbzn8Nq8.js                     7.45 kB │ gzip:   2.14 kB
+dist/assets/TasksPage-33AB3pTU.js                        7.76 kB │ gzip:   2.43 kB
+dist/assets/NewProposalPage-CoKgih_L.js                  7.85 kB │ gzip:   2.28 kB
+dist/assets/PresentationsPage-CW9q02r_.js                7.93 kB │ gzip:   2.24 kB
+dist/assets/BriefingPage-5Hy6IxTe.js                     8.18 kB │ gzip:   2.52 kB
+dist/assets/useChat-DccXLn6e.js                          8.50 kB │ gzip:   2.69 kB
+dist/assets/usePresentations-Bgi9by9U.js                 8.72 kB │ gzip:   2.88 kB
+dist/assets/ProjectsPage-BTVm87_v.js                     8.84 kB │ gzip:   2.81 kB
+dist/assets/StrategyPage-BKn_beND.js                     9.28 kB │ gzip:   2.74 kB
+dist/assets/NewMeetingPage-zCVpLAYg.js                   9.41 kB │ gzip:   2.17 kB
+dist/assets/NewPresentationPage-D35u2xfR.js              9.76 kB │ gzip:   2.45 kB
+dist/assets/BriefingResponsesPage-DIomb6iK.js            9.98 kB │ gzip:   3.22 kB
+dist/assets/useMeetings-DleaFm1s.js                     10.14 kB │ gzip:   2.98 kB
+dist/assets/ChatPage-BBXIAhyA.js                        10.34 kB │ gzip:   2.87 kB
+dist/assets/transformProposalToPdfModel-C_Cx5ZjY.js     10.73 kB │ gzip:   3.31 kB
+dist/assets/NewBriefingPage-D5fqr_tc.js                 10.88 kB │ gzip:   3.20 kB
+dist/assets/PublicBriefingFormPage-Dyy3ZKgF.js          10.96 kB │ gzip:   3.52 kB
+dist/assets/PresentationExportPage-BlcXYbWP.js          11.08 kB │ gzip:   3.66 kB
+dist/assets/ProposalsPage-vOQk3AKd.js                   11.32 kB │ gzip:   2.88 kB
+dist/assets/NewStrategyPage-BIw_-jL7.js                 11.51 kB │ gzip:   2.91 kB
+dist/assets/PublicProposalViewPage-BJkGo8jN.js          11.57 kB │ gzip:   3.60 kB
+dist/assets/ProposalWorkspacePage-Bzvg32ag.js           15.23 kB │ gzip:   4.60 kB
+dist/assets/useAgencySettings-DGfZZkaq.js               15.69 kB │ gzip:   4.28 kB
+dist/assets/ClientsPage-D2z1ytI-.js                     16.04 kB │ gzip:   4.43 kB
+dist/assets/strategy-Dd6LK99u.js                        16.70 kB │ gzip:   4.58 kB
+dist/assets/MeetingWorkspacePage-ClFjT2Vz.js            17.76 kB │ gzip:   3.71 kB
+dist/assets/BriefingTemplateEditorPage-DUq17Q4j.js      18.56 kB │ gzip:   5.00 kB
+dist/assets/ProjectWorkspacePage-CRPop6dw.js            19.82 kB │ gzip:   5.81 kB
+dist/assets/DashboardPage-BvDp1Vwb.js                   19.96 kB │ gzip:   4.99 kB
+dist/assets/useProposals-B0eiCYHm.js                    20.05 kB │ gzip:   5.56 kB
+dist/assets/PresentationWorkspacePage-CGEsFTJp.js       20.56 kB │ gzip:   4.72 kB
+dist/assets/useBriefings-D5rrafUl.js                    21.36 kB │ gzip:   6.39 kB
+dist/assets/BriefingExportPage-XXnD2Wnc.js              22.28 kB │ gzip:   6.48 kB
+dist/assets/WhiteLabelStudioPage-DOj1wHsg.js            22.51 kB │ gzip:   5.07 kB
+dist/assets/DiagnosticsPage-DI6aZrBx.js                 26.00 kB │ gzip:   7.31 kB
+dist/assets/utils-CEdj0ySq.js                           28.16 kB │ gzip:   8.99 kB
+dist/assets/SquadsPage-C6dYOOm8.js                      32.94 kB │ gzip:   8.23 kB
+dist/assets/vendor-icons-CocE9DeM.js                    33.24 kB │ gzip:  10.88 kB
+dist/assets/vendor-tanstack-RZxuP_au.js                 35.24 kB │ gzip:  10.39 kB
+dist/assets/vendor-dnd-DRBK_eql.js                      59.96 kB │ gzip:  19.70 kB
+dist/assets/TaskDetailPanel-DNobedge.js                 64.37 kB │ gzip:  16.43 kB
+dist/assets/StrategyWorkspacePage-CT_tJ8X-.js           75.51 kB │ gzip:  15.30 kB
+dist/assets/vendor-supabase-CTfmHPVw.js                214.38 kB │ gzip:  55.17 kB
+dist/assets/index-E8V-PKIu.js                          372.70 kB │ gzip: 112.71 kB
+dist/assets/react-pdf.browser-BTkZI2DR.js            1,198.96 kB │ gzip: 443.44 kB
+
+✓ built in 595ms

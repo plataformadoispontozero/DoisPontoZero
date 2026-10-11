@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 10: GOOGLE CALENDAR INTEGRATION HOOKS
@@ -22,15 +23,19 @@ const DEMO_CALENDAR_CONNECTION: CalendarConnection = {
 let demoCalendarStore: CalendarConnection | null = DEMO_CALENDAR_CONNECTION
 
 export function useCalendarConnection() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['calendar_connection'],
     queryFn: async (): Promise<CalendarConnection | null> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data } = await supabase.from('calendar_connections').select('*').eq('user_id', 'user-001').single()
-          if (data) return data as CalendarConnection
+          const { data , error: backendError1 } = await supabase.from('calendar_connections').select('*').eq('agency_id', agencyId).eq('user_id', auth.user?.id || '').maybeSingle()
+          if (backendError1) throw backendError1
+          return data as CalendarConnection
         } catch (err) {
-          console.warn('Supabase fetch calendar connection error:', err)
+          throw err
         }
       }
       return demoCalendarStore
@@ -39,10 +44,14 @@ export function useCalendarConnection() {
 }
 
 export function useToggleCalendarConnection() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (connect: boolean) => {
+      if (isSupabaseConfigured) throw new Error('Integração OAuth ainda não configurada no backend. Nenhuma conexão foi criada ou revogada.')
       if (connect) {
         demoCalendarStore = DEMO_CALENDAR_CONNECTION
       } else {

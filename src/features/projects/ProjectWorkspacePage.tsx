@@ -1,3 +1,5 @@
+import { isSupabaseConfigured } from '@/lib/supabase/client'
+import { useAgencyId } from '@/features/auth/AuthProvider'
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
@@ -40,6 +42,8 @@ import type { Project, ProjectBoard, Task, BoardColumn } from '@/types/projects'
 const MOCK_AGENCY_ID = 'demo-agency'
 
 export const ProjectWorkspacePage: React.FC = () => {
+  const MOCK_AGENCY_ID = useAgencyId()
+
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
 
@@ -328,6 +332,8 @@ export const ProjectWorkspacePage: React.FC = () => {
   const totalTasks = allTasks.length
   const completedTasks = allTasks.filter((t) => t.status === 'done' || t.column_id === 'col-done').length
   const percentCompleted = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+
+  if (isSupabaseConfigured && (!projectData || !boardData)) return <div role="alert">Recurso indisponível, carregando ou sem permissão. Nenhum exemplo substitui o recurso da agência.</div>
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">

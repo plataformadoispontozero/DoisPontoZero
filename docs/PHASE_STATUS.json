@@ -1,13 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "project": "Dois.Zero Creative Agency OS",
-  "generated_at": "2026-10-10T17:35:00Z",
+  "generated_at": "2026-10-11T04:27:41.438201+00:00",
   "phases": [
     {
       "id": "phase-01",
       "name": "Fase 01 - Design System, Shell e Dashboard",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Design System com 17+ componentes e variantes semânticas",
         "AppShell responsivo com Sidebar retrátil e persistência de estado",
         "Header e navegação rápida mobile em Sheet",
@@ -15,51 +24,70 @@
         "Suíte de testes unitários com Vitest",
         "Zero erros no build de produção (tsc e vite)"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T17:35:00Z",
-      "evidence": "src/components/ui, src/components/navigation, src/features/dashboard"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-02",
       "name": "Fase 02 - Supabase, Auth e Permission Studio",
       "status": "in_progress",
       "completed_requirements": [
-        "Migration PostgreSQL com tabelas de autenticação, agências, membros, roles e permissões",
-        "Políticas de Row Level Security (RLS) e funções seguras de verificação",
-        "Cliente Supabase configurado com verificação de ambiente isSupabaseConfigured",
-        "Definição de tipagens Database completas em src/lib/supabase/types.ts"
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
       ],
       "pending_requirements": [
         "Rotas frontend de autenticação (/login, /forgot-password, /reset-password)",
         "Interface administrativa do Permission Studio (/settings/permissions)",
         "Página de gestão de membros e convites (/settings/team)",
-        "Conexão com projeto Supabase remoto ativo com credenciais de produção"
+        "Conexão com projeto Supabase remoto ativo com credenciais de produção",
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
       ],
-      "last_verified_at": "2026-10-10T17:35:00Z",
-      "evidence": "supabase/migrations/20261010000001_phase02_schema_and_rls.sql, src/lib/supabase/types.ts"
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
+        "Migration PostgreSQL com tabelas de autenticação, agências, membros, roles e permissões",
+        "Políticas de Row Level Security (RLS) e funções seguras de verificação",
+        "Cliente Supabase configurado com verificação de ambiente isSupabaseConfigured",
+        "Definição de tipagens Database completas em src/lib/supabase/types.ts"
+      ],
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-03",
       "name": "Fase 03 - CRM e Client Hub",
       "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Interface completa de listagem e edição de clientes em src/features/clients/ClientsPage.tsx",
+        "Client Hub completo com brand guidelines e repositório de arquivos",
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Modelagem da tabela clients com campos de branding, status e datas em PostgreSQL",
         "Políticas RLS para isolamento de clientes por agência",
         "Tipagem de Client integrada no sistema de projetos",
         "Componente de integração ClientBriefingsTab para visualização e exportação direta de briefings"
       ],
-      "pending_requirements": [
-        "Interface completa de listagem e edição de clientes em src/features/clients/ClientsPage.tsx",
-        "Client Hub completo com brand guidelines e repositório de arquivos"
-      ],
-      "last_verified_at": "2026-10-10T17:35:00Z",
-      "evidence": "supabase/migrations/20261010000002_phase04_projects_tasks.sql (tabela clients), src/features/clients/components/ClientBriefingsTab.tsx"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-04",
       "name": "Fase 04 - Projetos, Kanban e Gestão de Tarefas",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Migration PostgreSQL com 14 tabelas (projects, boards, columns, tasks, checklists, comments, attachments, links, activity)",
         "RPCs transacionais (create_project_with_board, move_task, get_project_progress)",
         "Row Level Security com can_access_project() e can_access_task()",
@@ -72,15 +100,22 @@
         "Painel unificado de tarefas (/tasks) com suporte a URL direta (/tasks/:taskId)",
         "Testes unitários automatizados em src/features/projects/projects.test.tsx"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T17:35:00Z",
-      "evidence": "supabase/migrations/20261010000002_phase04_projects_tasks.sql, src/features/projects/*, src/features/tasks/*"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-05",
       "name": "Fase 05 - Squads e Gestão de Equipe",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Migration PostgreSQL (20261010000003_phase05_squads.sql) com 5 tabelas (squads, squad_members, squad_goals, squad_performance_snapshots, squad_projects)",
         "RPCs transacionais (compute_squad_ranking, upsert_performance_snapshot)",
         "Row Level Security com helper functions is_agency_member e is_agency_admin",
@@ -89,15 +124,22 @@
         "TanStack Query hooks em src/features/squads/hooks/useSquads.ts",
         "SquadsPage operacional com 4 abas (Squads, Ranking com pódio, Metas, Performance com anéis de progresso) e 3 diálogos modais"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T17:35:00Z",
-      "evidence": "supabase/migrations/20261010000003_phase05_squads.sql, src/features/squads/SquadsPage.tsx, src/types/squads.ts"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-06",
       "name": "Fase 06 - Briefing Studio e Professional PDF",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Migration PostgreSQL (20261010000004_phase06_briefings.sql) com 10 tabelas e 9 permissões",
         "Funções seguras RPC (get_public_briefing com token hash sanitizado, submit_public_briefing com snapshot imutável)",
         "Tipos de domínio e semântica Strategy/Proposal em src/types/briefing.ts",
@@ -110,15 +152,22 @@
         "Componente de integração para CRM Client Hub (ClientBriefingsTab)",
         "Suíte de testes com Vitest (43/43 passando) e build de produção 100% validado"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T17:35:00Z",
-      "evidence": "supabase/migrations/20261010000004_phase06_briefings.sql, src/features/briefing/*, vitest suite (43/43 passing)"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-07",
       "name": "Fase 07 - Strategy Studio e Editorial Generator",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Migration PostgreSQL (20261010000005_phase07_strategy.sql) com 6 tabelas (content_strategies, editorial_pillars, content_ideas, editorial_items, strategy_versions, strategy_activity)",
         "Funções e RPCs transacionais: get_strategy_overview e generate_editorial_suggestions",
         "Row Level Security (RLS) estrita em todas as 6 tabelas e permissões de agência cadastradas",
@@ -137,15 +186,22 @@
         "Rotas integradas no React Router (/strategy, /strategy/new, /strategy/:strategyId)",
         "Suíte de testes unitários Vitest (52/52 passando) e build de produção 100% verificado"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T18:49:00Z",
-      "evidence": "supabase/migrations/20261010000005_phase07_strategy.sql, src/features/strategy/*, src/features/strategy/strategy.test.tsx"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-08",
       "name": "Fase 08 - Proposal Studio e Commercial Proposals",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Migration PostgreSQL (20261010000006_phase08_proposals.sql) com 11 tabelas e 6 permissões seguras RLS",
         "RPCs transacionais (get_public_proposal com hash SHA-256 e submit_public_proposal_feedback)",
         "Tipagem de domínio completa em src/types/proposals.ts",
@@ -161,15 +217,22 @@
         "Componente de integração ClientProposalsTab no CRM Client Hub",
         "Suíte de testes automatizados Vitest (60/60 passando) e build de produção 100% verificado"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T21:10:00Z",
-      "evidence": "supabase/migrations/20261010000006_phase08_proposals.sql, src/features/proposals/*, vitest suite (60/60 passing)"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-09",
       "name": "Fase 09 - Google Drive e Presentation Studio",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Migration PostgreSQL (20261010000007_phase09_drive_presentations.sql) com 11 tabelas, RLS e RPC de visualização pública",
         "Tipagem de domínio completa em src/types/drive.ts e src/types/presentations.ts",
         "Hooks TanStack Query completos em src/features/drive/hooks/useDrive.ts e src/features/presentations/hooks/usePresentations.ts",
@@ -184,15 +247,22 @@
         "Componente de integração ClientPresentationsTab no Client Hub",
         "Suíte de testes automatizados Vitest (64/64 passando) e build de produção 100% verificado"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T21:30:00Z",
-      "evidence": "supabase/migrations/20261010000007_phase09_drive_presentations.sql, src/features/drive/*, src/features/presentations/*, vitest suite (64/64 passing)"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-10",
       "name": "Fase 10 - Meeting Hub + Team Chat",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Migration PostgreSQL (20261010000008_phase10_meetings_chat.sql) com 18 tabelas, RLS e RPC convert_action_item_to_task",
         "Tipagem de domínio em src/types/meetings.ts, src/types/chat.ts, src/types/notifications.ts",
         "Hooks TanStack Query completos em src/features/meetings/hooks/useMeetings.ts, src/features/chat/hooks/useChat.ts, src/features/notifications/hooks/useNotifications.ts, src/features/calendar/hooks/useCalendarIntegration.ts",
@@ -209,15 +279,22 @@
         "Abas de integração ClientMeetingsTab no Client Hub e ProjectChatTab no Project Workspace",
         "Suíte de testes automatizados Vitest (69/69 passando) e build de produção 100% verificado"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T21:46:00Z",
-      "evidence": "supabase/migrations/20261010000008_phase10_meetings_chat.sql, src/features/meetings/*, src/features/chat/*, src/features/notifications/*, vitest suite (69/69 passing)"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-11",
       "name": "Fase 11 - White Label Studio & Advanced Settings",
-      "status": "completed",
+      "status": "in_progress",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Migration PostgreSQL (20261010000009_phase11_whitelabel.sql) com 5 tabelas (agency_branding, agency_preferences, agency_document_settings, agency_portal_settings, agency_settings_history)",
         "Row Level Security (RLS) estrita em todas as 5 tabelas com isolamento por agency_id",
         "RPC get_public_agency_branding para acesso seguro em portais públicos",
@@ -236,16 +313,27 @@
         "Componente BrandPreview para visualização em tempo real de branding",
         "Suíte de testes automatizados Vitest (75/75 passando) e build de produção 100% verificado"
       ],
-      "pending_requirements": [],
-      "last_verified_at": "2026-10-10T22:13:00Z",
-      "evidence": "supabase/migrations/20261010000009_phase11_whitelabel.sql, src/features/settings/*, src/lib/contrast.ts, src/types/whitelabel.ts, docs/WHITE_LABEL_STUDIO.md, vitest suite (75/75 passing)"
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
     },
     {
       "id": "phase-12",
       "name": "Fase 12 - Production Readiness, Final Audit, Security & Deployment Preparation",
-      "status": "partial",
-      "stage": "AUDITORIA_E_PREPARACAO_CONCLUIDAS_DEPLOY_PENDENTE",
+      "status": "in_progress",
+      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED",
       "completed_requirements": [
+        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+      ],
+      "pending_requirements": [
+        "Autorização explícita do usuário para publicação em produção no Release Gate",
+        "Deploy do frontend para ambiente público de produção (Vercel/Netlify)",
+        "Execução de smoke tests em URL de produção ativa pós-deploy",
+        "Validação final de produção publicada",
+        "Aceite operacional autenticado com persistência e autorização em staging",
+        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+      ],
+      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
+      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "historical_claims": [
         "Auditoria de arquitetura de software completa em docs/ARCHITECTURE_AUDIT.md",
         "Inventário detalhado de funcionalidades dos 12 módulos em docs/FEATURE_INVENTORY.md",
         "Auditoria de integridade e schema PostgreSQL (9 migrations) em docs/DATABASE_AUDIT.md",
@@ -266,16 +354,17 @@
         "useDashboardData corrigido: eliminação de atividades falsas e exibição de histórico operacional real / honest empty state",
         "Compilação TypeScript (tsc -b) e build de produção (vite build) 100% aprovados com zero erros",
         "Suíte de testes automatizados Vitest 100% aprovada (75/75 testes passando em 16 arquivos)"
-      ],
-      "pending_requirements": [
-        "Autorização explícita do usuário para publicação em produção no Release Gate",
-        "Deploy do frontend para ambiente público de produção (Vercel/Netlify)",
-        "Execução de smoke tests em URL de produção ativa pós-deploy",
-        "Validação final de produção publicada"
-      ],
-      "last_verified_at": "2026-10-10T22:28:00Z",
-      "evidence": "docs/ARCHITECTURE_AUDIT.md, docs/FEATURE_INVENTORY.md, docs/DATABASE_AUDIT.md, docs/SECURITY_AUDIT.md, docs/PERFORMANCE_REPORT.md, docs/RELEASE_REPORT.md, vitest (75/75), tsc -b (exit code 0)"
+      ]
     }
-  ]
+  ],
+  "audit_basis": "CODEX_MASTER_AUDIT_15_1_LOCAL_ONLY",
+  "production_ready": false,
+  "recovery_02": {
+    "frontend_auth_status": "FRONTEND_AUTH_READY_LOCAL_CONTROLLED_TESTS",
+    "backend_auth_status": "BLOCKED",
+    "tenant_isolation_status": "FRONTEND_PASS_REAL_RLS_BLOCKED",
+    "permission_studio_status": "READ_IMPLEMENTED_SAVE_BLOCKED",
+    "remote_schema_status": "BLOCKED",
+    "report": "docs/RECOVERY_02_REPORT.md"
+  }
 }
-

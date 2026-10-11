@@ -1,76 +1,29 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { AppLayout } from '@/app/layouts/AppLayout'
-import { DashboardPage } from '@/features/dashboard/DashboardPage'
-import { CalendarPage } from '@/features/calendar/CalendarPage'
-import { ClientsPage } from '@/features/clients/ClientsPage'
-import { ProjectsPage } from '@/features/projects/ProjectsPage'
-import { NewProjectPage } from '@/features/projects/NewProjectPage'
-import { ProjectWorkspacePage } from '@/features/projects/ProjectWorkspacePage'
-import { TasksPage } from '@/features/tasks/TasksPage'
-import { SquadsPage } from '@/features/squads/SquadsPage'
-import { BriefingPage } from '@/features/briefing/BriefingPage'
-import { BriefingTemplatesPage } from '@/features/briefing/templates/BriefingTemplatesPage'
-import { BriefingTemplateEditorPage } from '@/features/briefing/templates/BriefingTemplateEditorPage'
-import { NewBriefingPage } from '@/features/briefing/NewBriefingPage'
-import { BriefingResponsesPage } from '@/features/briefing/BriefingResponsesPage'
-import { BriefingExportPage } from '@/features/briefing/BriefingExportPage'
-import { PublicBriefingFormPage } from '@/features/briefing/public/PublicBriefingFormPage'
-import { StrategyPage } from '@/features/strategy/StrategyPage'
-import { NewStrategyPage } from '@/features/strategy/NewStrategyPage'
-import { StrategyWorkspacePage } from '@/features/strategy/StrategyWorkspacePage'
-import { ProposalsPage } from '@/features/proposals/ProposalsPage'
-import { NewProposalPage } from '@/features/proposals/NewProposalPage'
-import { ProposalWorkspacePage } from '@/features/proposals/ProposalWorkspacePage'
-import { ServiceCatalogPage } from '@/features/proposals/ServiceCatalogPage'
-import { ProposalTemplatesPage } from '@/features/proposals/ProposalTemplatesPage'
-import { ProposalExportPage } from '@/features/proposals/ProposalExportPage'
-import { PublicProposalViewPage } from '@/features/proposals/public/PublicProposalViewPage'
-import { DriveBrowserPage } from '@/features/drive/DriveBrowserPage'
-import { DriveConnectionsPage } from '@/features/drive/DriveConnectionsPage'
-import { NewPresentationPage } from '@/features/presentations/NewPresentationPage'
-import { PresentationWorkspacePage } from '@/features/presentations/PresentationWorkspacePage'
-import { PresentationExportPage } from '@/features/presentations/PresentationExportPage'
-import { PublicShowcaseViewPage } from '@/features/presentations/public/PublicShowcaseViewPage'
-import { MeetingsPage } from '@/features/meetings/MeetingsPage'
-import { NewMeetingPage } from '@/features/meetings/NewMeetingPage'
-import { MeetingWorkspacePage } from '@/features/meetings/MeetingWorkspacePage'
-import { ChatPage } from '@/features/chat/ChatPage'
-import { ChatSettingsPage } from '@/features/chat/ChatSettingsPage'
-import { NotificationsPage } from '@/features/notifications/NotificationsPage'
-import { CalendarIntegrationPage } from '@/features/settings/CalendarIntegrationPage'
-import { PresentationsPage } from '@/features/presentations/PresentationsPage'
+import { AuthPage } from '@/features/auth/AuthPage'
+import { ProtectedWorkspace } from '@/features/auth/ProtectedWorkspace'
+import { createBrowserRouter, Navigate, redirect } from 'react-router-dom'
 import { SettingsLayout } from '@/features/settings/components/SettingsLayout'
-import { SettingsOverviewPage } from '@/features/settings/SettingsOverviewPage'
-import { AgencySettingsPage } from '@/features/settings/AgencySettingsPage'
-import { WhiteLabelStudioPage } from '@/features/settings/WhiteLabelStudioPage'
-import { AppearanceSettingsPage } from '@/features/settings/AppearanceSettingsPage'
-import { TeamManagementPage } from '@/features/settings/TeamManagementPage'
-import { PermissionStudioPage } from '@/features/settings/PermissionStudioPage'
-import { WorkspacePreferencesPage } from '@/features/settings/WorkspacePreferencesPage'
-import { DocumentBrandingPage } from '@/features/settings/DocumentBrandingPage'
-import { ClientExperiencePage } from '@/features/settings/ClientExperiencePage'
-import { IntegrationsCenterPage } from '@/features/settings/IntegrationsCenterPage'
-import { SecurityCenterPage } from '@/features/settings/SecurityCenterPage'
-import { ActivityCenterPage } from '@/features/settings/ActivityCenterPage'
-import { DiagnosticsPage } from '@/features/settings/DiagnosticsPage'
 
 export const router = createBrowserRouter([
+  { path: '/login', element: <AuthPage /> },
+  { path: '/forgot-password', element: <AuthPage mode="forgot" /> },
+  { path: '/reset-password', element: <AuthPage mode="reset" /> },
   // Public standalone routes for external clients (Briefing, Proposal, Showcase)
   {
     path: '/b/:publicToken',
-    element: <PublicBriefingFormPage />,
+    lazy: async () => ({ Component: (await import('@/features/briefing/public/PublicBriefingFormPage')).PublicBriefingFormPage }),
   },
   {
     path: '/p/:publicToken',
-    element: <PublicProposalViewPage />,
+    lazy: async () => ({ Component: (await import('@/features/proposals/public/PublicProposalViewPage')).PublicProposalViewPage }),
   },
   {
     path: '/showcase/:publicToken',
-    element: <PublicShowcaseViewPage />,
+    lazy: async () => ({ Component: (await import('@/features/presentations/public/PublicShowcaseViewPage')).PublicShowcaseViewPage }),
   },
   {
     path: '/',
-    element: <AppLayout />,
+    hydrateFallbackElement: <main className="p-8 text-[#F8F9FC]" role="status">Carregando aplicativo…</main>,
+    element: <ProtectedWorkspace />,
     children: [
       {
         index: true,
@@ -78,87 +31,94 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <DashboardPage />,
+        lazy: async () => ({ Component: (await import('@/features/dashboard/DashboardPage')).DashboardPage }),
+      },
+      {
+        path: 'agenda',
+        loader: () => redirect('/calendar'),
       },
       {
         path: 'calendar',
-        element: <CalendarPage />,
+        lazy: async () => ({ Component: (await import('@/features/calendar/CalendarPage')).CalendarPage }),
       },
       {
         path: 'clients',
-        element: <ClientsPage />,
+        lazy: async () => ({ Component: (await import('@/features/clients/ClientsPage')).ClientsPage }),
       },
+      { path: 'clients/new', lazy: async () => ({ Component: (await import('@/features/clients/ClientsPage')).ClientsPage }) },
+      { path: 'clients/:clientId', lazy: async () => ({ Component: (await import('@/features/clients/ClientsPage')).ClientsPage }) },
+      { path: 'clients/:clientId/edit', lazy: async () => ({ Component: (await import('@/features/clients/ClientsPage')).ClientsPage }) },
       {
         path: 'projects',
-        element: <ProjectsPage />,
+        lazy: async () => ({ Component: (await import('@/features/projects/ProjectsPage')).ProjectsPage }),
       },
       {
         path: 'projects/new',
-        element: <NewProjectPage />,
+        lazy: async () => ({ Component: (await import('@/features/projects/NewProjectPage')).NewProjectPage }),
       },
       {
         path: 'projects/:projectId',
-        element: <ProjectWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/projects/ProjectWorkspacePage')).ProjectWorkspacePage }),
       },
       {
         path: 'projects/:projectId/settings',
-        element: <ProjectWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/projects/ProjectWorkspacePage')).ProjectWorkspacePage }),
       },
       {
         path: 'tasks',
-        element: <TasksPage />,
+        lazy: async () => ({ Component: (await import('@/features/tasks/TasksPage')).TasksPage }),
       },
       {
         path: 'tasks/:taskId',
-        element: <TasksPage />,
+        lazy: async () => ({ Component: (await import('@/features/tasks/TasksPage')).TasksPage }),
       },
       {
         path: 'squads',
-        element: <SquadsPage />,
+        lazy: async () => ({ Component: (await import('@/features/squads/SquadsPage')).SquadsPage }),
       },
       {
         path: 'drive',
-        element: <DriveBrowserPage />,
+        lazy: async () => ({ Component: (await import('@/features/drive/DriveBrowserPage')).DriveBrowserPage }),
       },
       {
         path: 'drive/connections',
-        element: <DriveConnectionsPage />,
+        lazy: async () => ({ Component: (await import('@/features/drive/DriveConnectionsPage')).DriveConnectionsPage }),
       },
       {
         path: 'drive/clients/:clientId',
-        element: <DriveBrowserPage />,
+        lazy: async () => ({ Component: (await import('@/features/drive/DriveBrowserPage')).DriveBrowserPage }),
       },
       {
         path: 'briefings',
-        element: <BriefingPage />,
+        lazy: async () => ({ Component: (await import('@/features/briefing/BriefingPage')).BriefingPage }),
       },
       {
         path: 'briefings/templates',
-        element: <BriefingTemplatesPage />,
+        lazy: async () => ({ Component: (await import('@/features/briefing/templates/BriefingTemplatesPage')).BriefingTemplatesPage }),
       },
       {
         path: 'briefings/templates/new',
-        element: <BriefingTemplateEditorPage />,
+        lazy: async () => ({ Component: (await import('@/features/briefing/templates/BriefingTemplateEditorPage')).BriefingTemplateEditorPage }),
       },
       {
         path: 'briefings/templates/:templateId/edit',
-        element: <BriefingTemplateEditorPage />,
+        lazy: async () => ({ Component: (await import('@/features/briefing/templates/BriefingTemplateEditorPage')).BriefingTemplateEditorPage }),
       },
       {
         path: 'briefings/new',
-        element: <NewBriefingPage />,
+        lazy: async () => ({ Component: (await import('@/features/briefing/NewBriefingPage')).NewBriefingPage }),
       },
       {
         path: 'briefings/:briefingId',
-        element: <BriefingResponsesPage />,
+        lazy: async () => ({ Component: (await import('@/features/briefing/BriefingResponsesPage')).BriefingResponsesPage }),
       },
       {
         path: 'briefings/:briefingId/responses',
-        element: <BriefingResponsesPage />,
+        lazy: async () => ({ Component: (await import('@/features/briefing/BriefingResponsesPage')).BriefingResponsesPage }),
       },
       {
         path: 'briefings/:briefingId/export',
-        element: <BriefingExportPage />,
+        lazy: async () => ({ Component: (await import('@/features/briefing/BriefingExportPage')).BriefingExportPage }),
       },
       {
         path: 'briefing',
@@ -166,139 +126,139 @@ export const router = createBrowserRouter([
       },
       {
         path: 'strategy',
-        element: <StrategyPage />,
+        lazy: async () => ({ Component: (await import('@/features/strategy/StrategyPage')).StrategyPage }),
       },
       {
         path: 'strategy/new',
-        element: <NewStrategyPage />,
+        lazy: async () => ({ Component: (await import('@/features/strategy/NewStrategyPage')).NewStrategyPage }),
       },
       {
         path: 'strategy/:strategyId',
-        element: <StrategyWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/strategy/StrategyWorkspacePage')).StrategyWorkspacePage }),
       },
       {
         path: 'proposals',
-        element: <ProposalsPage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalsPage')).ProposalsPage }),
       },
       {
         path: 'proposals/new',
-        element: <NewProposalPage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/NewProposalPage')).NewProposalPage }),
       },
       {
         path: 'proposals/templates',
-        element: <ProposalTemplatesPage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalTemplatesPage')).ProposalTemplatesPage }),
       },
       {
         path: 'proposals/templates/new',
-        element: <ProposalTemplatesPage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalTemplatesPage')).ProposalTemplatesPage }),
       },
       {
         path: 'proposals/templates/:templateId/edit',
-        element: <ProposalTemplatesPage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalTemplatesPage')).ProposalTemplatesPage }),
       },
       {
         path: 'proposals/services',
-        element: <ServiceCatalogPage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ServiceCatalogPage')).ServiceCatalogPage }),
       },
       {
         path: 'proposals/:proposalId',
-        element: <ProposalWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalWorkspacePage')).ProposalWorkspacePage }),
       },
       {
         path: 'proposals/:proposalId/edit',
-        element: <ProposalWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalWorkspacePage')).ProposalWorkspacePage }),
       },
       {
         path: 'proposals/:proposalId/preview',
-        element: <ProposalWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalWorkspacePage')).ProposalWorkspacePage }),
       },
       {
         path: 'proposals/:proposalId/versions',
-        element: <ProposalWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalWorkspacePage')).ProposalWorkspacePage }),
       },
       {
         path: 'proposals/:proposalId/export',
-        element: <ProposalExportPage />,
+        lazy: async () => ({ Component: (await import('@/features/proposals/ProposalExportPage')).ProposalExportPage }),
       },
       {
         path: 'meetings',
-        element: <MeetingsPage />,
+        lazy: async () => ({ Component: (await import('@/features/meetings/MeetingsPage')).MeetingsPage }),
       },
       {
         path: 'meetings/new',
-        element: <NewMeetingPage />,
+        lazy: async () => ({ Component: (await import('@/features/meetings/NewMeetingPage')).NewMeetingPage }),
       },
       {
         path: 'meetings/:meetingId',
-        element: <MeetingWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/meetings/MeetingWorkspacePage')).MeetingWorkspacePage }),
       },
       {
         path: 'meetings/:meetingId/edit',
-        element: <MeetingWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/meetings/MeetingWorkspacePage')).MeetingWorkspacePage }),
       },
       {
         path: 'meetings/:meetingId/agenda',
-        element: <MeetingWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/meetings/MeetingWorkspacePage')).MeetingWorkspacePage }),
       },
       {
         path: 'meetings/:meetingId/minutes',
-        element: <MeetingWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/meetings/MeetingWorkspacePage')).MeetingWorkspacePage }),
       },
       {
         path: 'meetings/:meetingId/actions',
-        element: <MeetingWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/meetings/MeetingWorkspacePage')).MeetingWorkspacePage }),
       },
       {
         path: 'chat',
-        element: <ChatPage />,
+        lazy: async () => ({ Component: (await import('@/features/chat/ChatPage')).ChatPage }),
       },
       {
         path: 'chat/channels/:channelId',
-        element: <ChatPage />,
+        lazy: async () => ({ Component: (await import('@/features/chat/ChatPage')).ChatPage }),
       },
       {
         path: 'chat/direct/:conversationId',
-        element: <ChatPage />,
+        lazy: async () => ({ Component: (await import('@/features/chat/ChatPage')).ChatPage }),
       },
       {
         path: 'chat/settings',
-        element: <ChatSettingsPage />,
+        lazy: async () => ({ Component: (await import('@/features/chat/ChatSettingsPage')).ChatSettingsPage }),
       },
       {
         path: 'notifications',
-        element: <NotificationsPage />,
+        lazy: async () => ({ Component: (await import('@/features/notifications/NotificationsPage')).NotificationsPage }),
       },
       {
         path: 'settings/integrations/calendar',
-        element: <CalendarIntegrationPage />,
+        lazy: async () => ({ Component: (await import('@/features/settings/CalendarIntegrationPage')).CalendarIntegrationPage }),
       },
       {
         path: 'presentations',
-        element: <PresentationsPage />,
+        lazy: async () => ({ Component: (await import('@/features/presentations/PresentationsPage')).PresentationsPage }),
       },
       {
         path: 'presentations/new',
-        element: <NewPresentationPage />,
+        lazy: async () => ({ Component: (await import('@/features/presentations/NewPresentationPage')).NewPresentationPage }),
       },
       {
         path: 'presentations/:presentationId',
-        element: <PresentationWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/presentations/PresentationWorkspacePage')).PresentationWorkspacePage }),
       },
       {
         path: 'presentations/:presentationId/edit',
-        element: <PresentationWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/presentations/PresentationWorkspacePage')).PresentationWorkspacePage }),
       },
       {
         path: 'presentations/:presentationId/preview',
-        element: <PresentationWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/presentations/PresentationWorkspacePage')).PresentationWorkspacePage }),
       },
       {
         path: 'presentations/:presentationId/versions',
-        element: <PresentationWorkspacePage />,
+        lazy: async () => ({ Component: (await import('@/features/presentations/PresentationWorkspacePage')).PresentationWorkspacePage }),
       },
       {
         path: 'presentations/:presentationId/export',
-        element: <PresentationExportPage />,
+        lazy: async () => ({ Component: (await import('@/features/presentations/PresentationExportPage')).PresentationExportPage }),
       },
       {
         path: 'settings',
@@ -306,55 +266,55 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <SettingsOverviewPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/SettingsOverviewPage')).SettingsOverviewPage }),
           },
           {
             path: 'agency',
-            element: <AgencySettingsPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/AgencySettingsPage')).AgencySettingsPage }),
           },
           {
             path: 'branding',
-            element: <WhiteLabelStudioPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/WhiteLabelStudioPage')).WhiteLabelStudioPage }),
           },
           {
             path: 'appearance',
-            element: <AppearanceSettingsPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/AppearanceSettingsPage')).AppearanceSettingsPage }),
           },
           {
             path: 'team',
-            element: <TeamManagementPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/TeamManagementPage')).TeamManagementPage }),
           },
           {
             path: 'permissions',
-            element: <PermissionStudioPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/PermissionStudioPage')).PermissionStudioPage }),
           },
           {
             path: 'workspace',
-            element: <WorkspacePreferencesPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/WorkspacePreferencesPage')).WorkspacePreferencesPage }),
           },
           {
             path: 'documents',
-            element: <DocumentBrandingPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/DocumentBrandingPage')).DocumentBrandingPage }),
           },
           {
             path: 'client-experience',
-            element: <ClientExperiencePage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/ClientExperiencePage')).ClientExperiencePage }),
           },
           {
             path: 'integrations',
-            element: <IntegrationsCenterPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/IntegrationsCenterPage')).IntegrationsCenterPage }),
           },
           {
             path: 'security',
-            element: <SecurityCenterPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/SecurityCenterPage')).SecurityCenterPage }),
           },
           {
             path: 'activity',
-            element: <ActivityCenterPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/ActivityCenterPage')).ActivityCenterPage }),
           },
           {
             path: 'diagnostics',
-            element: <DiagnosticsPage />,
+            lazy: async () => ({ Component: (await import('@/features/settings/DiagnosticsPage')).DiagnosticsPage }),
           },
         ],
       },

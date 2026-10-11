@@ -1,3 +1,4 @@
+import { AuthProvider } from '@/features/auth/AuthProvider'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
@@ -18,9 +19,9 @@ const createTestQueryClient = () =>
 function renderWithProviders(ui: React.ReactElement) {
   const queryClient = createTestQueryClient()
   return render(
-    <QueryClientProvider client={queryClient}>
+    <AuthProvider><QueryClientProvider client={queryClient}>
       <BrowserRouter>{ui}</BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider></AuthProvider>
   )
 }
 

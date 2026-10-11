@@ -1,3 +1,4 @@
+import { useAuth } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 09: PRESENTATION STUDIO HOOKS
@@ -133,12 +134,15 @@ let demoPresentationsStore = [...DEMO_PRESENTATIONS]
 
 // 1. Hook: List Presentations
 export function usePresentations() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const query = useQuery({
     queryKey: ['presentations'],
     queryFn: async (): Promise<Presentation[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data } = await supabase
+          const { data , error: backendError1 } = await supabase
             .from('presentations')
             .select(`
               *,
@@ -146,9 +150,11 @@ export function usePresentations() {
               presentation_sections (*),
               presentation_assets (*)
             `)
+            .eq('agency_id', agencyId)
             .order('created_at', { ascending: false })
+          if (backendError1) throw backendError1
 
-          if (data && data.length > 0) {
+          if (data) {
             return data.map((p: any) => ({
               ...p,
               client_name: p.clients?.name,
@@ -158,7 +164,7 @@ export function usePresentations() {
             }))
           }
         } catch (err) {
-          console.warn('Supabase fetch presentations error:', err)
+          throw err
         }
       }
       return demoPresentationsStore
@@ -176,6 +182,9 @@ export function usePresentations() {
 
 // 2. Hook: Single Presentation
 export function usePresentation(presentationId?: string) {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['presentation', presentationId],
     enabled: Boolean(presentationId),
@@ -184,7 +193,7 @@ export function usePresentation(presentationId?: string) {
 
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data } = await supabase
+          const { data , error: backendError2 } = await supabase
             .from('presentations')
             .select(`
               *,
@@ -194,6 +203,7 @@ export function usePresentation(presentationId?: string) {
             `)
             .eq('id', presentationId)
             .single()
+          if (backendError2) throw backendError2
 
           if (data) {
             return {
@@ -205,7 +215,7 @@ export function usePresentation(presentationId?: string) {
             }
           }
         } catch (err) {
-          console.warn('Supabase fetch single presentation error:', err)
+          throw err
         }
       }
 
@@ -215,6 +225,9 @@ export function usePresentation(presentationId?: string) {
 }
 
 export function useSinglePresentation(presentationId?: string) {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const query = usePresentation(presentationId)
   const updateMutation = useUpdatePresentation()
 
@@ -340,6 +353,9 @@ export function useSinglePresentation(presentationId?: string) {
 
 // 3. Hook: Templates
 export function usePresentationTemplates() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   return useQuery({
     queryKey: ['presentation_templates'],
     queryFn: async (): Promise<PresentationTemplate[]> => {
@@ -350,6 +366,9 @@ export function usePresentationTemplates() {
 
 // 4. Hook: Create Presentation
 export function useCreatePresentation() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -370,7 +389,7 @@ export function useCreatePresentation() {
         if (tmpl) {
           sections = tmpl.sections_snapshot.map((s, idx) => ({
             id: `sec-${newId}-${idx}`,
-            agency_id: 'demo-agency',
+            agency_id: agencyId,
             presentation_id: newId,
             section_type: s.section_type || 'custom',
             title: s.title || 'Seção',
@@ -384,7 +403,7 @@ export function useCreatePresentation() {
 
       const newPres: Presentation = {
         id: newId,
-        agency_id: 'demo-agency',
+        agency_id: agencyId,
         client_id: payload.client_id,
         client_name: payload.client_name || 'Cliente Selecionado',
         title: payload.title,
@@ -414,7 +433,7 @@ export function useCreatePresentation() {
             status: newPres.status,
           })
         } catch (err) {
-          console.warn('Could not insert presentation in Supabase:', err)
+          throw err
         }
       }
 
@@ -426,6 +445,9 @@ export function useCreatePresentation() {
 
 // 5. Hook: Update Presentation
 export function useUpdatePresentation() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -462,7 +484,7 @@ export function useUpdatePresentation() {
             updated_at: updated.updated_at,
           }).eq('id', payload.id)
         } catch (err) {
-          console.warn('Could not update presentation in Supabase:', err)
+          throw err
         }
       }
 

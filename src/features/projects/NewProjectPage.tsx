@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FolderKanban, Calendar, User, Users, Flag, Building2, ArrowLeft } from 'lucide-react'
@@ -39,6 +40,8 @@ const PRIORITY_COLORS: Record<string, string> = {
 }
 
 export const NewProjectPage: React.FC = () => {
+  const MOCK_AGENCY_ID = useAgencyId()
+
   const navigate = useNavigate()
   const createProject = useCreateProject()
 

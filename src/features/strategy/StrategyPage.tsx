@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 07: STRATEGY STUDIO — MAIN DASHBOARD
@@ -37,6 +38,8 @@ import { STRATEGY_STATUS_CONFIG, type StrategyStatus } from '@/types/strategy'
 const DEMO_AGENCY_ID = 'demo-agency'
 
 export const StrategyPage: React.FC = () => {
+  const DEMO_AGENCY_ID = useAgencyId()
+
   const navigate = useNavigate()
   const [statusFilter, setStatusFilter] = useState<StrategyStatus | 'all'>('all')
   const [searchTerm, setSearchTerm] = useState('')

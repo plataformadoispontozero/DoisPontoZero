@@ -1,0 +1,25 @@
+[WebServer] (node:84972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 2 workers
+
+(node:84985) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:84984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [Desktop Chrome] › e2e/app.spec.ts:4:3 › Dois.Zero Application Baseline › should load dashboard and render branding (3.1s)
+  ✓  1 [Desktop Chrome] › e2e/app.spec.ts:12:3 › Dois.Zero Application Baseline › should navigate between modules (3.2s)
+(node:84994) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:84995) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [Tablet iPad] › e2e/app.spec.ts:4:3 › Dois.Zero Application Baseline › should load dashboard and render branding (2.5s)
+  ✓  4 [Tablet iPad] › e2e/app.spec.ts:12:3 › Dois.Zero Application Baseline › should navigate between modules (2.6s)
+(node:85004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:85005) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [Mobile iPhone 14] › e2e/app.spec.ts:4:3 › Dois.Zero Application Baseline › should load dashboard and render branding (2.6s)
+  ✓  6 [Mobile iPhone 14] › e2e/app.spec.ts:12:3 › Dois.Zero Application Baseline › should navigate between modules (2.8s)
+
+  6 passed (12.5s)
