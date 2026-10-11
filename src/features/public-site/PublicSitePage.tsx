@@ -337,6 +337,10 @@ export function PublicSitePage() {
               </Link>
             </div>
           </div>
+          <div className="dz-container dz-team-heading">
+            <p className="dz-eyebrow">QUEM CRIA COM VOCÊ</p>
+            <h2>Nossa <em>equipe.</em></h2>
+          </div>
           {c.team.length > 0 ? (
             <div className="dz-container dz-team">
               {c.team.map((person, i) => (
@@ -360,11 +364,17 @@ export function PublicSitePage() {
               ))}
             </div>
           ) : (
-            <div className="dz-container dz-team-disciplines">
-              <span>Estratégia.</span>
-              <span>Design.</span>
-              <span>Conteúdo.</span>
-              <span>Performance.</span>
+            <div className="dz-container dz-team">
+              {["Designer", "Social Media", "Tráfego Pago", "Videomaker"].map((role) => (
+                <article key={role}>
+                  <div className="dz-team-initial dz-team-placeholder" aria-label="Espaço reservado para foto">
+                    <Camera size={40} strokeWidth={1} />
+                    <span>Foto em breve</span>
+                  </div>
+                  <h3>{role}</h3>
+                  <p>Apresentação da equipe em breve.</p>
+                </article>
+              ))}
             </div>
           )}
         </section>

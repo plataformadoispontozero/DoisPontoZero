@@ -1500,3 +1500,8 @@
 @media(max-width:380px){.dz-nav-cta{display:none}.dz-menu-button{margin-left:auto}.dz-hero h1{font-size:42px}.dz-hero-copy{padding:0 18px}}
 .dz-static .dz-marquee-track{animation:none}
 .dz-site .dz-button:disabled{opacity:.55;cursor:wait;transform:none}
+
+.dz-team-heading { margin-top: 70px; }
+.dz-team-heading h2 { font-size: clamp(32px, 4vw, 56px); }
+.dz-team-placeholder { flex-direction: column; gap: 18px; background: radial-gradient(ellipse at top, #353042, #1c1b22); border: 1px solid #ffffff12; }
+.dz-team-placeholder span { font-size: 12px; letter-spacing: .08em; color: #aaa8b3; }

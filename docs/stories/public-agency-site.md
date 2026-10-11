@@ -38,3 +38,9 @@ As respostas de Supabase nos E2E são controladas, sem homologação de RLS remo
 O carregamento remoto deixava a galeria ausente no primeiro efeito, sem reinstalar listeners quando o conteúdo aparecia. A inicialização agora depende da disponibilidade do site, do término do carregamento e da quantidade de painéis. Reproduzido no domínio publicado (progress vazio); validado com Supabase real em build corrigido (progress 0.3507 após scroll).
 
 Hotfix validado com 18/18 E2E públicos, build de produção e `git diff --check`.
+
+
+## Seção de equipe — 2026-10-11
+Adicionado título Nossa equipe e quatro espaços claramente reservados para fotos: Designer, Social Media, Tráfego Pago e Videomaker. Quando o OWNER cadastra pessoas em Configurações > Site público > Equipe, os cartões reais substituem automaticamente os espaços reservados. Não foram inventados nomes nem fotos de pessoas.
+
+Seção de equipe validada com build de produção, 18/18 E2E públicos e `git diff --check`.
