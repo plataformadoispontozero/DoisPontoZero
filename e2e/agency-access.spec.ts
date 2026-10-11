@@ -197,3 +197,47 @@ test('team-only login hides Google and keeps workspace protected', async ({ page
   await page.goto('/dashboard')
   await expect(page).toHaveURL(/\/login$/)
 })
+
+
+test('monthly generator imports briefing and respects format quantities', async ({page}) => {
+  await api(page)
+  await page.route('**/rest/v1/briefings?**', route => route.fulfill({contentType:'application/json',body:JSON.stringify([{id:'brief-test',title:'Briefing mensal',status:'approved'}])}))
+  await page.route('**/rest/v1/briefing_answers?**', route => route.fulfill({contentType:'application/json',body:JSON.stringify([
+    {answer_value:'Gerar contatos',briefing_questions:{label:'Objetivo'}},
+    {answer_value:'Empreendedores locais',briefing_questions:{label:'Público-alvo'}}
+  ])}))
+  await login(page)
+  await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
+  await page.goto('/editorial')
+  await page.getByLabel('Cliente',{exact:true}).selectOption('33333333-3333-4333-8333-333333333333')
+  await page.getByLabel('Briefing do cliente').selectOption('brief-test')
+  await expect(page.getByRole('textbox',{name:'Objetivo',exact:true})).toHaveValue('Gerar contatos')
+  await expect(page.getByRole('textbox',{name:'Público-alvo',exact:true})).toHaveValue('Empreendedores locais')
+  await page.getByLabel('Post',{exact:true}).fill('1')
+  await page.getByLabel('Reels',{exact:true}).fill('1')
+  await page.getByLabel('Carrossel',{exact:true}).fill('1')
+  await page.getByRole('button',{name:'Gerar calendário mensal',exact:true}).click()
+  await expect(page.getByLabel(/Tema do conteúdo/)).toHaveCount(3)
+})
+
+test('public editorial review accepts copy suggestions and closes after approval without login', async ({page}) => {
+  await api(page)
+  let status='pending'; const submissions:any[]=[]
+  await page.route('**/rest/v1/rpc/get_public_editorial',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({client:'Cliente editorial',month:'2026-11-01',status,items:[{date:'2026-11-10',format:'post',title:'Tema do mês',copy:'Texto original'}]})}))
+  await page.route('**/rest/v1/rpc/submit_public_editorial',route=>{
+    const body=route.request().postDataJSON(); submissions.push(body)
+    status=body.p_decision==='approve'?'approved':'changes_requested'
+    return route.fulfill({contentType:'application/json',body:'true'})
+  })
+  await page.goto('/approve-calendar/'+ 'a'.repeat(64))
+  await expect(page.getByRole('heading',{name:'Revisão do calendário editorial'})).toBeVisible()
+  await page.getByLabel('Sugestão de copy').fill('Texto sugerido pelo cliente')
+  await page.getByRole('button',{name:'Enviar sugestão deste conteúdo'}).click()
+  await expect(page.getByText('Sua sugestão foi registrada para a equipe revisar.')).toBeVisible()
+  expect(submissions[0].p_copy).toBe('Texto sugerido pelo cliente')
+  page.on('dialog',dialog=>dialog.accept())
+  await page.getByRole('button',{name:'Aprovar calendário completo'}).click()
+  await expect(page.getByText('Revisão concluída. Este calendário já foi aprovado.')).toBeVisible()
+  await expect(page.getByLabel('Sugestão de copy')).toHaveCount(0)
+  expect(submissions[1].p_decision).toBe('approve')
+})

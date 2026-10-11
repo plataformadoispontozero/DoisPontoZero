@@ -36,8 +36,9 @@ describe('Navigation Components - Phase 01', () => {
     expect(screen.getByText('Configurações')).toBeInTheDocument()
   })
 
-  it('contains exactly 14 distinct navigation links in navItems', () => {
-    expect(navItems).toHaveLength(14)
+  it('contains distinct navigation destinations including editorial and production areas', () => {
+    expect(new Set(navItems.map(item => item.path)).size).toBe(navItems.length)
+    expect(navItems.map(item => item.path)).toEqual(expect.arrayContaining(['/editorial', '/production/design', '/production/video', '/production/traffic']))
   })
 
   it('renders mobile navigation structure and touch controls', () => {

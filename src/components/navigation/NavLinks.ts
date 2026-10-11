@@ -1,4 +1,7 @@
 import {
+  Palette,
+  Video,
+  Megaphone,
   LayoutDashboard,
   Calendar,
   Users,
@@ -13,127 +16,167 @@ import {
   Presentation,
   Settings,
   type LucideIcon,
-} from 'lucide-react'
+} from "lucide-react";
 
 export interface NavItem {
-  id: string
-  label: string
-  path: string
-  icon: LucideIcon
-  badge?: string
-  section: 'main' | 'tools' | 'system'
-  description: string
+  id: string;
+  label: string;
+  path: string;
+  icon: LucideIcon;
+  badge?: string;
+  section: "main" | "tools" | "system";
+  description: string;
 }
 
 export const navItems: NavItem[] = [
-  { id: 'team', label: 'Equipe & Profissionais', path: '/team', icon: Users, section: 'main', description: 'Profissionais vinculados à agência; especialidades são distintas de permissões.' },
+  {
+    id: "design",
+    label: "Design",
+    path: "/production/design",
+    icon: Palette,
+    section: "tools",
+    description: "Demandas de design dos projetos.",
+  },
+  {
+    id: "videomaker",
+    label: "Videomaker",
+    path: "/production/video",
+    icon: Video,
+    section: "tools",
+    description: "Produção de reels e vídeos.",
+  },
+  {
+    id: "paid-traffic",
+    label: "Tráfego Pago",
+    path: "/production/traffic",
+    icon: Megaphone,
+    section: "tools",
+    description: "Planejamento e revisão de mídia paga.",
+  },
+  {
+    id: "editorial",
+    label: "Calendário Editorial",
+    path: "/editorial",
+    icon: CalendarDays,
+    section: "tools",
+    description: "Campanhas mensais por cliente e aprovação pública.",
+  },
+  {
+    id: "team",
+    label: "Equipe & Profissionais",
+    path: "/team",
+    icon: Users,
+    section: "main",
+    description:
+      "Profissionais vinculados à agência; especialidades são distintas de permissões.",
+  },
   // MENU PRINCIPAL
   {
-    id: 'dashboard',
-    label: 'Visão Geral',
-    path: '/dashboard',
+    id: "dashboard",
+    label: "Visão Geral",
+    path: "/dashboard",
     icon: LayoutDashboard,
-    section: 'main',
-    description: 'Acompanhamento consolidado de operações da agência.',
+    section: "main",
+    description: "Acompanhamento consolidado de operações da agência.",
   },
   {
-    id: 'calendar',
-    label: 'Minha Agenda',
-    path: '/calendar',
+    id: "calendar",
+    label: "Minha Agenda",
+    path: "/calendar",
     icon: Calendar,
-    section: 'main',
-    description: 'Cronograma pessoal, reuniões e deadlines do dia.',
+    section: "main",
+    description: "Cronograma pessoal, reuniões e deadlines do dia.",
   },
   {
-    id: 'clients',
-    label: 'Clientes',
-    path: '/clients',
+    id: "clients",
+    label: "Clientes",
+    path: "/clients",
     icon: Users,
-    section: 'main',
-    description: 'Gestão de marcas, contatos e contas ativas.',
+    section: "main",
+    description: "Gestão de marcas, contatos e contas ativas.",
   },
   {
-    id: 'projects',
-    label: 'Projetos',
-    path: '/projects',
+    id: "projects",
+    label: "Projetos",
+    path: "/projects",
     icon: FolderKanban,
-    section: 'main',
-    description: 'Workflows criativos, kanban e entregas.',
+    section: "main",
+    description: "Workflows criativos, kanban e entregas.",
   },
   {
-    id: 'tasks',
-    label: 'Tarefas',
-    path: '/tasks',
+    id: "tasks",
+    label: "Tarefas",
+    path: "/tasks",
     icon: CheckSquare,
-    section: 'main',
-    description: 'Fila de produção criativa e checklists técnicos.',
+    section: "main",
+    description: "Fila de produção criativa e checklists técnicos.",
   },
   {
-    id: 'squads',
-    label: 'Squads',
-    path: '/squads',
+    id: "squads",
+    label: "Squads",
+    path: "/squads",
     icon: Users2,
-    section: 'main',
-    description: 'Equipes multidisciplinares e capacidade de horas.',
+    section: "main",
+    description: "Equipes multidisciplinares e capacidade de horas.",
   },
 
   // FERRAMENTAS
   {
-    id: 'briefings',
-    label: 'Briefings',
-    path: '/briefings',
+    id: "briefings",
+    label: "Briefings",
+    path: "/briefings",
     icon: FileText,
-    section: 'tools',
-    description: 'Entrada inteligente e formulários dinâmicos de demandas.',
+    section: "tools",
+    description: "Entrada inteligente e formulários dinâmicos de demandas.",
   },
   {
-    id: 'strategy',
-    label: 'Estratégia',
-    path: '/strategy',
+    id: "strategy",
+    label: "Estratégia",
+    path: "/strategy",
     icon: Compass,
-    section: 'tools',
-    description: 'Diagnósticos, personas e planejamento de contas.',
+    section: "tools",
+    description: "Diagnósticos, personas e planejamento de contas.",
   },
   {
-    id: 'proposals',
-    label: 'Propostas',
-    path: '/proposals',
+    id: "proposals",
+    label: "Propostas",
+    path: "/proposals",
     icon: FileCheck2,
-    section: 'tools',
-    description: 'Orçamentos comerciais e precificação de squad.',
+    section: "tools",
+    description: "Orçamentos comerciais e precificação de squad.",
   },
   {
-    id: 'meetings',
-    label: 'Reuniões',
-    path: '/meetings',
+    id: "meetings",
+    label: "Reuniões",
+    path: "/meetings",
     icon: CalendarDays,
-    section: 'tools',
-    description: 'Alinhamentos, pautas e atas inteligentes.',
+    section: "tools",
+    description: "Alinhamentos, pautas e atas inteligentes.",
   },
   {
-    id: 'chat',
-    label: 'Chat',
-    path: '/chat',
+    id: "chat",
+    label: "Chat",
+    path: "/chat",
     icon: MessageSquare,
-    section: 'tools',
-    description: 'Comunicação interna em canais e squads.',
+    section: "tools",
+    description: "Comunicação interna em canais e squads.",
   },
   {
-    id: 'presentations',
-    label: 'Apresentações',
-    path: '/presentations',
+    id: "presentations",
+    label: "Apresentações",
+    path: "/presentations",
     icon: Presentation,
-    section: 'tools',
-    description: 'Decks de defesa criativa e pitchings.',
+    section: "tools",
+    description: "Decks de defesa criativa e pitchings.",
   },
 
   // SISTEMA
   {
-    id: 'settings',
-    label: 'Configurações',
-    path: '/settings',
+    id: "settings",
+    label: "Configurações",
+    path: "/settings",
     icon: Settings,
-    section: 'system',
-    description: 'Parâmetros de sistema e White Label da agência.',
+    section: "system",
+    description: "Parâmetros de sistema e White Label da agência.",
   },
-]
+];
