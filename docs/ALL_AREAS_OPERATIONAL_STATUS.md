@@ -23,7 +23,7 @@
 
 Não há ferramenta de controle do navegador autenticado ou conexão administrativa Supabase nesta sessão. Não utilizar chave anon para operações administrativas. OpenAPI com chave pública retornou 401 e não permitiu inventário completo. Nove migrations locais não provam schema remoto: policies da migration 08 referenciam profiles.agency_id ausente no contrato inicial; aprovação/Storage/RPCs precisam ser revisados antes de migrations.
 
-Consulta somente de metadados preparada em /private/tmp/doiszero-admin/diagnostico-schema-operacional.sql. Deve ser executada por administrador no SQL Editor e ter seu resultado compartilhado para reconciliar colunas, constraints, funções/EXECUTE e policies (sem registros de clientes/usuários). A escolha de staging ou preparação manual do SQL no projeto atual foi solicitada ao usuário; não aplicar alterações automaticamente no banco existente.
+Consulta somente de metadados preparada em supabase/diagnostics/schema_operacional.sql. Deve ser executada por administrador no SQL Editor e ter seu resultado compartilhado para reconciliar colunas, constraints, funções/EXECUTE e policies (sem registros de clientes/usuários). A escolha de staging ou preparação manual do SQL no projeto atual foi solicitada ao usuário; não aplicar alterações automaticamente no banco existente.
 
 ## Primeiras correções
 
