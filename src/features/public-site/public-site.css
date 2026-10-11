@@ -605,7 +605,7 @@
   margin-top: 55px;
   border-top: 1px solid #ffffff20;
 }
-.dz-service-list > a {
+.dz-service-list > details > summary {
   display: grid;
   grid-template-columns: 45px 1.15fr 1fr 30px;
   gap: 22px;
@@ -614,10 +614,10 @@
   border-bottom: 1px solid #ffffff20;
   transition: color 0.2s;
 }
-.dz-service-list > a:hover {
+.dz-service-list > details > summary:hover {
   color: var(--dz-lime);
 }
-.dz-service-list > a > span {
+.dz-service-list > details > summary > span {
   font-size: 11px;
   color: #94949e;
 }
@@ -1349,18 +1349,18 @@
   .dz-service-list {
     margin-top: 35px;
   }
-  .dz-service-list > a {
+  .dz-service-list > details > summary {
     grid-template-columns: 24px 1fr 25px;
     gap: 10px;
     padding: 24px 0;
   }
-  .dz-service-list > a > p {
+  .dz-service-list > details > summary > p {
     grid-column: 2;
     grid-row: 2;
     max-width: 100%;
     font-size: 11px;
   }
-  .dz-service-list > a > svg {
+  .dz-service-list > details > summary > svg {
     grid-column: 3;
     grid-row: 1;
   }
@@ -1505,3 +1505,15 @@
 .dz-team-heading h2 { font-size: clamp(32px, 4vw, 56px); }
 .dz-team-placeholder { flex-direction: column; gap: 18px; background: radial-gradient(ellipse at top, #353042, #1c1b22); border: 1px solid #ffffff12; }
 .dz-team-placeholder span { font-size: 12px; letter-spacing: .08em; color: #aaa8b3; }
+
+.dz-service { border-bottom: 1px solid #ffffff20; }
+.dz-service-list > details > summary { cursor: pointer; list-style: none; border-bottom: 0; }
+.dz-service summary::-webkit-details-marker { display: none; }
+.dz-service[open] summary { color: var(--dz-lime); }
+.dz-service-toggle { font-size: 28px !important; justify-self: end; }
+.dz-service[open] .dz-service-toggle { transform: rotate(45deg); }
+.dz-service-description { padding: 0 45px 35px 67px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.dz-service-description h4 { margin: 0 0 10px; font-size: 15px; color: var(--dz-lime); }
+.dz-service-description p { max-width: none; font-size: 14px; }
+.dz-service-scope, .dz-service-description > a { grid-column: 1 / -1; }
+@media(max-width:767px) { .dz-service-description { padding: 0 0 28px 34px; grid-template-columns: 1fr; gap: 20px; } .dz-service-toggle { grid-column: 3; grid-row: 1; } }

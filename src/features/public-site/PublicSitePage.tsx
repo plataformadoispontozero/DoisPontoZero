@@ -308,15 +308,22 @@ export function PublicSitePage() {
           </div>
           <div className="dz-service-list">
             {siteServices.map((s) => (
-              <Link
-                key={s.number}
-                to={`/brief?service=${encodeURIComponent(s.name)}`}
-              >
-                <span>{s.number}</span>
-                <h3>{s.name}</h3>
-                <p>{s.detail}</p>
-                <ArrowUpRight size={27} />
-              </Link>
+              <details key={s.number} className="dz-service">
+                <summary>
+                  <span>{s.number}</span>
+                  <h3>{s.name}</h3>
+                  <p>{s.detail}</p>
+                  <span className="dz-service-toggle" aria-hidden="true">+</span>
+                </summary>
+                <div className="dz-service-description">
+                  <div><h4>O que fazemos</h4><p>{s.explanation}</p></div>
+                  <div><h4>O que pode ser entregue</h4><p>{s.delivery}</p></div>
+                  <p className="dz-service-scope">As entregas são definidas na proposta, conforme o seu objetivo e o escopo contratado.</p>
+                  <Link className="dz-text-link" to={`/brief?service=${encodeURIComponent(s.name)}`}>
+                    Solicitar briefing de {s.name} <ArrowUpRight size={18} />
+                  </Link>
+                </div>
+              </details>
             ))}
           </div>
         </section>

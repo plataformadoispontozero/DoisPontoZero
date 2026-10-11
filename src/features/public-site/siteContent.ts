@@ -166,26 +166,36 @@ export const siteServices = [
     name: "Branding & identidade",
     detail: "Uma marca com direção, personalidade e consistência.",
     number: "01",
+    explanation: "Definimos como sua marca se posiciona, se apresenta e é reconhecida.",
+    delivery: "Diagnóstico e posicionamento; identidade visual e logotipo; paleta, tipografia e guia de aplicação.",
   },
   {
     name: "Social media & conteúdo",
     detail: "Planejamento e criação para conversas que fazem sentido.",
     number: "02",
+    explanation: "Planejamos e produzimos conteúdo para comunicar sua marca nas redes sociais.",
+    delivery: "Calendário editorial; textos e peças para posts; roteiros para vídeos; acompanhamento de conteúdo.",
   },
   {
     name: "Tráfego pago",
     detail: "Campanhas orientadas ao seu público e ao seu objetivo.",
     number: "03",
+    explanation: "Planejamos anúncios para alcançar o público adequado e acompanhar oportunidades de negócio.",
+    delivery: "Planejamento de campanhas; configuração de anúncios; acompanhamento de indicadores; relatórios e ajustes.",
   },
   {
     name: "Websites & experiências",
     detail: "Seu negócio no digital, do primeiro olhar ao próximo clique.",
     number: "04",
+    explanation: "Criamos páginas que apresentam sua empresa e facilitam o contato em computadores e celulares.",
+    delivery: "Site institucional ou landing page; layout responsivo; formulários e integrações definidos no projeto; publicação.",
   },
   {
     name: "Assessoria de marketing",
     detail: "Estratégia para conectar sua comunicação e seu negócio.",
     number: "05",
+    explanation: "Organizamos as ações de marketing para conectar objetivos, comunicação e execução.",
+    delivery: "Diagnóstico; plano de ação; orientação de campanhas e canais; reuniões de acompanhamento e indicadores.",
   },
 ];
 export function safeMediaUrl(value: string) {

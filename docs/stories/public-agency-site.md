@@ -44,3 +44,7 @@ Hotfix validado com 18/18 E2E públicos, build de produção e `git diff --check
 Adicionado título Nossa equipe e quatro espaços claramente reservados para fotos: Designer, Social Media, Tráfego Pago e Videomaker. Quando o OWNER cadastra pessoas em Configurações > Site público > Equipe, os cartões reais substituem automaticamente os espaços reservados. Não foram inventados nomes nem fotos de pessoas.
 
 Seção de equipe validada com build de produção, 18/18 E2E públicos e `git diff --check`.
+
+Serviços agora expandem com explicação, exemplos de entregas e CTA para briefing com serviço selecionado. Escopo comercial é definido na proposta.
+
+Serviços validados com build de produção, 18/18 E2E públicos e conferência manual em 1440/390 px: acordeão abre e CTA seleciona o serviço correto.
