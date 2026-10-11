@@ -366,5 +366,13 @@
     "permission_studio_status": "READ_IMPLEMENTED_SAVE_BLOCKED",
     "remote_schema_status": "BLOCKED",
     "report": "docs/RECOVERY_02_REPORT.md"
+  },
+  "frontend_publication": {
+    "status": "DEPLOYED_SMOKE_PASS",
+    "branch": "codex/master-audit-15-1",
+    "source_commit": "c121ee03af270d8583ac4b038b936a9b4497d5f9",
+    "cloudflare_version": "80701662-0a98-40a6-810f-e1030803029a",
+    "url": "https://doispontozero.marketingrenatodesigner.workers.dev",
+    "backend_verified": false
   }
 }
