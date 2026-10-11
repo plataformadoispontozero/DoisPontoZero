@@ -1,3 +1,4 @@
+import { memberRoleOptions } from '@/features/team/memberRoleOptions'
 import React, { useState } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -11,16 +12,17 @@ import { useAgencyTeam } from './hooks/useAgencySettings'
 import { Users, UserPlus, Mail, Shield, Trash2, Clock, CheckCircle, ShieldAlert } from 'lucide-react'
 
 export const TeamManagementPage: React.FC = () => {
-  const { roles, members, invitations, inviteMember, revokeInvitation, updateMemberRole } = useAgencyTeam()
+  const { roles, members, invitations, inviteMember, revokeInvitation, updateMemberRole, canInvite, canUpdateRole, isError, rolesLoading, rolesError } = useAgencyTeam()
 
+  const roleOptions = memberRoleOptions(roles)
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
-  const [inviteRoleId, setInviteRoleId] = useState('role-member')
+  const [inviteRoleId, setInviteRoleId] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSendInvite = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!inviteEmail || !inviteEmail.includes('@')) {
+    if (!inviteEmail || !inviteEmail.includes('@') || !roles.some(r => r.id === inviteRoleId)) {
       toast.error('Informe um endereço de e-mail válido.')
       return
     }
@@ -63,6 +65,13 @@ export const TeamManagementPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
+      {isError && <p role="alert">Não foi possível carregar os dados da equipe. Nenhum registro de demonstração substitui esta falha.</p>}
+      {!canInvite && <p>Envio de convites e alteração de papéis aguardam homologação do serviço seguro no servidor.</p>}
+      <section className="space-y-2 rounded-xl border border-[#30303B] p-4" aria-label="Papéis disponíveis">
+        <h2 className="font-semibold">Papéis de acesso disponíveis</h2>
+        {rolesLoading ? <p role="status">Carregando papéis…</p> : rolesError ? <p role="alert">Não foi possível carregar os papéis da agência.</p> : roleOptions.length === 0 ? <p>Nenhum papel disponível para atribuição.</p> : <ul className="space-y-1 text-sm">{roleOptions.map(role => <li key={role.value}>{role.label}</li>)}</ul>}
+        <p className="text-xs text-[#A1A1B0]">Especialidades profissionais não concedem permissões. OWNER é reservado ao proprietário.</p>
+      </section>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -76,7 +85,7 @@ export const TeamManagementPage: React.FC = () => {
         </div>
 
         {/* Botão de Convite */}
-        <Button variant="accent" size="sm" onClick={() => setIsInviteOpen(true)}>
+        <Button variant="accent" size="sm" disabled={!canInvite} onClick={() => setIsInviteOpen(true)}>
           <UserPlus className="w-4 h-4" />
           <span>Convidar Membro</span>
         </Button>
@@ -110,18 +119,16 @@ export const TeamManagementPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
-                  Cargo / Papel Atribuído
+                <label htmlFor="invite-role" className="text-xs font-semibold text-[#A1A1B0] block mb-1.5">
+                  Papel de acesso atribuído
                 </label>
                 <Select
                   value={inviteRoleId}
                   onChange={(e) => setInviteRoleId(e.target.value)}
-                  options={roles
-                    .filter((r) => r.name !== 'OWNER') // Não permite convidar como OWNER
-                    .map((r) => ({
-                      value: r.id,
-                      label: `${r.name} - ${r.description}`,
-                    }))}
+                  id="invite-role"
+                  required
+                  disabled={rolesLoading || rolesError || roleOptions.length === 0}
+                  options={[{value: '', label: rolesLoading ? 'Carregando papéis…' : rolesError ? 'Falha ao carregar papéis' : roleOptions.length ? 'Selecione um papel de acesso' : 'Nenhum papel disponível'}, ...roleOptions]}
                 />
               </div>
 
@@ -139,7 +146,7 @@ export const TeamManagementPage: React.FC = () => {
                 <Button type="button" variant="ghost" size="sm" onClick={() => setIsInviteOpen(false)}>
                   Cancelar
                 </Button>
-                <Button type="submit" variant="accent" size="sm" loading={isSubmitting}>
+                <Button type="submit" variant="accent" size="sm" loading={isSubmitting} disabled={!canInvite || !roleOptions.some(r => r.value === inviteRoleId)}>
                   Enviar Convite
                 </Button>
               </div>
@@ -183,7 +190,7 @@ export const TeamManagementPage: React.FC = () => {
                   {/* Seletor de Cargo */}
                   <div className="w-36">
                     <Select
-                      disabled={member.role_name === 'OWNER'}
+                      disabled={!canUpdateRole || member.role_name === 'OWNER'}
                       value={member.role_id}
                       onChange={(e) => handleRoleChange(member.id, member.role_name, e.target.value)}
                       options={roles.map((r) => ({

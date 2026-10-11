@@ -26,6 +26,7 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
+  { id: 'team', label: 'Equipe & Profissionais', path: '/team', icon: Users, section: 'main', description: 'Profissionais vinculados à agência; especialidades são distintas de permissões.' },
   // MENU PRINCIPAL
   {
     id: 'dashboard',

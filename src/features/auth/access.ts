@@ -17,6 +17,10 @@ export function safeReturnPath(value: unknown) {
 export function routePermission(path: string): string | null {
   const segments = path.split('/').filter(Boolean)
   const module = segments[0]
+  if (module === 'team') return segments[1] === 'new' ? 'members.invite' : 'members.view'
+  if (module === 'production') return 'tasks.view'
+  if (module === 'traffic') return 'traffic.view'
+  if (module === 'settings' && segments[1] === 'integrations' && segments[2] === 'meta') return 'meta.connections.view'
   if (module === 'chat') return 'chat.access'
   if (module === 'calendar' || module === 'agenda') return 'meetings.view'
   if (module === 'notifications') return null

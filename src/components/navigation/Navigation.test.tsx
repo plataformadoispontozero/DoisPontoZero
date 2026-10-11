@@ -36,8 +36,8 @@ describe('Navigation Components - Phase 01', () => {
     expect(screen.getByText('Configurações')).toBeInTheDocument()
   })
 
-  it('contains exactly 13 distinct navigation links in navItems', () => {
-    expect(navItems).toHaveLength(13)
+  it('contains exactly 14 distinct navigation links in navItems', () => {
+    expect(navItems).toHaveLength(14)
   })
 
   it('renders mobile navigation structure and touch controls', () => {

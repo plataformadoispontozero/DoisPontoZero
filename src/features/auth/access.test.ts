@@ -19,3 +19,16 @@ describe('agency access boundaries', () => {
     expect(routePermission('/chat')).toBe('chat.access')
   })
 })
+
+describe('Prompt 17 route boundaries', () => {
+  it('separates team reading and invitations from specialties', () => {
+    expect(routePermission('/team')).toBe('members.view')
+    expect(routePermission('/team/member-id')).toBe('members.view')
+    expect(routePermission('/team/new')).toBe('members.invite')
+  })
+  it('reserves explicit capabilities for future Meta and traffic modules', () => {
+    expect(routePermission('/settings/integrations/meta')).toBe('meta.connections.view')
+    expect(routePermission('/traffic')).toBe('traffic.view')
+    expect(routePermission('/production/design')).toBe('tasks.view')
+  })
+})

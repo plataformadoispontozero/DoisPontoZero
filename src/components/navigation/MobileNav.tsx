@@ -1,3 +1,4 @@
+import { routePermission } from '@/features/auth/access'
 import { useAuth } from '@/features/auth/AuthProvider'
 import React, { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -23,6 +24,7 @@ import { cn } from '@/lib/utils'
 
 export const MobileNav: React.FC = () => {
   const auth = useAuth()
+  const canOpen = (path: string) => { const permission = routePermission(path); return auth.isDemo || auth.activeAgency?.roleName === 'OWNER' || !permission || auth.permissions.has(permission) }
   const logout = () => void auth.signOut().catch(() => toast.error('Não foi possível encerrar a sessão. Tente novamente.'))
 
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -78,7 +80,7 @@ export const MobileNav: React.FC = () => {
               Menu da Agência
             </span>
             <div className="grid grid-cols-1 gap-1">
-              {navItems.map((item) => (
+              {navItems.filter(item => { const permission = routePermission(item.path); return auth.isDemo || auth.activeAgency?.roleName === 'OWNER' || !permission || auth.permissions.has(permission) }).map((item) => (
                 <NavLink
                   key={item.id}
                   to={item.path}
@@ -124,7 +126,7 @@ export const MobileNav: React.FC = () => {
         className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#1C1C24]/95 backdrop-blur-md border-t border-[#30303B] h-16 px-2 flex items-center justify-around"
         aria-label="Navegação rápida mobile"
       >
-        <NavLink
+        {canOpen('/dashboard') && <NavLink
           to="/dashboard"
           className={({ isActive }) =>
             cn(
@@ -135,9 +137,9 @@ export const MobileNav: React.FC = () => {
         >
           <LayoutDashboard className="w-5 h-5" />
           <span>Início</span>
-        </NavLink>
+        </NavLink>}
 
-        <NavLink
+        {canOpen('/tasks') && <NavLink
           to="/tasks"
           className={({ isActive }) =>
             cn(
@@ -148,9 +150,9 @@ export const MobileNav: React.FC = () => {
         >
           <CheckSquare className="w-5 h-5" />
           <span>Tarefas</span>
-        </NavLink>
+        </NavLink>}
 
-        <NavLink
+        {canOpen('/projects') && <NavLink
           to="/projects"
           className={({ isActive }) =>
             cn(
@@ -161,9 +163,9 @@ export const MobileNav: React.FC = () => {
         >
           <FolderKanban className="w-5 h-5" />
           <span>Projetos</span>
-        </NavLink>
+        </NavLink>}
 
-        <NavLink
+        {canOpen('/squads') && <NavLink
           to="/squads"
           className={({ isActive }) =>
             cn(
@@ -174,7 +176,7 @@ export const MobileNav: React.FC = () => {
         >
           <Users2 className="w-5 h-5" />
           <span>Squads</span>
-        </NavLink>
+        </NavLink>}
 
         <button
           onClick={() => setDrawerOpen(true)}

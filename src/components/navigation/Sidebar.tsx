@@ -1,3 +1,4 @@
+import { routePermission } from '@/features/auth/access'
 import { useAuth } from '@/features/auth/AuthProvider'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
@@ -30,9 +31,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const { branding } = useBranding()
 
-  const mainItems = navItems.filter((i) => i.section === 'main')
-  const toolItems = navItems.filter((i) => i.section === 'tools')
-  const systemItems = navItems.filter((i) => i.section === 'system')
+  const visibleItems = navItems.filter(item => { const permission = routePermission(item.path); return auth.isDemo || auth.activeAgency?.roleName === 'OWNER' || !permission || auth.permissions.has(permission) })
+  const mainItems = visibleItems.filter((i) => i.section === 'main')
+  const toolItems = visibleItems.filter((i) => i.section === 'tools')
+  const systemItems = visibleItems.filter((i) => i.section === 'system')
 
   return (
     <aside

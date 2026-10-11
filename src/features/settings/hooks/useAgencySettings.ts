@@ -496,7 +496,8 @@ export function useAgencyTeam(agencyId?: string) {
       if (error) throw error
       return (data ?? []) as RoleDefinition[]
     },
-    initialData: isSupabaseConfigured ? [] : initialRoles,
+    enabled: !!agencyId,
+    initialData: isSupabaseConfigured ? undefined : initialRoles,
   })
   const membersQuery = useQuery({
     queryKey: ['agencyMembers', agencyId],
@@ -562,7 +563,7 @@ export function useAgencyTeam(agencyId?: string) {
   const inviteMemberMutation = useMutation({
     mutationFn: async ({ email, roleId }: { email: string; roleId: string }) => {
       if (isSupabaseConfigured) throw new Error('Convites dependem do fluxo seguro de envio e aceite no backend. Integração pendente; nenhum convite foi enviado.')
-      const roleName = rolesQuery.data.find((r) => r.id === roleId)?.name || 'MEMBER'
+      const roleName = (rolesQuery.data ?? []).find((r) => r.id === roleId)?.name || 'MEMBER'
       const newInv: AgencyInvitation = {
         id: `inv-${Date.now()}`,
         agency_id: agencyId,
@@ -599,10 +600,13 @@ export function useAgencyTeam(agencyId?: string) {
   const revokeInvitationMutation = useMutation({
     mutationFn: async (invitationId: string) => {
       if (isSupabaseConfigured && supabase) {
-        await supabase
+        const { data, error } = await supabase
           .from('agency_invitations')
           .update({ revoked_at: new Date().toISOString() })
           .eq('id', invitationId).eq('agency_id', agencyId)
+          .select('id').single()
+        if (error) throw error
+        if (!data) throw new Error('Convite não encontrado ou alteração não permitida.')
       }
       return invitationId
     },
@@ -615,12 +619,13 @@ export function useAgencyTeam(agencyId?: string) {
 
   const updateMemberRoleMutation = useMutation({
     mutationFn: async ({ memberId, newRoleId }: { memberId: string; newRoleId: string }) => {
+      if (isSupabaseConfigured) throw new Error('Alteração de papel bloqueada até homologar a operação administrativa segura no backend.')
       const member = (membersQuery.data ?? []).find((m) => m.id === memberId)
       if (member?.role_name === 'OWNER') {
         throw new Error('O privilégio de OWNER é exclusivo e não pode ser alterado diretamente.')
       }
 
-      const roleName = rolesQuery.data.find((r) => r.id === newRoleId)?.name || 'MEMBER'
+      const roleName = (rolesQuery.data ?? []).find((r) => r.id === newRoleId)?.name || 'MEMBER'
 
       if (isSupabaseConfigured && supabase) {
         await supabase.from('agency_members').update({ role_id: newRoleId }).eq('id', memberId).eq('agency_id', agencyId)
@@ -636,10 +641,15 @@ export function useAgencyTeam(agencyId?: string) {
   })
 
   return {
-    roles: rolesQuery.data,
+    roles: rolesQuery.data ?? [],
+    rolesLoading: rolesQuery.isLoading,
+    rolesError: rolesQuery.isError,
     members: membersQuery.data ?? [],
     invitations: invitationsQuery.data ?? [],
     isLoading: membersQuery.isLoading || invitationsQuery.isLoading,
+    isError: membersQuery.isError || rolesQuery.isError || invitationsQuery.isError,
+    canInvite: !isSupabaseConfigured,
+    canUpdateRole: !isSupabaseConfigured,
     inviteMember: inviteMemberMutation.mutateAsync,
     revokeInvitation: revokeInvitationMutation.mutateAsync,
     updateMemberRole: updateMemberRoleMutation.mutateAsync,

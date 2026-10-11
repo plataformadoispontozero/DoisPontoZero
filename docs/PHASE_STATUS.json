@@ -374,5 +374,33 @@
     "cloudflare_version": "80701662-0a98-40a6-810f-e1030803029a",
     "url": "https://doispontozero.marketingrenatodesigner.workers.dev",
     "backend_verified": false
+  },
+  "prompt_17": {
+    "started_at": "2026-10-11T06:08:08.221058+00:00",
+    "scope": "LOCAL_ONLY_NO_PUSH_NO_DEPLOY_NO_REMOTE_SQL",
+    "status": "PARTIAL",
+    "staging": "PREPARATION_SAVED_NOT_PROVISIONED",
+    "meta_app": "USER_CONFIRMED_NOT_CREATED",
+    "phase_A": "PARTIAL_REMOTE_METADATA_RLS_HISTORY_BLOCKED",
+    "phase_B": "PARTIAL_DIRECTORY_AND_FAIL_CLOSED_MUTATIONS",
+    "phase_C": "BLOCKED_SECURITY",
+    "phase_D": "BLOCKED_EXTERNAL",
+    "phase_E": "BLOCKED_EXTERNAL",
+    "phase_F": "BLOCKED_EXTERNAL",
+    "phase_G": "BLOCKED_SCHEMA",
+    "phase_H": "LOCAL_PASS_REAL_BACKEND_NOT_RUN",
+    "migration_draft": "supabase/pending/prompt17_member_role.sql NOT_RUN",
+    "inventory": "docs/PROMPT_17_INVENTORY.json",
+    "release_gate": "NO_GO",
+    "tests": {
+      "unit": "92/92",
+      "auth_controlled_e2e": "45/45",
+      "local_demo_regression_e2e": "84/84",
+      "typecheck": "PASS",
+      "build": "PASS",
+      "lint": "PASS_WITH_WARNINGS",
+      "remote_rls": "NOT_RUN",
+      "meta_integration": "NOT_RUN"
+    }
   }
 }

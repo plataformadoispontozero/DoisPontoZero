@@ -48,6 +48,9 @@ export const router = createBrowserRouter([
       { path: 'clients/new', lazy: async () => ({ Component: (await import('@/features/clients/ClientsPage')).ClientsPage }) },
       { path: 'clients/:clientId', lazy: async () => ({ Component: (await import('@/features/clients/ClientsPage')).ClientsPage }) },
       { path: 'clients/:clientId/edit', lazy: async () => ({ Component: (await import('@/features/clients/ClientsPage')).ClientsPage }) },
+      { path: 'team', lazy: async () => ({ Component: (await import('@/features/team/TeamDirectoryPage')).TeamDirectoryPage }) },
+      { path: 'team/new', lazy: async () => ({ Component: (await import('@/features/team/TeamDirectoryPage')).TeamDirectoryPage }) },
+      { path: 'team/:memberId', lazy: async () => ({ Component: (await import('@/features/team/TeamDirectoryPage')).TeamDirectoryPage }) },
       {
         path: 'projects',
         lazy: async () => ({ Component: (await import('@/features/projects/ProjectsPage')).ProjectsPage }),

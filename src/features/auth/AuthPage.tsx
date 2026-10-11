@@ -1,3 +1,4 @@
+import { startGoogleOAuth } from './googleOAuth'
 import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
@@ -14,10 +15,18 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState('')
+  const params = new URLSearchParams(location.search)
+  const returnPath = safeReturnPath(location.state?.from ?? params.get('next'))
+  const [error, setError] = useState(() => params.has('error') || new URLSearchParams(location.hash.slice(1)).has('error') ? 'O acesso com Google foi cancelado ou não pôde ser concluído. Tente novamente.' : '')
   const [message, setMessage] = useState('')
-  if (mode === 'login' && (auth.user || auth.isDemo)) return <Navigate to={safeReturnPath(location.state?.from)} replace />
+  if (mode === 'login' && (auth.user || auth.isDemo)) return <Navigate to={returnPath} replace />
   const title = mode === 'forgot' ? 'Recuperar senha' : mode === 'reset' ? 'Definir nova senha' : 'Entrar na sua agência'
+  async function signInGoogle() {
+    if (busy) return
+    setBusy(true); setError(''); setMessage('')
+    try { await startGoogleOAuth(window.location.origin, returnPath) }
+    catch (cause) { setError(cause instanceof Error ? cause.message : 'Não foi possível entrar com Google.'); setBusy(false) }
+  }
   async function submit(event: React.FormEvent) {
     event.preventDefault(); setError(''); setMessage('')
     if (!supabase) { setError('Configure o Supabase para acessar o modo agência.'); return }
@@ -27,7 +36,7 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
       if (mode === 'login') {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
         if (error) throw error
-        navigate(safeReturnPath(location.state?.from), { replace: true })
+        navigate(returnPath, { replace: true })
       } else if (mode === 'forgot') {
         const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/reset-password` })
         if (error) throw error
@@ -41,5 +50,5 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
     } catch { setError(mode === 'login' ? 'Não foi possível entrar. Confira e-mail e senha ou tente novamente.' : 'Não foi possível concluir. Confira o link de recuperação e tente novamente.') }
     finally { setBusy(false) }
   }
-  return <main className="min-h-screen bg-[#101014] text-[#F8F9FC] flex items-center justify-center p-4"><section className="w-full max-w-md rounded-xl border border-[#30303B] bg-[#1C1C24] p-6 space-y-5"><Link to="/" className="font-bold">Dois.Zero</Link><h1 className="text-2xl font-semibold">{title}</h1>{!isSupabaseConfigured && <p role="alert">Supabase não configurado. O acesso administrativo permanece protegido.</p>}<form onSubmit={submit} className="space-y-4">{mode !== 'reset' && <div><label htmlFor="auth-email">E-mail</label><Input id="auth-email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} /></div>}{mode !== 'forgot' && <div><label htmlFor="auth-password">Senha</label><Input id="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required minLength={mode === 'reset' ? 8 : undefined} value={password} onChange={e => setPassword(e.target.value)} /></div>}{mode === 'reset' && <div><label htmlFor="auth-confirm">Confirmar senha</label><Input id="auth-confirm" type="password" autoComplete="new-password" required value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>}{error && <p role="alert" className="text-[#FB7185]">{error}</p>}{message && <p role="status">{message}</p>}<Button type="submit" variant="primary" loading={busy} disabled={!supabase || (mode === 'reset' && !auth.session)}>{mode === 'login' ? 'Entrar' : mode === 'forgot' ? 'Enviar instruções' : 'Atualizar senha'}</Button></form>{mode === 'login' ? <Link to="/forgot-password" className="block text-[#B8FF65]">Esqueci minha senha</Link> : <Link to="/login" className="block text-[#B8FF65]">Voltar ao login</Link>}</section></main>
+  return <main className="min-h-screen bg-[#101014] text-[#F8F9FC] flex items-center justify-center p-4"><section className="w-full max-w-md rounded-xl border border-[#30303B] bg-[#1C1C24] p-6 space-y-5"><Link to="/" className="font-bold">Dois.Zero</Link><h1 className="text-2xl font-semibold">{title}</h1>{!isSupabaseConfigured && <p role="alert">Supabase não configurado. O acesso administrativo permanece protegido.</p>}<form onSubmit={submit} className="space-y-4">{mode !== 'reset' && <div><label htmlFor="auth-email">E-mail</label><Input id="auth-email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} /></div>}{mode !== 'forgot' && <div><label htmlFor="auth-password">Senha</label><Input id="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required minLength={mode === 'reset' ? 8 : undefined} value={password} onChange={e => setPassword(e.target.value)} /></div>}{mode === 'reset' && <div><label htmlFor="auth-confirm">Confirmar senha</label><Input id="auth-confirm" type="password" autoComplete="new-password" required value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>}{error && <p role="alert" className="text-[#FB7185]">{error}</p>}{message && <p role="status">{message}</p>}<Button type="submit" variant="primary" loading={busy} disabled={busy || !supabase || (mode === 'reset' && !auth.session)}>{mode === 'login' ? 'Entrar' : mode === 'forgot' ? 'Enviar instruções' : 'Atualizar senha'}</Button></form>{mode === 'login' && <div className="space-y-3 border-t border-[#30303B] pt-4"><Button type="button" size="lg" className="w-full" disabled={busy || !supabase} onClick={() => void signInGoogle()}>Continuar com Google</Button><p className="text-xs text-[#A1A1B0]">Entre ou crie sua conta com Google. O acesso à agência depende de um convite ou vínculo ativo.</p></div>}{mode === 'login' ? <Link to="/forgot-password" className="block text-[#B8FF65]">Esqueci minha senha</Link> : <Link to="/login" className="block text-[#B8FF65]">Voltar ao login</Link>}</section></main>
 }

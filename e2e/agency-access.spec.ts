@@ -164,3 +164,37 @@ test('personal agenda lists real API meetings and deadlines and links to creatio
   await page.getByRole('button',{name:'Novo Compromisso',exact:true}).click()
   await expect(page).toHaveURL(/\/meetings\/new$/)
 })
+
+test('team routes require permissions and cannot bypass access through a direct URL', async ({page}) => {
+  await api(page,{owner:false})
+  await login(page)
+  await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
+  for (const path of ['/team','/team/new','/team/not-in-this-agency']) {
+    await page.goto(path)
+    await expect(page.getByRole('heading',{name:'Acesso negado'})).toBeVisible()
+  }
+})
+
+test('team invitation route explains the server blocker without inventing an auth user',async ({page})=>{
+  await api(page)
+  await login(page)
+  await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
+  await page.goto('/team/new')
+  await expect(page.getByRole('heading',{name:'Convidar profissional'})).toBeVisible()
+  await expect(page.getByText(/Nenhum usuário será criado automaticamente/)).toBeVisible()
+  await page.reload()
+  await expect(page.getByRole('heading',{name:'Convidar profissional'})).toBeVisible()
+  await page.goto('/team/unknown-member')
+  await expect(page.getByRole('alert').filter({hasText:'Profissional não encontrado nesta agência.'})).toBeVisible()
+})
+
+test('Google login reports a disabled provider without creating a session or bypassing agency access', async ({page}) => {
+  await api(page)
+  await page.route('**/auth/v1/settings', route => route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({external:{google:false}})}))
+  await page.goto('/login')
+  await page.getByRole('button',{name:'Continuar com Google'}).click()
+  await expect(page.getByRole('alert')).toContainText('ainda não foi ativado')
+  await expect(page.getByRole('button',{name:'Continuar com Google'})).toBeEnabled()
+  await page.goto('/dashboard')
+  await expect(page).toHaveURL(/\/login$/)
+})
