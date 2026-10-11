@@ -1518,7 +1518,28 @@
 .dz-service-scope, .dz-service-description > a { grid-column: 1 / -1; }
 @media(max-width:767px) { .dz-service-description { padding: 0 0 28px 34px; grid-template-columns: 1fr; gap: 20px; } .dz-service-toggle { grid-column: 3; grid-row: 1; } }
 
-/* Original black-and-orange artwork stays intact on a white backing. */
-.dz-wordmark img { display: block; width: 150px; height: auto; padding: 9px 12px; background: #fff; border-radius: 4px; box-sizing: content-box; }
-.dz-hero-logo { width: 230px; height: auto; padding: 15px 22px; background: #fff; border-radius: 5px; box-sizing: content-box; }
-@media(max-width:767px) { .dz-wordmark img { width: 120px; } .dz-hero-logo { width: 190px; } }
+
+
+/* White wordmark with the original orange symbol, without a backing. */
+.dz-brand-logo { display: inline-block; position: relative; width: 175px; line-height: 0; }
+.dz-brand-logo img { display: block; width: 100%; height: auto; padding: 0; background: transparent; border-radius: 0; margin: 0; }
+.dz-brand-official > img:first-child { filter: brightness(0) invert(1); }
+.dz-brand-logo .dz-brand-symbol { position: absolute; inset: 0; clip-path: inset(0 88% 0 0); filter: none; }
+.dz-brand-hero { width: 270px; margin: 0 auto 33px; }
+.dz-team img, .dz-team-initial { border-radius: 22px; }
+.dz-team h3 { color: #fff; }
+.dz-site { --dz-muted: #b8b8bd; }
+.dz-site .dz-button { transition: transform .25s ease, box-shadow .25s ease, background .25s ease; box-shadow: 0 5px 24px #ff5a1f26; }
+.dz-site .dz-button:hover { transform: translateY(-3px); box-shadow: 0 12px 32px #ff5a1f44; }
+.dz-site .dz-button:active { transform: translateY(0); }
+.dz-site a svg, .dz-site button svg { transition: transform .25s ease; }
+.dz-site a:hover svg, .dz-site button:hover svg { transform: translate(3px,-3px); }
+.dz-contact { background: radial-gradient(ellipse at 85% 10%,#71301a 0,transparent 55%),#171719; color: #fff; border-top: 1px solid #ff5a1f66; }
+.dz-contact .dz-eyebrow { color: #ff8759; }
+.dz-contact h2 > span { opacity: 1; color: #ff8759; }
+.dz-contact-bottom { border-color: #ffffff40; }
+.dz-contact-bottom > p { color: #e6e6e8; }
+.dz-contact .dz-button { background: #ff5a1f; color: #101013; font-weight: 700; border: 1px solid #ff8c60; }
+.dz-contact .dz-button:hover { background: #ff824f; }
+@media(max-width:767px) { .dz-brand-logo { width: 140px; } .dz-brand-hero { width: 230px; } .dz-brand-logo .dz-hero-logo { display:block; } }
+@media(prefers-reduced-motion:reduce) { .dz-site .dz-button, .dz-site a svg, .dz-site button svg { transition:none; } .dz-site .dz-button:hover, .dz-site a:hover svg, .dz-site button:hover svg { transform:none; } }

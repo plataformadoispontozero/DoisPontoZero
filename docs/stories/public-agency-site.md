@@ -54,3 +54,9 @@ Serviços validados com build de produção, 18/18 E2E públicos e conferência 
 Logo enviada pelo usuário aplicada sem alterações em hero e navegação, com suporte branco para legibilidade do desenho preto no site escuro. Paleta pública ajustada para laranja, preto e branco.
 
 Identidade validada com build de produção, 18/18 E2E públicos e `git diff --check`. Laranja de interface `#ff5a1f` é uma aproximação visual; não foi fornecida uma especificação cromática exata.
+
+
+## Refinamento visual — 2026-10-11
+Logo com letras brancas e símbolo original laranja, sem suporte branco; maior contraste no CTA final e nomes da equipe; retratos com cantos arredondados. Câmera CSS 3D combina percurso vertical, profundidade e rotações. Botões e ícones respondem ao hover, respeitando movimento reduzido.
+
+Refinamento validado com build de produção, 18/18 E2E públicos, revisão visual em desktop/mobile sem overflow e `git diff --check`.

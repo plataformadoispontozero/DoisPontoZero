@@ -23,7 +23,7 @@ export function useSceneMotion(enabled: boolean, panelCount: number) {
       const panels = node.querySelectorAll<HTMLElement>("[data-scene-panel]");
       panels.forEach((panel, i) => {
         const distance = i - progress * (panels.length - 1);
-        panel.style.transform = `translate3d(${distance * 115}%, ${Math.abs(distance) * 5}%, ${-Math.abs(distance) * 180}px) rotateY(${distance * -18}deg)`;
+        panel.style.transform = `translate3d(${distance * 76}%, ${Math.sin(distance * 1.2) * 18}%, ${-Math.abs(distance) * 520}px) rotateY(${distance * -32}deg) rotateZ(${distance * -5}deg)`;
         panel.style.opacity = String(
           Math.max(0.12, 1 - Math.abs(distance) * 0.58),
         );
