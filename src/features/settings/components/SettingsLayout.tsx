@@ -2,7 +2,6 @@ import React from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import {
   Building2,
-  Palette,
   SunMoon,
   Users,
   ShieldCheck,
@@ -16,7 +15,6 @@ import {
   LayoutGrid,
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
-import { Badge } from '@/components/ui/Badge'
 import { cn } from '@/lib/utils'
 
 export interface SettingsTabItem {
@@ -31,7 +29,6 @@ export const settingsTabs: SettingsTabItem[] = [
   { id: 'overview', label: 'Visão Geral', path: '/settings', icon: LayoutGrid },
   { id: 'public-site', label: 'Site público da agência', path: '/settings/public-site', icon: Globe2 },
   { id: 'agency', label: 'Dados da Agência', path: '/settings/agency', icon: Building2 },
-  { id: 'branding', label: 'White Label Studio', path: '/settings/branding', icon: Palette, badge: 'Pro' },
   { id: 'appearance', label: 'Aparência & Tema', path: '/settings/appearance', icon: SunMoon },
   { id: 'team', label: 'Gestão de Equipe', path: '/settings/team', icon: Users },
   { id: 'permissions', label: 'Permission Studio', path: '/settings/permissions', icon: ShieldCheck },
@@ -51,16 +48,12 @@ export const SettingsLayout: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <PageHeader
         title="Central de Configurações do Workspace"
-        subtitle="Administração da agência, personalização de marca White Label, equipe e controle de segurança."
+        subtitle="Administração da agência, equipe, site público e controle de acesso."
         breadcrumbs={[
           { label: 'Visão Geral', href: '/dashboard' },
           { label: 'Configurações' },
         ]}
-        badge={
-          <Badge variant="accent" className="text-xs py-1">
-            White Label OS v0.2.0
-          </Badge>
-        }
+
       />
 
       {/* Navegação Secundária Adaptativa */}

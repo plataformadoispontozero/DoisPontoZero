@@ -1,49 +1,71 @@
-import * as React from 'react'
-import { cn } from '@/lib/utils'
-
-interface TooltipProps {
-  content: string
-  children: React.ReactNode
-  position?: 'top' | 'bottom' | 'left' | 'right'
-  className?: string
-}
-
-export const Tooltip: React.FC<TooltipProps> = ({
-  content,
-  children,
-  position = 'top',
-  className,
-}) => {
-  const [visible, setVisible] = React.useState(false)
-
-  const positionClasses = {
-    top: '-top-8 left-1/2 -translate-x-1/2',
-    bottom: '-bottom-8 left-1/2 -translate-x-1/2',
-    left: 'top-1/2 -left-2 -translate-x-full -translate-y-1/2',
-    right: 'top-1/2 -right-2 translate-x-full -translate-y-1/2',
-  }
-
+import * as React from "react";
+import { createPortal } from "react-dom";
+import { cn } from "@/lib/utils";
+export const Tooltip: React.FC<{
+  content: string;
+  children: React.ReactNode;
+  position?: "top" | "bottom" | "left" | "right";
+  className?: string;
+}> = ({ content, children, position = "top", className }) => {
+  const [rect, setRect] = React.useState<DOMRect | null>(null),
+    ref = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (!rect) return;
+    const hide = () => setRect(null);
+    window.addEventListener("scroll", hide, true);
+    window.addEventListener("resize", hide);
+    return () => {
+      window.removeEventListener("scroll", hide, true);
+      window.removeEventListener("resize", hide);
+    };
+  }, [rect]);
+  const show = () => setRect(ref.current?.getBoundingClientRect() || null);
+  const styles: React.CSSProperties = rect
+    ? position === "right"
+      ? {
+          left: rect.right + 8,
+          top: rect.top + rect.height / 2,
+          transform: "translateY(-50%)",
+        }
+      : position === "left"
+        ? {
+            left: rect.left - 8,
+            top: rect.top + rect.height / 2,
+            transform: "translate(-100%,-50%)",
+          }
+        : position === "bottom"
+          ? {
+              left: rect.left + rect.width / 2,
+              top: rect.bottom + 8,
+              transform: "translateX(-50%)",
+            }
+          : {
+              left: rect.left + rect.width / 2,
+              top: rect.top - 8,
+              transform: "translate(-50%,-100%)",
+            }
+    : {};
   return (
     <div
-      className="relative inline-flex items-center"
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-      onFocus={() => setVisible(true)}
-      onBlur={() => setVisible(false)}
+      ref={ref}
+      className={cn("relative inline-flex items-center", className)}
+      onMouseEnter={show}
+      onMouseLeave={() => setRect(null)}
+      onFocus={show}
+      onBlur={() => setRect(null)}
     >
       {children}
-      {visible && (
-        <div
-          role="tooltip"
-          className={cn(
-            'absolute z-50 whitespace-nowrap rounded-md bg-[#252530] border border-[#30303B] px-2 py-1 text-[11px] font-medium text-[#F8F9FC] shadow-lg pointer-events-none animate-in fade-in zoom-in-95 duration-100',
-            positionClasses[position],
-            className
-          )}
-        >
-          {content}
-        </div>
-      )}
+      {rect &&
+        createPortal(
+          <div
+            role="tooltip"
+            style={styles}
+            className="fixed z-[70] whitespace-nowrap rounded-md bg-[var(--color-surface-elevated)] border border-[var(--color-border)] px-2 py-1 text-[11px] text-[var(--color-text-primary)] shadow-lg pointer-events-none"
+          >
+            {content}
+          </div>,
+          document.body,
+        )}
     </div>
-  )
-}
+  );
+};

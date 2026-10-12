@@ -1,4 +1,4 @@
-import { useAgencyId, useAuth } from '@/features/auth/AuthProvider'
+import { useAgencyId, useAuth, usePermission } from '@/features/auth/AuthProvider'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { isSupabaseConfigured, supabase } from '@/lib/supabase/client'
 import { defaultBranding } from '@/config/branding'
@@ -484,6 +484,8 @@ export function useAgencyPortalSettings(agencyId?: string) {
 
 export function useAgencyTeam(agencyId?: string) {
   const auth = useAuth()
+  const canInvite = usePermission('members.invite')
+  const canUpdateRole = usePermission('members.edit')
   const currentAgencyId = useAgencyId()
   agencyId = currentAgencyId || agencyId || ''
   const queryClient = useQueryClient()
@@ -562,49 +564,23 @@ export function useAgencyTeam(agencyId?: string) {
 
   const inviteMemberMutation = useMutation({
     mutationFn: async ({ email, roleId }: { email: string; roleId: string }) => {
-      if (isSupabaseConfigured) throw new Error('Convites dependem do fluxo seguro de envio e aceite no backend. Integração pendente; nenhum convite foi enviado.')
-      const roleName = (rolesQuery.data ?? []).find((r) => r.id === roleId)?.name || 'MEMBER'
-      const newInv: AgencyInvitation = {
-        id: `inv-${Date.now()}`,
-        agency_id: agencyId,
-        email,
-        role_id: roleId,
-        role_name: roleName,
-        invited_by: auth.user?.id || '',
-        invited_by_name: 'Lucas Silveira',
-        expires_at: new Date(Date.now() + 86400000 * 7).toISOString(),
-        created_at: new Date().toISOString(),
+      if (!supabase || !isSupabaseConfigured) throw new Error('Convites exigem conexão com o servidor.')
+      const { data, error } = await supabase.functions.invoke('team-invite', { body: { email, roleId, agencyId } })
+      if (error) {
+        const response = (error as {context?: Response}).context
+        const body = response ? await response.json().catch(() => null) : null
+        throw new Error(body?.error || 'Não foi possível preparar o convite. Tente novamente.')
       }
-
-      if (isSupabaseConfigured && supabase) {
-        const { data, error } = await supabase.from('agency_invitations').insert({
-          agency_id: agencyId,
-          email,
-          role_id: roleId,
-          invited_by: auth.user?.id || '',
-          token_hash: `token_${Math.random().toString(36).slice(2)}`,
-          expires_at: newInv.expires_at,
-        }).select().single()
-
-        if (error) throw error
-        return { ...newInv, id: data.id }
-      }
-
-      return newInv
+      if (!data?.inviteUrl || !data?.invitationId) throw new Error('O servidor não confirmou o convite.')
+      return data as {inviteUrl: string; invitationId: string; existingAccount: boolean}
     },
-    onSuccess: (newInv) => {
-      queryClient.setQueryData<AgencyInvitation[]>(['agencyInvitations', agencyId], (old = []) => [newInv, ...old])
-    },
+    onSuccess: () => { void queryClient.invalidateQueries({queryKey:['agencyInvitations',agencyId]}) },
   })
 
   const revokeInvitationMutation = useMutation({
     mutationFn: async (invitationId: string) => {
       if (isSupabaseConfigured && supabase) {
-        const { data, error } = await supabase
-          .from('agency_invitations')
-          .update({ revoked_at: new Date().toISOString() })
-          .eq('id', invitationId).eq('agency_id', agencyId)
-          .select('id').single()
+        const { data, error } = await supabase.rpc('revoke_team_invitation', {p_id: invitationId, p_agency: agencyId})
         if (error) throw error
         if (!data) throw new Error('Convite não encontrado ou alteração não permitida.')
       }
@@ -619,25 +595,12 @@ export function useAgencyTeam(agencyId?: string) {
 
   const updateMemberRoleMutation = useMutation({
     mutationFn: async ({ memberId, newRoleId }: { memberId: string; newRoleId: string }) => {
-      if (isSupabaseConfigured) throw new Error('Alteração de papel bloqueada até homologar a operação administrativa segura no backend.')
-      const member = (membersQuery.data ?? []).find((m) => m.id === memberId)
-      if (member?.role_name === 'OWNER') {
-        throw new Error('O privilégio de OWNER é exclusivo e não pode ser alterado diretamente.')
-      }
-
-      const roleName = (rolesQuery.data ?? []).find((r) => r.id === newRoleId)?.name || 'MEMBER'
-
-      if (isSupabaseConfigured && supabase) {
-        await supabase.from('agency_members').update({ role_id: newRoleId }).eq('id', memberId).eq('agency_id', agencyId)
-      }
-
-      return { memberId, newRoleId, roleName }
+      if (!supabase || !isSupabaseConfigured) throw new Error('Alteração de papel exige conexão com o servidor.')
+      const {data,error}=await supabase.rpc('update_team_member_role',{p_id:memberId,p_agency:agencyId,p_role:newRoleId})
+      if(error) throw error
+      if(data!==true) throw new Error('O servidor não confirmou a alteração.')
     },
-    onSuccess: ({ memberId, newRoleId, roleName }) => {
-      queryClient.setQueryData<AgencyMemberUser[]>(['agencyMembers', agencyId], (old = []) =>
-        old.map((m) => (m.id === memberId ? { ...m, role_id: newRoleId, role_name: roleName } : m))
-      )
-    },
+    onSuccess:()=>{void queryClient.invalidateQueries({queryKey:['agencyMembers',agencyId]})},
   })
 
   return {
@@ -648,8 +611,8 @@ export function useAgencyTeam(agencyId?: string) {
     invitations: invitationsQuery.data ?? [],
     isLoading: membersQuery.isLoading || invitationsQuery.isLoading,
     isError: membersQuery.isError || rolesQuery.isError || invitationsQuery.isError,
-    canInvite: !isSupabaseConfigured,
-    canUpdateRole: !isSupabaseConfigured,
+    canInvite,
+    canUpdateRole,
     inviteMember: inviteMemberMutation.mutateAsync,
     revokeInvitation: revokeInvitationMutation.mutateAsync,
     updateMemberRole: updateMemberRoleMutation.mutateAsync,

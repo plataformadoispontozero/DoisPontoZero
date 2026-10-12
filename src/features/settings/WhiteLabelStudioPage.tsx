@@ -45,9 +45,9 @@ export const WhiteLabelStudioPage: React.FC = () => {
     setIsSaving(true)
     try {
       await updateBranding(draft)
-      toast.success('Identidade de marca e temas White Label salvos com sucesso!')
+      toast.success('Identidade de marca e temas da agência salvos com sucesso!')
     } catch {
-      toast.error('Erro ao salvar as configurações White Label.')
+      toast.error('Erro ao salvar as configurações da agência.')
     } finally {
       setIsSaving(false)
     }
@@ -94,12 +94,12 @@ export const WhiteLabelStudioPage: React.FC = () => {
 
   return (
     <form onSubmit={handleSave} className="space-y-6 animate-in fade-in duration-200">
-      {/* Header do White Label Studio */}
+      {/* Header do Identidade da Agência */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
             <Palette className="w-5 h-5 text-[#C74410]" />
-            White Label Studio
+            Identidade da Agência
           </h3>
           <p className="text-xs text-[#B8B8C0]">
             Personalize a identidade da sua agência em toda a plataforma, documentos e portais.

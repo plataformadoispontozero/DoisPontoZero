@@ -9,7 +9,7 @@ import { Dialog, DialogBody, DialogHeader, DialogTitle } from '@/components/ui/D
 import { Avatar } from '@/components/ui/Avatar'
 import { toast } from '@/components/ui/Toast'
 import { useAgencyTeam } from './hooks/useAgencySettings'
-import { Users, UserPlus, Mail, Shield, Trash2, Clock, CheckCircle, ShieldAlert } from 'lucide-react'
+import { Users, UserPlus, Mail, Shield, Trash2, Clock } from 'lucide-react'
 
 export const TeamManagementPage: React.FC = () => {
   const { roles, members, invitations, inviteMember, revokeInvitation, updateMemberRole, canInvite, canUpdateRole, isError, rolesLoading, rolesError } = useAgencyTeam()
@@ -19,6 +19,7 @@ export const TeamManagementPage: React.FC = () => {
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteRoleId, setInviteRoleId] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [inviteLink, setInviteLink] = useState('')
 
   const handleSendInvite = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,12 +30,13 @@ export const TeamManagementPage: React.FC = () => {
 
     setIsSubmitting(true)
     try {
-      await inviteMember({ email: inviteEmail, roleId: inviteRoleId })
-      toast.success(`Convite seguro enviado com sucesso para ${inviteEmail}!`)
+      const result = await inviteMember({ email: inviteEmail, roleId: inviteRoleId })
+      setInviteLink(result.inviteUrl)
+      toast.success('Convite criado. Copie o link e envie ao profissional.')
       setInviteEmail('')
       setIsInviteOpen(false)
-    } catch {
-      toast.error('Erro ao enviar convite.')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Erro ao preparar convite.')
     } finally {
       setIsSubmitting(false)
     }
@@ -66,7 +68,14 @@ export const TeamManagementPage: React.FC = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       {isError && <p role="alert">Não foi possível carregar os dados da equipe. Nenhum registro de demonstração substitui esta falha.</p>}
-      {!canInvite && <p>Envio de convites e alteração de papéis aguardam homologação do serviço seguro no servidor.</p>}
+      {!canInvite && <p>Você não tem permissão para convidar membros desta agência.</p>}
+      {inviteLink && <section className="space-y-3 rounded-xl border border-orange-400/40 p-4" aria-label="Convite criado">
+        <h2 className="font-semibold">Convite pronto para compartilhar</h2>
+        <p className="text-sm text-[#B8B8C0]">Copie e envie diretamente ao convidado. Válido por até 1 hora. Nenhum e-mail foi enviado automaticamente; para substituir um link vencido, gere um novo convite.</p>
+        <Input aria-label="Link do convite" readOnly value={inviteLink} />
+        <Button onClick={async()=>{try{await navigator.clipboard.writeText(inviteLink);toast.success('Link copiado.')}catch{toast.error('Selecione o link e copie manualmente.')}}}>Copiar link do convite</Button>
+        <Button variant="ghost" onClick={()=>setInviteLink('')}>Ocultar link</Button>
+      </section>}
       <section className="space-y-2 rounded-xl border border-[#30303B] p-4" aria-label="Papéis disponíveis">
         <h2 className="font-semibold">Papéis de acesso disponíveis</h2>
         {rolesLoading ? <p role="status">Carregando papéis…</p> : rolesError ? <p role="alert">Não foi possível carregar os papéis da agência.</p> : roleOptions.length === 0 ? <p>Nenhum papel disponível para atribuição.</p> : <ul className="space-y-1 text-sm">{roleOptions.map(role => <li key={role.value}>{role.label}</li>)}</ul>}
@@ -109,6 +118,7 @@ export const TeamManagementPage: React.FC = () => {
                   <Mail className="w-4 h-4 text-[#98989F] absolute left-3 top-2.5" />
                   <Input
                     type="email"
+                    aria-label="E-mail do convidado"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="colaborador@agencia.com.br"
@@ -135,10 +145,10 @@ export const TeamManagementPage: React.FC = () => {
               <div className="p-3 rounded-xl bg-[#101014] border border-[#30303B] text-[11px] text-[#B8B8C0] space-y-1">
                 <span className="font-semibold text-[#F8F9FC] block flex items-center gap-1">
                   <Shield className="w-3.5 h-3.5 text-[#C74410]" />
-                  Convite com Hash Seguro de 7 Dias
+                  Convite seguro com validade de 1 hora
                 </span>
                 <p>
-                  O colaborador receberá um link único com expiração automática. Nenhuma senha ou token em texto puro é armazenado.
+                  Você receberá um link para enviar ao colaborador. Ele define a própria senha; contas existentes usam seu login habitual.
                 </p>
               </div>
 
@@ -147,7 +157,7 @@ export const TeamManagementPage: React.FC = () => {
                   Cancelar
                 </Button>
                 <Button type="submit" variant="accent" size="sm" loading={isSubmitting} disabled={!canInvite || !roleOptions.some(r => r.value === inviteRoleId)}>
-                  Enviar Convite
+                  Gerar Convite
                 </Button>
               </div>
             </form>

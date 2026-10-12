@@ -1,3 +1,5 @@
+import { NavigationGroups } from './NavigationGroups'
+import { WorkspaceSelector } from './WorkspaceSelector'
 import { routePermission } from '@/features/auth/access'
 import { useAuth } from '@/features/auth/AuthProvider'
 import React, { useState, useEffect } from 'react'
@@ -9,16 +11,13 @@ import {
   CheckSquare,
   Users2,
   MoreHorizontal,
-  Building2,
   LogOut,
-  X,
 } from 'lucide-react'
 import { BrandLogo } from '@/components/shared/BrandLogo'
-import { navItems } from '@/components/navigation/NavLinks'
 import { useBranding } from '@/hooks/useBranding'
 import { IconButton } from '@/components/ui/IconButton'
 import { Avatar } from '@/components/ui/Avatar'
-import { Sheet, SheetHeader, SheetTitle, SheetContent } from '@/components/ui/Sheet'
+import { Sheet, SheetHeader, SheetContent } from '@/components/ui/Sheet'
 import { toast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 
@@ -69,37 +68,9 @@ export const MobileNav: React.FC = () => {
           </div>
         </SheetHeader>
 
-        <div className="px-5 py-2.5 bg-[#101014]/60 border-b border-[#30303B] flex items-center gap-2 text-xs text-[#B8B8C0]">
-          <Building2 className="w-4 h-4 text-[#C74410]" />
-          <span>{auth.activeAgency?.agencyName || branding.company.workspaceName}</span>
-        </div>
-
-        <SheetContent className="space-y-4 py-4 px-3">
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#98989F] px-3 block mb-2">
-              Menu da Agência
-            </span>
-            <div className="grid grid-cols-1 gap-1">
-              {navItems.filter(item => { const permission = routePermission(item.path); return auth.isDemo || auth.activeAgency?.roleName === 'OWNER' || !permission || auth.permissions.has(permission) }).map((item) => (
-                <NavLink
-                  key={item.id}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    cn(
-                      'flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium transition-colors min-h-[44px]',
-                      isActive
-                        ? 'bg-[#C74410] text-[#F8F9FC] font-semibold'
-                        : 'text-[#B8B8C0] hover:bg-[#252530] hover:text-[#F8F9FC]'
-                    )
-                  }
-                >
-                  <item.icon className="w-4 h-4 shrink-0" />
-                  <span>{item.label}</span>
-                </NavLink>
-              ))}
-            </div>
-          </div>
-        </SheetContent>
+        <div className="shrink-0 px-4 border-b border-[var(--color-border)]"><WorkspaceSelector mobile /></div>
+        <SheetContent className="min-h-0 space-y-4 py-4 px-3"><NavigationGroups scope="mobile" /></SheetContent>
+        <div className="shrink-0 px-3 py-2 border-t border-[var(--color-border)]"><NavigationGroups footer scope="mobile-footer" /></div>
 
         <div className="p-4 border-t border-[#30303B] flex items-center justify-between bg-[#1C1C24]">
           <div className="flex items-center gap-2.5">

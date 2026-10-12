@@ -1,3 +1,4 @@
+import { NotificationSoundController } from '@/features/notifications/NotificationSoundController'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSyncExternalStore } from 'react'
 import { useAuth } from '@/features/auth/AuthProvider'
@@ -39,6 +40,7 @@ export const AppLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#101014] text-[#F8F9FC] flex flex-col md:flex-row antialiased overflow-x-hidden">
+      <NotificationSoundController />
       {/* Sidebar Desktop Fixa */}
       <Sidebar collapsed={collapsed} onToggleCollapse={toggleCollapse} />
 
@@ -50,7 +52,6 @@ export const AppLayout: React.FC = () => {
         <TopBar />
         {failedAreas && <div role="alert" className="px-4 py-3 text-xs text-[#FB7185] border-b border-[#30303B]">Não foi possível carregar: {failedAreas}. Verifique a conexão e as permissões. Nenhum dado de demonstração substitui essa falha. <button type="button" className="underline ml-2" onClick={()=>void queryClient.invalidateQueries({predicate:query=>query.state.status==='error',refetchType:'active'})}>Tentar novamente</button></div>}
         {auth.isDemo && <div role="status" className="px-4 py-2 text-xs text-[#FBBF24] border-b border-[#30303B]">Demonstração local — dados não persistidos no Supabase.</div>}
-        {!auth.isDemo && auth.memberships.length > 1 && <div className="px-4 py-2 flex items-center gap-3"><label htmlFor="agency-switch">Agência</label><select id="agency-switch" value={auth.activeAgency?.agencyId ?? ''} onChange={e => auth.selectAgency(e.target.value)} className="bg-[#1C1C24] border border-[#30303B] rounded p-2">{auth.memberships.map(m => <option key={m.agencyId} value={m.agencyId}>{m.agencyName}</option>)}</select></div>}
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8 max-w-7xl w-full mx-auto pb-24 md:pb-12">
           <Outlet />
         </main>

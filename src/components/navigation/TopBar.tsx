@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { useBranding } from '@/hooks/useBranding'
 import { navItems } from '@/components/navigation/NavLinks'
+import { navigationContext } from './navigationConfig'
 import { Avatar } from '@/components/ui/Avatar'
 import { IconButton } from '@/components/ui/IconButton'
 import { Button } from '@/components/ui/Button'
@@ -64,10 +65,7 @@ export const TopBar: React.FC = () => {
   const [tasksSheetOpen, setTasksSheetOpen] = useState(false)
 
   // Determina título contextual e breadcrumb
-  const currentNavItem = navItems.find((item) =>
-    location.pathname === item.path ||
-    (item.path !== '/dashboard' && location.pathname.startsWith(item.path))
-  )
+  const currentNavItem = navItems.find(item => item.id === navigationContext(location.pathname))
 
   const currentTitle = currentNavItem ? currentNavItem.label : 'Visão Geral'
 

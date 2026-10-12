@@ -14,26 +14,8 @@ export const BrandSymbol: React.FC<{ size?: number; className?: string }> = ({
   size = 32,
   className,
 }) => {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 36 36"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn('shrink-0', className)}
-      aria-hidden="true"
-    >
-      <rect width="36" height="36" rx="9" fill="#1C1C24" />
-      <rect x="0.5" y="0.5" width="35" height="35" rx="8.5" stroke="#282834" />
-      {/* Círculo 1 com gradiente Primary */}
-      <circle cx="13" cy="18" r="6" stroke="#C74410" strokeWidth="2.5" />
-      {/* Círculo 2 com Accent */}
-      <circle cx="23" cy="18" r="6" stroke="#FF8759" strokeWidth="2.5" />
-      {/* Ponto de convergência central */}
-      <circle cx="18" cy="18" r="2" fill="#F8F9FC" />
-    </svg>
-  )
+  return <span className={cn('inline-block shrink-0 overflow-hidden',className)} style={{width:size,height:size}} aria-hidden="true"><img src="/agency/official-logo.webp" alt="" style={{height:size,width:size*275/39,maxWidth:'none'}} /></span>
+
 }
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({

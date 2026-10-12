@@ -39,7 +39,7 @@ export const navItems: NavItem[] = [
   },
   {
     id: "videomaker",
-    label: "Videomaker",
+    label: "Vídeo & Motion",
     path: "/production/video",
     icon: Video,
     section: "tools",

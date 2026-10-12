@@ -79,7 +79,11 @@ test('login preserves deep link and tenant switch clears client cache', async ({
   await page.getByRole('button', {name:'Entrar',exact:true}).click()
   await expect(page).toHaveURL(/\/clients$/)
   await expect(page.getByText('Cliente da agência A', {exact:true})).toBeVisible()
-  await page.getByLabel('Agência', {exact:true}).selectOption(agencyB)
+  if ((page.viewportSize()?.width||1440)<768) {
+    await page.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click()
+    await page.getByLabel('Agência no menu móvel',{exact:true}).selectOption(agencyB)
+    const close=page.getByRole('button',{name:'Fechar painel',exact:true}); if(await close.isVisible()) await close.click()
+  } else await page.getByLabel('Agência', {exact:true}).selectOption(agencyB)
   await expect(page.getByText('Cliente da agência B', {exact:true})).toBeVisible()
   await expect(page.getByText('Cliente da agência A', {exact:true})).toHaveCount(0)
   expect(reads).toContain(`notification:eq.${userId}`)
@@ -175,15 +179,21 @@ test('team routes require permissions and cannot bypass access through a direct 
   }
 })
 
-test('team invitation route explains the server blocker without inventing an auth user',async ({page})=>{
+test('team invitation creates a manual link with the selected role and no false email confirmation',async ({page})=>{
   await api(page)
+  await page.route('**/rest/v1/roles?**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify([{id:roleId,name:'MANAGER',agency_id:agencyA}])}))
+  let body:any
+  await page.route('**/functions/v1/team-invite',route=>{body=route.request().postDataJSON();return route.fulfill({contentType:'application/json',body:JSON.stringify({invitationId:'test-id',inviteUrl:'https://site.invalid/accept-invitation#id=test-id',existingAccount:true})})})
   await login(page)
   await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
   await page.goto('/team/new')
-  await expect(page.getByRole('heading',{name:'Convidar profissional'})).toBeVisible()
-  await expect(page.getByText(/Nenhum usuário será criado automaticamente/)).toBeVisible()
-  await page.reload()
-  await expect(page.getByRole('heading',{name:'Convidar profissional'})).toBeVisible()
+  await page.getByRole('button',{name:'Convidar Membro'}).click()
+  await page.getByLabel('E-mail do convidado').fill('gestor@example.invalid')
+  await page.getByLabel('Papel de acesso atribuído').selectOption(roleId)
+  await page.getByRole('button',{name:'Gerar Convite',exact:true}).click()
+  await expect(page.getByLabel('Link do convite')).toHaveValue('https://site.invalid/accept-invitation#id=test-id')
+  expect(body).toEqual({email:'gestor@example.invalid',roleId,agencyId:agencyA})
+  await expect(page.getByText(/Nenhum e-mail foi enviado automaticamente/)).toBeVisible()
   await page.goto('/team/unknown-member')
   await expect(page.getByRole('alert').filter({hasText:'Profissional não encontrado nesta agência.'})).toBeVisible()
 })
@@ -240,4 +250,91 @@ test('public editorial review accepts copy suggestions and closes after approval
   await expect(page.getByText('Revisão concluída. Este calendário já foi aprovado.')).toBeVisible()
   await expect(page.getByLabel('Sugestão de copy')).toHaveCount(0)
   expect(submissions[1].p_decision).toBe('approve')
+})
+
+
+test('grouped navigation preserves active section, settings footer and compact icon alignment',async ({page})=>{
+ await api(page);await login(page)
+ await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
+ const mobile=(page.viewportSize()?.width||1440)<768
+ if(mobile)await page.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click()
+ const nav=mobile?page.getByRole('dialog'):page.getByRole('complementary',{name:'Navegação Principal'})
+ await expect(nav.getByRole('button',{name:'CLIENTES & COMERCIAL',exact:true})).toBeVisible()
+ await nav.getByRole('button',{name:'CLIENTES & COMERCIAL',exact:true}).click()
+ await expect(nav.getByRole('link',{name:'Clientes',exact:true})).toBeHidden()
+ if(mobile)await page.getByRole('button',{name:'Fechar painel',exact:true}).click()
+ await page.goto('/clients')
+ if(mobile)await page.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click()
+ await expect(nav.getByRole('button',{name:'CLIENTES & COMERCIAL',exact:true})).toHaveAttribute('aria-expanded','true')
+ await expect(nav.getByRole('link',{name:'Clientes',exact:true})).toHaveAttribute('aria-current','page')
+ await expect(nav.getByRole('link',{name:'Configurações',exact:true})).toHaveCount(1)
+ if(!mobile){
+  await page.getByRole('button',{name:'Recolher barra lateral'}).click()
+  await expect(page.getByRole('complementary',{name:'Navegação Principal'})).toHaveCSS('width','72px')
+  const sidebar=page.getByRole('complementary',{name:'Navegação Principal'}),box=await sidebar.boundingBox()
+  const icon=await sidebar.getByRole('link',{name:'Clientes',exact:true}).locator('svg').boundingBox()
+  expect(Math.abs((icon!.x+icon!.width/2)-(box!.x+box!.width/2))).toBeLessThan(2)
+  await expect(sidebar.getByRole('link',{name:'Dois.Zero',exact:true}).locator('img')).toBeVisible()
+  await page.screenshot({path:`test-results/navigation-compact-${page.viewportSize()!.width}.png`,fullPage:false})
+  await page.reload();await expect(sidebar).toHaveAttribute('data-collapsed','true')
+  await page.getByRole('link',{name:'Clientes',exact:true}).first().focus()
+  await expect(page.getByRole('tooltip').filter({hasText:'Clientes'})).toBeVisible()
+  await page.getByRole('button',{name:'Expandir barra lateral'}).click()
+  await expect(sidebar).toHaveCSS('width','248px')
+ }else{
+  await nav.getByRole('link',{name:'Configurações',exact:true}).click()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(page.getByRole('heading',{name:'Central de Configurações do Workspace'})).toBeVisible()
+ }
+ await page.screenshot({path:`test-results/navigation-${page.viewportSize()!.width}.png`,fullPage:false})
+})
+
+test('invite acceptance verifies token and sets the invited professional password',async ({page})=>{
+ await api(page)
+ const id='99999999-9999-4999-8999-999999999999'
+ let verified=false,accepted=false
+ await page.route('**/auth/v1/verify',route=>{verified=route.request().postDataJSON().token_hash==='controlled-invite-token';return route.fulfill({contentType:'application/json',body:JSON.stringify({access_token:token,refresh_token:'test-refresh',expires_in:3600,token_type:'bearer',user})})})
+ await page.route('**/rest/v1/rpc/accept_team_invitation',route=>{accepted=route.request().postDataJSON().p_id===id;return route.fulfill({contentType:'application/json',body:JSON.stringify(agencyA)})})
+ await page.goto('/accept-invitation#id='+id+'&token_hash=controlled-invite-token')
+ await page.getByLabel('Seu nome').fill('Gestor convidado')
+ await page.getByLabel('Criar senha').fill('StrongTest1!')
+ await page.getByLabel('Confirmar senha').fill('StrongTest1!')
+ await page.getByRole('button',{name:'Aceitar convite e entrar'}).click()
+ await expect(page).toHaveURL(/\/dashboard$/)
+ expect(verified).toBe(true);expect(accepted).toBe(true)
+})
+
+test('five notification sounds can be previewed and muted',async ({page})=>{
+ await api(page);await login(page)
+ await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
+ await page.goto('/notifications')
+ await expect(page.getByRole('button',{name:/^Testar:/})).toHaveCount(5)
+ await page.getByRole('button',{name:'Ativar sons de notificação',exact:true}).click()
+ await expect(page.getByRole('button',{name:'Silenciar notificações',exact:true})).toBeVisible()
+ await page.getByRole('button',{name:'Testar: Cliente aprovou',exact:true}).click()
+ await page.getByRole('button',{name:'Silenciar notificações',exact:true}).click()
+ await expect(page.getByRole('button',{name:'Ativar sons de notificação',exact:true})).toBeVisible()
+})
+
+
+test('new operational events play approval, production and client motifs without replaying history',async({page})=>{
+ await api(page)
+ await page.addInitScript(()=>{
+  const original=window.AudioContext
+  ;(window as any).__played=[]
+  window.AudioContext=new Proxy(original,{construct(target,args){const context=Reflect.construct(target,args) as AudioContext;const create=context.createOscillator.bind(context);context.createOscillator=()=>{const oscillator=create(),start=oscillator.start.bind(oscillator);oscillator.start=(...args:Parameters<typeof start>)=>{(window as any).__played.push(oscillator.frequency.value);return start(...args)};return oscillator};return context}})
+ })
+ let phase=0
+ await page.route('**/rest/v1/monthly_editorial_campaigns?**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify([{id:'sound-test',status:phase===0?'pending':phase===1?'approved':'production'}])}))
+ await page.route('**/rest/v1/clients?**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify(phase<3?[]:[{id:'new-client-sound',name:'Cliente do teste de áudio'}])}))
+ await login(page);await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible();await page.goto('/notifications')
+ const baseline=page.waitForResponse(r=>r.url().includes('/rest/v1/monthly_editorial_campaigns'))
+ await page.getByRole('button',{name:'Ativar sons de notificação',exact:true}).click();await baseline
+ await page.evaluate(()=>{(window as any).__played=[]})
+ phase=1
+ await expect.poll(()=>page.evaluate(()=>(window as any).__played),{timeout:20000}).toEqual([523,659,784])
+ await page.evaluate(()=>{(window as any).__played=[]});phase=2
+ await expect.poll(()=>page.evaluate(()=>(window as any).__played),{timeout:20000}).toEqual([220,330])
+ await page.evaluate(()=>{(window as any).__played=[]});phase=3
+ await expect.poll(()=>page.evaluate(()=>(window as any).__played),{timeout:20000}).toEqual([392,494,587,784])
 })

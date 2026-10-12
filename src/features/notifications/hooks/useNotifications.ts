@@ -54,7 +54,9 @@ export function useNotifications() {
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   return useQuery({
-    queryKey: ['notifications'],
+    queryKey: ['notifications',agencyId,auth.user?.id],
+    enabled: !isSupabaseConfigured || (!!agencyId && !!auth.user),
+    refetchInterval: 15000,
     initialData: isSupabaseConfigured ? undefined : demoNotificationsStore,
     queryFn: async (): Promise<AppNotification[]> => {
       if (isSupabaseConfigured && supabase) {

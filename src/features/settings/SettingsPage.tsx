@@ -19,7 +19,7 @@ export const SettingsPage: React.FC = () => {
     <div className="space-y-8 animate-in fade-in duration-200">
       <PageHeader
         title="Configurações do Sistema"
-        subtitle="Parâmetros do Creative Agency OS, identidade White Label e infraestrutura local."
+        subtitle="Parâmetros do Creative Agency OS, identidade da agência e infraestrutura local."
         breadcrumbs={[
           { label: 'Visão Geral', href: '/dashboard' },
           { label: 'Configurações' },
@@ -33,12 +33,12 @@ export const SettingsPage: React.FC = () => {
 
       {/* Grid de Configurações */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Painel White Label Ativo */}
+        {/* Painel da agência Ativo */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Palette className="w-5 h-5 text-[#C74410]" />
-              <CardTitle>Configuração White Label Centralizada</CardTitle>
+              <CardTitle>Configuração da agência Centralizada</CardTitle>
             </div>
             <CardDescription>
               Valores definidos em <code className="text-[#FF8759]">src/config/branding.ts</code> consumidos por todos os componentes do sistema.

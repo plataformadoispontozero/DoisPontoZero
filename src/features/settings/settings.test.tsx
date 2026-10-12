@@ -42,8 +42,9 @@ describe('Fase 11 — White Label Studio & Advanced Settings Suite', () => {
   it('renders SettingsOverviewPage with 12 module cards', () => {
     renderWithProviders(<SettingsOverviewPage />)
 
-    expect(screen.getByText('White Label Studio & System Architecture')).toBeInTheDocument()
-    expect(screen.getAllByText('White Label Studio').length).toBeGreaterThan(0)
+    expect(screen.getByText('Configurações da Dois.Zero')).toBeInTheDocument()
+    expect(screen.queryByText('White Label Studio')).not.toBeInTheDocument()
+    expect(screen.getByText('Versão da plataforma: 0.2.0')).toBeInTheDocument()
     expect(screen.getByText('Permission Studio')).toBeInTheDocument()
   })
 

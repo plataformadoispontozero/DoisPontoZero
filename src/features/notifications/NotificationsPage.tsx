@@ -4,6 +4,7 @@
 // ============================================================
 
 import React from 'react'
+import { NotificationSoundControls } from './NotificationSoundControls'
 import { useNavigate } from 'react-router-dom'
 import { Bell, CheckCheck, Calendar, MessageSquare, CheckCircle, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -52,6 +53,8 @@ export const NotificationsPage: React.FC = () => {
           </Button>
         )}
       </div>
+
+      <NotificationSoundControls />
 
       {isLoading ? (
         <div className="p-12 text-center text-xs text-content-tertiary">

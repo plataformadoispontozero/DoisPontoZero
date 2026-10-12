@@ -15,25 +15,26 @@ export const SettingsOverviewPage: React.FC = () => {
         <div className="space-y-1 max-w-2xl">
           <div className="flex items-center gap-2 text-[#FF8759] text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-4 h-4" />
-            <span>White Label Studio & System Architecture</span>
+            <span>Configurações da Dois.Zero</span>
           </div>
           <h2 className="text-xl font-bold text-[#F8F9FC]">
             Painel Central de Administração da Agência
           </h2>
           <p className="text-xs text-[#B8B8C0] leading-relaxed">
-            Personalize toda a experiência da plataforma, defina as permissões de acesso da equipe, ajuste a identidade visual nos portais públicos e consulte a auditoria operacional do workspace.
+            Gerencie os acessos da equipe, atualize os dados da agência e configure o conteúdo do site público.
           </p>
         </div>
 
         <Link
-          to="/settings/branding"
+          to="/settings/team"
           className="px-4 py-2.5 rounded-xl bg-[#C74410] hover:bg-[#C74410]/90 text-white font-medium text-xs flex items-center justify-center gap-2 shadow-lg shadow-[#C74410]/25 shrink-0 transition-all"
         >
-          <span>Abrir White Label Studio</span>
+          <span>Gerenciar equipe</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 
+      <p className="text-xs text-[#98989F]">Versão da plataforma: 0.2.0</p>
       {/* Grid com os 12 Módulos de Configuração */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {tabs.map((tab) => {

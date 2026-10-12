@@ -136,7 +136,7 @@ export const ClientExperiencePage: React.FC = () => {
           <CardHeader>
             <CardTitle className="text-sm">Portais Públicos Ativos</CardTitle>
             <CardDescription className="text-xs">
-              Experiências que herdam esta configuração White Label.
+              Experiências que herdam esta configuração da agência.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -185,7 +185,7 @@ export const ClientExperiencePage: React.FC = () => {
             <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs text-[#B8B8C0] space-y-1">
               <span className="font-semibold text-[#F8F9FC] block flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-[#34D399]" />
-                Proteção de Marca White Label
+                Proteção de Marca da agência
               </span>
               <p className="text-[11px]">
                 Nenhum portal externo exibirá marcas obrigatórias do fornecedor. A agência tem total autonomia visual.

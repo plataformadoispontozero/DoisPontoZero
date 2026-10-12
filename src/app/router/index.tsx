@@ -27,6 +27,7 @@ export const router = createBrowserRouter([
   },
   { path: "/login", element: <AuthPage /> },
   { path: "/forgot-password", element: <AuthPage mode="forgot" /> },
+  {path: "/accept-invitation", lazy: async () => ({Component:(await import('@/features/team/AcceptInvitationPage')).AcceptInvitationPage})},
   { path: "/reset-password", element: <AuthPage mode="reset" /> },
   {
     path: "/approve-calendar/:token",
