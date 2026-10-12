@@ -5,9 +5,9 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { useSinglePresentation } from './hooks/usePresentations';
-import { generatePresentationPdf, generatePresentationPdfBlob } from './pdf/generatePresentationPdf';
 import { defaultBranding } from '../../config/branding';
 import { toast } from '../../components/ui/Toast';
+
 
 export const PresentationExportPage: React.FC = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
@@ -28,44 +28,48 @@ export const PresentationExportPage: React.FC = () => {
     );
   }
 
+  const buildPdfModel = async () => {
+    const { transformPresentationToPdfModel } = await import('./pdf/transformPresentationToPdfModel')
+    return transformPresentationToPdfModel(
+      { ...presentation, sections: sections ?? [], assets: assets ?? [] } as any,
+      defaultBranding as any
+    )
+  }
+
   const handleDownloadPdf = async () => {
-    setIsExporting(true);
-    setDownloadSuccess(false);
+    setIsExporting(true)
+    setDownloadSuccess(false)
     try {
-      await generatePresentationPdf({
-        presentation,
-        sections,
-        assets,
-        branding: defaultBranding
-      });
-      setDownloadSuccess(true);
-      toast.success('PDF da apresentação gerado com sucesso!');
+      const { downloadPresentationPdf } = await import('./pdf/generatePresentationPdf')
+      const model = await buildPdfModel()
+      await downloadPresentationPdf(model)
+      setDownloadSuccess(true)
+      toast.success('PDF da apresentação gerado com sucesso!')
     } catch (err) {
-      console.error('Erro ao exportar PDF:', err);
-      toast.error(`Erro ao gerar PDF: ${String(err)}`);
+      console.error('Erro ao exportar PDF:', err)
+      toast.error(`Erro ao gerar PDF: ${String(err)}`)
     } finally {
-      setIsExporting(false);
+      setIsExporting(false)
     }
-  };
+  }
 
   const handlePreview = async () => {
-    setIsPreviewing(true);
-    if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
+    setIsPreviewing(true)
+    if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl)
     try {
-      const { presentation: p, sections: s, assets: a } = { presentation, sections, assets };
-      const fullPresentation = { ...p, sections: s || [], assets: a || [] };
-      const { transformPresentationToPdfModel } = await import('./pdf/transformPresentationToPdfModel');
-      const model = transformPresentationToPdfModel(fullPresentation, defaultBranding as any);
-      const res = await generatePresentationPdfBlob(model);
-      setPreviewBlobUrl(res.blobUrl);
-      toast.success('Prévia da apresentação carregada!');
+      const { generatePresentationPdfBlob } = await import('./pdf/generatePresentationPdf')
+      const model = await buildPdfModel()
+      const res = await generatePresentationPdfBlob(model)
+      setPreviewBlobUrl(res.blobUrl)
+      toast.success('Prévia da apresentação carregada!')
     } catch (err) {
-      console.error('Erro ao gerar prévia:', err);
-      toast.error(`Erro ao renderizar prévia: ${String(err)}`);
+      console.error('Erro ao gerar prévia:', err)
+      toast.error(`Erro ao renderizar prévia: ${String(err)}`)
     } finally {
-      setIsPreviewing(false);
+      setIsPreviewing(false)
     }
-  };
+  }
+
 
   // Resolve a human-readable client identifier
   const clientDisplay = (presentation as any).client_name || (presentation as any).client?.name || presentation.client_id;

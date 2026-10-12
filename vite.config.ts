@@ -17,6 +17,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // Fix: @react-pdf/renderer v4 requires explicit optimizeDeps config in Vite
+  optimizeDeps: {
+    include: ['@react-pdf/renderer'],
+    exclude: [],
+  },
   server: {
     host: true, // Aceita conexões na rede local
     port: 5173,
@@ -38,6 +43,9 @@ export default defineConfig({
           }
           if (id.includes('lucide-react')) {
             return 'vendor-icons'
+          }
+          if (id.includes('@react-pdf/')) {
+            return 'vendor-pdf'
           }
         },
       },
