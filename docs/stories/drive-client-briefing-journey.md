@@ -135,3 +135,5 @@ Artefatos de seed locais: `/Users/designer/Documents/Codex/2026-10-12/modelos-br
 - Migrações aplicadas: `20261012142837_client_drive_document_reviews.sql` e `20261012142843_briefing_template_atomic_save.sql`; Google Workspace v8 ACTIVE.
 - Seis modelos publicados e 59 perguntas confirmados em produção; índice com RLS e RPCs sem execução anon. Advisors preservam avisos anteriores; save_client_drive_review é SECURITY DEFINER autenticado intencional, com autorização e versão verificadas.
 - Há conexão central cadastrada, mas leitura real de documentos e OAuth não foram homologados nesta execução. CodeRabbit indisponível.
+
+- Publicação confirmada: commit funcional `e52fe17` enviado ao GitHub; Cloudflare `50df9232-c821-4c3a-b2ef-caefb8e61255`. Worker e domínio oficial entregam `index-FGJWY57t.js`.
