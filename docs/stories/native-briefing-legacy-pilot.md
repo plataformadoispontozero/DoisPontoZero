@@ -32,3 +32,5 @@ Quatro testes de PostgreSQL local executam a migration real contra tabelas míni
 - Três E2E de respostas booleanas, banner histórico e versões passaram com backend simulado em desktop/tablet/mobile; não constituem leitura visual real do cadastro. Sem arquivos de backup versionados.
 
 - Gates: 255 testes em 63 arquivos, lint e build aprovados. CodeRabbit indisponível.
+
+- Publicação confirmada: GitHub `386191e`; Cloudflare `3d48c1b4-082d-42ef-8ad3-396b63263e1f`. Rota nativa no domínio oficial entrega `index-DX4-EeI1.js`.
