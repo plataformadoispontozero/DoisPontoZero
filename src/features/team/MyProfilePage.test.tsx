@@ -1,0 +1,13 @@
+import {beforeEach,expect,it,vi} from 'vitest';
+import {fireEvent,render,screen,waitFor} from '@testing-library/react';
+import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
+import {MemoryRouter} from 'react-router-dom';
+import {MyProfilePage} from './MyProfilePage';
+const {rpc,upload,reload}=vi.hoisted(()=>({rpc:vi.fn(),upload:vi.fn(),reload:vi.fn()}));
+vi.mock('@/features/auth/AuthProvider',()=>({useAuth:()=>({user:{id:'user1'},reloadAccess:reload})}));
+vi.mock('@/lib/supabase/client',()=>({supabase:{rpc,storage:{from:()=>({upload,getPublicUrl:()=>({data:{publicUrl:'https://storage/avatar.webp'}}),remove:vi.fn()})}}}));
+beforeEach(()=>{vi.clearAllMocks();rpc.mockImplementation((name)=>Promise.resolve({data:name==='get_my_profile'?{full_name:'Membro Teste',avatar_url:null,profession:'designer',birth_date:null}:true,error:null}));});
+function setup(){render(<MemoryRouter><QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><MyProfilePage/></QueryClientProvider></MemoryRouter>);}
+it('saves only own descriptive fields and optional date without requesting access role changes',async()=>{setup();fireEvent.change(await screen.findByLabelText('Nome do perfil'),{target:{value:'Nome Revisado'}});fireEvent.change(screen.getByLabelText('Função profissional'),{target:{value:'videomaker'}});fireEvent.click(screen.getByRole('button',{name:'Salvar perfil'}));await screen.findByText('Perfil atualizado.');expect(rpc).toHaveBeenCalledWith('save_my_profile',{p_name:'Nome Revisado',p_avatar_url:null,p_profession:'videomaker',p_birth_date:null});expect(reload).toHaveBeenCalled();});
+it('rejects a non-image before uploading or changing the profile',async()=>{setup();await screen.findByLabelText('Foto de perfil');fireEvent.change(screen.getByLabelText('Foto de perfil'),{target:{files:[new File(['file'],'photo.svg',{type:'image/svg+xml'})]}});fireEvent.click(screen.getByRole('button',{name:'Salvar perfil'}));await screen.findByText('Use uma foto JPG, PNG ou WebP de até 2 MB.');expect(upload).not.toHaveBeenCalled();expect(rpc.mock.calls.filter(c=>c[0]==='save_my_profile')).toHaveLength(0);});
+it('keeps fields when saving fails and does not report success',async()=>{rpc.mockImplementation(name=>Promise.resolve(name==='get_my_profile'?{data:{full_name:'Teste',avatar_url:null,profession:null,birth_date:null}}:{error:{message:'Falha de conexão'}}));setup();await screen.findByLabelText('Nome do perfil');fireEvent.click(screen.getByRole('button',{name:'Salvar perfil'}));await screen.findByText('Falha de conexão');await waitFor(()=>expect(screen.getByLabelText('Nome do perfil')).toHaveValue('Teste'));expect(reload).not.toHaveBeenCalled();});

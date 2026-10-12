@@ -4,6 +4,7 @@ export function filterNotificationHistory(notifications: AppNotification[], read
   return notifications.filter(n => (read === 'all' || (read === 'unread' ? !n.read_at : !!n.read_at)) && (type === 'all' || n.type === type))
 }
 export function notificationDestination(notification: AppNotification): string | null {
+  if (notification.type === 'member_birthday') return '/team'
   if (notification.resource_type === 'team_registration_request') return '/settings/team'
   if (!notification.resource_id) return null
   if (notification.resource_type === 'client') return `/clients/${notification.resource_id}`
@@ -15,6 +16,7 @@ export function notificationDestination(notification: AppNotification): string |
 
 export function notificationTypeLabel(type: string): string {
   const labels: Record<string, string> = {
+    member_birthday:'Aniversários da equipe',
     material_approved: 'Materiais aprovados', material_changes_requested: 'Ajustes de materiais',
     meeting_invitation: 'Convites de reunião', meeting_updated: 'Reuniões atualizadas',
     meeting_cancelled: 'Reuniões canceladas', meeting_action_assigned: 'Ações de reunião',

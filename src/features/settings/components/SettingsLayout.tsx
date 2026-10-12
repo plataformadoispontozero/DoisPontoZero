@@ -27,6 +27,7 @@ export interface SettingsTabItem {
 }
 
 export const settingsTabs: SettingsTabItem[] = [
+  { id: 'profile', label: 'Meu perfil', path: '/profile', icon: Users },
   { id: 'overview', label: 'Visão Geral', path: '/settings', icon: LayoutGrid },
   { id: 'public-site', label: 'Site público da agência', path: '/settings/public-site', icon: Globe2 },
   { id: 'agency', label: 'Dados da Agência', path: '/settings/agency', icon: Building2 },

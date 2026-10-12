@@ -12,6 +12,7 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
   ({ className, src, alt, name, size = 'md', status, ...props }, ref) => {
     const [imageError, setImageError] = React.useState(false)
+    React.useEffect(()=>setImageError(false),[src])
 
     const sizeClasses = {
       sm: 'w-7 h-7 text-[10px]',

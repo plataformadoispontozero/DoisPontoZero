@@ -61,6 +61,7 @@ export function useNotifications() {
     queryFn: async (): Promise<AppNotification[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
+          if(['OWNER','ADMIN','MANAGER'].includes(auth.activeAgency?.roleName||'')){const birthday=await supabase.rpc('sync_member_birthdays',{p_agency:agencyId});if(birthday.error)throw birthday.error;}
           const { data , error: backendError1 } = await supabase.from('notifications').select('*').eq('agency_id', agencyId).eq('recipient_id', auth.user?.id || '').order('created_at', { ascending: false })
           if (backendError1) throw backendError1
           return data ?? [] as AppNotification[]

@@ -554,6 +554,10 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: "profile",
+        lazy: async () => ({Component:(await import("@/features/team/MyProfilePage")).MyProfilePage}),
+      },
+      {
         path: "settings",
         element: <SettingsLayout />,
         children: [

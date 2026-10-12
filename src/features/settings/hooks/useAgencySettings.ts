@@ -507,7 +507,7 @@ export function useAgencyTeam(agencyId?: string) {
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
           .from('agency_members')
-          .select('*, profiles(full_name, avatar_url), roles(name)')
+          .select('*, profiles(full_name, avatar_url, profession), roles(name)')
           .eq('agency_id', agencyId)
 
         if (error) throw error
@@ -522,6 +522,7 @@ export function useAgencyTeam(agencyId?: string) {
             full_name: m.profiles?.full_name || 'Usuário Sem Nome',
             email: m.user_id === auth.user?.id ? auth.user?.email || '' : '',
             avatar_url: m.profiles?.avatar_url,
+            profession:m.profiles?.profession||null,
             joined_at: m.joined_at,
           })) as AgencyMemberUser[]
         }

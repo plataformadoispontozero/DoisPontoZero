@@ -4,6 +4,7 @@
 // ============================================================
 
 export type NotificationType =
+  | 'member_birthday'
   | 'team_registration_pending'
   | 'meeting_invitation'
   | 'meeting_updated'

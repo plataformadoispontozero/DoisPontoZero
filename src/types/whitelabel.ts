@@ -92,6 +92,7 @@ export interface AgencyMemberUser {
   email: string
   avatar_url?: string
   joined_at: string
+  profession?: string | null
 }
 
 export interface AgencyInvitation {

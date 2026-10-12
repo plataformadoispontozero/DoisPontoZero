@@ -8,6 +8,7 @@ export type AuthStatus = 'INITIALIZING' | 'UNAUTHENTICATED' | 'AUTHENTICATED' | 
 interface AuthState {
   session: Session | null
   user: User | null
+  avatarUrl: string | null
   name: string
   memberships: AgencyAccess[]
   activeAgency: AgencyAccess | null
@@ -23,7 +24,7 @@ interface AuthContextValue extends AuthState {
   signOut: () => Promise<void>
   reloadAccess: () => void
 }
-const empty: AuthState = { session: null, user: null, name: '', memberships: [], activeAgency: null, permissions: new Set(), loading: false, error: null, backendUnavailable: false, isDemo: false }
+const empty: AuthState = { session: null, user: null, name: '', avatarUrl:null, memberships: [], activeAgency: null, permissions: new Set(), loading: false, error: null, backendUnavailable: false, isDemo: false }
 const AuthContext = createContext<AuthContextValue | null>(null)
 const storageKey = (userId: string) => `doiszero_agency_${userId}`
 const demo = localDemoAllowed(import.meta.env.VITE_ENABLE_LOCAL_DEMO, window.location.hostname, isSupabaseConfigured)
@@ -84,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (userError || !user || user.id !== session!.user.id) throw new Error('Sessão inválida. Entre novamente.')
         const [{ data: members, error: memberError }, { data: profile, error: profileError }] = await Promise.all([
           client.from('agency_members').select('agency_id, role_id, agencies(id, name, status), roles(id, name)').eq('user_id', user.id).eq('status', 'active'),
-          client.from('profiles').select('full_name').eq('id', user.id).maybeSingle(),
+          client.from('profiles').select('full_name, avatar_url').eq('id', user.id).maybeSingle(),
         ])
         if (memberError) throw memberError
         if (profileError) throw profileError
@@ -105,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (permission?.permission_key) permissions.add(permission.permission_key)
           }
         }
-        if (current()) setAccess({ ...empty, session, user, name: profile?.full_name || user.email || 'Usuário', memberships, activeAgency, permissions })
+        if (current()) setAccess({ ...empty, session, user, name: profile?.full_name || user.email || 'Usuário', avatarUrl:profile?.avatar_url||null, memberships, activeAgency, permissions })
       } catch (error) {
         if (current()) setAccess({ ...empty, backendUnavailable: error instanceof Error && /indisponível|fetch/i.test(error.message), error: error instanceof Error ? error.message : 'Não foi possível verificar o acesso à agência.' })
       }

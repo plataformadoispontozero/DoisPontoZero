@@ -166,7 +166,7 @@ export const TopBar: React.FC = () => {
           <Dropdown>
             <DropdownTrigger>
               <div className="flex items-center gap-2 cursor-pointer p-0.5 rounded-lg hover:bg-[#1C1C24] transition-colors">
-                <Avatar name={auth.name || 'Usuário'} size="sm" status="online" />
+                <Avatar src={auth.avatarUrl||undefined} name={auth.name || 'Usuário'} size="sm" status="online" />
               </div>
             </DropdownTrigger>
             <DropdownContent align="right" className="w-56">
@@ -176,6 +176,7 @@ export const TopBar: React.FC = () => {
                   {auth.activeAgency?.agencyName || branding.company.workspaceName}
                 </p>
               </div>
+              <DropdownItem onClick={() => navigate('/profile')}><User className="w-3.5 h-3.5 text-[#C74410]"/><span>Meu perfil</span></DropdownItem>
               <DropdownItem onClick={() => navigate('/settings')}>
                 <Settings className="w-3.5 h-3.5 text-[#C74410]" />
                 <span>Configurações do Workspace</span>

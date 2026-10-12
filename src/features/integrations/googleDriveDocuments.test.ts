@@ -35,5 +35,5 @@ describe('Private client Drive briefing discovery/read',()=>{
   let metadataReads=0;const changing=vi.fn(async(input:RequestInfo|URL)=>String(input).includes('/export?')?new Response('Antes'):json({...file(),version:String(++metadataReads)}));
   await expect(readClientDriveDocument(client,document,'server-token',changing as typeof fetch)).rejects.toThrow('mudou');
  });
- it('recognizes documents only, not a similarly named video',()=>{expect(isBriefingDocument({name:'Estratégia de conteúdo',mimeType:docMime},'')).toBe(true);expect(isBriefingDocument({name:'Briefing.mp4',mimeType:'video/mp4'},'02 BRIEFINGS & DOCS')).toBe(false);});
+ it('recognizes documents only, not a similarly named video',()=>{expect(isBriefingDocument({name:'Estratégia de conteúdo',mimeType:docMime},'')).toBe(true);expect(isBriefingDocument({name:'Direção editorial',mimeType:docMime},'')).toBe(true);expect(isBriefingDocument({name:'Briefing.mp4',mimeType:'video/mp4'},'02 BRIEFINGS & DOCS')).toBe(false);});
 });

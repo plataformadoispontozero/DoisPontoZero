@@ -71,7 +71,7 @@ export const Sidebar: React.FC<{
         <div
           className={`flex items-center rounded-xl bg-[var(--color-bg)] p-2 ${collapsed ? "flex-col justify-center gap-1" : "gap-2"}`}
         >
-          <Avatar name={auth.name || "Usuário"} size="sm" status="online" />
+          <NavLink to="/profile" aria-label="Meu perfil"><Avatar src={auth.avatarUrl||undefined} name={auth.name || "Usuário"} size="sm" status="online" /></NavLink>
           {!collapsed && (
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold truncate">

@@ -1,3 +1,4 @@
+import { SquadMembersPanel } from './SquadMembersPanel'
 import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // SquadsPage — Fase 05: Squads, Metas & Gamificação
@@ -671,6 +672,7 @@ const SquadsTabContent: React.FC<{
         <SquadCard
           key={squad.id}
           squad={squad}
+          agencyId={agencyId}
           onCreateGoal={() => onCreateGoal(squad.id)}
           onPerformance={() => onPerformance(squad)}
           onArchive={() => handleArchive(squad)}
@@ -683,10 +685,11 @@ const SquadsTabContent: React.FC<{
 // ---- Squad Card ----
 const SquadCard: React.FC<{
   squad: Squad
+  agencyId: string
   onCreateGoal: () => void
   onPerformance: () => void
   onArchive: () => void
-}> = ({ squad, onCreateGoal, onPerformance, onArchive }) => {
+}> = ({ squad, agencyId, onCreateGoal, onPerformance, onArchive }) => {
   const members = squad.members ?? []
   const leader = members.find((m) => m.role === 'leader')
   const specialty = SPECIALTY_OPTIONS.find((s) => s.value === squad.specialty)
@@ -777,6 +780,7 @@ const SquadCard: React.FC<{
             Performance
           </Button>
         </div>
+        <SquadMembersPanel squad={squad} agencyId={agencyId}/>
       </CardContent>
     </Card>
   )
