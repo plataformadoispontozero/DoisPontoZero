@@ -41,11 +41,11 @@ Validação da central: typecheck aprovado; 3 testes direcionados aprovados; lin
 - [x] Formulário público solicita nome, e-mail, senha e profissão; não concede vínculo ativo.
 - [x] Administrador/gestor confere identidade e atribui papel protegido antes de ativar.
 - [x] Solicitação gera notificação privada aos revisores autorizados.
-- [ ] Testes de isolamento, permissões, validação e implantação concluídos.
+- [x] Testes de isolamento, permissões, validação e implantação concluídos.
 Files: src/features/team/TeamRegistrationPage.tsx; src/features/team/RegistrationRequestsPanel.tsx; src/features/auth/AuthPage.tsx; src/app/router/index.tsx; src/features/settings/TeamManagementPage.tsx; backend team-registration e migration associada.
 
 Migration aplicada: 20261012084523_team_registration_review.sql. RLS confirmado, APIs privilegiadas service_role somente, confirmação global preservada. Arquivos adicionais: supabase/config.toml; src/types/notifications.ts; src/features/team/teamProfessions.ts; src/features/team/TeamRegistrationPage.test.tsx; src/features/team/RegistrationRequestsPanel.test.tsx; src/features/team/team-registration.database.test.ts.
 
 Permissão dedicada de revisão implantada: migration 20261012085000_team_registration_reviewer_permission.sql. Gestor aprova Colaborador; atribuição Administrador exclusiva do proprietário. 5 testes DB aprovados; members.edit preservada.
 
-Validação final isolada: lint sem erros, typecheck, 168 testes em 42 arquivos e build passaram. Cadastro em desktop/tablet/mobile homologado com backend simulado sem criar contas reais. CodeRabbit indisponível; nenhum passe declarado. Publicação aguarda checagem de produção.
+Validação final isolada: lint sem erros, typecheck, 168 testes em 42 arquivos e build passaram. Cadastro em desktop/tablet/mobile homologado com backend simulado sem criar contas reais. CodeRabbit indisponível; nenhum passe declarado. Publicação concluída: commits 8473325 e 1751443; função team-registration ACTIVE v1; Cloudflare ea9b606f-8e14-47bc-8554-09bce55d48f2; bundle index-KG9bh9MZ.js. Aprovação anônima recusada 401; preflight 204. Nenhum cadastro real criado na homologação.
