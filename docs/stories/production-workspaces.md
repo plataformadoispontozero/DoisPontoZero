@@ -1,6 +1,6 @@
 # Áreas operacionais de produção
 
-Status: Ready for Review — implementado e validado; push e deploy autorizados explicitamente em 2026-10-12.
+Status: Done — push e deploy concluídos após autorização explícita em 2026-10-12.
 
 Pedido: melhorar Design, Vídeo & Motion e Tráfego Pago além dos atalhos de calendário/tarefas.
 
@@ -21,3 +21,6 @@ Arquivo adicional: TaskDetailPanel.tsx. Evidências: test-results/production-144
 Resultado final: 115 testes Vitest em 28 arquivos e seis testes Playwright de produção em 1440×900, 768×1024 e 390×844 aprovados. Typecheck, lint (avisos preexistentes), build de produção e git diff --check aprovados. Cenários: filas por especialidade, filtro, criação vinculada ao projeto/agência, prefixo e status iniciais, troca para revisão, consulta sem criação e erro de backend sem demonstração. Capturas revisadas visualmente.
 
 Observação do usuário: o escopo inclui Vídeo & Motion e Tráfego Pago. Tráfego ganha seção de Resultados dos clientes com estado explícito de integração Meta pendente. Código atual não possui OAuth, contas ou insights Meta; nenhuma métrica simulada ou alegação de conexão operacional. Os futuros dados precisam de sincronização e vínculo cliente/conta de anúncios, conforme CODEX_META_INTEGRATION.md e CODEX_PAID_TRAFFIC.md.
+
+
+Publicação: código `675fcc9`, branch `codex/master-audit-15-1`; Worker `3f8c1741-7f21-468a-9f80-b4e8554a92c0`. Domínio https://doispontozero.renatodesigner.com.br confirmado com bundle `index-N-zwDQRS.js`. Em 1440×900 e 390×844, `/production/design`, `/production/video` e `/production/traffic` retornaram HTTP 200 e redirecionaram visitantes sem sessão ao login, sem overflow horizontal. Essa checagem não executou criação ou edição com usuário real em produção. Nenhuma migration, backend, DNS ou merge alterado nesta publicação.
