@@ -61,5 +61,8 @@ Senha agora tem controle mostrar/ocultar sem submeter formulário. Recuperação
 - google-workspace: ACTIVE, versão 1, autenticação customizada no corpo (POST auth.getUser + permissão; GET state único/PKCE/expiração). verify_jwt=false é necessário ao callback público Google e não libera acesso aos dados.
 - Pós-migration: CSV executável somente por authenticated; segredo RPC somente service_role; tabelas private sem SELECT authenticated e com RLS. Contagem clients permanece zero.
 - Advisor: RLS sem policies nas duas tabelas private é deny-by-default intencional; RPCs authenticated SECURITY DEFINER são intencionais e verificam sessão/permissão. Avisos legados sobre funções/auth anteriores à rodada continuam registrados no projeto; não foram alterados por este deploy.
-- Push e deploy Cloudflare: em andamento; SHA/versão Worker serão registrados após confirmação.
+- Push confirmado: commit funcional `817df66`, branch `codex/master-audit-15-1`. Deploy Cloudflare concluído no Worker existente: versão `ac980a52-4a16-43cc-a20d-64ac31ac3fcc`; bundle `index-DJNuYfI4.js` confirmado no domínio oficial.
+- Smoke Edge: POST sem sessão retornou HTTP 401; GET callback retornou HTTP 303 para o domínio oficial com `google=configuration_required`, conforme verificação do backend.
+- Navegador real em 1440×900 e 390×844: início e login HTTP 200; editorial protegido redireciona visitante sem sessão ao login; bundle correto e sem overflow. Verificação não executou OAuth Google nem importou clientes.
+- Gates de publicação: 152 testes unitários em 37 arquivos, typecheck, lint sem erros (avisos preexistentes) e build de produção aprovados. Nenhum instalador binário ou target nativo foi incluído no commit.
 - OAuth Google, Google Picker/sincronização, apps assinados Windows/mobile e push com app fechado continuam pendentes conforme limites acima e relatório de apps.

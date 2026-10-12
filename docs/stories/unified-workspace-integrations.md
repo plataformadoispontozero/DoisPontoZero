@@ -1,6 +1,6 @@
 # Jornada única, importação, Google e app da equipe
 
-Status: Ready for Review. Usuário autorizou posteriormente push e deploy em 12/10/2026. Migrations e função Google implantadas; publicação frontend em andamento. Credenciais OAuth, jornadas avançadas e distribuição assinada permanecem pendentes. Nenhum cliente real foi importado.
+Status: Done para o escopo validado. Usuário autorizou posteriormente push e deploy em 12/10/2026. Migrations, função Google e frontend publicados; evidências registradas em CODEX_WORKSPACE_INTEGRATIONS.md. Credenciais OAuth, jornadas avançadas e distribuição assinada permanecem pendentes. Nenhum cliente real foi importado.
 
 Fontes: solicitações de 12/10/2026 e anexos febde614 (jornada) e 7d63ab83 (CSV). Escopo preserva motor editorial e fluxos atuais. Google confirmado: Agenda e Drive; usuário possui Google Cloud, sem contas de distribuição de apps informadas.
 
