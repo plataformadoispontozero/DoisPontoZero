@@ -22,9 +22,21 @@ export function PublicSitePage() {
   const [menu, setMenu] = useState(false);
   const [paused, setPaused] = useState(false);
   const [motion, setMotion] = useState(true);
+  const [splashVisible, setSplashVisible] = useState(true);
   const hero = c.projects.filter((p) => p.placement === "hero");
   const gallery = c.projects.filter((p) => p.placement === "gallery");
   const scene = useSceneMotion(motion && available && !pending && gallery.length > 1, gallery.length);
+  useEffect(() => {
+    const maxDuration = window.setTimeout(() => setSplashVisible(false), 5000);
+    if (!pending) {
+      const readyDuration = window.setTimeout(() => setSplashVisible(false), 850);
+      return () => {
+        window.clearTimeout(maxDuration);
+        window.clearTimeout(readyDuration);
+      };
+    }
+    return () => window.clearTimeout(maxDuration);
+  }, [pending]);
   useEffect(() => {
     const previous = document.title;
     document.title = `${c.name} — Estratégia, design e marketing`;
@@ -43,6 +55,7 @@ export function PublicSitePage() {
   if (!available)
     return (
       <main className="dz-site dz-brief">
+        {splashVisible && <LandingSplash />}
         <div className="dz-brief-main">
           <p className="dz-eyebrow">DOIS.ZERO</p>
           <h1>{pending ? "Carregando…" : "Nosso site está em preparação."}</h1>
@@ -57,6 +70,7 @@ export function PublicSitePage() {
     <div
       className={`dz-site ${paused ? "dz-paused" : ""} ${!motion ? "dz-static" : ""}`}
     >
+      {splashVisible && <LandingSplash />}
       <a className="dz-skip" href="#conteudo">
         Pular para o conteúdo
       </a>
@@ -465,6 +479,17 @@ export function PublicSitePage() {
           PRÉVIA CRIATIVA · CONTEÚDO EDITÁVEL
         </span>
       )}
+    </div>
+  );
+}
+
+function LandingSplash() {
+  return (
+    <div className="dz-splash" role="status" aria-live="polite" aria-label="Carregando Dois.Zero">
+      <div className="dz-splash-logo">
+        <BrandLogo src="/agency/official-logo.webp" name="Dois.Zero" hero />
+      </div>
+      <span className="dz-splash-progress" aria-hidden="true" />
     </div>
   );
 }
