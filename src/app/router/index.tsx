@@ -27,7 +27,13 @@ export const router = createBrowserRouter([
   },
   { path: "/login", element: <AuthPage /> },
   { path: "/forgot-password", element: <AuthPage mode="forgot" /> },
-  {path: "/accept-invitation", lazy: async () => ({Component:(await import('@/features/team/AcceptInvitationPage')).AcceptInvitationPage})},
+  {
+    path: "/accept-invitation",
+    lazy: async () => ({
+      Component: (await import("@/features/team/AcceptInvitationPage"))
+        .AcceptInvitationPage,
+    }),
+  },
   { path: "/reset-password", element: <AuthPage mode="reset" /> },
   {
     path: "/approve-calendar/:token",
@@ -121,6 +127,13 @@ export const router = createBrowserRouter([
         lazy: async () => ({
           Component: (await import("@/features/clients/ClientsPage"))
             .ClientsPage,
+        }),
+      },
+      {
+        path: "clients/:clientId/workspace",
+        lazy: async () => ({
+          Component: (await import("@/features/clients/ClientWorkspacePage"))
+            .default,
         }),
       },
       {
@@ -237,9 +250,7 @@ export const router = createBrowserRouter([
         path: "briefings/templates/new",
         lazy: async () => ({
           Component: (
-            await import(
-              "@/features/briefing/templates/BriefingTemplateEditorPage"
-            )
+            await import("@/features/briefing/templates/BriefingTemplateEditorPage")
           ).BriefingTemplateEditorPage,
         }),
       },
@@ -247,9 +258,7 @@ export const router = createBrowserRouter([
         path: "briefings/templates/:templateId/edit",
         lazy: async () => ({
           Component: (
-            await import(
-              "@/features/briefing/templates/BriefingTemplateEditorPage"
-            )
+            await import("@/features/briefing/templates/BriefingTemplateEditorPage")
           ).BriefingTemplateEditorPage,
         }),
       },
@@ -626,6 +635,30 @@ export const router = createBrowserRouter([
               Component: (
                 await import("@/features/settings/IntegrationsCenterPage")
               ).IntegrationsCenterPage,
+            }),
+          },
+          {
+            path: "integrations/google",
+            lazy: async () => ({
+              Component: (
+                await import("@/features/settings/GoogleWorkspacePage")
+              ).default,
+            }),
+          },
+          {
+            path: "apps",
+            lazy: async () => ({
+              Component: (
+                await import("@/features/app-install/AppsInstallPage")
+              ).default,
+            }),
+          },
+          {
+            path: "integrations/import-clients",
+            lazy: async () => ({
+              Component: (
+                await import("@/features/settings/import-clients/ImportClientsPage")
+              ).default,
             }),
           },
           {

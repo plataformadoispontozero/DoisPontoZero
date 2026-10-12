@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAgencyId } from "@/features/auth/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
@@ -54,7 +54,8 @@ const statusNames: Record<string, string> = {
 export function MonthlyEditorialPage() {
   const agency = useAgencyId(),
     cache = useQueryClient();
-  const [client, setClient] = useState(""),
+  const [params] = useSearchParams();
+  const [client, setClient] = useState(params.get("clientId") || ""),
     [briefing, setBriefing] = useState(""),
     [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [context, setContext] = useState<EditorialContext>(emptyContext),
@@ -157,6 +158,17 @@ export function MonthlyEditorialPage() {
       return r.data as Campaign[];
     },
   });
+  const linked = useQuery({
+    queryKey: ["linked-editorial", agency, params.get("campaignId"), params.get("clientId")],
+    enabled: !!agency && !!params.get("campaignId"),
+    queryFn: async () => {
+      let request = supabase!.from("monthly_editorial_campaigns").select("*").eq("agency_id", agency).eq("id", params.get("campaignId")!);
+      if (params.get("clientId")) request = request.eq("client_id", params.get("clientId")!);
+      const result = await request.maybeSingle();
+      if (result.error) throw result.error;
+      return result.data as Campaign | null;
+    },
+  });
   const feedback = useQuery({
     queryKey: ["editorial-feedback", id],
     enabled: !!id,
@@ -190,7 +202,7 @@ export function MonthlyEditorialPage() {
       return r.data;
     },
   });
-  const active = campaigns.data?.find((c) => c.id === id),
+  const active = campaigns.data?.find((c) => c.id === id) || (linked.data?.id === id ? linked.data : null),
     locked = !!active?.project_id;
   function newCampaign() {
     setId(null);
@@ -218,6 +230,11 @@ export function MonthlyEditorialPage() {
     setDirty(false);
     setNotice("");
   }
+  useEffect(() => {
+    const requested = params.get("campaignId");
+    const target = linked.data || campaigns.data?.find(c => c.id === requested);
+    if (target && id !== target.id && !dirty) load(target);
+  }, [params, campaigns.data, linked.data]);
   async function save() {
     if (!supabase || !agency) throw Error("Conexão indisponível.");
     validateEditorialItems(items, context);

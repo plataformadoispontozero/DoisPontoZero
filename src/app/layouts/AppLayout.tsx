@@ -1,3 +1,4 @@
+import { BrandedNotificationController } from "@/features/app-install/BrandedNotificationController";
 import { NotificationSoundController } from '@/features/notifications/NotificationSoundController'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSyncExternalStore } from 'react'
@@ -40,7 +41,7 @@ export const AppLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#101014] text-[#F8F9FC] flex flex-col md:flex-row antialiased overflow-x-hidden">
-      <NotificationSoundController />
+      <BrandedNotificationController /><NotificationSoundController />
       {/* Sidebar Desktop Fixa */}
       <Sidebar collapsed={collapsed} onToggleCollapse={toggleCollapse} />
 

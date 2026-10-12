@@ -48,7 +48,7 @@ async function api(page: Page, options: { member?: boolean; owner?: boolean; fai
 
       if (options.failClients) return respond({ code:'42501', message:'access denied' },403)
       const scope = url.searchParams.get('agency_id') || ''; reads.push(scope)
-      return respond([{ id: '33333333-3333-4333-8333-333333333333', agency_id: scope.replace('eq.',''), name: scope.includes(agencyB) ? 'Cliente da agência B':'Cliente da agência A', slug:'cliente', status:'active', logo_url:null, created_at:new Date().toISOString(), updated_at:new Date().toISOString() }])
+      const fixture = { id: '33333333-3333-4333-8333-333333333333', agency_id: scope.replace('eq.',''), name: scope.includes(agencyB) ? 'Cliente da agência B':'Cliente da agência A', slug:'cliente', status:'active', logo_url:null, created_at:new Date().toISOString(), updated_at:new Date().toISOString() }; return respond(url.searchParams.has('id') ? fixture : [fixture])
     }
     return respond([])
   })
@@ -472,3 +472,28 @@ test('monthly generator consumes client strategy pillars and preserves exact cam
  await expect(page.getByLabel(/Tema do conteúdo/)).toHaveCount(3);
  await expect(page.getByText(/3 propostas; 1 posts, 1 carrosséis e 1 reels/)).toContainText('Consultoria aprovada: 3');
 });
+
+test('password visibility and staged CSV import preserve confirmation and tenant',async({page})=>{
+ const scopeReads=await api(page);let imported=false
+ await page.route('**/rest/v1/rpc/import_clients_csv',route=>{const body=route.request().postDataJSON();expect(body.p_agency_id).toBe(agencyA);expect(body.p_rows).toEqual([{row:2,name:'Fictício CSV',slug:'ficticio-csv'}]);imported=true;return route.fulfill({contentType:'application/json',body:JSON.stringify({results:[{row:2,status:'imported',message:'Cliente cadastrado.'}],imported:1,ignored:0,errors:0})})})
+ await page.goto('/login');await page.getByLabel('Senha',{exact:true}).fill('audit-password-only');await page.getByRole('button',{name:'Mostrar senha'}).click();await expect(page.getByLabel('Senha',{exact:true})).toHaveAttribute('type','text');await page.getByRole('button',{name:'Ocultar senha'}).click();await expect(page.getByLabel('Senha',{exact:true})).toHaveAttribute('type','password')
+ await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/settings/integrations/import-clients')
+ await page.getByLabel('Arquivo CSV').setInputFiles({name:'teste.csv',mimeType:'text/csv',buffer:Buffer.from('nome;slug\nFictício CSV;ficticio-csv\nInválido;SLUG')})
+ await expect(page.getByText('Nome obrigatório, até 200 caracteres.')).toHaveCount(0)
+ await expect(page.getByText('Slug obrigatório:',{exact:false})).toBeVisible();expect(imported).toBe(false)
+ if(page.viewportSize()?.width===1440)await page.screenshot({path:'/private/tmp/doiszero-csv-preview.png',fullPage:true});await page.getByRole('button',{name:'Revisar importação'}).click();expect(imported).toBe(false)
+ await page.getByRole('button',{name:'Confirmar e importar clientes'}).click();await expect(page.getByText('Linha 2: imported — Cliente cadastrado.')).toBeVisible();expect(imported).toBe(true);expect(scopeReads).toContain(`eq.${agencyA}`);expect(scopeReads).not.toContain('eq.demo-agency')
+})
+test('Google missing configuration does not simulate a connection',async({page})=>{
+ await api(page);await page.route('**/functions/v1/google-workspace',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({configured:false,connected:false})}))
+ await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/settings/integrations/google');await expect(page.getByText('Configuração necessária no Google Cloud e no backend.',{exact:false})).toBeVisible();await expect(page.getByRole('button',{name:'Conectar Google Agenda e Drive'})).toBeDisabled()
+})
+test('client journey queries stay scoped and editorial keeps selected client',async({page})=>{
+ const reads=await api(page);await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/clients/33333333-3333-4333-8333-333333333333/workspace');await expect(page.getByRole('heading',{name:'Cliente da agência A',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Calendário e aprovação',exact:true})).toBeVisible();await page.getByRole('link',{name:'Planejar calendário deste cliente'}).click();await expect(page).toHaveURL(/editorial\?clientId=33333333/);expect(reads).toContain(`eq.${agencyA}`)
+})
+
+test('changing agency discards CSV review and confirmation',async({page})=>{
+ await api(page);await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/settings/integrations/import-clients');await page.getByLabel('Arquivo CSV').setInputFiles({name:'teste.csv',mimeType:'text/csv',buffer:Buffer.from('name,slug\nFictício,ficticio')});await page.getByRole('button',{name:'Revisar importação'}).click();await expect(page.getByRole('button',{name:'Confirmar e importar clientes'})).toBeVisible()
+ if((page.viewportSize()?.width||1440)<768){await page.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();await page.getByLabel('Agência no menu móvel',{exact:true}).selectOption(agencyB);const close=page.getByRole('button',{name:'Fechar painel',exact:true});if(await close.isVisible())await close.click()}else await page.getByLabel('Agência',{exact:true}).selectOption(agencyB)
+ await expect(page.getByRole('button',{name:'Confirmar e importar clientes'})).toHaveCount(0);await expect(page.getByRole('cell',{name:'Fictício',exact:true})).toHaveCount(0)
+})

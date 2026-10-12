@@ -1,0 +1,31 @@
+{
+  "id": "/workspace-app",
+  "name": "Dois.Zero — Workspace da agência",
+  "short_name": "Dois.Zero",
+  "description": "Produção, equipe e operação da agência Dois.Zero.",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#101014",
+  "theme_color": "#c84408",
+  "icons": [
+    {
+      "src": "/app-icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/app-icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/app-icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

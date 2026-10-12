@@ -141,7 +141,7 @@ export function useClients(agencyId: string = 'demo-agency', filters?: ClientFil
 export function useClient(clientId?: string) {
   const agencyId = useAgencyId()
   return useQuery<Client | null>({
-    queryKey: ['client', clientId],
+    queryKey: ['client', agencyId, clientId],
     queryFn: async () => {
       if (!clientId) return null
 
@@ -247,7 +247,7 @@ export function useUpdateClient(agencyId: string) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['clients', agencyId] })
       if (data?.id) {
-        queryClient.invalidateQueries({ queryKey: ['client', data.id] })
+        queryClient.invalidateQueries({ queryKey: ['client', agencyId, data.id] })
       }
     },
   })

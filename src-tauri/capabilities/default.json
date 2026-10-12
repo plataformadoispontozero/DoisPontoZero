@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "workspace-default",
+  "description": "Janela local, notificações de equipe; sem permissões de shell ou filesystem.",
+  "windows": ["main"],
+  "permissions": ["core:default", "notification:default"]
+}

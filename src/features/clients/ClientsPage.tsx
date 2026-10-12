@@ -451,6 +451,7 @@ export const ClientsPage: React.FC = () => {
           </SheetHeader>
 
           <SheetContent className="space-y-6">
+              <button className="mb-4 text-orange-300" onClick={() => navigate(`/clients/${selectedClientHub.id}/workspace`)}>Abrir jornada completa do cliente →</button>
               <Tabs defaultValue="briefings" className="w-full">
                 <TabsList className="bg-[#1C1C24] border border-[#30303B] p-1 rounded-xl flex gap-1 w-full">
                   <TabsTrigger

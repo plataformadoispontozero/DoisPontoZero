@@ -1,0 +1,302 @@
+import { useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAgencyId, usePermission } from "@/features/auth/AuthProvider";
+import { supabase } from "@/lib/supabase/client";
+import {
+  CLIENT_FIELDS,
+  autoMapping,
+  previewCsv,
+  readCsvFile,
+  type ColumnMapping,
+  type CsvDocument,
+} from "./csv";
+export default function ImportClientsPage() {
+  const agency = useAgencyId();
+  return <ImportClientsWizard key={agency || "no-agency"} />;
+}
+function ImportClientsWizard() {
+  const agencyId = useAgencyId(),
+    allowed = usePermission("clients.create"),
+    clients = useQuery({
+      queryKey: ["client-import-existing", agencyId],
+      enabled: !!agencyId && !!supabase && allowed,
+      queryFn: async () => {
+        const existing: { id: string; name: string; slug: string }[] = [];
+        for (let offset = 0; ; offset += 1000) {
+          const r = await supabase!.from("clients").select("id,name,slug")
+            .eq("agency_id", agencyId).order("id").range(offset, offset + 999);
+          if (r.error) throw r.error;
+          const batch = r.data as { id: string; name: string; slug: string }[];
+          existing.push(...batch);
+          if (batch.length < 1000) break;
+        }
+        return existing;
+      },
+    }),
+    cache = useQueryClient();
+  const [document, setDocument] = useState<CsvDocument | null>(null),
+    [filename, setFilename] = useState(""),
+    [mapping, setMapping] = useState<ColumnMapping>({}),
+    [selected, setSelected] = useState<Set<number>>(new Set()),
+    [confirm, setConfirm] = useState(false),
+    [busy, setBusy] = useState(false),
+    [message, setMessage] = useState(""),
+    [result, setResult] = useState<
+      { row: number; status: string; message: string }[]
+    >([]);
+  const rows = useMemo(
+    () => (document ? previewCsv(document, mapping, clients.data || []) : []),
+    [document, mapping, clients.data],
+  );
+  const chosen = rows.filter(
+    (r) => selected.has(r.data.row) && !r.errors.length && !r.duplicate,
+  );
+  const missing = ["name", "slug"].filter(
+    (f) => mapping[f as keyof ColumnMapping] === undefined,
+  );
+  const duplicateMapping =
+    new Set(Object.values(mapping)).size !== Object.values(mapping).length;
+  async function upload(file: File) {
+    setMessage("");
+    setResult([]);
+    setConfirm(false);
+    try {
+      const parsed = await readCsvFile(file);
+      setDocument(parsed);
+      setFilename(file.name);
+      setMapping(autoMapping(parsed.headers));
+      setSelected(new Set(parsed.records.map((r) => r.row)));
+    } catch (e) {
+      setDocument(null);
+      setMessage(
+        e instanceof Error ? e.message : "Não foi possível ler o CSV.",
+      );
+    }
+  }
+  async function save() {
+    if (!supabase || !agencyId || !allowed || !confirm || !chosen.length)
+      return;
+    setBusy(true);
+    setMessage("");
+    try {
+      const { data, error } = await supabase.rpc("import_clients_csv", {
+        p_agency_id: agencyId,
+        p_filename: filename,
+        p_rows: chosen.map((r) => r.data),
+      });
+      if (error) throw error;
+      setResult(data.results);
+      setConfirm(false);
+      setSelected(new Set());
+      await cache.invalidateQueries({ queryKey: ["clients"] });
+      await cache.invalidateQueries({
+        queryKey: ["client-import-existing", agencyId],
+      });
+    } catch {
+      setMessage(
+        "Importação não concluída. Confira as permissões e a disponibilidade da migration local antes de tentar novamente.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <section className="space-y-5">
+      <h2 className="text-xl font-semibold">Importar clientes via CSV</h2>
+      <p>
+        Importação CSV disponível. Exporte manualmente seu arquivo em UTF-8. Até
+        2 MB, 500 clientes e 30 colunas. Nenhum registro existente será
+        atualizado.
+      </p>
+      {!allowed ? (
+        <p role="alert">Você precisa da permissão de criar clientes.</p>
+      ) : (
+        <input
+          aria-label="Arquivo CSV"
+          type="file"
+          accept=".csv,text/csv"
+          disabled={busy}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) void upload(f);
+            e.target.value = "";
+          }}
+        />
+      )}
+      {message && (
+        <p role="alert" className="text-orange-300">
+          {message}
+        </p>
+      )}
+      {clients.isError && (
+        <p role="alert">
+          Não foi possível conferir clientes existentes. A importação está
+          bloqueada.
+        </p>
+      )}
+      {document && (
+        <>
+          <p>
+            {document.records.length} registros ·{" "}
+            {rows.filter((r) => r.errors.length).length} inválidos ·{" "}
+            {rows.filter((r) => r.duplicate).length} duplicados ·{" "}
+            {chosen.length} selecionados
+          </p>
+          <div className="grid gap-3 md:grid-cols-4">
+            {CLIENT_FIELDS.map((field) => (
+              <label key={field}>
+                {field} {["name", "slug"].includes(field) && "*"}
+                <select
+                  className="block w-full bg-[#202026] p-2"
+                  aria-label={`Coluna ${field}`}
+                  value={mapping[field] ?? ""}
+                  disabled={busy || confirm}
+                  onChange={(e) =>
+                    setMapping((m) => {
+                      const next = { ...m };
+                      if (e.target.value === "") delete next[field];
+                      else next[field] = Number(e.target.value);
+                      return next;
+                    })
+                  }
+                >
+                  <option value="">Não importar</option>
+                  {document.headers.map((h, i) => (
+                    <option value={i} key={i}>
+                      {h}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
+          <p>
+            Colunas não utilizadas:{" "}
+            {document.headers
+              .filter((_, i) => !Object.values(mapping).includes(i))
+              .join(", ") || "nenhuma"}
+            . Duplicados são identificados pelo slug nesta agência. Nomes iguais
+            com slugs diferentes exigem sua revisão.
+          </p>
+          {missing.length > 0 && (
+            <p role="alert">
+              Mapeie os campos obrigatórios: {missing.join(", ")}.
+            </p>
+          )}
+          {duplicateMapping && (
+            <p role="alert">Cada campo precisa de uma coluna diferente.</p>
+          )}
+          <div className="overflow-auto max-h-96">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr>
+                  <th>Importar</th>
+                  <th>Linha</th>
+                  <th>Nome</th>
+                  <th>Slug</th>
+                  <th>Status / logotipo</th>
+                  <th>Validação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.data.row} className="border-b border-white/10">
+                    <td>
+                      <input
+                        type="checkbox"
+                        aria-label={`Selecionar linha ${r.data.row}`}
+                        disabled={
+                          busy || confirm || !!r.errors.length || !!r.duplicate
+                        }
+                        checked={
+                          selected.has(r.data.row) &&
+                          !r.errors.length &&
+                          !r.duplicate
+                        }
+                        onChange={(e) =>
+                          setSelected((old) => {
+                            const n = new Set(old);
+                            if (e.target.checked) n.add(r.data.row);
+                            else n.delete(r.data.row);
+                            return n;
+                          })
+                        }
+                      />
+                    </td>
+                    <td>{r.data.row}</td>
+                    <td>{r.data.name}</td>
+                    <td>{r.data.slug}</td>
+                    <td>
+                      {r.data.status || "active"}
+                      <br />
+                      {r.data.logo_url || "Sem logotipo"}
+                    </td>
+                    <td>
+                      {r.errors.join(" ")}
+                      {r.duplicate
+                        ? "Já cadastrado."
+                        : r.possibleSameName
+                          ? "Possível mesmo cliente; revise."
+                          : !r.errors.length
+                            ? "Válido"
+                            : ""}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {!confirm ? (
+            <button
+              className="bg-[#c84408] rounded-lg p-3"
+              disabled={
+                busy ||
+                !chosen.length ||
+                !!missing.length ||
+                duplicateMapping ||
+                clients.isPending ||
+                clients.isError ||
+                !allowed ||
+                !supabase
+              }
+              onClick={() => setConfirm(true)}
+            >
+              Revisar importação
+            </button>
+          ) : (
+            <div className="space-y-3 border border-orange-600 rounded-lg p-4">
+              <p>
+                Confirme os {chosen.length} registros selecionados na tabela.
+                Somente esses valores serão cadastrados; campos não mapeados
+                serão ignorados.
+              </p>
+              <button
+                className="bg-[#c84408] rounded-lg p-3"
+                disabled={busy}
+                onClick={() => void save()}
+              >
+                {busy ? "Importando…" : "Confirmar e importar clientes"}
+              </button>
+              <button
+                className="ml-4"
+                disabled={busy}
+                onClick={() => setConfirm(false)}
+              >
+                Voltar à revisão
+              </button>
+            </div>
+          )}
+        </>
+      )}
+      {result.length > 0 && (
+        <div role="status">
+          {result.map((r) => (
+            <p key={r.row}>
+              Linha {r.row}: {r.status} — {r.message}
+            </p>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}

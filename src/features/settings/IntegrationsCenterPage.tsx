@@ -21,6 +21,7 @@ export const IntegrationsCenterPage: React.FC = () => {
         </p>
       </div>
 
+      <Card><CardHeader><CardTitle>Importar clientes via CSV</CardTitle><CardDescription>Importação CSV disponível. Upload manual, prévia, mapeamento e confirmação; sem sincronização automática.</CardDescription></CardHeader><CardContent><Link to="/settings/integrations/import-clients">Revisar e importar clientes →</Link></CardContent></Card>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Infraestrutura Supabase */}
         <Card className="flex flex-col justify-between">
@@ -30,7 +31,7 @@ export const IntegrationsCenterPage: React.FC = () => {
                 <Database className="w-5 h-5" />
               </div>
               <Badge variant={isSupabaseActive ? 'default' : 'neutral'}>
-                {isSupabaseActive ? 'Conectado' : 'Modo Local / Demo'}
+                {isSupabaseActive ? 'Configurado' : 'Modo Local / Demo'}
               </Badge>
             </div>
             <CardTitle className="text-base font-bold">Supabase PostgreSQL</CardTitle>
@@ -51,7 +52,7 @@ export const IntegrationsCenterPage: React.FC = () => {
             </div>
             <div className="p-2.5 rounded-lg bg-[#101014] border border-[#30303B] text-[11px] text-[#98989F]">
               {isSupabaseActive
-                ? 'Conexão remota ativa verificada com sucesso.'
+                ? 'Credenciais do projeto configuradas. Consulte Diagnósticos para verificar a conexão.'
                 : 'Rodando com fallback seguro e persistência em memória/localStorage.'}
             </div>
           </CardContent>
@@ -64,7 +65,7 @@ export const IntegrationsCenterPage: React.FC = () => {
               <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
                 <HardDrive className="w-5 h-5" />
               </div>
-              <Badge variant="outline">Disponível</Badge>
+              <Badge variant="outline">Configuração necessária</Badge>
             </div>
             <CardTitle className="text-base font-bold">Google Drive Workspace</CardTitle>
             <CardDescription className="text-xs">
@@ -73,10 +74,10 @@ export const IntegrationsCenterPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-3 pt-0">
             <p className="text-xs text-[#B8B8C0]">
-              Gerencie pastas conectadas e sincronize arquivos diretamente pelo Drive Browser.
+              Autorize sua conta pelo Google Cloud para consultar os arquivos compartilhados com o aplicativo.
             </p>
             <a
-              href="/drive/connections"
+              href="/settings/integrations/google"
               className="w-full py-2 rounded-lg border border-[#30303B] bg-[#101014] hover:bg-[#1C1C24] text-xs font-medium text-[#F8F9FC] flex items-center justify-center gap-2 transition-colors"
             >
               <span>Gerenciar Conexões Drive</span>
@@ -92,11 +93,11 @@ export const IntegrationsCenterPage: React.FC = () => {
               <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
                 <Calendar className="w-5 h-5" />
               </div>
-              <Badge variant="outline">Disponível</Badge>
+              <Badge variant="outline">Configuração necessária</Badge>
             </div>
             <CardTitle className="text-base font-bold">Google Calendar</CardTitle>
             <CardDescription className="text-xs">
-              Sincronização bidirecional de reuniões, agendamentos e chamadas.
+              Conexão OAuth para acessar a agenda autorizada. Configuração Google Cloud necessária.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 pt-0">
@@ -104,7 +105,7 @@ export const IntegrationsCenterPage: React.FC = () => {
               Conecte sua conta do Google Workspace para importar pautas e horários.
             </p>
             <a
-              href="/settings/integrations/calendar"
+              href="/settings/integrations/google"
               className="w-full py-2 rounded-lg border border-[#30303B] bg-[#101014] hover:bg-[#1C1C24] text-xs font-medium text-[#F8F9FC] flex items-center justify-center gap-2 transition-colors"
             >
               <span>Configurar Calendário</span>

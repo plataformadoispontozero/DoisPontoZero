@@ -1,9 +1,11 @@
+import { nativeApp } from "@/features/app-install/appRuntime"
 import { OfficialBrandLogo } from '@/components/shared/OfficialBrandLogo'
 import { ArrowLeft, ArrowUpRight, LockKeyhole } from 'lucide-react'
 import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
+import { PasswordInput } from '@/components/ui/PasswordInput'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from './AuthProvider'
 import { safeReturnPath } from './access'
@@ -33,7 +35,7 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
         if (error) throw error
         navigate(returnPath, { replace: true })
       } else if (mode === 'forgot') {
-        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/reset-password` })
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${nativeApp() ? "https://doispontozero.renatodesigner.com.br" : window.location.origin}/reset-password` })
         if (error) throw error
         setMessage('Se houver uma conta para este e-mail, você receberá as instruções de recuperação.')
       } else {
@@ -62,8 +64,8 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
         {!isSupabaseConfigured && <p role="alert">Supabase não configurado. O acesso administrativo permanece protegido.</p>}
         <form onSubmit={submit} className="space-y-5">
           {mode !== 'reset' && <div><label htmlFor="auth-email">E-mail</label><Input id="auth-email" type="email" autoComplete="email" placeholder="voce@agencia.com" required value={email} onChange={e => setEmail(e.target.value)} /></div>}
-          {mode !== 'forgot' && <div><label htmlFor="auth-password">Senha</label><Input id="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required minLength={mode === 'reset' ? 8 : undefined} value={password} onChange={e => setPassword(e.target.value)} /></div>}
-          {mode === 'reset' && <div><label htmlFor="auth-confirm">Confirmar senha</label><Input id="auth-confirm" type="password" autoComplete="new-password" required value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>}
+          {mode !== 'forgot' && <div><label htmlFor="auth-password">Senha</label><PasswordInput id="auth-password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required minLength={mode === 'reset' ? 8 : undefined} value={password} onChange={e => setPassword(e.target.value)} /></div>}
+          {mode === 'reset' && <div><label htmlFor="auth-confirm">Confirmar senha</label><PasswordInput id="auth-confirm" autoComplete="new-password" required value={confirmation} onChange={e => setConfirmation(e.target.value)} /></div>}
           {error && <p role="alert" className="text-[#FB7185]">{error}</p>}
           {message && <p role="status">{message}</p>}
           <Button className="w-full" size="lg" type="submit" variant="primary" loading={busy} disabled={busy || !supabase || (mode === 'reset' && !auth.session)}>{mode === 'login' ? 'Entrar' : mode === 'forgot' ? 'Enviar instruções' : 'Atualizar senha'}<ArrowUpRight size={18} /></Button>
