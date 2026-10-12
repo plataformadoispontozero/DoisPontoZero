@@ -1,4 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.117.3'
+import { corsHeaders } from 'npm:@supabase/supabase-js@2.117.3/cors'
 const env=(key:string)=>Deno.env.get(key)||''
 const origin=env('GOOGLE_WORKSPACE_APP_ORIGIN')||'https://doispontozero.renatodesigner.com.br'
 const redirect=env('GOOGLE_WORKSPACE_REDIRECT_URI')
@@ -13,7 +14,7 @@ async function open(value:string){const [iv,data]=JSON.parse(value).map((s:strin
 Deno.serve(async(req:Request)=>{
  const requestOrigin=req.headers.get('origin')||''
  const allowedOrigins=new Set([origin,'tauri://localhost','https://tauri.localhost','http://tauri.localhost'])
- const headers={'Content-Type':'application/json','Cache-Control':'no-store','Access-Control-Allow-Origin':allowedOrigins.has(requestOrigin)?requestOrigin:origin,'Access-Control-Allow-Headers':'authorization, apikey, x-client-info, content-type','Access-Control-Allow-Methods':'POST, OPTIONS','Vary':'Origin'}
+ const headers={'Content-Type':'application/json','Cache-Control':'no-store','Access-Control-Allow-Origin':allowedOrigins.has(requestOrigin)?requestOrigin:origin,'Access-Control-Allow-Headers':corsHeaders['Access-Control-Allow-Headers'],'Access-Control-Allow-Methods':'POST, OPTIONS','Vary':'Origin'}
  const reply=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers})
  const back=(status:string)=>new Response(null,{status:303,headers:{Location:`${origin}/settings/integrations/google?google=${status}`,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}})
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers})

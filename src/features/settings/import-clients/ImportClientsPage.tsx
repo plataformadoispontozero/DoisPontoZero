@@ -51,7 +51,7 @@ function ImportClientsWizard() {
   const chosen = rows.filter(
     (r) => selected.has(r.data.row) && !r.errors.length && !r.duplicate,
   );
-  const missing = ["name", "slug"].filter(
+  const missing = ["name"].filter(
     (f) => mapping[f as keyof ColumnMapping] === undefined,
   );
   const duplicateMapping =
@@ -92,10 +92,9 @@ function ImportClientsWizard() {
       await cache.invalidateQueries({
         queryKey: ["client-import-existing", agencyId],
       });
-    } catch {
-      setMessage(
-        "Importação não concluída. Confira as permissões e a disponibilidade da migration local antes de tentar novamente.",
-      );
+    } catch (e) {
+      const code = (e as {code?: string})?.code;
+      setMessage(code === "42501" ? "Sua conta não tem permissão para importar clientes nesta agência." : code === "PGRST202" ? "Serviço de importação indisponível. Contate o administrador." : "Importação não concluída. Verifique sua conexão e tente novamente; nenhum registro existente será atualizado.");
     } finally {
       setBusy(false);
     }
@@ -137,7 +136,7 @@ function ImportClientsWizard() {
       {document && (
         <>
           <p>
-            {document.records.length} registros ·{" "}
+            {filename} · {document.records.length} registros ·{" "}
             {rows.filter((r) => r.errors.length).length} inválidos ·{" "}
             {rows.filter((r) => r.duplicate).length} duplicados ·{" "}
             {chosen.length} selecionados
@@ -145,7 +144,7 @@ function ImportClientsWizard() {
           <div className="grid gap-3 md:grid-cols-4">
             {CLIENT_FIELDS.map((field) => (
               <label key={field}>
-                {field} {["name", "slug"].includes(field) && "*"}
+                {{name: "Nome do cliente", slug: "Identificador (slug)", logo_url: "URL do logotipo", status: "Status"}[field]} {field === "name" && "*"}
                 <select
                   className="block w-full bg-[#202026] p-2"
                   aria-label={`Coluna ${field}`}
@@ -160,7 +159,7 @@ function ImportClientsWizard() {
                     })
                   }
                 >
-                  <option value="">Não importar</option>
+                  <option value="">{field === "slug" ? "Gerar pelo nome do cliente" : "Não importar"}</option>
                   {document.headers.map((h, i) => (
                     <option value={i} key={i}>
                       {h}
@@ -171,7 +170,7 @@ function ImportClientsWizard() {
             ))}
           </div>
           <p>
-            Colunas não utilizadas:{" "}
+            {mapping.slug === undefined && "O identificador será gerado pelo nome. Status ativo/inativo/arquivado será convertido automaticamente. "} Colunas não importadas:{" "}
             {document.headers
               .filter((_, i) => !Object.values(mapping).includes(i))
               .join(", ") || "nenhuma"}

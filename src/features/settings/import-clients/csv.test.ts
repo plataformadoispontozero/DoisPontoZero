@@ -35,6 +35,21 @@ describe("CSV de clientes", () => {
     );
     expect(previewCsv(d, autoMapping(d.headers), [])[0].errors).toHaveLength(3);
   });
+  it("aceita exportação portuguesa sem slug, preservando campos entre aspas", () => {
+    const d = parseCsv('\uFEFFID;Nome do cliente;Status;Público-alvo\r\nexterno;Agência São José;ativo;"Empresas\nLocais"');
+    const mapping = autoMapping(d.headers);
+    expect(mapping).toEqual({name:1,status:2});
+    const row = previewCsv(d, mapping, [])[0];
+    expect(row.errors).toEqual([]);
+    expect(row.data).toEqual({row:2,name:"Agência São José",slug:"agencia-sao-jose",status:"active"});
+    expect(d.records[0].cells[3]).toBe("Empresas\nLocais");
+  });
+  it("bloqueia colisões de slug gerado e não corrige slug explicitamente inválido", () => {
+    const d = parseCsv("Nome do cliente;Status\nSão José;ativo\nSao Jose;inativo");
+    expect(previewCsv(d,autoMapping(d.headers),[])[1].errors.join()).toContain("Slug repetido");
+    const explicit = parseCsv("nome;slug\nNome;INVALIDO");
+    expect(previewCsv(explicit,autoMapping(explicit.headers),[])[0].errors.join()).toContain("Slug obrigatório");
+  });
   it("limita registros e tamanho", () => {
     expect(() =>
       parseCsv(

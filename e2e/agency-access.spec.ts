@@ -497,3 +497,36 @@ test('changing agency discards CSV review and confirmation',async({page})=>{
  if((page.viewportSize()?.width||1440)<768){await page.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();await page.getByLabel('Agência no menu móvel',{exact:true}).selectOption(agencyB);const close=page.getByRole('button',{name:'Fechar painel',exact:true});if(await close.isVisible())await close.click()}else await page.getByLabel('Agência',{exact:true}).selectOption(agencyB)
  await expect(page.getByRole('button',{name:'Confirmar e importar clientes'})).toHaveCount(0);await expect(page.getByRole('cell',{name:'Fictício',exact:true})).toHaveCount(0)
 })
+
+
+test('Portuguese client export generates slug and translates status before confirmation', async ({page}) => {
+ await api(page); let imported=false;
+ await page.route('**/rest/v1/rpc/import_clients_csv', route => {
+  const body=route.request().postDataJSON();
+  expect(body.p_agency_id).toBe(agencyA);
+  expect(body.p_rows).toEqual([{row:2,name:'Agência São José',slug:'agencia-sao-jose',status:'active'}]);
+  imported=true;
+  return route.fulfill({contentType:'application/json',body:JSON.stringify({results:[{row:2,status:'imported',message:'Cliente cadastrado.'}]})});
+ });
+ await login(page); await expect(page).toHaveURL(/dashboard/);
+ await page.goto('/settings/integrations/import-clients');
+ await page.getByLabel('Arquivo CSV').setInputFiles({name:'exportacao.csv',mimeType:'text/csv',buffer:Buffer.from('\uFEFFID;Nome do cliente;Status;Nicho\r\nexterno;Agência São José;ativo;Serviços')});
+ await expect(page.getByRole('cell',{name:'agencia-sao-jose',exact:true})).toBeVisible();
+ await expect(page.getByText('Colunas não importadas:',{exact:false})).toContainText('ID, Nicho');
+ await page.getByRole('button',{name:'Revisar importação'}).click(); expect(imported).toBe(false);
+ await page.getByRole('button',{name:'Confirmar e importar clientes'}).click();
+ await expect(page.getByText('Linha 2: imported — Cliente cadastrado.')).toBeVisible(); expect(imported).toBe(true);
+});
+
+test('Google network error can be retried and configuration instructions identify OAuth client', async ({page}) => {
+ await api(page); let available=false;
+ await page.route('**/functions/v1/google-workspace',route => {
+  return !available ? route.abort('failed') : route.fulfill({contentType:'application/json',body:JSON.stringify({configured:false,connected:false})});
+ });
+ await login(page); await expect(page).toHaveURL(/dashboard/); await page.goto('/settings/integrations/google');
+ await expect(page.getByText('Não foi possível comunicar com a integração Google.',{exact:false})).toBeVisible();
+ available=true; await page.getByRole('button',{name:'Tentar novamente',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Ativar Agenda e Drive no Google Cloud'})).toBeVisible();
+ await expect(page.getByRole('link',{name:'Abrir credenciais do Google Cloud'})).toHaveAttribute('href',/firm-pentameter-474412-h7/);
+ await expect(page.getByRole('button',{name:'Conectar Google Agenda e Drive'})).toBeDisabled();
+});

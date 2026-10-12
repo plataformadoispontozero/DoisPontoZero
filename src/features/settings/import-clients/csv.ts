@@ -32,7 +32,7 @@ const normalize = (v: string) =>
     .toLowerCase()
     .replace(/[\s-]+/g, "_");
 const aliases: Record<ClientField, string[]> = {
-  name: ["name", "nome", "marca", "nome_da_marca", "razao_social"],
+  name: ["name", "nome", "marca", "nome_da_marca", "nome_do_cliente", "cliente", "razao_social"],
   slug: ["slug", "identificador", "identificador_unico"],
   logo_url: ["logo_url", "url_do_logotipo", "logotipo", "logo"],
   status: ["status", "situacao"],
@@ -153,6 +153,10 @@ export async function readCsvFile(file: File) {
   }
   return parseCsv(text);
 }
+export const clientSlug = (name: string) => name.normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "").slice(0, 100).replace(/-$/g, "");
+const statuses: Record<string, string> = { ativo: "active", ativa: "active", inativo: "inactive", inativa: "inactive", arquivado: "archived", arquivada: "archived" };
 export function previewCsv(
   document: CsvDocument,
   mapping: ColumnMapping,
@@ -165,10 +169,10 @@ export function previewCsv(
     const data: ImportClient = {
       row: record.row,
       name: get("name"),
-      slug: get("slug"),
+      slug: mapping.slug === undefined ? clientSlug(get("name")) : get("slug"),
     };
     if (get("logo_url")) data.logo_url = get("logo_url");
-    if (get("status")) data.status = get("status");
+    if (get("status")) data.status = statuses[normalize(get("status"))] || get("status").toLowerCase();
     const errors: string[] = [];
     if (record.cells.length !== document.headers.length)
       errors.push("Quantidade de campos diferente do cabeçalho.");

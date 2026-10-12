@@ -1,3 +1,4 @@
+import { FunctionsHttpError } from "@supabase/supabase-js";
 import { nativeApp } from "@/features/app-install/appRuntime";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -23,6 +24,7 @@ function GoogleWorkspacePanel() {
   const auth = useAuth(),
     agency = useAgencyId(),
     allowed = usePermission("settings.edit");
+  const [retry, setRetry] = useState(0);
   const [state, setState] = useState<State | null>(null),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
@@ -41,11 +43,16 @@ function GoogleWorkspacePanel() {
         "google-workspace",
         { body: { agencyId: agency, action } },
       );
-      if (error || data?.error)
-        throw Error(
-          data?.error ||
-            "Backend Google ainda não disponível. Configure e implante a integração antes de conectar.",
-        );
+      if (error) {
+        if (error instanceof FunctionsHttpError) {
+          const details = await error.context.json().catch(() => null);
+          throw Error(details?.error || (error.context.status === 401
+            ? "Sua sessão expirou. Entre novamente na plataforma."
+            : "Não foi possível consultar a integração Google. Tente novamente."));
+        }
+        throw Error("Não foi possível comunicar com a integração Google. Verifique a conexão e tente novamente.");
+      }
+      if (data?.error) throw Error(data.error);
       return data;
     },
     [agency],
@@ -69,7 +76,7 @@ function GoogleWorkspacePanel() {
     return () => {
       active = false;
     };
-  }, [agency, allowed, auth.user?.id, request]);
+  }, [agency, allowed, auth.user?.id, request, retry]);
   async function action(name: string) {
     setBusy(true);
     setError("");
@@ -110,6 +117,7 @@ function GoogleWorkspacePanel() {
       {error && (
         <p role="alert" className="text-orange-300">
           {error}
+          <button className="block underline mt-2" onClick={() => setRetry(v => v + 1)}>Tentar novamente</button>
         </p>
       )}
       {state && !state.configured && (
@@ -117,6 +125,20 @@ function GoogleWorkspacePanel() {
           Configuração necessária no Google Cloud e no backend. Nenhuma conta
           está conectada.
         </p>
+      )}
+      {state && !state.configured && (
+        <div className="rounded-xl border border-white/15 bg-white/5 p-5 space-y-3">
+          <h3 className="font-semibold">Ativar Agenda e Drive no Google Cloud</h3>
+          <ol className="list-decimal pl-5 space-y-2">
+            <li>Habilite Google Drive API e Google Calendar API no projeto <strong>firm-pentameter-474412-h7</strong>.</li>
+            <li>Configure a tela de consentimento OAuth e adicione as contas da equipe como usuários de teste enquanto o aplicativo estiver em teste.</li>
+            <li>Em Credenciais, crie um ID do cliente OAuth do tipo Aplicativo da Web. Uma conta de serviço não substitui esse cliente OAuth.</li>
+            <li>Cadastre a origem <code className="break-all">https://doispontozero.renatodesigner.com.br</code> e o URI de redirecionamento <code className="break-all">https://pvkhlobsiszrjtblpruu.supabase.co/functions/v1/google-workspace</code>.</li>
+            <li>Em Supabase → Edge Functions → Secrets, cadastre GOOGLE_WORKSPACE_CLIENT_ID, GOOGLE_WORKSPACE_CLIENT_SECRET e GOOGLE_WORKSPACE_REDIRECT_URI. Cadastre GOOGLE_WORKSPACE_TOKEN_KEY com uma chave aleatória de 32 bytes em Base64, gerada em ambiente seguro. Não envie os segredos por chat.</li>
+          </ol>
+          <a className="inline-block underline text-orange-300" href="https://console.cloud.google.com/apis/credentials?project=firm-pentameter-474412-h7" target="_blank" rel="noreferrer">Abrir credenciais do Google Cloud</a>
+          <button className="block underline" onClick={() => setRetry(v => v + 1)}>Verificar configuração novamente</button>
+        </div>
       )}
       {state?.connected ? (
         <>

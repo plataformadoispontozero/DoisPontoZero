@@ -66,3 +66,13 @@ Senha agora tem controle mostrar/ocultar sem submeter formulário. Recuperação
 - Navegador real em 1440×900 e 390×844: início e login HTTP 200; editorial protegido redireciona visitante sem sessão ao login; bundle correto e sem overflow. Verificação não executou OAuth Google nem importou clientes.
 - Gates de publicação: 152 testes unitários em 37 arquivos, typecheck, lint sem erros (avisos preexistentes) e build de produção aprovados. Nenhum instalador binário ou target nativo foi incluído no commit.
 - OAuth Google, Google Picker/sincronização, apps assinados Windows/mobile e push com app fechado continuam pendentes conforme limites acima e relatório de apps.
+
+## Correção da importação e diagnóstico Google — 12/10/2026
+
+O arquivo fornecido contém 29 registros UTF-8/BOM, delimitador ponto e vírgula e campos multilinha entre aspas. Nome do cliente agora é reconhecido; quando slug não existe, é gerado a partir do nome. Status ativo/inativo/arquivado é convertido para active/inactive/archived. Prévia, colisões, tenant e confirmação continuam obrigatórios; nenhum registro existente é atualizado. Os outros campos do arquivo são mostrados como não importados, porque a API atual de clientes suporta somente name/slug/status/logo_url. Todos os 29 registros ficaram válidos na leitura em memória, sem importar dados reais nos testes.
+
+Google mostra erros de sessão/serviço separadamente de falta de configuração e oferece nova tentativa. A página tem passos para criar um cliente OAuth Web no projeto firm-pentameter-474412-h7 e cadastrar os segredos somente no Supabase. Conta de serviço é diferente de autorização individual OAuth: https://developers.google.com/identity/protocols/oauth2/web-server.
+
+A Edge Function foi atualizada para versão 2 com cabeçalhos CORS canônicos do SDK, mantendo a lista de origens, permissões e autenticação. Não há prova de que CORS era a causa do erro observado; logs mostraram 404 antes do deploy original e OPTIONS 204 depois dele. Um teste de navegador no domínio oficial obteve HTTP 401 sem sessão (comunicação chegou ao backend). Após versão 2: preflight 204/headers SDK, POST não autenticado 401, callback 303 configuration_required. A autorização real do Google continua aguardando CLIENT_ID/CLIENT_SECRET/REDIRECT_URI/TOKEN_KEY.
+
+Verificações: 154 testes/37 arquivos; lint sem erros (avisos existentes), typecheck e build. Dez cenários E2E afetados passaram em desktop/mobile. Bundle produzido index-DEGoNDhl.js. Frontend: publicação da correção em andamento.
