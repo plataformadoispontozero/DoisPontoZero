@@ -28,3 +28,5 @@ PGlite executa a migration real com tabelas mínimas e autenticação simulada p
 - Migration `20261012145455` aplicada; get/save/sync sem execução anon; data privada RLS; bucket público profile-avatars de 2 MiB confirmado. Nenhum upload real de foto foi exercitado.
 - Advisors sem novos WARN; duas INFO de RLS privadas sem policies são deny-by-default intencional.
 - Aniversários sincronizam quando a gestão abre/refaz consulta na plataforma; não há cron de avisos offline. CodeRabbit indisponível.
+
+- Publicação confirmada: perfil/squads `44f35a3` e acesso mobile `98c26dd` enviados; Cloudflare `69899d30-2596-4d3c-900e-3194d4c7bdcc`, domínio `/profile` com `index-DTb_Leor.js`. Após ajuste mobile, três E2E perfil/squads passaram novamente. Ferramentas de auditoria versionadas separadamente em `1e0788b`; nenhuma importação executada.
