@@ -37,12 +37,10 @@ export function usePublicSite() {
     content: draft ?? query.data ?? defaultSiteContent,
     draft: Boolean(draft),
     configured: Boolean(query.data),
-    available: Boolean(
-      draft ||
-        query.data ||
-        import.meta.env.VITE_PUBLIC_SITE_PREVIEW === "true" ||
-        ["localhost", "127.0.0.1"].includes(window.location.hostname),
-    ),
+    // O conteúdo padrão é uma landing completa e segura: a página pública não
+    // deve desaparecer apenas porque o registro editável do Supabase está
+    // ausente, não publicado ou temporariamente indisponível.
+    available: true,
     pending: query.isLoading,
   };
 }
