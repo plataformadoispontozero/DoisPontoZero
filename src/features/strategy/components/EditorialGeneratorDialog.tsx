@@ -60,6 +60,7 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
   const [destination, setDestination] = useState<'calendar' | 'ideas'>('calendar')
   const [isImporting, setIsImporting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [importError, setImportError] = useState('')
 
   const handleGenerate = () => {
     if (pillars.length === 0) return
@@ -68,6 +69,7 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
     // Select all by default
     setSelectedIndices(result.map((_, i) => i))
     setIsSuccess(false)
+    setImportError('')
   }
 
   const toggleSelectAll = () => {
@@ -90,6 +92,7 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
     if (selectedIndices.length === 0) return
 
     setIsImporting(true)
+    setImportError('')
     try {
       const itemsToImport = selectedIndices.map((i) => suggestions[i])
 
@@ -121,6 +124,12 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
         setIsSuccess(false)
         setSuggestions([])
       }, 1200)
+    } catch (error) {
+      setImportError(
+        error instanceof Error
+          ? `Não foi possível importar as sugestões. ${error.message}`
+          : 'Não foi possível importar as sugestões. Nenhum conteúdo novo foi confirmado após esta falha.',
+      )
     } finally {
       setIsImporting(false)
     }
@@ -188,6 +197,11 @@ export const EditorialGeneratorDialog: React.FC<EditorialGeneratorDialogProps> =
             {/* Generated Suggestions List */}
             {suggestions.length > 0 && (
               <div className="space-y-3">
+                {importError && (
+                  <p role="alert" className="rounded-lg border border-red-400/40 bg-red-500/10 p-3 text-xs text-red-200">
+                    {importError} Verifique os itens já criados antes de tentar novamente.
+                  </p>
+                )}
                 <div className="flex items-center justify-between text-xs px-1">
                   <div className="flex items-center gap-2">
                     <button

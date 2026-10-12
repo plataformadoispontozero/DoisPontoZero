@@ -231,7 +231,14 @@ export const ChatPage: React.FC = () => {
               <p>Envie a primeira mensagem para iniciar a conversa.</p>
             </div>
           ) : (
-            (messages || []).map((msg) => (
+            (messages || []).map((msg) => {
+              const reactionCounts = Array.from(
+                (msg.reactions || []).reduce((counts, reaction) => {
+                  counts.set(reaction.emoji, (counts.get(reaction.emoji) || 0) + 1)
+                  return counts
+                }, new Map<string, number>())
+              )
+              return (
               <div key={msg.id} className="flex items-start space-x-3 group">
                 <img
                   src={msg.sender_avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100'}
@@ -265,9 +272,9 @@ export const ChatPage: React.FC = () => {
 
                   {/* Reactions */}
                   <div className="flex items-center space-x-2 pt-1">
-                    {(msg.reactions || []).map((r) => (
-                      <button key={r.id} onClick={() => handleEmojiClick(msg.id, r.emoji)} className="px-1.5 py-0.5 bg-surface-subtle border border-surface-border rounded text-[11px] hover:border-brand-primary">
-                        {r.emoji} 1
+                    {reactionCounts.map(([emoji, count]) => (
+                      <button key={emoji} onClick={() => handleEmojiClick(msg.id, emoji)} className="px-1.5 py-0.5 bg-surface-subtle border border-surface-border rounded text-[11px] hover:border-brand-primary">
+                        {emoji} {count}
                       </button>
                     ))}
                     <button onClick={() => handleEmojiClick(msg.id, '👍')} className="opacity-0 group-hover:opacity-100 transition-opacity text-content-tertiary hover:text-content-primary text-xs">
@@ -276,7 +283,8 @@ export const ChatPage: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))
+              )
+            })
           )}
         </div>
 

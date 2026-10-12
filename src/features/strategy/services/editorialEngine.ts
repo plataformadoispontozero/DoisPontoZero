@@ -31,10 +31,17 @@ function parseFrequency(freq: string | null): number {
   if (FREQUENCY_MAP[normalized] !== undefined) return FREQUENCY_MAP[normalized]
 
   // Try extracting number (e.g. "3x", "3 vezes")
-  const match = normalized.match(/(\d+)\s*x/i)
+  const match = normalized.match(/(\d+)\s*(?:x|vez(?:es)?)(?:\s+por\s+semana)?/i)
   if (match) return parseInt(match[1], 10)
 
   return 2
+}
+
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 // Deterministic topic rotation
@@ -95,13 +102,6 @@ export function generateEditorialSuggestions(
       const suggestedDate = new Date(today)
       suggestedDate.setDate(suggestedDate.getDate() + dayOffset)
 
-      // Check if there's already an idea for this slot
-      const existingIdea = existingIdeas.find(
-        (idea) =>
-          idea.pillar_id === pillar.id &&
-          idea.status !== 'discarded'
-      )
-
       const format = getRotatedFormat(pillar.content_formats, i)
       const availableTopics = pillar.example_topics.filter(topic => !usedTopics.has(topic.trim().toLowerCase()))
       if (!availableTopics.length) continue
@@ -113,7 +113,7 @@ export function generateEditorialSuggestions(
         pillar_name: pillar.name,
         pillar_color: pillar.color,
         suggested_format: format,
-        suggested_date: suggestedDate.toISOString().split('T')[0],
+        suggested_date: formatLocalDate(suggestedDate),
         example_topics: [topic, ...pillar.example_topics.filter((t) => t !== topic).slice(0, 2)],
       })
     }

@@ -15,3 +15,19 @@ describe('legacy strategy history',()=>{
   expect(generateEditorialSuggestions([pillar],30,existing)).toEqual([])
  })
 })
+
+describe('frequency and date handling',()=>{
+ it('understands written frequencies such as three times per week',()=>{
+  const topics=Array.from({length:20},(_,i)=>`Tema ${i+1}`)
+  const result=generateEditorialSuggestions([
+   {...pillar,percentage:50,posting_frequency:'3 vezes por semana',example_topics:topics},
+   {...pillar,id:'p2',name:'Outro',percentage:50,posting_frequency:'1x por semana',example_topics:['Outro tema']},
+  ],30)
+  expect(result.filter((suggestion)=>suggestion.pillar_id==='p')).toHaveLength(13)
+ })
+
+ it('returns calendar dates in the local calendar format',()=>{
+  const result=generateEditorialSuggestions([{...pillar,posting_frequency:'1x por semana'}],1)
+  expect(result[0]?.suggested_date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+ })
+})

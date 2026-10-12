@@ -187,8 +187,8 @@ export function usePresentation(presentationId?: string) {
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   return useQuery({
-    queryKey: ['presentation', presentationId],
-    enabled: Boolean(presentationId),
+    queryKey: ['presentation', agencyId, presentationId],
+    enabled: Boolean(presentationId && agencyId),
     queryFn: async (): Promise<Presentation | null> => {
       if (!presentationId) return null
 
@@ -203,6 +203,7 @@ export function usePresentation(presentationId?: string) {
               presentation_assets (*)
             `)
             .eq('id', presentationId)
+            .eq('agency_id', agencyId)
             .single()
           if (backendError2) throw backendError2
 
@@ -231,6 +232,20 @@ export function useSinglePresentation(presentationId?: string) {
 
   const query = usePresentation(presentationId)
   const updateMutation = useUpdatePresentation()
+  const publicLinkMutation = useMutation({
+    mutationFn: async () => {
+      if (!presentation) throw new Error('Apresentação não encontrada')
+      if (!isSupabaseConfigured || !supabase) return presentation.public_token || `demo-${presentation.id}`
+      if (!agencyId) throw new Error('Sessão e agência são obrigatórias.')
+      const { data, error } = await supabase.rpc('create_presentation_public_link', {
+        p_agency: agencyId,
+        p_presentation: presentation.id,
+      })
+      if (error) throw error
+      if (!data || typeof data !== 'string') throw new Error('O servidor não retornou um token público válido.')
+      return data
+    },
+  })
 
   const presentation = query.data || null
   const sections = presentation?.sections || []
@@ -240,7 +255,7 @@ export function useSinglePresentation(presentationId?: string) {
   const addSection = async (section: Partial<PresentationSection>) => {
     if (!presentation) return
     const newSec: PresentationSection = {
-      id: `sec-${Date.now()}`,
+      id: isSupabaseConfigured ? crypto.randomUUID() : `sec-${Date.now()}`,
       agency_id: presentation.agency_id || 'demo-agency',
       presentation_id: presentation.id,
       section_type: section.section_type || 'custom',
@@ -293,7 +308,7 @@ export function useSinglePresentation(presentationId?: string) {
   const addAsset = async (asset: Partial<PresentationAsset>) => {
     if (!presentation) return
     const newAst: PresentationAsset = {
-      id: `ast-${Date.now()}`,
+      id: isSupabaseConfigured ? crypto.randomUUID() : `ast-${Date.now()}`,
       agency_id: presentation.agency_id || 'demo-agency',
       presentation_id: presentation.id,
       section_id: asset.section_id || null,
@@ -328,8 +343,7 @@ export function useSinglePresentation(presentationId?: string) {
   }
 
   const createPublicLink = async () => {
-    if (!presentation) return 'demo_public_token'
-    return presentation.public_token || 'demo_public_token'
+    return publicLinkMutation.mutateAsync()
   }
 
   return {
@@ -348,7 +362,7 @@ export function useSinglePresentation(presentationId?: string) {
     publishPresentation,
     createPublicLink,
     isPublishing: updateMutation.isPending,
-    isCreatingLink: false,
+    isCreatingLink: publicLinkMutation.isPending,
   }
 }
 
@@ -382,26 +396,75 @@ export function useCreatePresentation() {
       template_id?: string
       description?: string
     }): Promise<Presentation> => {
-      const newId = `pres-${Date.now()}`
-
-      let sections: PresentationSection[] = []
-      if (payload.template_id) {
-        const tmpl = INITIAL_PRESENTATION_TEMPLATES.find((t) => t.id === payload.template_id)
-        if (tmpl) {
-          sections = tmpl.sections_snapshot.map((s, idx) => ({
-            id: `sec-${newId}-${idx}`,
+      if (isSupabaseConfigured && supabase) {
+        if (!agencyId) throw new Error('Sessão e agência são obrigatórias.')
+        const { data: row, error: presentationError } = await supabase
+          .from('presentations')
+          .insert({
             agency_id: agencyId,
-            presentation_id: newId,
-            section_type: s.section_type || 'custom',
-            title: s.title || 'Seção',
-            content: s.content || {},
-            position: idx,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }))
+            client_id: payload.client_id,
+            title: payload.title.trim(),
+            description: payload.description?.trim() || null,
+            period_month: payload.period_month,
+            period_year: payload.period_year,
+            status: 'draft',
+          })
+          .select('*, clients(name, logo_url)')
+          .single()
+        if (presentationError) throw presentationError
+
+        const template = payload.template_id
+          ? INITIAL_PRESENTATION_TEMPLATES.find((t) => t.id === payload.template_id)
+          : undefined
+        const templateSections = template?.sections_snapshot.map((s, idx) => ({
+          agency_id: agencyId,
+          presentation_id: row.id,
+          section_type: s.section_type || 'custom',
+          title: s.title || 'Seção',
+          description: s.description || null,
+          content: s.content || {},
+          position: idx,
+        })) || []
+        let createdSections: PresentationSection[] = []
+        if (templateSections.length) {
+          const { data, error: sectionsError } = await supabase
+            .from('presentation_sections')
+            .insert(templateSections)
+            .select('*')
+            .order('position')
+          if (sectionsError) {
+            await supabase.from('presentations').delete().eq('id', row.id).eq('agency_id', agencyId)
+            throw sectionsError
+          }
+          createdSections = (data || []) as PresentationSection[]
         }
+
+        queryClient.invalidateQueries({ queryKey: ['presentations', agencyId] })
+        return {
+          ...row,
+          client_name: row.clients?.name || payload.client_name || 'Cliente Selecionado',
+          client_logo_url: row.clients?.logo_url,
+          sections: createdSections,
+          assets: [],
+        } as Presentation
       }
 
+      const newId = `pres-${Date.now()}`
+      const template = payload.template_id
+        ? INITIAL_PRESENTATION_TEMPLATES.find((t) => t.id === payload.template_id)
+        : undefined
+      const sections: PresentationSection[] = template?.sections_snapshot.map((s, idx) => ({
+        id: `sec-${newId}-${idx}`,
+        agency_id: agencyId,
+        presentation_id: newId,
+        section_type: s.section_type || 'custom',
+        title: s.title || 'Seção',
+        description: s.description || '',
+        content: s.content || {},
+        position: idx,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })) || []
       const newPres: Presentation = {
         id: newId,
         agency_id: agencyId,
@@ -418,27 +481,8 @@ export function useCreatePresentation() {
         sections,
         assets: [],
       }
-
       demoPresentationsStore = [newPres, ...demoPresentationsStore]
-
-      if (isSupabaseConfigured && supabase) {
-        try {
-          await supabase.from('presentations').insert({
-            id: newPres.id,
-            agency_id: newPres.agency_id,
-            client_id: newPres.client_id,
-            title: newPres.title,
-            description: newPres.description,
-            period_month: newPres.period_month,
-            period_year: newPres.period_year,
-            status: newPres.status,
-          })
-        } catch (err) {
-          throw err
-        }
-      }
-
-      queryClient.invalidateQueries({ queryKey: ['presentations'] })
+      queryClient.invalidateQueries({ queryKey: ['presentations', agencyId] })
       return newPres
     },
   })
@@ -460,6 +504,93 @@ export function useUpdatePresentation() {
       title?: string
       description?: string
     }): Promise<Presentation> => {
+      if (isSupabaseConfigured && supabase) {
+        if (!agencyId) throw new Error('Sessão e agência são obrigatórias.')
+        const updates: Record<string, unknown> = {}
+        if (payload.title !== undefined) updates.title = payload.title.trim()
+        if (payload.description !== undefined) updates.description = payload.description
+        if (payload.status !== undefined) {
+          updates.status = payload.status
+          if (payload.status === 'published') updates.published_at = new Date().toISOString()
+        }
+        const presentationQuery = Object.keys(updates).length
+          ? supabase
+              .from('presentations')
+              .update(updates)
+              .eq('id', payload.id)
+              .eq('agency_id', agencyId)
+              .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*)')
+              .single()
+          : supabase
+              .from('presentations')
+              .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*)')
+              .eq('id', payload.id)
+              .eq('agency_id', agencyId)
+              .single()
+        const { error } = await presentationQuery
+        if (error) throw error
+        if (payload.sections !== undefined) {
+          const sectionRows = payload.sections.map((section) => ({
+            id: section.id,
+            agency_id: agencyId,
+            presentation_id: payload.id,
+            section_type: section.section_type,
+            title: section.title,
+            description: section.description || null,
+            content: section.content || {},
+            position: section.position,
+          }))
+          const sectionIds = sectionRows.map((section) => section.id)
+          const deleteSections = sectionIds.length
+            ? supabase.from('presentation_sections').delete().eq('presentation_id', payload.id).eq('agency_id', agencyId).not('id', 'in', `(${sectionIds.join(',')})`)
+            : supabase.from('presentation_sections').delete().eq('presentation_id', payload.id).eq('agency_id', agencyId)
+          const { error: deleteError } = await deleteSections
+          if (deleteError) throw deleteError
+          if (sectionRows.length) {
+            const { error: upsertError } = await supabase.from('presentation_sections').upsert(sectionRows, { onConflict: 'id' })
+            if (upsertError) throw upsertError
+          }
+        }
+        if (payload.assets !== undefined) {
+          const assetRows = payload.assets.map((asset) => ({
+            id: asset.id,
+            agency_id: agencyId,
+            presentation_id: payload.id,
+            section_id: asset.section_id || null,
+            file_reference_id: asset.file_reference_id || null,
+            title: asset.title,
+            description: asset.description || null,
+            position: asset.position,
+          }))
+          const assetIds = assetRows.map((asset) => asset.id)
+          const deleteAssets = assetIds.length
+            ? supabase.from('presentation_assets').delete().eq('presentation_id', payload.id).eq('agency_id', agencyId).not('id', 'in', `(${assetIds.join(',')})`)
+            : supabase.from('presentation_assets').delete().eq('presentation_id', payload.id).eq('agency_id', agencyId)
+          const { error: deleteError } = await deleteAssets
+          if (deleteError) throw deleteError
+          if (assetRows.length) {
+            const { error: upsertError } = await supabase.from('presentation_assets').upsert(assetRows, { onConflict: 'id' })
+            if (upsertError) throw upsertError
+          }
+        }
+        const { data: refreshed, error: refreshError } = await supabase
+          .from('presentations')
+          .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*)')
+          .eq('id', payload.id)
+          .eq('agency_id', agencyId)
+          .single()
+        if (refreshError) throw refreshError
+        queryClient.invalidateQueries({ queryKey: ['presentations', agencyId] })
+        queryClient.invalidateQueries({ queryKey: ['presentation', agencyId, payload.id] })
+        return {
+          ...refreshed,
+          client_name: refreshed.clients?.name,
+          client_logo_url: refreshed.clients?.logo_url,
+          sections: (refreshed.presentation_sections || []).sort((a: PresentationSection, b: PresentationSection) => a.position - b.position),
+          assets: (refreshed.presentation_assets || []).sort((a: PresentationAsset, b: PresentationAsset) => a.position - b.position),
+        } as Presentation
+      }
+
       const idx = demoPresentationsStore.findIndex((p) => p.id === payload.id)
       if (idx === -1) throw new Error('Apresentação não encontrada')
 
@@ -476,21 +607,8 @@ export function useUpdatePresentation() {
 
       demoPresentationsStore[idx] = updated
 
-      if (isSupabaseConfigured && supabase) {
-        try {
-          await supabase.from('presentations').update({
-            title: updated.title,
-            description: updated.description,
-            status: updated.status,
-            updated_at: updated.updated_at,
-          }).eq('id', payload.id)
-        } catch (err) {
-          throw err
-        }
-      }
-
-      queryClient.invalidateQueries({ queryKey: ['presentations'] })
-      queryClient.invalidateQueries({ queryKey: ['presentation', payload.id] })
+      queryClient.invalidateQueries({ queryKey: ['presentations', agencyId] })
+      queryClient.invalidateQueries({ queryKey: ['presentation', agencyId, payload.id] })
       return updated
     },
   })
