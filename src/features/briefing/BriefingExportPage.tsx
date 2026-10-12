@@ -35,7 +35,7 @@ import { INITIAL_BRIEFING_TEMPLATES } from './constants/initialTemplates'
 import type { BriefingPdfModel } from './pdf/types'
 import { toast } from '@/components/ui/Toast'
 
-const DEMO_AGENCY_ID = 'demo-agency'
+
 
 export const BriefingExportPage: React.FC = () => {
   const DEMO_AGENCY_ID = useAgencyId()
@@ -171,18 +171,16 @@ export const BriefingExportPage: React.FC = () => {
   const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
 
-  // Construct PDF Model
-  const model: BriefingPdfModel = transformBriefingToPdfModel(briefing as any, {
-    agencyName,
-    primaryColor,
-    footerText,
-  })
+  // Build PDF model lazily inside handlers to avoid render-time throw
+  const buildModel = (): BriefingPdfModel =>
+    transformBriefingToPdfModel(briefing as any, { agencyName, primaryColor, footerText })
 
   // Handle direct download
   const handleDownload = async () => {
     setIsGenerating(true)
     try {
-      await downloadBriefingPdf(model)
+      const m = buildModel()
+      await downloadBriefingPdf(m)
       toast.success('PDF profissional gerado com sucesso!')
     } catch (err) {
       toast.error(`Erro ao gerar PDF: ${String(err)}`)
@@ -194,8 +192,11 @@ export const BriefingExportPage: React.FC = () => {
   // Generate preview in iframe
   const handlePreviewInBrowser = async () => {
     setIsGenerating(true)
+    // Revoke previous blob URL
+    if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl)
     try {
-      const res = await generateBriefingPdfBlob(model)
+      const m = buildModel()
+      const res = await generateBriefingPdfBlob(m)
       setPreviewBlobUrl(res.blobUrl)
       toast.success('Prévia do PDF renderizada no navegador!')
     } catch (err) {
@@ -205,7 +206,28 @@ export const BriefingExportPage: React.FC = () => {
     }
   }
 
-  if (isSupabaseConfigured && (!realBriefing)) return <div role="alert">Recurso indisponível, carregando ou sem permissão. Nenhum exemplo substitui o recurso da agência.</div>
+  // Show loading spinner while briefing is fetching from Supabase
+  if (isLoading) {
+    return (
+      <div className="p-12 text-center text-content-secondary">
+        <div className="animate-spin w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full mx-auto mb-4" />
+        <p className="text-sm">Carregando dados do briefing...</p>
+      </div>
+    )
+  }
+
+  // Only block when Supabase is configured, loading finished, and no briefing found
+  if (isSupabaseConfigured && !isLoading && !realBriefing) {
+    return (
+      <div role="alert" className="p-8 text-center space-y-3">
+        <p className="text-sm font-semibold text-content-primary">Briefing não encontrado.</p>
+        <p className="text-xs text-content-secondary">Este recurso não existe ou você não tem permissão para acessá-lo.</p>
+      </div>
+    )
+  }
+
+  // Safe to build display model at this point — briefing is guaranteed to be populated
+  const model = buildModel()
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
