@@ -40,3 +40,13 @@ Google: logs mostraram 404 anteriores ao deploy original e OPTIONS 204 após dep
 Arquivo adicional de evidências: docs/CODEX_WORKSPACE_INTEGRATIONS.md. File list da correção: csv.ts, csv.test.ts, ImportClientsPage.tsx, GoogleWorkspacePage.tsx, google-workspace/index.ts, e2e/agency-access.spec.ts e os dois documentos.
 
 Hotfix CSV/Google publicado em 12/10/2026: código `d843200`, Worker `ad2451af-feae-4ee5-bdb9-afb05fb1aed4`; domínio e bundle conferidos em desktop/mobile.
+
+## Botão de seleção CSV — 12/10/2026
+
+Status: Ready for Review. Solicitação: entrada de arquivo aparecia como texto nativo sem botão visível.
+
+- [x] Botão explícito Selecionar arquivo CSV/Trocar arquivo CSV, com foco por teclado e estado ocupado.
+- [x] Nome do arquivo selecionado e orientação sobre prévia, revisão e confirmação.
+- [x] Gates: 154 testes, lint sem erros (avisos legados), typecheck/build e 2 E2E desktop/mobile passando com clique real no botão e filechooser. Bundle index-CpZtEP9W.js. Publicação em andamento.
+
+File list: ImportClientsPage.tsx, e2e/agency-access.spec.ts e esta story.

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAgencyId, usePermission } from "@/features/auth/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
@@ -15,6 +15,7 @@ export default function ImportClientsPage() {
   return <ImportClientsWizard key={agency || "no-agency"} />;
 }
 function ImportClientsWizard() {
+  const fileInput = useRef<HTMLInputElement>(null);
   const agencyId = useAgencyId(),
     allowed = usePermission("clients.create"),
     clients = useQuery({
@@ -110,7 +111,21 @@ function ImportClientsWizard() {
       {!allowed ? (
         <p role="alert">Você precisa da permissão de criar clientes.</p>
       ) : (
+        <div className="space-y-3 rounded-xl border border-white/15 bg-white/5 p-5">
+        <button
+          type="button"
+          className="inline-flex min-h-12 items-center justify-center rounded-lg bg-[#c84408] px-5 py-3 font-semibold text-white transition-colors hover:bg-[#e65412] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={busy}
+          onClick={() => fileInput.current?.click()}
+        >
+          {document ? "Trocar arquivo CSV" : "Selecionar arquivo CSV"}
+        </button>
+        <p className="text-sm text-zinc-300">
+          {document ? `Arquivo selecionado: ${filename}` : "Selecione o arquivo para visualizar os clientes. Depois, revise e confirme a importação."}
+        </p>
         <input
+          ref={fileInput}
+          className="hidden"
           aria-label="Arquivo CSV"
           type="file"
           accept=".csv,text/csv"
@@ -121,6 +136,7 @@ function ImportClientsWizard() {
             e.target.value = "";
           }}
         />
+        </div>
       )}
       {message && (
         <p role="alert" className="text-orange-300">

@@ -510,7 +510,10 @@ test('Portuguese client export generates slug and translates status before confi
  });
  await login(page); await expect(page).toHaveURL(/dashboard/);
  await page.goto('/settings/integrations/import-clients');
- await page.getByLabel('Arquivo CSV').setInputFiles({name:'exportacao.csv',mimeType:'text/csv',buffer:Buffer.from('\uFEFFID;Nome do cliente;Status;Nicho\r\nexterno;Agência São José;ativo;Serviços')});
+ const chooserPromise=page.waitForEvent('filechooser');
+ await page.getByRole('button',{name:'Selecionar arquivo CSV'}).click();
+ const chooser=await chooserPromise;
+ await chooser.setFiles({name:'exportacao.csv',mimeType:'text/csv',buffer:Buffer.from('\uFEFFID;Nome do cliente;Status;Nicho\r\nexterno;Agência São José;ativo;Serviços')});
  await expect(page.getByRole('cell',{name:'agencia-sao-jose',exact:true})).toBeVisible();
  await expect(page.getByText('Colunas não importadas:',{exact:false})).toContainText('ID, Nicho');
  await page.getByRole('button',{name:'Revisar importação'}).click(); expect(imported).toBe(false);
