@@ -113,3 +113,5 @@ Arquivos previstos para implementação/revisão, conforme divisão de trabalho:
 - Geração salva rascunho automaticamente e abre workspace; cards abrem editor individual. Edição de uma lâmina preserva as demais e a direção visual; reels apresentam fala, texto na tela, câmera e áudio.
 - Falha ao gravar mantém entradas e rota de geração; produção continua bloqueada enquanto calendário não aprovado. Modal tem nome acessível e largura compatível com mobile.
 - Não houve geração, aprovação ou produção sobre dados reais. CodeRabbit indisponível. Sem mudanças de banco ou Edge Functions nesta release.
+
+- Push funcional `74d48f1` confirmado. Cloudflare `8d890db8-ccb8-40bc-8889-b5d90abad7fd`; rota `/editorial/new` no domínio oficial entrega `index-DSYpyNqU.js`.
