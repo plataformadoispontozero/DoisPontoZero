@@ -107,7 +107,7 @@ export function validateEditorialItems(
     signatures = new Set<string>();
   for (const item of items) {
     const text = normalizeEditorial(
-      [item.title, item.copy, item.editorial?.visual || ""].join(" "),
+      [item.title, item.copy, item.editorial?.visual || "",item.editorial?.postConcept?.support||"",item.editorial?.postConcept?.composition||""].join(" "),
     );
     const hit = blocked.find((term) =>
       (" " + text + " ").includes(" " + term + " "),
@@ -177,6 +177,67 @@ const openings: Record<string, string> = {
   etapas: "Por dentro de",
   bastidores: "O processo de",
 };
+type NarrativeBlock = { role: string; headline: string; text: string; visual: string };
+const narrativeRoles: Record<number, string[]> = {
+  3: ['criteria'],4: ['context','action'],5: ['context','criteria','summary'],
+  6: ['context','diagnostic','criteria','action'],7: ['context','diagnostic','criteria','action','summary'],
+  8: ['context','diagnostic','criteria','checklist','action','summary'],
+  9: ['context','diagnostic','criteria','checklist','comparison','action','summary'],
+  10: ['context','diagnostic','criteria','evidence','checklist','comparison','action','summary'],
+};
+const topicReference = (theme: string) => theme.split(/\s+/).slice(0, 8).join(' ');
+function decisionFrame(trace:EditorialTrace){
+ const topic=normalizeEditorial(trace.theme+' '+trace.audience);
+ if(/obra|reforma|construcao|engenharia|espaco/.test(topic))return {need:'Que uso o espaço precisa atender e quais intervenções você está considerando?',criteria:'delimitação do escopo, sequência de etapas e condições de execução',checklist:'áreas envolvidas, necessidades de uso e dúvidas sobre o escopo',comparison:'Compare propostas para as mesmas áreas e intervenções; registre diferenças de escopo antes de decidir.',action:'Liste as necessidades do espaço e leve suas dúvidas a uma conversa de alinhamento.'};
+ if(/marca|branding|identidade|conteudo|social|marketing/.test(topic))return {need:'Que mensagem precisa chegar ao público e qual resposta você espera provocar?',criteria:'clareza da mensagem, adequação ao público e coerência entre canais',checklist:'mensagem principal, público prioritário e ação desejada',comparison:'Compare abordagens para o mesmo público e objetivo; explique o papel de cada peça antes de escolher.',action:'Organize a mensagem principal e selecione uma ação para o público realizar.'};
+ if(/curso|aprendiz|educacao|ensino/.test(topic))return {need:'O que você pretende aprender e como esse objetivo se encaixa na sua rotina?',criteria:'objetivo de aprendizagem, conteúdo proposto e disponibilidade para estudar',checklist:'objetivo pessoal, conteúdo de interesse e tempo disponível',comparison:'Compare propostas pelo conteúdo e pela rotina necessária; esclareça dúvidas sem presumir um resultado garantido.',action:'Anote o que pretende aprender e peça detalhes sobre o conteúdo e a rotina.'};
+ return {need:'Qual necessidade você quer atender e o que precisa esclarecer antes de escolher?',criteria:'escopo da oferta, condições de atendimento e adequação à sua necessidade',checklist:'necessidade principal, condições da oferta e dúvidas ainda abertas',comparison:'Compare alternativas com os mesmos critérios; registre o que cada opção inclui e o que precisa ser esclarecido.',action:'Organize sua principal dúvida e reúna as informações necessárias para o próximo contato.'};
+}
+function narrativeBlocks(trace:EditorialTrace,size:number):NarrativeBlock[]{
+ const theme=topicReference(trace.theme),fact=trace.sources.find(s=>s.startsWith('Informação aprovada: '))?.slice('Informação aprovada: '.length);
+ const frame=decisionFrame(trace);
+ const orientation=trace.family==='choice'?'Compare as opções usando os mesmos critérios.':trace.family==='action'?'Transforme uma necessidade clara em um próximo passo possível.':'Organize as informações antes de decidir.';
+ const blocks:Record<string,NarrativeBlock>={
+  hook:{role:'hook',headline:trace.theme,text:`${theme}: por onde começar uma decisão bem informada?`,visual:`Capa: título sobre ${theme}; um elemento focal e contraste entre título e fundo, sem excesso de texto.`},
+  context:{role:'context',headline:'Comece pela necessidade',text:`${frame.need} Use essa resposta para orientar sua decisão sobre ${theme}.`,visual:'Composição em duas áreas: necessidade atual e objetivo desejado. Use ícones ou tipografia, sem representar um resultado já alcançado.'},
+  diagnostic:{role:'diagnostic',headline:'Faça três perguntas',text:`Ao avaliar ${theme}, separe o que você já sabe, o que precisa confirmar e o que ainda é dúvida. Qual desses pontos merece atenção primeiro?`,visual:'Três cartões numerados, uma pergunta por cartão; destaque uma palavra em cada bloco para facilitar a leitura.'},
+  criteria:{role:'criteria',headline:'Compare o que importa',text:`Para avaliar ${theme}, compare ${frame.criteria}. Esses critérios organizam a conversa, sem substituir uma avaliação do seu caso.`,visual:'Checklist de critérios com marcações neutras; não incluir números de desempenho nem selos de qualidade não comprovados.'},
+  evidence:{role:'evidence',headline:fact?'O que está confirmado':'Procure informações verificáveis',text:fact||'Antes de confiar em uma afirmação, confira sua origem e o contexto. Exemplos e comprovações precisam ser reais, não apenas persuasivos.',visual:fact?'Destaque tipográfico da informação aprovada; use foto ou documento somente se a equipe confirmar sua disponibilidade.':'Organize fonte, contexto e verificação em um diagrama; não criar depoimentos ou imagens de resultados.'},
+  checklist:{role:'checklist',headline:'Organize sua decisão',text:`Sua lista de conferência: ${frame.checklist}. Se algum ponto não estiver claro, esclareça-o antes de avançar.`,visual:'Lista vertical de três itens com espaço em branco; um símbolo por item, sem repetir a composição dos cartões anteriores.'},
+  comparison:{role:'comparison',headline:'Avalie as alternativas',text:orientation+' '+frame.comparison,visual:'Quadro comparativo de critérios, com colunas sem marcas ou notas inventadas. Deixe o conteúdo factual para materiais verificados.'},
+  action:{role:'action',headline:'Defina o próximo passo',text:`${frame.action} O próximo passo sobre ${theme} precisa corresponder à sua necessidade.`,visual:'Sequência de três passos com direção de leitura evidente: organizar, reunir e conversar; destaque apenas o passo final.'},
+  summary:{role:'summary',headline:'Leve esta síntese',text:`Para avançar com ${theme}, conecte necessidade, critérios e próximo passo. Uma decisão clara começa com perguntas bem formuladas.`,visual:'Síntese em três palavras-chave conectadas por linhas; recuperar um elemento da capa sem repetir o layout.'},
+  cta:{role:'cta',headline:trace.cta,text:`${trace.cta} Compartilhe sua principal dúvida sobre ${theme}.`,visual:'Encerramento com marca e uma chamada principal. Usar contato ou link somente quando fornecido e confirmado pela equipe.'},
+ };
+ const middle=narrativeRoles[size].map(role=>blocks[role]);
+ // An approved fact is quoted once; the remaining blocks develop guidance instead of repeating it.
+ if(fact&&!middle.some(b=>b.role==='evidence')){const index=middle.findIndex(b=>b.role==='criteria');if(index>=0)middle[index]={...blocks.evidence,role:'criteria',headline:'Critério com base confirmada',visual:'Informação aprovada em destaque, seguida por composição de critérios; confirme qualquer imagem utilizada.'};}
+ return [blocks.hook,...middle,blocks.cta];
+}
+export function renderEditorialCopy(item:MonthlyItem):string{
+ const trace=item.editorial;if(!trace)return item.copy;
+ const caption=trace.caption;
+ if(item.format==='carousel'&&trace.slides)return trace.slides.map((slide,i)=>`Slide ${i+1}: ${slide.headline&&slide.headline!==slide.text?slide.headline+' — ':''}${slide.text}`).join('\n')+(caption?`\nLegenda: ${caption}`:'');
+ if(item.format==='reels'&&trace.scenes)return trace.scenes.map((scene,i)=>`Cena ${i+1} (${scene.seconds}s): ${scene.text}${scene.onScreen?`\nNa tela: ${scene.onScreen}`:''}`).join('\n')+(caption?`\nLegenda: ${caption}`:'');
+ return trace.postConcept?`Texto da arte: ${trace.postConcept.headline}\nApoio: ${trace.postConcept.support}\nLegenda: ${trace.postConcept.caption}`:item.copy;
+}
+export function renderProductionDirection(item:MonthlyItem):string{
+ const trace=item.editorial;if(!trace)return '';
+ const base=trace.visual.split('\nRoteiro técnico:')[0];
+ if(item.format!=='reels'||!trace.scenes)return base;
+ return base+'\nRoteiro técnico:\n'+trace.scenes.map((scene,i)=>`Cena ${i+1} (${scene.seconds}s): ${scene.camera||'Plano a confirmar'}; ${scene.audio||'Áudio a confirmar'}. ${scene.visual}`).join('\n');
+}
+function applyNarrativeStructure(item:MonthlyItem,size:number,seconds:number):MonthlyItem{
+ const trace={...item.editorial!};const blocks=narrativeBlocks(trace,size);blocks[0]={...blocks[0],headline:item.title};
+ if(item.format==='carousel')trace.slides=blocks.map(b=>({...b}));
+ else trace.scenes=blocks.map((b,i)=>({...b,narration:b.text,onScreen:b.headline,seconds:Math.floor(seconds/size)+(i<seconds%size?1:0),camera:cameraForRole(b.role),audio:i===0?'Locução clara; trilha instrumental discreta.':i===size-1?'Locução com pausa antes da chamada; finalizar a trilha sem cortar a frase.':'Voz em primeiro plano; transição sonora discreta entre blocos.'}));
+ const updated={...item,editorial:trace};trace.visual=renderProductionDirection(updated);return {...updated,copy:renderEditorialCopy(updated)};
+}
+function cameraForRole(role:string):string{
+ const cameras:Record<string,string>={hook:'Plano médio de abertura; aproximação suave e contato com a câmera.',context:'Plano lateral ou apoio ilustrativo; movimento lento para apresentar o contexto.',diagnostic:'Close de fala; cortes secos entre as três perguntas.',criteria:'Plano superior de uma lista ou gráfico a produzir; revelar um critério por vez.',evidence:'Close estável do material aprovado, se disponível; foco sem simular comprovação.',checklist:'Plano de detalhe de lista ilustrativa; alternar enquadramento a cada item.',comparison:'Plano frontal de quadro comparativo; deslocamento lateral entre critérios.',action:'Planos curtos de organização de ideias; sequência com cortes orientados pelo texto.',summary:'Retorno ao plano médio; enquadramento estável para a síntese.',cta:'Plano fechado de encerramento ou marca; segurar o quadro até concluir a chamada.'};
+ return cameras[role]||cameras.criteria;
+}
+
 export function generateCampaignPlan(
   month: string,
   client: string,
@@ -358,7 +419,7 @@ export function generateCampaignPlan(
       (themeUse.get(normalizeEditorial(theme)) || 0) + 1,
     );
     familyUse.set(f.id, (familyUse.get(f.id) || 0) + 1);
-    const formal = /formal|institucional|técnico|tecnico/i.test(context.tone),
+    const formal = /formal|profissional|institucional|técnico|tecnico/i.test(context.tone),
       title = `${openings[angle] || "Sobre"} ${theme}`,
       cta =
         f.journey === "Conversão"
@@ -368,30 +429,9 @@ export function generateCampaignPlan(
           : f.journey === "Relacionamento"
             ? "Conheça a marca."
             : "Salve para consultar.";
-    const fact =
-        context.approvedFacts?.[index % (context.approvedFacts?.length || 1)],
-      pending = `[Completar com informação aprovada sobre ${theme}.]`;
-    const support =
-      fact ||
-      (f.id === "institutional" && context.positioning
-        ? context.positioning
-        : pending);
-    const warnings = [
-      ...(!fact
-        ? [
-            "Conteúdo de apoio pendente: forneça uma informação aprovada antes de enviar ao cliente.",
-          ]
-        : []),
-      ...(!context.tone
-        ? ["Tom não informado; linguagem neutra aplicada."]
-        : []),
-      ...(!context.visualGuidance
-        ? [
-            "Identidade visual não informada; designer deve confirmar referências.",
-          ]
-        : []),
-    ];
-    const visual = `Direção sugerida, material a produzir: ${context.visualGuidance || "usar a identidade aprovada do cliente"}. Composição com foco em ${theme}, hierarquia curta e espaço livre para o título. Não representa material existente.`;
+    const fact=context.approvedFacts?.[index%(context.approvedFacts?.length||1)];
+    const warnings=[...(!fact?['Sem fatos aprovados: proposta usa perguntas e orientação geral; valide a adequação antes de compartilhar.']:[]),...(!context.tone?['Tom não informado; linguagem neutra aplicada.']:[]),...(!context.visualGuidance?['Identidade visual não informada; designer deve confirmar referências.']:[])];
+    const visual=`Direção sugerida, material a produzir: ${context.visualGuidance||"usar a identidade aprovada do cliente"}. Conceito sobre ${theme}; não representa material existente.`;
     const similar = history.filter(
       (h) =>
         h.item.editorial &&
@@ -439,58 +479,17 @@ export function generateCampaignPlan(
           : []),
       ],
     };
-    let copy = `${title}.\n${support}\n${cta}`;
-    if (format === "carousel") {
-      trace.slides = Array.from({ length: slidesCount }, (_, i) => ({
-        text:
-          i === 0
-            ? title
-            : i === slidesCount - 1
-              ? cta
-              : i === 1
-                ? support
-                : `[Complementar: ponto ${i} aprovado sobre ${theme}.]`,
-        visual: `Direção sugerida do slide ${i + 1}: ${i === 0 ? "capa tipográfica" : i === slidesCount - 1 ? "síntese com logo" : "diagrama ou detalhe visual a produzir"}, conforme identidade aprovada.`,
-      }));
-      copy =
-        trace.slides
-          .map((slide, i) => `Slide ${i + 1}: ${slide.text}`)
-          .join("\n") + `\nLegenda: ${title}. ${cta}`;
-      trace.warnings.push(
-        "Revisar cada slide e fornecer os pontos aprovados; o motor não inventa informações para preencher slides.",
-      );
-    }
-    if (format === "reels") {
-      trace.scenes = Array.from({ length: scenesCount }, (_, i) => ({
-        seconds:
-          Math.floor(seconds / scenesCount) +
-          (i < seconds % scenesCount ? 1 : 0),
-        text:
-          i === 0
-            ? title
-            : i === scenesCount - 1
-              ? cta
-              : i === 1
-                ? support
-                : `[Complementar: fala ${i} aprovada sobre ${theme}.]`,
-        visual:
-          i === 0
-            ? `Plano de abertura sugerido; texto na tela. Material a gravar: ${theme}.`
-            : i === scenesCount - 1
-              ? "Fechamento com marca e uma única chamada."
-              : "Plano de apoio ou demonstração sugerida, a confirmar e gravar; não representa cena existente.",
-      }));
-      copy = trace.scenes
-        .map((scene, i) => `Cena ${i + 1} (${scene.seconds}s): ${scene.text}`)
-        .join("\n");
-    }
-    results.push({
-      date: `${month}-${String(1 + Math.floor((index * days) / total)).padStart(2, "0")}`,
-      format,
-      title,
-      copy,
-      editorial: trace,
-    });
+    trace.rules.push('narrativa-progressiva-revisavel');
+    const shortTheme=topicReference(theme);
+    trace.caption=`${title}.\n${fact||`Ao pensar em ${shortTheme}, organize sua necessidade, seus critérios e o próximo passo.`}\n${cta}`;
+    let item:MonthlyItem={date:`${month}-${String(1+Math.floor((index*days)/total)).padStart(2,"0")}`,format,title,copy:trace.caption,editorial:trace};
+    if(format==='post'){
+      const support=fact||`${decisionFrame(trace).need} Ao pensar em ${shortTheme}, organize essa resposta antes do próximo passo.`;
+      trace.postConcept={headline:title,support,composition:`Poster com título em destaque sobre ${shortTheme}, apoio em um único bloco e CTA discreto. Criar uma ilustração conceitual ou usar material autorizado; evitar imagem que sugira resultados inexistentes.`,caption:trace.caption};
+      trace.visual+=` ${trace.postConcept.composition}`;
+      item.copy=renderEditorialCopy(item);
+    } else item=applyNarrativeStructure(item,format==='carousel'?slidesCount:scenesCount,seconds);
+    results.push(item);
   }
   validateEditorialItems(results, context);
   return results;
@@ -505,7 +504,7 @@ export function restructureItem(
     throw Error("Peça sem ficha de formato; ajuste a estrutura manualmente.");
   if (!Number.isInteger(size) || size < 3 || size > 10)
     throw Error("Use de 3 a 10 slides/cenas.");
-  const trace = { ...item.editorial },
+  const trace = { ...item.editorial,caption:item.editorial.caption||item.copy.split('\n').find(line=>line.startsWith('Legenda:'))?.replace(/^Legenda:\s*/, '') },
     isCarousel = item.format === "carousel";
   if (
     !isCarousel &&
@@ -517,53 +516,20 @@ export function restructureItem(
     throw Error(
       "Duração deve ser 10–90 segundos e ao menos 2 segundos por cena.",
     );
-  const lines = item.copy
-    .split("\n")
-    .filter((line) =>
-      isCarousel ? /^Slide \d+:/.test(line) : /^Cena \d+ \(\d+s\):/.test(line),
-    );
-  const expected = isCarousel ? trace.slides?.length : trace.scenes?.length;
-  if (!expected || lines.length !== expected)
-    throw Error(
-      "Estrutura da copy foi editada manualmente. Ajuste os blocos manualmente para não perder conteúdo.",
-    );
-  const texts = lines.map((line) =>
-    line.replace(isCarousel ? /^Slide \d+:\s*/ : /^Cena \d+ \(\d+s\):\s*/, ""),
-  );
-  const next = Array.from({ length: size }, (_, i) =>
-    i === 0
-      ? texts[0]
-      : i === size - 1
-        ? texts[texts.length - 1]
-        : texts[i] && i < texts.length - 1
-          ? texts[i]
-          : `[Complementar: ponto ${i} aprovado sobre ${trace.theme}.]`,
-  );
-  if (isCarousel) {
-    trace.slides = next.map((text, i) => ({
-      text,
-      visual: `Direção sugerida do slide ${i + 1}: ${i === 0 ? "capa tipográfica" : i === size - 1 ? "síntese e CTA" : "recurso gráfico ou detalhe a produzir"} na identidade aprovada.`,
-    }));
-    return {
-      ...item,
-      editorial: trace,
-      copy:
-        next.map((text, i) => `Slide ${i + 1}: ${text}`).join("\n") +
-        "\n" +
-        (item.copy.split("\n").find((line) => line.startsWith("Legenda:")) ||
-          `Legenda: ${item.title}. ${trace.cta}`),
-    };
+  const expected=isCarousel?trace.slides?.length:trace.scenes?.length;
+  if(!expected)throw Error('Peça sem blocos estruturados.');
+  // Canonical copy must match blocks; an independent free-form edit must not be overwritten.
+  const canonical=renderEditorialCopy(item);
+  const legacyLines=item.copy.split('\n').filter(line=>isCarousel?/^Slide \d+:/.test(line):/^Cena \d+ \(\d+s\):/.test(line));
+  const hasNewStructure=isCarousel?trace.slides?.some(s=>s.role):trace.scenes?.some(s=>s.role);
+  if((hasNewStructure&&item.copy!==canonical)||(!hasNewStructure&&legacyLines.length!==expected))throw Error('Estrutura da copy foi editada manualmente. Ajuste os blocos manualmente para não perder conteúdo.');
+  const generated=applyNarrativeStructure({...item,editorial:trace},size,seconds);
+  if(isCarousel){
+    const old=trace.slides!;generated.editorial!.slides=generated.editorial!.slides!.map((block,i)=>{const previous=old.find(b=>b.role&&b.role===block.role)||(i===0?old[0]:i===size-1?old[old.length-1]:!hasNewStructure?old[i]:undefined);return previous?{...block,...previous}:block;});
+  }else{
+    const old=trace.scenes!;generated.editorial!.scenes=generated.editorial!.scenes!.map((block,i)=>{const previous=old.find(b=>b.role&&b.role===block.role)||(i===0?old[0]:i===size-1?old[old.length-1]:!hasNewStructure?old[i]:undefined);return previous?{...block,...previous,seconds:block.seconds}:block;});
   }
-  trace.scenes = next.map((text, i) => ({
-    text,
-    seconds: Math.floor(seconds / size) + (i < seconds % size ? 1 : 0),
-    visual: `Cena ${i + 1}: plano sugerido a confirmar e gravar; não representa material existente.`,
-  }));
-  return {
-    ...item,
-    editorial: trace,
-    copy: trace.scenes
-      .map((scene, i) => `Cena ${i + 1} (${scene.seconds}s): ${scene.text}`)
-      .join("\n"),
-  };
+  generated.editorial!.visual=renderProductionDirection(generated);
+  generated.copy=renderEditorialCopy(generated);
+  return generated;
 }

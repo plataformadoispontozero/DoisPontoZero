@@ -6,6 +6,8 @@ import {
   DEFAULT_REPERTOIRE,
   restructureItem,
   editorialQualityWarnings,
+  renderEditorialCopy,
+  renderProductionDirection,
 } from "./campaignEngine";
 import { emptyContext } from "./monthlyPlanner";
 const context = {
@@ -69,7 +71,8 @@ describe("campaign engine — editorial workbench", () => {
     expect(
       plan.every((i) => i.editorial!.visual.includes("material a produzir")),
     ).toBe(true);
-    expect(plan.some((i) => i.copy.includes("[Completar"))).toBe(true);
+    expect(plan.every((i) => !/\[Completar|\[Complementar/.test(i.copy))).toBe(true);
+    expect(plan.every(i=>i.editorial!.warnings.some(w=>w.includes("Sem fatos aprovados")))).toBe(true);
     expect(
       plan.every(
         (i) => !i.copy.includes("R$") && !i.copy.includes("garantido"),
@@ -286,4 +289,25 @@ it("flags repeated or long blocks and pending facts without truncating edited co
     editorialQualityWarnings({ ...item, copy: "Texto ".repeat(200) }),
   ).toEqual([expect.stringMatching(/extenso/)]);
   expect(item.copy).toContain("Slide 3");
+});
+
+describe('progressive format narratives',()=>{
+ it.each([3,4,5,6,7,8,9,10])('creates %i distinct slides and scenes with opening, development and closing',size=>{
+  const plan=generateCampaignPlan('2026-11','Cliente auditado',{...context,topics:['Planejamento de reformas comerciais'],audience:'Empresas que precisam de obras',carouselSlides:size,reelsScenes:size,reelsSeconds:40},{post:1,reels:1,carousel:1});
+  const slides=plan.find(i=>i.format==='carousel')!.editorial!.slides!;
+  expect(slides).toHaveLength(size);expect(slides[0].role).toBe('hook');expect(slides.at(-1)?.role).toBe('cta');expect(new Set(slides.map(s=>s.text.toLowerCase())).size).toBe(size);expect(slides.every(s=>s.headline&&s.visual)).toBe(true);
+  const reel=plan.find(i=>i.format==='reels')!,scenes=reel.editorial!.scenes!;
+  expect(scenes).toHaveLength(size);expect(new Set(scenes.map(s=>s.text.toLowerCase())).size).toBe(size);expect(scenes.reduce((n,s)=>n+s.seconds,0)).toBe(40);expect(scenes.every(s=>s.narration===s.text&&s.onScreen&&s.camera&&s.audio)).toBe(true);expect(new Set(scenes.map(s=>s.camera)).size).toBeGreaterThan(2);expect(reel.copy).toContain('Na tela:');expect(reel.copy).toContain('Legenda:');expect(reel.editorial!.visual).toContain('Roteiro técnico:');
+  const post=plan.find(i=>i.format==='post')!;expect(post.editorial?.postConcept?.composition).toContain('Poster');expect(post.copy).toContain('Apoio:');expect(post.copy).toContain('Legenda:');expect(plan.every(p=>p.copy.length<=3000)).toBe(true);
+ });
+ it('uses exact approved claims only once in slide bodies and distinguishes guidance from missing proof',()=>{
+  const fact='Atendimento por agendamento.';
+  const plan=generateCampaignPlan('2026-11','Cliente',{...context,approvedFacts:[fact],carouselSlides:10},{post:0,reels:0,carousel:1});
+  const slides=plan[0].editorial!.slides!;expect(slides.filter(s=>s.text===fact)).toHaveLength(1);expect(plan[0].copy).toContain(fact);expect(plan[0].copy).not.toMatch(/\d+%|R\$/);
+ });
+ it('preserves edited structured text/visual while changing block count and regenerates technical duration summary',()=>{
+  const reel=generateCampaignPlan('2026-11','Cliente',{...context,reelsScenes:5},{post:0,reels:1,carousel:0})[0];
+  reel.editorial!.scenes![0]={...reel.editorial!.scenes![0],text:'Abertura revisada pela equipe.',narration:'Abertura revisada pela equipe.',camera:'Plano aprovado específico',onScreen:'Título revisado'};reel.copy=renderEditorialCopy(reel);
+  const expanded=restructureItem(reel,8,48);expect(expanded.editorial!.scenes![0].text).toBe('Abertura revisada pela equipe.');expect(expanded.editorial!.scenes![0].camera).toBe('Plano aprovado específico');expect(expanded.editorial!.scenes!.reduce((n,s)=>n+s.seconds,0)).toBe(48);expect(renderProductionDirection(expanded)).toContain('Plano aprovado específico');expect(expanded.copy).toContain('Na tela: Título revisado');expect(new Set(expanded.editorial!.scenes!.map(s=>s.text)).size).toBe(8);
+ });
 });

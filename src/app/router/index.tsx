@@ -86,6 +86,12 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: "editorial/new",
+        lazy: async () => ({
+          Component: (await import("@/features/editorial/MonthlyEditorialPage")).MonthlyEditorialPage,
+        }),
+      },
+      {
         path: "production/:department",
         lazy: async () => ({
           Component: (await import("@/features/production/DepartmentPage"))

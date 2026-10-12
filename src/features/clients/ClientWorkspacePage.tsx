@@ -197,7 +197,7 @@ export default function ClientWorkspacePage() {
       {strategyAllowed && (
         <Link
           className="inline-block rounded-lg bg-[#c84408] p-3"
-          to={`/editorial?clientId=${clientId}`}
+          to={`/editorial/new?clientId=${clientId}`}
         >
           Planejar calendário deste cliente
         </Link>

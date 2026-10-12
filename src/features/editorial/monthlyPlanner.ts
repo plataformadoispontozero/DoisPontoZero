@@ -52,8 +52,10 @@ export interface EditorialTrace {
   cta: string;
   signature: string;
   visual: string;
-  slides?: { text: string; visual: string }[];
-  scenes?: { seconds: number; text: string; visual: string }[];
+  caption?: string;
+  postConcept?: { headline: string; support: string; composition: string; caption: string };
+  slides?: { text: string; visual: string; headline?: string; role?: string }[];
+  scenes?: { seconds: number; text: string; visual: string; narration?: string; onScreen?: string; camera?: string; audio?: string; role?: string }[];
   warnings: string[];
   sources: string[];
   rules: string[];

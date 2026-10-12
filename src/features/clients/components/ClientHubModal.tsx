@@ -60,7 +60,7 @@ export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}
    <div className="mt-4 flex flex-wrap gap-2">
     {canBriefs&&<button className={actionStyle} onClick={()=>{setSection('Briefings');setEditing(false);}}><FileText className="mr-2 inline h-4 w-4"/>Briefings</button>}
     {canEdit&&<button className={actionStyle} onClick={()=>{setDraft(profile);setLogo(client.logo_url||'');setSection('Dados e links');setEditing(true);}}><Pencil className="mr-2 inline h-4 w-4"/>Editar ficha</button>}
-    {canStrategy&&<button className="rounded-lg bg-[#c84408] px-4 py-2.5 text-sm font-semibold hover:bg-orange-600" onClick={()=>navigate(`/editorial?clientId=${client.id}`)}><CalendarDays className="mr-2 inline h-4 w-4"/>Gerar calendário</button>}
+    {canStrategy&&<button className="rounded-lg bg-[#c84408] px-4 py-2.5 text-sm font-semibold hover:bg-orange-600" onClick={()=>navigate(`/editorial/new?clientId=${client.id}`)}><CalendarDays className="mr-2 inline h-4 w-4"/>Gerar calendário</button>}
     <button className={actionStyle} onClick={()=>navigate(`/clients/${client.id}/workspace`)}>Abrir jornada <ArrowRight className="ml-2 inline h-4 w-4"/></button>
    </div>
   </header>

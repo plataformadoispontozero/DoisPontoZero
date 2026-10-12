@@ -1,8 +1,9 @@
+import { EditorialPieceEditor } from "./EditorialPieceEditor";
 import { missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
 import { currentDriveReview,useDriveBriefDocuments,type DriveBriefDocument } from '@/features/briefing/driveDocuments';
 import { readClientProfile } from "@/features/clients/clientProfile";
 import { useEffect, useRef,useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams,useLocation,useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAgencyId } from "@/features/auth/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
@@ -55,6 +56,7 @@ const statusNames: Record<string, string> = {
   production: "Em produção",
 };
 export function MonthlyEditorialPage() {
+  const location=useLocation(),navigate=useNavigate(),creating=location.pathname.endsWith('/new');
   const agency = useAgencyId(),
     cache = useQueryClient();
   const [params] = useSearchParams();
@@ -73,6 +75,9 @@ export function MonthlyEditorialPage() {
   const [pieceSizes, setPieceSizes] = useState<
     Record<number, { size: number; seconds: number }>
   >({});
+  const [selectedPiece,setSelectedPiece]=useState<number|null>(null),[formatFilter,setFormatFilter]=useState('all');
+  const pieceDialog=useRef<HTMLDialogElement>(null);
+  useEffect(()=>{const dialog=pieceDialog.current;if(!dialog)return;if(selectedPiece!==null&&!dialog.open)dialog.showModal();else if(selectedPiece===null&&dialog.open)dialog.close();},[selectedPiece]);
   const [topicDraft,setTopicDraft]=useState("");
   const [topicsReviewed,setTopicsReviewed]=useState(false);
   const inputs = useCampaignInputs(agency, client, context.strategyId, id);
@@ -240,6 +245,7 @@ export function MonthlyEditorialPage() {
     setContext(emptyContext);
   }
   function load(c: Campaign) {
+    setSelectedPiece(null);
     setId(c.id);
     setClient(c.client_id);
     setBriefing(c.briefing_id || "");
@@ -261,17 +267,18 @@ export function MonthlyEditorialPage() {
     const target = linked.data || campaigns.data?.find(c => c.id === requested);
     if (target && id !== target.id && !dirty) load(target);
   }, [params, campaigns.data, linked.data]);
-  async function save() {
+  async function save(generatedItems?:MonthlyItem[],generatedContext?:EditorialContext) {
     if (!supabase || !agency) throw Error("Conexão indisponível.");
-    validateEditorialItems(items, context);
+    const savingItems=generatedItems||items,savingContext=generatedContext||context;
+    validateEditorialItems(savingItems, savingContext);
     const r = await supabase.rpc("save_monthly_editorial", {
       p_id: id,
       p_agency: agency,
       p_client: client,
       p_briefing: briefing || null,
       p_month: month + "-01",
-      p_context: { ...context, forbiddenTerms: forbiddenTerms(context) },
-      p_items: items,
+      p_context: { ...savingContext, forbiddenTerms: forbiddenTerms(savingContext) },
+      p_items: savingItems,
     });
     if (r.error) throw r.error;
     setId(r.data);
@@ -305,8 +312,8 @@ export function MonthlyEditorialPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Calendário editorial mensal"
-        subtitle="Cliente, briefing e quantidades por formato. Revise a estratégia antes de enviar ao cliente."
+        title={creating?'Criar calendário editorial':'Calendários e demandas'}
+        subtitle={creating?'Defina cliente, estratégia, formatos e quantidades. A geração salva um rascunho para revisão.':'Conteúdos organizados por campanha. Abra uma demanda para revisar copy, roteiro e direção visual.'}
       />
       {notice && (
         <p role="status" className="rounded-xl border border-orange-400/30 p-4">
@@ -324,12 +331,13 @@ export function MonthlyEditorialPage() {
         </p>
       )}
       <div className="flex flex-wrap gap-3">
-        <Button onClick={newCampaign}>Nova campanha</Button>
+        <Button onClick={()=>{newCampaign();navigate(`/editorial/new${client?'?clientId='+client:''}`);}}>Criar calendário</Button>
+        {creating&&<Link className="text-sm text-orange-200 underline" to="/editorial">Voltar aos calendários</Link>}
         {campaigns.isFetching && (
           <span role="status">Atualizando campanhas…</span>
         )}
       </div>
-      <div className="grid md:grid-cols-2 gap-6">
+      {creating&&<div className="grid md:grid-cols-2 gap-6">
         <section className="space-y-4 rounded-2xl border border-white/10 p-5">
           <label className="block">
             Cliente
@@ -337,7 +345,7 @@ export function MonthlyEditorialPage() {
               aria-label="Cliente"
               className={control}
               value={client}
-              disabled={!!id}
+              disabled={!!id||busy}
               onChange={(e) => {
                 setClient(e.target.value);
                 setBriefing("");
@@ -365,14 +373,14 @@ export function MonthlyEditorialPage() {
           </section>}
           {client&&<p className="text-xs text-orange-200">O cadastro sugere objetivo, público, tom e posicionamento. Revise estes dados e complete as lacunas antes de gerar.</p>}
           {client&&<section className="space-y-2 rounded-xl border border-orange-500/20 p-4"><h2 className="font-semibold">Contexto dos briefs no Drive</h2><p className="text-sm text-zinc-300">Escolha um documento revisado para orientar esta campanha. A aplicação confere se a versão no Drive continua igual.</p>{driveBriefs.isError?<p role="alert">Não foi possível consultar os briefs espelhados.</p>:driveBriefs.data?.filter(d=>d.client_id===client&&currentDriveReview(d)).map(d=><Button key={d.id} disabled={busy||!!id||locked} onClick={()=>void applyDriveBrief(d)}>Usar contexto de {d.name}</Button>)}<Link className="block text-sm text-orange-200 underline" to={`/clients/${client}`}>Consultar e revisar briefs na ficha do cliente</Link></section>}
-          {!!historicalBriefs.data?.length&&<div className="rounded-lg border border-orange-500/20 p-3 space-y-2"><p className="text-sm">Briefings importados da plataforma anterior</p>{historicalBriefs.data.map(record=><button key={record.id} type="button" disabled={!!id} className="block text-sm text-orange-200 underline disabled:opacity-50" onClick={()=>applyHistoricalBrief(record)}>Usar dados do briefing {record.source_created_at?new Date(record.source_created_at).toLocaleDateString('pt-BR'):''}</button>)}<p className="text-xs text-zinc-300">A aplicação substitui apenas os campos presentes no documento. Revise os dados e complete temas, fatos e restrições.</p></div>}
+          {!!historicalBriefs.data?.length&&<div className="rounded-lg border border-orange-500/20 p-3 space-y-2"><p className="text-sm">Briefings importados da plataforma anterior</p>{historicalBriefs.data.map(record=><button key={record.id} type="button" disabled={!!id||busy} className="block text-sm text-orange-200 underline disabled:opacity-50" onClick={()=>applyHistoricalBrief(record)}>Usar dados do briefing {record.source_created_at?new Date(record.source_created_at).toLocaleDateString('pt-BR'):''}</button>)}<p className="text-xs text-zinc-300">A aplicação substitui apenas os campos presentes no documento. Revise os dados e complete temas, fatos e restrições.</p></div>}
           <label className="block">
             Briefing do cliente
             <select
               aria-label="Briefing do cliente"
               className={control}
               value={briefing}
-              disabled={!!id}
+              disabled={!!id||busy}
               onChange={(e) => {
                 setBriefing(e.target.value);
                 setDirty(true);
@@ -393,7 +401,7 @@ export function MonthlyEditorialPage() {
             <Input
               type="month"
               value={month}
-              disabled={!!id}
+              disabled={!!id||busy}
               onChange={(e) => {
                 setMonth(e.target.value);
                 setDirty(true);
@@ -666,8 +674,7 @@ export function MonthlyEditorialPage() {
                 (inputs.pillars.isFetching || inputs.pillars.isError))
             }
             variant="primary"
-            onClick={() => {
-              try {
+            onClick={() => void action(async() => {
                 const missing=missingEditorialInputs(context,inputs.pillars.data||[]);
                 if(missing.length)throw Error(`Antes de gerar, complete: ${missing.join("; ")}. Use a área Preparar temas do mês para revisar sugestões.`);
                 const engineContext = {
@@ -676,28 +683,29 @@ export function MonthlyEditorialPage() {
                   repertoireVersion: inputs.repertoire.data?.version || 0,
                   requestedCounts: { ...counts },
                 };
-                setItems(
-                  generateMonthlyPlan(month, name, engineContext, counts, {
+                const generated=generateMonthlyPlan(month, name, engineContext, counts, {
                     clientId: client,
                     pillars: inputs.pillars.data || [],
                     history: inputs.history.data || [],
                     repertoire: inputs.repertoire.data?.families,
-                  }),
-                );
+                  });
+                setItems(generated);setContext(engineContext);setDirty(true);
+                const campaignId=await save(generated,engineContext);
+                setItems(generated);
                 setContext(engineContext);
                 setPieceSizes({});
-                setDirty(true);
+                setDirty(false);
                 setShare("");
                 setNotice(
                   "Calendário gerado como rascunho. Revise temas, datas e copies antes da aprovação.",
                 );
-              } catch (e) {
-                setNotice((e as Error).message);
-              }
-            }}
+                setSelectedPiece(null);
+                navigate(`/editorial?clientId=${client}&campaignId=${campaignId}`);
+            })}
           >
             Gerar calendário mensal
           </Button>
+          {items.length>0&&!id&&<p className="text-sm text-orange-200">Prévia gerada com {items.length} demandas. Se a gravação falhou, confira a mensagem e gere novamente para tentar salvar; suas entradas foram mantidas.</p>}
           <p className="text-sm text-[#B8B8C0]">
             As quantidades são ajustáveis para cada campanha; nenhum pacote fixo
             é imposto ao cliente.
@@ -723,7 +731,7 @@ export function MonthlyEditorialPage() {
               type="button"
               className="block w-full rounded-lg border border-white/10 p-3 text-left"
               key={c.id}
-              onClick={() => load(c)}
+              onClick={() => {load(c);navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`);}}
             >
               {clients.data?.find((x) => x.id === c.client_id)?.name ||
                 "Cliente"}{" "}
@@ -734,8 +742,9 @@ export function MonthlyEditorialPage() {
             </button>
           ))}
         </section>
-      </div>
-      {items.length > 0 && (
+      </div>}
+      {!creating&&<section className="space-y-3"><h2 className="text-xl font-semibold">Campanhas do cliente</h2>{campaigns.isError?<p role="alert">Não foi possível carregar as campanhas.</p>:campaigns.isPending?<p>Carregando campanhas…</p>:!campaigns.data?.length?<p>Nenhum calendário salvo. Crie uma campanha para organizar as demandas.</p>:<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{campaigns.data.map(c=><button key={c.id} aria-pressed={c.id===id} className={`rounded-xl border p-4 text-left ${c.id===id?'border-orange-500 bg-orange-500/10':'border-white/10'}`} onClick={()=>{load(c);setSelectedPiece(null);navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`);}}><p className="font-semibold">{clients.data?.find(x=>x.id===c.client_id)?.name||'Cliente'} · {c.month.slice(0,7)}</p><p className="text-sm text-orange-200">{statusNames[c.status]||c.status} · {c.items.length} conteúdos</p></button>)}</div>}</section>}
+      {!creating&&items.length > 0 && (
         <section className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="text-xl">
@@ -854,7 +863,12 @@ export function MonthlyEditorialPage() {
               </p>
             </section>
           )}
-          {items.map((item, index) => (
+          <div className="flex flex-wrap gap-2">{['all','post','carousel','reels'].map(format=><Button key={format} onClick={()=>setFormatFilter(format)} aria-pressed={formatFilter===format}>{format==='all'?'Todas as demandas':formatNames[format as MonthlyItem['format']]}</Button>)}</div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{items.map((item,index)=>(formatFilter==='all'||item.format===formatFilter)&&<button key={index} aria-label={`Abrir demanda ${index+1}`} onClick={()=>setSelectedPiece(index)} className="rounded-xl border border-white/10 p-5 text-left transition hover:border-orange-500"><p className="text-xs text-orange-300">{item.date} · {formatNames[item.format]}</p><h3 className="mt-3 font-semibold">{item.title}</h3><p className="mt-2 text-sm text-zinc-400">{item.editorial?.pillar}</p><p className="mt-4 text-sm">Revisar copy e direção visual ↗</p></button>)}</div>
+          <dialog aria-labelledby="editorial-piece-heading" ref={pieceDialog} onCancel={e=>{e.preventDefault();setSelectedPiece(null);}} className="fixed m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-4xl overflow-y-auto rounded-2xl border border-white/15 bg-zinc-900 p-5 text-white backdrop:bg-black/80">
+          <div className="sticky top-0 z-10 mb-4 flex justify-between gap-3 bg-zinc-900 py-2"><h2 id="editorial-piece-heading" className="text-xl font-semibold">Revisar demanda</h2><Button onClick={()=>setSelectedPiece(null)}>Fechar</Button></div>
+          {items.map((item, index) => selectedPiece===index&&(
+
             <article
               key={index}
               className="space-y-3 rounded-xl border border-white/10 p-5"
@@ -1049,34 +1063,11 @@ export function MonthlyEditorialPage() {
                   ))}
                 </ul>
               )}
-              <label className="block">
-                Copy do conteúdo {index + 1}
-                <textarea
-                  className={control}
-                  maxLength={3000}
-                  rows={5}
-                  value={item.copy}
-                  disabled={locked}
-                  onChange={(e) => {
-                    setItems(
-                      items.map((v, i) =>
-                        i === index
-                          ? {
-                              ...v,
-                              copy: e.target.value,
-                              editorial: v.editorial
-                                ? { ...v.editorial, humanEdited: true }
-                                : undefined,
-                            }
-                          : v,
-                      ),
-                    );
-                    setDirty(true);
-                  }}
-                />
-              </label>
+              <EditorialPieceEditor item={item} disabled={locked||busy} onChange={changed=>{setItems(items.map((v,i)=>i===index?changed:v));setDirty(true);setShare('');}}/>
+              <Button disabled={locked||busy||!dirty} onClick={()=>void action(async()=>{await save();})}>Salvar alterações</Button>
             </article>
           ))}
+          </dialog>
           {versions.data && (
             <details className="rounded-xl border border-white/10 p-4">
               <summary>Histórico de versões ({versions.data.length})</summary>
