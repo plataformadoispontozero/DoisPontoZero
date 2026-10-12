@@ -22,7 +22,7 @@ Deno.serve(async(req:Request)=>{
   if(permission.error||permission.data!==true||member.error||!['OWNER','ADMIN'].includes(role))return reply({error:'Somente administrador pode configurar credenciais da agência.'},403);
   const admin=createClient(env('SUPABASE_URL'),env('SUPABASE_SERVICE_ROLE_KEY'),{auth:{persistSession:false}});
   const previous=await providerConfiguration(admin,agency,provider);
-  if(body.action==='status')return reply({configured:!!previous,secureStorageAvailable:configurationAvailable(),clientId:previous?.clientId||'',version:previous?.version||'v26.0',redirectUri:`${env('SUPABASE_URL')}/functions/v1/${provider==='google'?'google-workspace':'meta-workspace'}`});
+  if(body.action==='status')return reply({configured:!!previous,secureStorageAvailable:configurationAvailable(),clientId:previous?.clientId||'',version:previous?.version||'v26.0',apiKey:previous?.apiKey||'',projectNumber:previous?.projectNumber||'',redirectUri:`${env('SUPABASE_URL')}/functions/v1/${provider==='google'?'google-workspace':'meta-workspace'}`});
   if(body.action!=='save')return reply({error:'Operação inválida.'},400);
   if(!configurationAvailable())return reply({error:'O armazenamento criptografado ainda precisa ser ativado pelo administrador técnico.'},409);
   const id=String(body.clientId||'').trim(),secret=typeof body.clientSecret==='string'?body.clientSecret.trim():'';
@@ -30,7 +30,9 @@ Deno.serve(async(req:Request)=>{
   if(secret.length>2000||(!secret&&!previous?.clientSecret))return reply({error:'Informe o segredo do aplicativo.'},400);
   const version=String(body.version||'v26.0');if(provider==='meta'&&!/^v\d{2}\.0$/.test(version))return reply({error:'Versão da API inválida.'},400);
   if(previous&&previous.clientId!==id&&!secret)return reply({error:'Informe o segredo do novo aplicativo.'},400);
-  await providerSecret(admin,'save',provider,agency,undefined,undefined,await encryptCredential({clientId:id,clientSecret:secret||previous!.clientSecret,redirectUri:`${env('SUPABASE_URL')}/functions/v1/${provider==='google'?'google-workspace':'meta-workspace'}`,version}));
+  const apiKey=String(body.apiKey??previous?.apiKey??'').trim(),projectNumber=String(body.projectNumber??previous?.projectNumber??'').trim();
+  if(provider==='google'&&((apiKey&&!/^[A-Za-z0-9_-]{20,150}$/.test(apiKey))||(projectNumber&&!/^\d{5,30}$/.test(projectNumber))))return reply({error:'Chave pública do Picker ou número do projeto inválido.'},400);
+  await providerSecret(admin,'save',provider,agency,undefined,undefined,await encryptCredential({clientId:id,clientSecret:secret||previous!.clientSecret,redirectUri:`${env('SUPABASE_URL')}/functions/v1/${provider==='google'?'google-workspace':'meta-workspace'}`,version,apiKey,projectNumber}));
   return reply({configured:true,secureStorageAvailable:true,clientId:id,version});
  }catch{return reply({error:'Não foi possível salvar a configuração. Verifique a conexão e tente novamente.'},400);}
 });

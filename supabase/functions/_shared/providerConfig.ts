@@ -1,7 +1,7 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2.117.3';
 const env=(key:string)=>Deno.env.get(key)||'';
 export type Provider='google'|'meta';
-export interface ProviderConfiguration {clientId:string;clientSecret:string;redirectUri:string;version?:string;}
+export interface ProviderConfiguration {clientId:string;clientSecret:string;redirectUri:string;version?:string;apiKey?:string;projectNumber?:string;}
 export function configurationAvailable(){return !!env('INTEGRATION_CONFIG_KEY');}
 async function key(){const raw=Uint8Array.from(atob(env('INTEGRATION_CONFIG_KEY')),c=>c.charCodeAt(0));if(raw.length!==32)throw Error('Configuração de criptografia indisponível.');return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['encrypt','decrypt']);}
 export async function decryptCredential(value:string){const [iv,data]=JSON.parse(value).map((s:string)=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)));return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv},await key(),data)));}

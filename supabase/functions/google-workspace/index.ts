@@ -53,10 +53,10 @@ Deno.serve(async(req:Request)=>{
   const raw=await req.text();if(raw.length>4096)return reply({error:'Solicitação inválida.'},400)
   const body=JSON.parse(raw),agency=body.agencyId
   if(typeof agency!=='string'||!/^[0-9a-f-]{36}$/i.test(agency))return reply({error:'Agência inválida.'},400)
-  const productionAction=['client-drive-list','client-drive-upload-start','client-drive-create-folder'].includes(body.action)
+  const productionAction=['client-drive-list','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
   const can=async(permission:string)=>{const r=await caller.rpc('has_agency_permission',{p_agency_id:agency,p_permission_key:permission});return !r.error&&r.data===true}
   if(productionAction){
-   if(!await can('clients.view')||(body.action==='client-drive-upload-start'&&!await can('tasks.edit')))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
+   if(!await can('clients.view')||(body.action!=='client-drive-list'&&!await can('tasks.edit')))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
   }else{
    const access=await caller.rpc('google_workspace_permission',{p_agency:agency});if(access.error||access.data!==true)return reply({error:'Permissão de editar configurações necessária.'},403)
   }
@@ -94,9 +94,14 @@ Deno.serve(async(req:Request)=>{
    }
    const folder=folderIdFromUrl(client.data.profile?.drive_url)
    if(!folder)return reply({error:'Cadastre o link da pasta do Drive no perfil deste cliente.'},409)
+   if(body.action==='client-picker-session'){
+    if(!requestConfig.apiKey||!requestConfig.projectNumber)return reply({error:'Configure a chave pública do Google Picker e o número do projeto em Integrações → Google.'},409)
+    // Google Picker requires this user's drive.file access token. Browser keeps it only in memory for this picker session.
+    return reply({accessToken:token.access_token,apiKey:requestConfig.apiKey,appId:requestConfig.projectNumber,folderId:folder})
+   }
    const googleHeaders={Authorization:`Bearer ${token.access_token}`}
    const check=await fetch(`https://www.googleapis.com/drive/v3/files/${folder}?fields=id,mimeType,trashed,capabilities(canAddChildren)&supportsAllDrives=true`,{headers:googleHeaders})
-   if(!check.ok)return reply({error:'Esta pasta não está autorizada para o aplicativo Google ou para sua conta. O link da pasta sozinho não concede acesso. Selecione a pasta pelo aplicativo no Google ou vincule uma pasta criada por ele.'},403)
+   if(!check.ok)return reply({error:'Esta pasta não está autorizada para o aplicativo Google ou para sua conta. O link da pasta sozinho não concede acesso. Use Autorizar pasta existente para selecionar a pasta cadastrada, ou vincule uma pasta criada pelo aplicativo.'},403)
    const metadata=await check.json()
    if(metadata.mimeType!=='application/vnd.google-apps.folder'||metadata.trashed)return reply({error:'A pasta do cliente não está disponível.'},409)
    if(body.action==='client-drive-upload-start'){

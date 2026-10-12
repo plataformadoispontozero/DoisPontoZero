@@ -58,7 +58,7 @@ function ProductionWorkspace({ department }: { department: string }) {
     auth = useAuth();
   const canCreate = usePermission("tasks.create"),
     canEdit = usePermission("tasks.edit");
-  const clients = useClients();
+  const clients = useClients(agencyId);
   const [materialClient, setMaterialClient] = useState("");
   const query = useTasks({ search: config?.prefix || "" });
   const projects = useProjects(canCreate ? agencyId : undefined);
@@ -344,12 +344,11 @@ function ProductionWorkspace({ department }: { department: string }) {
             </li>
           ))}
         </ul>
-        {department !== "traffic" && <section className="space-y-4"><h2 className="font-semibold">Arquivos do cliente</h2><Select aria-label="Cliente dos materiais" value={materialClient} onChange={e=>setMaterialClient(e.target.value)} options={[{value:"",label:"Selecione um cliente"},...(clients.data||[]).map(c=>({value:c.id,label:c.name}))]}/>{clients.isError&&<p role="alert">Não foi possível carregar os clientes.</p>}{materialClient&&<ClientDrivePanel key={materialClient} clientId={materialClient}/>}</section>}
+
       {department === "traffic" && (
           <p className="text-xs mt-4 text-[var(--color-text-secondary)]">
-            Campanhas e relatórios são organizados por links e documentos. Este
-            painel não publica anúncios nem consulta resultados de mídia
-            automaticamente.
+            As métricas são consultadas no Meta após a autorização da conta.
+            Este painel usa somente leitura e não publica anúncios.
           </p>
         )}
         <Link

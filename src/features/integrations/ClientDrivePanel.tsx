@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
+import {useQueryClient} from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 import { useAgencyId, usePermission } from '@/features/auth/AuthProvider';
 import { supabase } from '@/lib/supabase/client';
 import { validateDriveUpload, isGoogleUploadUrl, DRIVE_MEDIA_TYPES } from '../../../supabase/functions/google-workspace/drive';
+import {authorizeClientFolder} from './googlePicker';
 export interface DriveMaterial { id: string; name: string; mimeType: string; webViewLink?: string; modifiedTime?: string; size?: string }
 export function ClientDrivePanel({clientId}: {clientId: string}) {
+  const queryClient=useQueryClient();
   const agencyId = useAgencyId(), canUpload = usePermission('tasks.edit'), canEditClient = usePermission('clients.edit');
   const [files, setFiles] = useState<DriveMaterial[]>([]), [error,setError] = useState(''), [busy,setBusy] = useState(false), [progress,setProgress] = useState<number|null>(null), [loaded,setLoaded] = useState(false), [nextPage,setNextPage] = useState<string|null>(null), [selected,setSelected]=useState<string[]>([]), [reviewLink,setReviewLink]=useState('');
   const identity = useRef(''); identity.current = `${agencyId}:${clientId}`;
@@ -22,6 +25,12 @@ export function ClientDrivePanel({clientId}: {clientId: string}) {
     const current=identity.current;setBusy(true);setError('');
     try {const data=await request('client-drive-list',append&&nextPage?{pageToken:nextPage}:{});if(identity.current!==current)return;setFiles(previous=>append?[...previous,...data.files.filter((f:DriveMaterial)=>!previous.some(p=>p.id===f.id))]:data.files);setNextPage(data.nextPageToken);setLoaded(true);}
     catch(e){if(identity.current===current)setError(e instanceof Error?e.message:'Falha ao consultar materiais.');}
+    finally{if(identity.current===current)setBusy(false);}
+  }
+  async function authorize(){
+    const current=identity.current;setBusy(true);setError('');
+    try{const session=await request('client-picker-session');if(identity.current!==current)return;await authorizeClientFolder(session);if(identity.current===current)await load();}
+    catch(e){if(identity.current===current)setError(e instanceof Error?e.message:'Não foi possível autorizar a pasta.');}
     finally{if(identity.current===current)setBusy(false);}
   }
   async function send(file:File) {
@@ -43,11 +52,12 @@ export function ClientDrivePanel({clientId}: {clientId: string}) {
     }catch(e){if(identity.current===current)setError(e instanceof Error?e.message:'Não foi possível enviar o arquivo.');}
     finally{if(identity.current===current){setBusy(false);setProgress(null);}upload.current=null;}
   }
-  async function createFolder(){setBusy(true);setError('');try{await request('client-drive-create-folder');await load();}catch(e){setError(e instanceof Error?e.message:'Não foi possível criar a pasta.');}finally{setBusy(false);}}
+  async function createFolder(){setBusy(true);setError('');try{await request('client-drive-create-folder');await Promise.all([queryClient.invalidateQueries({queryKey:['clients',agencyId]}),queryClient.invalidateQueries({queryKey:['client',agencyId,clientId]})]);await load();}catch(e){setError(e instanceof Error?e.message:'Não foi possível criar a pasta.');}finally{setBusy(false);}}
   async function publish(){setBusy(true);setError('');try{const r=await supabase!.functions.invoke('drive-material-approval',{body:{action:'publish',agencyId,clientId,fileIds:selected}});if(r.error||r.data?.error)throw Error('Não foi possível criar o link de revisão.');setReviewLink(r.data.link);}catch(e){setError(e instanceof Error?e.message:'Falha ao publicar.');}finally{setBusy(false);}}
   return <section className="rounded-2xl border border-white/15 bg-white/[0.03] p-5 space-y-4" aria-label="Materiais no Drive do cliente">
     <div><h3 className="font-semibold text-lg">Materiais do cliente · Google Drive</h3><p className="text-sm text-[var(--color-text-secondary)] mt-1">Consulte a pasta vinculada no cadastro e envie imagens ou vídeos sem sair da produção. Os arquivos permanecem privados no Google Drive.</p></div>
     <div className="flex flex-wrap gap-3 items-center"><button disabled={busy} className="rounded-lg border border-white/20 px-4 py-2 disabled:opacity-50" onClick={()=>void load()}>Atualizar materiais</button>
+      {canUpload&&<button disabled={busy} className="rounded-lg border border-white/20 px-4 py-2 disabled:opacity-50" onClick={()=>void authorize()}>Autorizar pasta existente</button>}
       {canUpload&&<label className={`rounded-lg bg-[#c84408] px-4 py-2 cursor-pointer ${busy?'opacity-50':''}`}>Enviar imagem ou vídeo<input aria-label="Enviar material para a pasta do cliente" className="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm" disabled={busy} onChange={e=>{const f=e.target.files?.[0];e.target.value='';if(f)void send(f);}}/></label>}
       {canEditClient&&<button disabled={busy} className="rounded-lg border border-white/20 px-4 py-2" onClick={()=>void createFolder()}>Criar pasta para este cliente</button>}
       <Link className="text-sm underline" to="/settings/integrations/google">Configurar conexão</Link></div>

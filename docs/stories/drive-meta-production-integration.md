@@ -34,10 +34,24 @@ Google documentos oficiais de scopes/drive.file e uploads resumíveis consultado
 - [x] Materiais em Design/Vídeo e resultados Meta em Tráfego Pago com seleção real de cliente.
 - [x] Revisão pública com token aleatório hashed, validade de 14 dias, arquivos privados e verificação de versão antes da aprovação.
 - [x] Cinco migrations aplicadas; funções Google, Meta, configuração e revisão implantadas com autenticação própria.
-- [ ] Notificação de resposta e publicação frontend final.
+- [x] Notificação de resposta implantada (20261012131204) e publicação frontend final.
 - [ ] Homologação externa após configuração e autorização das contas pelo administrador.
 
 Arquivos adicionais: src/features/integrations/ClientMetaPanel.tsx, MaterialReviewPage.tsx, materialApproval.database.test.ts; src/features/production/DepartmentPage.tsx; src/app/router/index.tsx; supabase/functions/drive-material-approval/index.ts; migrations drive_material_approval e drive_approval_notification; supabase/config.toml.
 Limites: arquivos continuam privados no Drive; vídeos grandes precisam de teste real conforme limites de execução do plano Supabase. A prévia atual carrega o arquivo sob demanda no navegador. Nenhum arquivo foi enviado a uma conta real durante testes.
 
 Gates locais finais: 184 testes em 48 arquivos, lint sem erros, typecheck e build aprovados. Revisão pública com resposta simulada e proteção de Meta/Design/Vídeo homologadas em desktop, tablet e celular, sem overflow. Nenhuma conta externa, upload ou mensagem real usados nos testes. Key server-only gerada; OAuth app credentials continuam pendentes. RPCs de segredos recusam anon/authenticated e aceitam somente service_role. Funções sem autenticação retornam 401 e preflight 204.
+
+## Complemento: Google Picker
+- [x] Autorizar a pasta legada vinculada ao cliente sem ampliar o escopo drive.file.
+- [x] Formulário Google inclui API Key pública restrita ao Picker e número do projeto Cloud.
+- [x] Sessão retorna access token do próprio usuário apenas em memória para a API oficial Picker, nunca refresh token/secret.
+- [x] Seletor rejeita outro ID de pasta; perfil do cliente não é alterado pela seleção.
+- [x] CSP permite somente hosts oficiais específicos para SDK/frame/conexão Picker.
+- [x] Typecheck e cinco testes unitários (Drive e Picker) passaram.
+- [ ] Seleção real pendente da configuração OAuth/API Key e habilitação Google Picker API.
+
+Arquivos adicionais: src/features/integrations/googlePicker.ts; googlePicker.test.ts; public/_headers.
+
+Google Picker preparado para autorizar pastas legadas com escopo drive.file; exige chave pública restrita e número do projeto Google no formulário. Token OAuth curto é usado somente em memória pelo seletor, sem refresh token ou Client Secret devolvido. Seletor e API recebem o cliente/agência autenticados; Design/Vídeo/Tráfego usam agencyId válido e sem seletores duplicados.
+Gates do complemento: lint sem erros, typecheck/build e 186 testes em 49 arquivos; testes do seletor e da validação da pasta. Produção autenticada simulada em três viewports verifica query clients por agência UUID e consultas Drive/Meta com clientId/agencyId. Homologação real de Picker/OAuth continua pendente de credenciais e autorização. CodeRabbit indisponível.

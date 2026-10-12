@@ -73,5 +73,7 @@ Arquivos: supabase/functions/team-invite/index.ts; src/features/team/AcceptInvit
 - [x] Migration aplicada e 29 clientes enriquecidos a partir do mapeamento por IDs revisado, sem sobrescrever campos existentes.
 - [x] Histórico imutável por cliente disponível com RLS e estados de aprovação originais.
 - [x] Objetivo, público, tom e posicionamento do cadastro sugeridos ao iniciar calendário, com revisão pela social media.
-- [ ] Importação completa dos documentos antigos e publicação final.
+- [x] Documentos históricos disponíveis; 566 importados, 27 registros de 13 clientes ausentes ficam separados para revisão, sem vínculo inventado.
 Arquivos adicionais: src/features/clients/clientProfile.ts, profileFields.ts, components/ClientHubModal.tsx, ClientLegacyPanel.tsx; testes clientProfile/clientLegacy; migrations client_profiles_and_csv_enrichment e client_legacy_records.
+
+Reconciliação final do histórico: 23 briefings, 43 estratégias, 103 calendários, 326 demandas e 71 registros de vídeo = 566. Verificação do agente de migração: nenhum duplicado, mapeamento inválido ou credencial nos registros importados. Esses documentos preservam estados antigos e não criam novas aprovações.
