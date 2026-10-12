@@ -76,3 +76,6 @@ Google mostra erros de sessão/serviço separadamente de falta de configuração
 A Edge Function foi atualizada para versão 2 com cabeçalhos CORS canônicos do SDK, mantendo a lista de origens, permissões e autenticação. Não há prova de que CORS era a causa do erro observado; logs mostraram 404 antes do deploy original e OPTIONS 204 depois dele. Um teste de navegador no domínio oficial obteve HTTP 401 sem sessão (comunicação chegou ao backend). Após versão 2: preflight 204/headers SDK, POST não autenticado 401, callback 303 configuration_required. A autorização real do Google continua aguardando CLIENT_ID/CLIENT_SECRET/REDIRECT_URI/TOKEN_KEY.
 
 Verificações: 154 testes/37 arquivos; lint sem erros (avisos existentes), typecheck e build. Dez cenários E2E afetados passaram em desktop/mobile. Bundle produzido index-DEGoNDhl.js. Frontend: publicação da correção em andamento.
+
+
+Publicação do hotfix CSV/Google: commit funcional `d843200`, branch `codex/master-audit-15-1`; Worker `ad2451af-feae-4ee5-bdb9-afb05fb1aed4`. Bundle `index-DEGoNDhl.js` confirmado no domínio oficial em 1440×900 e 390×844: início/login HTTP 200; editorial protegido redireciona ao login sem sessão; sem overflow. Verificação não executou OAuth nem importou clientes. Backend Google v2 havia sido publicado e validado separadamente antes deste deploy.

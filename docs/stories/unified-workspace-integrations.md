@@ -38,3 +38,5 @@ Validação da correção: 154 testes em 37 arquivos, lint sem erros (avisos leg
 Google: logs mostraram 404 anteriores ao deploy original e OPTIONS 204 após deploy; não foi comprovada a causa da falha da sessão do usuário. Consulta real feita no navegador Chrome no domínio oficial respondeu 401 sem sessão, confirmando comunicação CORS sem liberar acesso. Edge versão 2 publicada usando corsHeaders do SDK, preservando origem restrita e autenticação customizada. Preflight 204 incluindo traceparent/x-retry-count, POST sem sessão 401 e callback 303 configuration_required confirmados. O cliente OAuth ainda não existe/configurou-se; conta de serviço não é substituto desse fluxo. Projeto informado pelo usuário: firm-pentameter-474412-h7. Nenhum segredo recebido ou publicado.
 
 Arquivo adicional de evidências: docs/CODEX_WORKSPACE_INTEGRATIONS.md. File list da correção: csv.ts, csv.test.ts, ImportClientsPage.tsx, GoogleWorkspacePage.tsx, google-workspace/index.ts, e2e/agency-access.spec.ts e os dois documentos.
+
+Hotfix CSV/Google publicado em 12/10/2026: código `d843200`, Worker `ad2451af-feae-4ee5-bdb9-afb05fb1aed4`; domínio e bundle conferidos em desktop/mobile.
