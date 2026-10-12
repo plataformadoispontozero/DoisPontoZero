@@ -6,7 +6,7 @@ export interface LegacyEditorialSource { id: string; payload: Record<string, unk
 const text = (value: unknown) => typeof value === 'string' ? value.trim().slice(0, 500) : '';
 export function suggestEditorialTopics(profile: ClientProfile, briefs: LegacyEditorialSource[], strategies: LegacyEditorialSource[]): SuggestedTopic[] {
  const suggestions: SuggestedTopic[] = [];
- const add = (value: unknown, source: string) => { const candidate = text(value); if(candidate && !suggestions.some(s=>s.text.toLocaleLowerCase()===candidate.toLocaleLowerCase())) suggestions.push({text:candidate,source}); };
+ const add = (value: unknown, source: string) => { const original = text(value); const candidate = original.length>140?original.slice(0,137).replace(/\s+\S*$/, '').trim()+'…':original; if(candidate && !suggestions.some(s=>s.text.toLocaleLowerCase()===candidate.toLocaleLowerCase())) suggestions.push({text:candidate,source}); };
  const latestStrategy = strategies[0];
  if(latestStrategy){ const summary=latestStrategy.payload.resumo_extraido; if(summary&&typeof summary==='object'&&!Array.isArray(summary)) {const s=summary as Record<string,unknown>;add(s.foco_q1,'Foco da primeira quinzena da estratégia histórica');add(s.foco_q2,'Foco da segunda quinzena da estratégia histórica');} }
  const latestBrief=briefs[0];
@@ -37,4 +37,17 @@ export function legacyCalendarHistory(clientId:string, records:LegacyEditorialSo
    return [...new Set(titles)].map(title=>({clientId,campaignId:`legacy:${record.id}:${index}`,state:'historical',item:{date:'',format:'post' as const,title,copy:''}}));
   });
  });
+}
+
+export interface BriefContextAnswer {questionKey?:string;label?:string;value:unknown}
+export function briefingEditorialContext(answers:BriefContextAnswer[]):Partial<EditorialContext>{
+ const normalize=(s:string)=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ const rows=answers.map(a=>({...a,key:normalize(a.questionKey||''),label:normalize(a.label||''),text:typeof a.value==='string'?a.value.trim():Array.isArray(a.value)?a.value.filter(v=>typeof v==='string').join(', '):''})).filter(a=>a.text);
+ const pick=(keys:string[],pattern:RegExp)=>keys.map(k=>rows.find(a=>a.key===k)?.text).find(Boolean)||rows.find(a=>pattern.test(a.key+' '+a.label))?.text;
+ const result:Partial<EditorialContext>={};
+ const fields:[keyof EditorialContext,string[],RegExp][]=[['objective',['objetivo_principal','objective','objetivo'],/objetivo principal|objective|goals/],['audience',['persona_descricao','target_audience','publico_alvo','audience'],/publico.alvo|persona.descricao|audience/],['tone',['tom_de_voz','tone','tom_comunicacao'],/tom de comunicacao|tom de voz|tone/],['positioning',['posicionamento','brand_positioning','diferenciais'],/posicion|position|diferencia/],['restrictions',['palavras_proibidas','restrictions','restricoes'],/restri|proibi/],['visualGuidance',['identidade_visual','visual_guidance'],/identidade.visual|visual.guidance/]];
+ for(const [field,keys,pattern] of fields){const value=pick(keys,pattern);if(value)(result as Record<string,unknown>)[field]=value;}
+ const topics=pick(['temas_aprovados','approved_topics'],/temas.aprovados|approved.topics/);if(topics)result.topics=topics.split(/\n/).map(t=>t.trim()).filter(Boolean);
+ const facts=pick(['fatos_aprovados','approved_facts'],/fatos.aprovados|approved.facts/);if(facts)result.approvedFacts=facts.split('\n').map(t=>t.trim()).filter(Boolean);
+ return result;
 }

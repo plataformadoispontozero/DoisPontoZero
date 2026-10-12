@@ -1,3 +1,4 @@
+import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 08: NEW PROPOSAL WIZARD
@@ -29,7 +30,7 @@ import { useClients } from '@/features/clients/hooks/useClients'
 export const NewProposalPage: React.FC = () => {
   const navigate = useNavigate()
   const createProposalMutation = useCreateProposal()
-  const { data: clients = [] } = useClients('demo-agency')
+  const { data: clients = [] } = useClients(useAgencyId())
   const { data: templates = [] } = useProposalTemplates()
 
   const [step, setStep] = useState<number>(1)

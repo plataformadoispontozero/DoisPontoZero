@@ -1,4 +1,4 @@
-import { useAuth } from '@/features/auth/AuthProvider'
+import { useAgencyId, useAuth } from '@/features/auth/AuthProvider'
 import { toast } from '@/components/ui/Toast'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -20,7 +20,7 @@ import type { Client } from '@/types/projects'
 export const NewMeetingPage: React.FC = () => {
   const auth = useAuth()
   const navigate = useNavigate()
-  const { data: clients } = useClients()
+  const { data: clients } = useClients(useAgencyId())
   const { data: projects = [] } = useProjects()
   const createMeetingMutation = useCreateMeeting()
 

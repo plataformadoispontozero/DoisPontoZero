@@ -29,7 +29,7 @@ export const DiagnosticsPage: React.FC = () => {
               <span className="text-[10px] text-[#B8B8C0] uppercase font-bold block">
                 Ambiente Frontend
               </span>
-              <span className="text-sm font-bold text-[#F8F9FC]">Vite + React 18</span>
+              <span className="text-sm font-bold text-[#F8F9FC]">Vite + React 19</span>
             </div>
             <Terminal className="w-5 h-5 text-[#FF8759]" />
           </CardContent>
@@ -55,9 +55,9 @@ export const DiagnosticsPage: React.FC = () => {
               <span className="text-[10px] text-[#B8B8C0] uppercase font-bold block">
                 Segurança RLS
               </span>
-              <span className="text-sm font-bold text-[#34D399]">Auditado & Ativo</span>
+              <span className="text-sm font-bold text-[#FBBF24]">Requer validação remota</span>
             </div>
-            <ShieldCheck className="w-5 h-5 text-[#34D399]" />
+            <ShieldCheck className="w-5 h-5 text-[#FBBF24]" />
           </CardContent>
         </Card>
 

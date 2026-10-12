@@ -113,7 +113,7 @@ export const ProposalWorkspacePage: React.FC = () => {
   // Section manipulation functions
   const handleAddSection = (type: SectionType) => {
     const newSection: ProposalSection = {
-      id: `sec-${Date.now()}`,
+      id: crypto.randomUUID(),
       agency_id: proposal.agency_id,
       proposal_id: proposal.id,
       section_type: type,
@@ -167,7 +167,7 @@ export const ProposalWorkspacePage: React.FC = () => {
     if (!svc) return
 
     const newItem: ProposalItem = {
-      id: `item-${Date.now()}`,
+      id: crypto.randomUUID(),
       agency_id: proposal.agency_id,
       proposal_id: proposal.id,
       service_id: svc.id,

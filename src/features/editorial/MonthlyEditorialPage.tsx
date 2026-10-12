@@ -1,5 +1,5 @@
 import { EditorialPieceEditor } from "./EditorialPieceEditor";
-import { missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
+import { briefingEditorialContext, missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
 import { currentDriveReview,useDriveBriefDocuments,type DriveBriefDocument } from '@/features/briefing/driveDocuments';
 import { readClientProfile } from "@/features/clients/clientProfile";
 import { useEffect, useRef,useState } from "react";
@@ -114,6 +114,8 @@ export function MonthlyEditorialPage() {
   const historicalStrategies=useQuery({queryKey:['editorial-legacy-strategies',agency,client],enabled:!!client,queryFn:async()=>{const r=await supabase!.from('client_legacy_records').select('id,payload,source_created_at').eq('agency_id',agency).eq('client_id',client).eq('source_kind','estrategias_mensais').order('source_created_at',{ascending:false});if(r.error)throw r.error;return r.data as {id:string;payload:Record<string,unknown>}[];}});
   const topicSuggestions=suggestEditorialTopics(readClientProfile(clients.data?.find(c=>c.id===client)?.profile),historicalBriefs.data||[],historicalStrategies.data||[]);
   useEffect(()=>{setTopicDraft('');setTopicsReviewed(false);},[client]);
+  useEffect(()=>{if(!client||id||items.length||historicalBriefs.isPending||historicalStrategies.isPending||!topicSuggestions.length)return;setContext(old=>old.topics?.length?old:{...old,topics:topicSuggestions.map(t=>t.text)});},[client,id,items.length,historicalBriefs.data,historicalStrategies.data]);
+
   function applyHistoricalBrief(record:{id:string;payload:Record<string,unknown>}){const text=(key:string)=>typeof record.payload[key]==='string'?(record.payload[key] as string).slice(0,4000):'';setContext(old=>({...old,objective:text('objetivo_principal')||old.objective,audience:text('persona_descricao')||old.audience,tone:text('tom_de_voz')||old.tone,positioning:text('diferenciais')||old.positioning,restrictions:text('palavras_proibidas')||old.restrictions,changeNote:`Dados revisados do briefing histórico ${record.id}`}));setDirty(true);setNotice('Dados do briefing anterior sugeridos. Confira os campos antes de gerar; o histórico original foi preservado.');}
   const briefs = useQuery({
     queryKey: ["editorial-briefs", agency, client],
@@ -131,7 +133,7 @@ export function MonthlyEditorialPage() {
     },
   });
   const details = useQuery({
-    queryKey: ["editorial-brief-context", agency, briefing],
+    queryKey: ["editorial-brief-context", agency, client, briefing],
     enabled: !!briefing,
     queryFn: async () => {
       const r = await supabase!.rpc("get_editorial_briefing", {
@@ -140,34 +142,7 @@ export function MonthlyEditorialPage() {
         p_briefing: briefing,
       });
       if (r.error) throw r.error;
-      const result = { ...emptyContext };
-      for (const a of r.data?.answers || []) {
-        const q = { question_key: a.questionKey, label: a.label };
-        const key = ((q?.question_key || "") + " " + (q?.label || ""))
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "");
-        const v =
-          typeof a.value === "string"
-            ? a.value
-            : Array.isArray(a.value)
-              ? a.value.join(", ")
-              : "";
-        if (/objetivo|objective|meta|goals/.test(key)) result.objective = v;
-        if (/audience|publico|persona/.test(key)) result.audience = v;
-        if (/tom_|tone|linguagem/.test(key)) result.tone = v;
-        if (/posicion|position|diferencial/.test(key)) result.positioning = v;
-        if (/restri|limit|proibi/.test(key)) result.restrictions = v;
-        if (/temas_aprovados|approved_topics/.test(key))
-          result.topics = v
-            .split(/\n|,/)
-            .map((t: string) => t.trim())
-            .filter(Boolean);
-        if (/fatos_aprovados|approved_facts/.test(key))
-          result.approvedFacts = v.split("\n").filter(Boolean);
-        if (/identidade_visual|visual_guidance/.test(key))
-          result.visualGuidance = v;
-      }
+      const result = briefingEditorialContext(r.data?.answers || []);
       return {
         ...result,
         briefingRevision: r.data.revision,
@@ -175,6 +150,7 @@ export function MonthlyEditorialPage() {
       };
     },
   });
+  useEffect(()=>{if(client&&!id&&!briefing&&briefs.data?.length)setBriefing(briefs.data[0].id);},[client,id,briefing,briefs.data]);
   const campaigns = useQuery({
     queryKey: ["monthly-editorial", agency],
     enabled: !!agency,
@@ -215,7 +191,7 @@ export function MonthlyEditorialPage() {
   });
   useEffect(() => {
     if (details.data && !id) {
-      setContext(details.data);
+      setContext(old=>({...old,...details.data}));
       setDirty(true);
     }
   }, [details.data, id]);
@@ -300,8 +276,8 @@ export function MonthlyEditorialPage() {
       await fn();
     } catch (e) {
       setNotice(
-        e instanceof Error
-          ? e.message
+        e && typeof e==='object' && 'message' in e
+          ? String(e.message)
           : "Não foi possível concluir. Verifique as permissões e tente novamente.",
       );
     } finally {
@@ -675,10 +651,11 @@ export function MonthlyEditorialPage() {
             }
             variant="primary"
             onClick={() => void action(async() => {
-                const missing=missingEditorialInputs(context,inputs.pillars.data||[]);
+                const effectiveContext={...context,topics:context.topics?.length?context.topics:topicSuggestions.map(t=>t.text)};
+                const missing=missingEditorialInputs(effectiveContext,inputs.pillars.data||[]);
                 if(missing.length)throw Error(`Antes de gerar, complete: ${missing.join("; ")}. Use a área Preparar temas do mês para revisar sugestões.`);
                 const engineContext = {
-                  ...context,
+                  ...effectiveContext,
                   engineVersion: ENGINE_VERSION,
                   repertoireVersion: inputs.repertoire.data?.version || 0,
                   requestedCounts: { ...counts },

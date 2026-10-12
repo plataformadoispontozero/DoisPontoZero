@@ -306,7 +306,7 @@ export const BriefingResponsesPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {realBriefing?.source_system==='lovable'&&<><section className="rounded-xl border border-orange-500/25 p-5"><h2 className="font-semibold">Briefing migrado do Lovable</h2><p className="mt-2 text-sm text-zinc-300">Status na origem: {realBriefing.source_status||'Não informado'}. As respostas e datas foram preservadas. O rascunho aguarda revisão na nova plataforma; a migração não concede aprovação.</p></section><MigratedBriefingHistory briefingId={realBriefing.id}/></>}
+      {realBriefing?.source_system==='lovable'&&<><section className="rounded-xl border border-orange-500/25 p-5"><h2 className="font-semibold">Briefing migrado do Lovable</h2><p className="mt-2 text-sm text-zinc-300">Status na origem: {realBriefing.source_status||'Não informado'}. As respostas e datas foram preservadas. {realBriefing.migration_review_pending?'O rascunho aguarda revisão na nova plataforma.':'Dados disponíveis para o planejamento deste cliente.'} A migração preserva o status histórico.</p></section><MigratedBriefingHistory briefingId={realBriefing.id}/></>}
       {/* Sections and Questions with Answers */}
       <div className="space-y-6">
         {[...(briefing.template?.sections||[])].sort((a,b)=>a.position-b.position).map((sec, sIdx) => {

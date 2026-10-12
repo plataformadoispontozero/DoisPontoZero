@@ -34,3 +34,17 @@ it('includes rejected historical structured topics in reuse checks and does not 
  expect(()=>generateCampaignPlan('2026-11','Cliente',context,{post:1,reels:0,carousel:0},{clientId:'a',history})).toThrow(/esgotado/);
  expect(generateCampaignPlan('2026-11','Outro cliente',context,{post:1,reels:0,carousel:0},{clientId:'b',history})).toHaveLength(1);
 });
+
+it('keeps primary briefing fields when later metadata is empty and does not approve arbitrary facts',async()=>{
+ const {briefingEditorialContext}=await import('./editorialContext');
+ const result=briefingEditorialContext([{questionKey:'objetivo_principal',value:'Atrair clientes'},{questionKey:'meta_faturamento',value:null},{questionKey:'meta_leads_mes',value:'20'},{questionKey:'persona_descricao',value:'Empresas'},{questionKey:'localizacao_publico',value:null},{questionKey:'tom_de_voz',value:'Profissional'},{questionKey:'diferenciais',value:'Atendimento consultivo'}]);
+ expect(result).toMatchObject({objective:'Atrair clientes',audience:'Empresas',tone:'Profissional',positioning:'Atendimento consultivo'});expect(result.approvedFacts).toBeUndefined();
+});
+
+it('turns a long imported service description into a usable topic without altering the briefing',()=>{
+ const payload={produtos_servicos:'Consultoria e execução de obras comerciais '.repeat(20)};
+ const suggestions=suggestEditorialTopics({niche:'Engenharia'},[{id:'b',payload}],[]);
+ expect(suggestions.every(s=>s.text.length<=140)).toBe(true);
+ const plan=generateCampaignPlan('2026-11','Cliente',{...emptyContext,objective:'Contatos',audience:'Empresas',topics:suggestions.map(s=>s.text)},{post:4,reels:4,carousel:2},{clientId:'a'});
+ expect(plan).toHaveLength(10);expect(payload.produtos_servicos.length).toBeGreaterThan(500);
+});

@@ -104,7 +104,7 @@ export function useProposals() {
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   return useQuery({
-    queryKey: ['proposals'],
+    queryKey: ['proposals', agencyId],
     queryFn: async (): Promise<Proposal[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
@@ -147,8 +147,8 @@ export function useProposal(proposalId?: string) {
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   return useQuery({
-    queryKey: ['proposal', proposalId],
-    enabled: Boolean(proposalId),
+    queryKey: ['proposal', agencyId, proposalId],
+    enabled: Boolean(proposalId) && (!isSupabaseConfigured || Boolean(agencyId)),
     queryFn: async (): Promise<Proposal | null> => {
       if (!proposalId) return null
       if (isSupabaseConfigured && supabase) {
@@ -162,6 +162,7 @@ export function useProposal(proposalId?: string) {
               proposal_items (*),
               proposal_pricing (*)
             `)
+            .eq('agency_id', agencyId)
             .eq('id', proposalId)
             .single()
 
@@ -265,16 +266,14 @@ export function useCreateProposal() {
     }): Promise<Proposal> => {
       if (supabase && isSupabaseConfigured) {
         if (!auth.user || !agencyId) throw new Error('Sessão e agência são obrigatórias.')
-        if (payload.template_id) throw new Error('Aplicação de modelo exige transação de seções e itens no backend; integração pendente.')
-        const { data, error } = await supabase.from('proposals').insert({
-          agency_id: agencyId, client_id: payload.client_id, title: payload.title.trim(),
-          description: payload.description || null, briefing_id: payload.briefing_id || null,
-          strategy_id: payload.strategy_id || null, created_by: auth.user.id, owner_id: auth.user.id,
-          proposal_number: `PROP-${new Date().getFullYear()}-${crypto.randomUUID().slice(0, 8)}`, status: 'draft',
-        }).select('*').single()
+        const { data, error } = await supabase.rpc('create_agency_proposal', {
+          p_agency_id: agencyId,
+          p_payload: { title: payload.title.trim(), client_id: payload.client_id, description: payload.description || null,
+            briefing_id: payload.briefing_id || null, strategy_id: payload.strategy_id || null, template_id: payload.template_id || null },
+        })
         if (error) throw error
         queryClient.invalidateQueries({ queryKey: ['proposals'] })
-        return { ...data, sections: [], items: [] } as Proposal
+        return data as Proposal
       }
       const newId = `prop-${Date.now()}`
       const propNumber = `PROP-2026-${Math.floor(100 + Math.random() * 900)}`
@@ -399,13 +398,13 @@ export function useUpdateProposal() {
       description?: string
     }): Promise<Proposal> => {
       if (supabase && isSupabaseConfigured) {
-        if (payload.items || payload.sections) throw new Error('Salvar itens e seções exige transação e cálculo de preço no backend; integração pendente.')
-        if (payload.status && !['draft', 'internal_review', 'archived'].includes(payload.status)) throw new Error('Essa transição exige o fluxo autorizado de aprovação/publicação no backend.')
-        const { data, error } = await supabase.from('proposals').update({
-          title: payload.title, description: payload.description, status: payload.status,
-        }).eq('agency_id', agencyId).eq('id', payload.id).select('*').single()
+        if (!auth.user || !agencyId) throw new Error('Sessão e agência são obrigatórias.')
+        const { id, ...changes } = payload
+        const { data, error } = await supabase.rpc('save_agency_proposal', {
+          p_agency_id: agencyId, p_proposal_id: id, p_changes: changes,
+        })
         if (error) throw error
-        queryClient.invalidateQueries({ queryKey: ['proposals'] }); queryClient.invalidateQueries({ queryKey: ['proposal', payload.id] })
+        queryClient.invalidateQueries({ queryKey: ['proposals'] }); queryClient.invalidateQueries({ queryKey: ['proposal', agencyId, payload.id] })
         return data as Proposal
       }
       const foundIdx = demoProposalsStore.findIndex((p) => p.id === payload.id)
@@ -466,7 +465,7 @@ export function useUpdateProposal() {
       }
 
       queryClient.invalidateQueries({ queryKey: ['proposals'] })
-      queryClient.invalidateQueries({ queryKey: ['proposal', payload.id] })
+      queryClient.invalidateQueries({ queryKey: ['proposal', agencyId, payload.id] })
       return updated
     },
   })

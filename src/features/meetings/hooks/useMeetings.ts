@@ -213,8 +213,8 @@ export function useSingleMeeting(meetingId?: string) {
   const queryClient = useQueryClient()
 
   const meetingQuery = useQuery({
-    queryKey: ['meeting', meetingId],
-    enabled: Boolean(meetingId),
+    queryKey: ['meeting', agencyId, meetingId],
+    enabled: Boolean(meetingId) && (!isSupabaseConfigured || Boolean(agencyId)),
     queryFn: async (): Promise<Meeting | null> => {
       if (!meetingId) return null
 
@@ -238,12 +238,12 @@ export function useSingleMeeting(meetingId?: string) {
     mutationFn: async (updates: Partial<Meeting>) => {
       if (!meetingId) throw new Error('Reunião não encontrada.')
       if (supabase && isSupabaseConfigured) {
-        if (updates.agenda || updates.minutes || updates.decisions || updates.actions) throw new Error('Conteúdo relacionado da reunião exige persistência transacional no backend; integração pendente.')
-        const allowed = ['title', 'description', 'status', 'starts_at', 'ends_at', 'timezone', 'location_type', 'location_text', 'meeting_url']
-        const fields = Object.fromEntries(Object.entries(updates).filter(([key]) => allowed.includes(key)))
-        const { error } = await supabase.from('meetings').update(fields).eq('agency_id', agencyId).eq('id', meetingId).select('id').single()
+        if (!auth.user || !agencyId) throw new Error('Sessão e agência são obrigatórias.')
+        const { data: _saved, error } = await supabase.rpc('save_meeting_content', {
+          p_agency_id: agencyId, p_meeting_id: meetingId, p_changes: updates,
+        })
         if (error) throw error
-        queryClient.invalidateQueries({ queryKey: ['meetings'] }); queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] })
+        queryClient.invalidateQueries({ queryKey: ['meetings'] }); queryClient.invalidateQueries({ queryKey: ['meeting', agencyId, meetingId] })
         return
       }
       const idx = demoMeetingsStore.findIndex((m) => m.id === meetingId)
@@ -255,7 +255,7 @@ export function useSingleMeeting(meetingId?: string) {
         }
       }
       queryClient.invalidateQueries({ queryKey: ['meetings'] })
-      queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] })
+      queryClient.invalidateQueries({ queryKey: ['meeting', agencyId, meetingId] })
     },
   })
 
@@ -264,7 +264,7 @@ export function useSingleMeeting(meetingId?: string) {
     const newAgenda = [
       ...(meeting.agenda || []),
       {
-        id: `agenda-${Date.now()}`,
+        id: crypto.randomUUID(),
         agency_id: meeting.agency_id,
         meeting_id: meeting.id,
         title: item.title || 'Novo Tópico',
@@ -294,7 +294,7 @@ export function useSingleMeeting(meetingId?: string) {
     if (!meeting) return
     const currentMin = meeting.minutes
     const updatedMinutes: MeetingMinutes = {
-      id: currentMin?.id || `min-${Date.now()}`,
+      id: currentMin?.id || crypto.randomUUID(),
       agency_id: meeting.agency_id,
       meeting_id: meeting.id,
       content,
@@ -312,7 +312,7 @@ export function useSingleMeeting(meetingId?: string) {
     const newDecisions = [
       ...(meeting.decisions || []),
       {
-        id: `dec-${Date.now()}`,
+        id: crypto.randomUUID(),
         agency_id: meeting.agency_id,
         meeting_id: meeting.id,
         title: decision.title || 'Nova Decisão',
@@ -329,14 +329,14 @@ export function useSingleMeeting(meetingId?: string) {
     const newActions = [
       ...(meeting.actions || []),
       {
-        id: `act-${Date.now()}`,
+        id: crypto.randomUUID(),
         agency_id: meeting.agency_id,
         meeting_id: meeting.id,
         decision_id: action.decision_id || null,
         title: action.title || 'Nova Ação',
         description: action.description || '',
         assigned_to: action.assigned_to || null,
-        assignee_name: action.assignee_name || 'Lucas Mendes',
+        assignee_name: action.assignee_name || undefined,
         due_at: action.due_at || new Date(Date.now() + 86400000).toISOString(),
         status: 'pending' as const,
         created_at: new Date().toISOString(),
@@ -351,7 +351,7 @@ export function useSingleMeeting(meetingId?: string) {
     if (supabase && isSupabaseConfigured) {
       const { data, error } = await supabase.rpc('convert_action_item_to_task', { p_action_item_id: actionId, p_project_id: projectId })
       if (error) throw error
-      queryClient.invalidateQueries({ queryKey: ['meeting', meetingId] }); queryClient.invalidateQueries({ queryKey: ['projects'] }); queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['meeting', agencyId, meetingId] }); queryClient.invalidateQueries({ queryKey: ['projects'] }); queryClient.invalidateQueries({ queryKey: ['tasks'] })
       return data as string
     }
     const taskId = `task-conv-${Date.now()}`
