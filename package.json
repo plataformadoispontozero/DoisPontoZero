@@ -15,7 +15,11 @@
     "native:dev": "tauri dev",
     "native:build": "tauri build",
     "native:android:init": "tauri android init",
-    "native:ios:init": "tauri ios init"
+    "native:ios:init": "tauri ios init",
+    "briefing:audit": "node scripts/migrate-briefings/audit.mjs audit",
+    "briefing:export": "node scripts/migrate-briefings/audit.mjs export",
+    "briefing:dry-run": "node scripts/migrate-briefings/audit.mjs dry-run",
+    "briefing:verify": "node scripts/migrate-briefings/audit.mjs verify"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
