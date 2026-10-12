@@ -1,5 +1,7 @@
+import { PROFILE_FIELDS } from "@/features/clients/profileFields";
+import { validateClientProfile, type ClientProfile } from "@/features/clients/clientProfile";
 export const CSV_LIMITS = { bytes: 2 * 1024 * 1024, rows: 500, columns: 30 };
-export const CLIENT_FIELDS = ["name", "slug", "logo_url", "status"] as const;
+export const CLIENT_FIELDS = ["name", "slug", "logo_url", "status", ...PROFILE_FIELDS.map(f=>f.key)] as const;
 export type ClientField = (typeof CLIENT_FIELDS)[number];
 export interface CsvRecord {
   row: number;
@@ -17,6 +19,9 @@ export interface ImportClient {
   slug: string;
   logo_url?: string;
   status?: string;
+  profile?: ClientProfile;
+  action?: "create" | "fill_missing";
+  existing_id?: string;
 }
 export interface PreviewRow {
   data: ImportClient;
@@ -32,10 +37,17 @@ const normalize = (v: string) =>
     .toLowerCase()
     .replace(/[\s-]+/g, "_");
 const aliases: Record<ClientField, string[]> = {
+  meta_ad_account_id: ["meta_ad_account_id", "conta_meta_ads", "conta_de_anuncios"],
   name: ["name", "nome", "marca", "nome_da_marca", "nome_do_cliente", "cliente", "razao_social"],
   slug: ["slug", "identificador", "identificador_unico"],
   logo_url: ["logo_url", "url_do_logotipo", "logotipo", "logo"],
   status: ["status", "situacao"],
+  niche: ["niche", "nicho"], city: ["city", "cidade"], instagram: ["instagram"], plan: ["plan", "plano"],
+  average_ticket: ["average_ticket", "ticket_medio"], monthly_content_count: ["monthly_content_count", "conteudos_por_mes", "quantidade_conteudos"],
+  target_audience: ["target_audience", "publico_alvo"], age_range: ["age_range", "faixa_etaria"], audience_gender: ["audience_gender", "genero_do_publico", "genero"],
+  tone: ["tone", "tom_de_comunicacao", "tom_comunicacao"], differential: ["differential", "diferencial"], special_dates: ["special_dates", "datas_especiais"],
+  renewal_date: ["renewal_date", "data_de_renovacao", "data_renovacao"], source_id: ["source_id", "id"], source_created_at: ["source_created_at", "cadastrado_em", "created_at"], source_updated_at: ["source_updated_at", "atualizado_em", "updated_at"],
+  positioning: ["positioning", "posicionamento"], structure: ["structure", "estrutura"], monthly_objective: ["monthly_objective", "objetivo_do_mes", "objetivo_mes"], drive_url: ["drive_url", "link_do_drive"], maps_url: ["maps_url", "google_maps", "link_do_google_maps"],
 };
 export function autoMapping(headers: string[]): ColumnMapping {
   const result: ColumnMapping = {};
@@ -174,6 +186,23 @@ export function previewCsv(
     if (get("logo_url")) data.logo_url = get("logo_url");
     if (get("status")) data.status = statuses[normalize(get("status"))] || get("status").toLowerCase();
     const errors: string[] = [];
+    const profile: Record<string, string | number> = {};
+    for (const field of PROFILE_FIELDS) {
+      const value = get(field.key);
+      if (!value) continue;
+      if (field.key === "average_ticket" || field.key === "monthly_content_count") {
+        let numeric = value.replace(/R\$|\s/g, "");
+        if (numeric.includes(",") || /^\d{1,3}(\.\d{3})+$/.test(numeric)) numeric = numeric.replace(/\./g, "");
+        const number = Number(numeric.replace(",", "."));
+        if (!Number.isFinite(number) || number < 0 || (field.key === "monthly_content_count" ? (!Number.isInteger(number) || number > 1000) : number > 1e9)) errors.push(`${field.label}: número inválido.`);
+        else profile[field.key] = number;
+      } else if (field.key === "renewal_date" && /^\d{2}\/\d{2}\/\d{4}$/.test(value)) profile[field.key] = value.split("/").reverse().join("-");
+      else profile[field.key] = value;
+    }
+    if (Object.keys(profile).length) {
+      errors.push(...validateClientProfile(profile));
+      data.profile = profile as ClientProfile;
+    }
     if (record.cells.length !== document.headers.length)
       errors.push("Quantidade de campos diferente do cabeçalho.");
     if (!data.name || data.name.length > 200)

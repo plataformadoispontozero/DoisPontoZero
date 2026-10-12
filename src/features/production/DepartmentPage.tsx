@@ -1,3 +1,6 @@
+import { ClientMetaPanel } from "@/features/integrations/ClientMetaPanel";
+import { ClientDrivePanel } from "@/features/integrations/ClientDrivePanel";
+import { useClients } from "@/features/clients/hooks/useClients";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -55,6 +58,8 @@ function ProductionWorkspace({ department }: { department: string }) {
     auth = useAuth();
   const canCreate = usePermission("tasks.create"),
     canEdit = usePermission("tasks.edit");
+  const clients = useClients();
+  const [materialClient, setMaterialClient] = useState("");
   const query = useTasks({ search: config?.prefix || "" });
   const projects = useProjects(canCreate ? agencyId : undefined);
   const [search, setSearch] = useState(""),
@@ -321,21 +326,8 @@ function ProductionWorkspace({ department }: { department: string }) {
           )}
         </>
       )}
-      {department === "traffic" && (
-        <section aria-labelledby="traffic-results-title" className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 id="traffic-results-title" className="font-semibold">Resultados dos clientes</h2>
-            <span className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs text-[var(--color-text-secondary)]">Integração Meta pendente</span>
-          </div>
-          <p className="mt-3 text-sm text-[var(--color-text-secondary)]">Esta área será alimentada pelas contas de anúncios vinculadas aos clientes. A conexão e a sincronização com o Meta ainda precisam ser implementadas.</p>
-          <ul className="mt-4 grid gap-3 md:grid-cols-3 text-sm">
-            <li>Investimento, impressões e cliques por período</li>
-            <li>Campanhas e contas de anúncios por cliente</li>
-            <li>Resultados e custos conforme os dados disponíveis</li>
-          </ul>
-          <p className="mt-4 text-xs text-[var(--color-text-secondary)]">Nenhuma métrica sincronizada disponível. Os indicadores de produção acima se referem às demandas da equipe.</p>
-        </section>
-      )}
+      {department !== "traffic" && <section className="space-y-4"><h2 className="font-semibold">Arquivos do cliente</h2><Select aria-label="Cliente dos materiais" value={materialClient} onChange={e=>setMaterialClient(e.target.value)} options={[{value:"",label:"Selecione um cliente"},...(clients.data||[]).map(c=>({value:c.id,label:c.name}))]}/>{clients.isError&&<p role="alert">Não foi possível carregar os clientes.</p>}{materialClient&&<ClientDrivePanel key={materialClient} clientId={materialClient}/>}</section>}
+      {department === "traffic" && <section className="space-y-4"><h2 className="font-semibold">Resultados dos clientes</h2><Select aria-label="Cliente dos resultados Meta" value={materialClient} onChange={e=>setMaterialClient(e.target.value)} options={[{value:"",label:"Selecione um cliente"},...(clients.data||[]).map(c=>({value:c.id,label:c.name}))]}/>{materialClient&&<ClientMetaPanel key={materialClient} clientId={materialClient}/>}</section>}
       <section className="rounded-xl border border-[var(--color-border)] p-5">
         <h2 className="font-semibold">Materiais e fluxo de {config.name}</h2>
         <p className="text-sm text-[var(--color-text-secondary)] mt-2">
@@ -352,7 +344,8 @@ function ProductionWorkspace({ department }: { department: string }) {
             </li>
           ))}
         </ul>
-        {department === "traffic" && (
+        {department !== "traffic" && <section className="space-y-4"><h2 className="font-semibold">Arquivos do cliente</h2><Select aria-label="Cliente dos materiais" value={materialClient} onChange={e=>setMaterialClient(e.target.value)} options={[{value:"",label:"Selecione um cliente"},...(clients.data||[]).map(c=>({value:c.id,label:c.name}))]}/>{clients.isError&&<p role="alert">Não foi possível carregar os clientes.</p>}{materialClient&&<ClientDrivePanel key={materialClient} clientId={materialClient}/>}</section>}
+      {department === "traffic" && (
           <p className="text-xs mt-4 text-[var(--color-text-secondary)]">
             Campanhas e relatórios são organizados por links e documentos. Este
             painel não publica anúncios nem consulta resultados de mídia

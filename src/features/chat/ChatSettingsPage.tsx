@@ -9,12 +9,14 @@ import { ArrowLeft, Settings, Hash, Shield, Bell, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { useChannels } from './hooks/useChat'
+import { useChannels, useChatPreferences } from './hooks/useChat'
 
 export const ChatSettingsPage: React.FC = () => {
   const navigate = useNavigate()
   const { data: channels } = useChannels()
   const safeChannels = channels || []
+  const {query,save}=useChatPreferences()
+  const preferences=query.data||{direct_notifications:true,mention_notifications:true}
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-200">
@@ -25,7 +27,7 @@ export const ChatSettingsPage: React.FC = () => {
         </Button>
         <div>
           <h1 className="text-xl font-bold text-content-primary">Configurações do Team Chat</h1>
-          <p className="text-xs text-content-secondary">Gerencie canais, permissões de membros e retenção de mensagens.</p>
+          <p className="text-xs text-content-secondary">Consulte canais e ajuste suas preferências de mensagens.</p>
         </div>
       </div>
 
@@ -59,13 +61,15 @@ export const ChatSettingsPage: React.FC = () => {
           </h2>
 
           <div className="space-y-3 text-xs text-content-secondary">
+            {(query.error||save.error)&&<p role="alert">Não foi possível salvar ou carregar as preferências.</p>}
+            {save.isSuccess&&<p role="status">Preferências salvas.</p>}
             <label className="flex items-center space-x-2 cursor-pointer">
-              <input type="checkbox" defaultChecked className="rounded border-surface-border text-brand-primary focus:ring-brand-primary" />
+              <input aria-label="Notificações de mensagens diretas" type="checkbox" checked={preferences.direct_notifications} disabled={query.isLoading||save.isPending} onChange={e=>save.mutate({...preferences,direct_notifications:e.target.checked})} className="rounded border-surface-border text-brand-primary focus:ring-brand-primary" />
               <span>Receber notificações de mensagens diretas</span>
             </label>
 
             <label className="flex items-center space-x-2 cursor-pointer">
-              <input type="checkbox" defaultChecked className="rounded border-surface-border text-brand-primary focus:ring-brand-primary" />
+              <input aria-label="Notificações de menções" type="checkbox" checked={preferences.mention_notifications} disabled={query.isLoading||save.isPending} onChange={e=>save.mutate({...preferences,mention_notifications:e.target.checked})} className="rounded border-surface-border text-brand-primary focus:ring-brand-primary" />
               <span>Receber notificações de menções (@)</span>
             </label>
           </div>

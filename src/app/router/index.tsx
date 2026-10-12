@@ -25,6 +25,7 @@ export const router = createBrowserRouter([
         .PublicBriefPage,
     }),
   },
+  { path: "/material-review", lazy: async () => ({ Component: (await import("@/features/integrations/MaterialReviewPage")).default }) },
   { path: "/login", element: <AuthPage /> },
   { path: "/register", lazy: async () => ({ Component: (await import("@/features/team/TeamRegistrationPage")).TeamRegistrationPage }) },
   { path: "/forgot-password", element: <AuthPage mode="forgot" /> },
@@ -637,6 +638,10 @@ export const router = createBrowserRouter([
                 await import("@/features/settings/IntegrationsCenterPage")
               ).IntegrationsCenterPage,
             }),
+          },
+          {
+            path: "integrations/meta",
+            lazy: async () => ({ Component: (await import("@/features/settings/MetaWorkspacePage")).default }),
           },
           {
             path: "integrations/google",

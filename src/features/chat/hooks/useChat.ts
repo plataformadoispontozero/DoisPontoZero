@@ -153,14 +153,16 @@ export function useChannels() {
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   return useQuery({
-    queryKey: ['chat_channels'],
+    queryKey: ['chat_channels', agencyId, auth.user?.id],
+    enabled: !isSupabaseConfigured || Boolean(agencyId && auth.user),
+    refetchInterval: 15000,
     initialData: isSupabaseConfigured ? undefined : demoChannelsStore,
     queryFn: async (): Promise<ChatChannel[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data , error: backendError1 } = await supabase.from('chat_channels').select('*').eq('agency_id', agencyId).order('name', { ascending: true })
+          const { data , error: backendError1 } = await supabase.rpc('chat_directory', {p_agency: agencyId})
           if (backendError1) throw backendError1
-          return data ?? [] as ChatChannel[]
+          return (data?.channels ?? []) as ChatChannel[]
         } catch (err) {
           throw err
         }
@@ -175,14 +177,16 @@ export function useConversations() {
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   return useQuery({
-    queryKey: ['chat_conversations'],
+    queryKey: ['chat_conversations', agencyId, auth.user?.id],
+    enabled: !isSupabaseConfigured || Boolean(agencyId && auth.user),
+    refetchInterval: 15000,
     initialData: isSupabaseConfigured ? undefined : demoConversationsStore,
     queryFn: async (): Promise<ChatConversation[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
-          const { data , error: backendError2 } = await supabase.from('chat_conversations').select('*').eq('agency_id', agencyId).order('updated_at', { ascending: false })
+          const { data , error: backendError2 } = await supabase.rpc('chat_directory', {p_agency: agencyId})
           if (backendError2) throw backendError2
-          return data ?? [] as ChatConversation[]
+          return (data?.conversations ?? []) as ChatConversation[]
         } catch (err) {
           throw err
         }
@@ -207,13 +211,13 @@ export function useMessages(targetId?: string, isConversation = false) {
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*',
           schema: 'public',
           table: 'chat_messages',
           filter: isConversation ? `conversation_id=eq.${targetId}` : `channel_id=eq.${targetId}`,
         },
         (payload) => {
-          queryClient.invalidateQueries({ queryKey: ['chat_messages', targetId] })
+          queryClient.invalidateQueries({ queryKey: ['chat_messages', agencyId, auth.user?.id, targetId] })
         }
       )
       .subscribe()
@@ -221,11 +225,12 @@ export function useMessages(targetId?: string, isConversation = false) {
     return () => {
       supabase?.removeChannel(channel)
     }
-  }, [targetId, isConversation, queryClient])
+  }, [targetId, isConversation, queryClient, agencyId, auth.user?.id])
 
   return useQuery({
-    queryKey: ['chat_messages', targetId],
-    enabled: Boolean(targetId),
+    queryKey: ['chat_messages', agencyId, auth.user?.id, targetId],
+    enabled: Boolean(targetId) && (!isSupabaseConfigured || Boolean(agencyId && auth.user)),
+    refetchInterval: 15000,
     queryFn: async (): Promise<ChatMessage[]> => {
       if (!targetId) return []
 
@@ -275,7 +280,7 @@ export function useSendMessage() {
           body: payload.body.trim(), message_type: 'text', client_message_id: crypto.randomUUID(),
         }).select('*').single()
         if (error) throw error
-        queryClient.invalidateQueries({ queryKey: ['chat_messages', payload.targetId] })
+        queryClient.invalidateQueries({ queryKey: ['chat_messages', agencyId, auth.user?.id, payload.targetId] })
         return { ...data, sender_name: auth.name, attachments: [], reactions: [] } as ChatMessage
       }
       const newMsgId = `msg-${Date.now()}`
@@ -310,7 +315,7 @@ export function useSendMessage() {
       }
       demoMessagesStore[payload.targetId].push(newMsg)
 
-      queryClient.invalidateQueries({ queryKey: ['chat_messages', payload.targetId] })
+      queryClient.invalidateQueries({ queryKey: ['chat_messages', agencyId, auth.user?.id, payload.targetId] })
       return newMsg
     },
   })
@@ -327,19 +332,17 @@ export function useCreateChannel() {
       name: string
       description?: string
       channel_type: 'general' | 'squad' | 'project' | 'custom'
+      members?: string[]
       visibility: 'agency' | 'private'
       squad_id?: string
       project_id?: string
     }): Promise<ChatChannel> => {
       if (supabase && isSupabaseConfigured) {
         if (!auth.user || !agencyId) throw new Error('Sessão e agência são obrigatórias.')
-        if (payload.visibility === 'private') throw new Error('Criação de canal privado requer transação de membros no backend; integração pendente.')
-        const { data, error } = await supabase.from('chat_channels').insert({
-          ...payload, name: payload.name.trim(), agency_id: agencyId, created_by: auth.user.id,
-        }).select('*').single()
+        const { data: id, error } = await supabase.rpc('chat_create_channel', {p_agency:agencyId,p_name:payload.name.trim(),p_description:payload.description||'',p_type:payload.channel_type,p_visibility:payload.visibility,p_members:payload.members||[]})
         if (error) throw error
         queryClient.invalidateQueries({ queryKey: ['chat_channels'] })
-        return data as ChatChannel
+        return {id,agency_id:agencyId,...payload,created_at:new Date().toISOString(),updated_at:new Date().toISOString()} as ChatChannel
       }
       const newChan: ChatChannel = {
         id: `chan-${Date.now()}`,
@@ -379,7 +382,7 @@ export function useAddReaction() {
           ? await supabase.from('chat_reactions').delete().eq('id', existing.id).eq('agency_id', agencyId).eq('user_id', auth.user.id)
           : await supabase.from('chat_reactions').insert({ agency_id: agencyId, message_id: messageId, user_id: auth.user.id, emoji })
         if (error) throw error
-        queryClient.invalidateQueries({ queryKey: ['chat_messages', targetId] })
+        queryClient.invalidateQueries({ queryKey: ['chat_messages', agencyId, auth.user?.id, targetId] })
         return
       }
       const msgs = demoMessagesStore[targetId] || []
@@ -401,7 +404,30 @@ export function useAddReaction() {
           })
         }
       }
-      queryClient.invalidateQueries({ queryKey: ['chat_messages', targetId] })
+      queryClient.invalidateQueries({ queryKey: ['chat_messages', agencyId, auth.user?.id, targetId] })
     },
   })
+}
+
+export function useChatMembers() {
+ const auth=useAuth(); const agency=auth.activeAgency?.agencyId||''
+ return useQuery({queryKey:['chat_members',agency,auth.user?.id],enabled:Boolean(agency&&auth.user&&supabase),queryFn:async()=>{
+ const {data,error}=await supabase!.from('agency_members').select('user_id,profiles:user_id(full_name,avatar_url)').eq('agency_id',agency).eq('status','active').neq('user_id',auth.user!.id)
+ if(error)throw error
+ return (data||[]).map((m:any)=>({id:m.user_id,name:m.profiles?.full_name||'Membro da equipe'}))
+ }})
+}
+export function useStartDirect() {
+ const auth=useAuth();const client=useQueryClient()
+ return useMutation({mutationFn:async(other:string)=>{if(!supabase||!auth.activeAgency)throw new Error('Sessão necessária');const {data,error}=await supabase.rpc('chat_start_direct',{p_agency:auth.activeAgency.agencyId,p_other:other});if(error)throw error;return data as string},onSuccess:()=>client.invalidateQueries({queryKey:['chat_conversations']})})
+}
+export function useMarkChatRead() {
+ const auth=useAuth();const client=useQueryClient()
+ return useMutation({mutationFn:async(p:{target:string;direct:boolean;last:string})=>{if(!supabase||!auth.activeAgency)return;const {error}=await supabase.rpc('chat_mark_read',{p_agency:auth.activeAgency.agencyId,p_target:p.target,p_direct:p.direct,p_last_message:p.last});if(error)throw error},onSuccess:()=>{client.invalidateQueries({queryKey:['chat_channels']});client.invalidateQueries({queryKey:['chat_conversations']})}})
+}
+export function useChatPreferences() {
+ const auth=useAuth();const client=useQueryClient();const agency=auth.activeAgency?.agencyId||'';const key=['chat_preferences',agency,auth.user?.id]
+ const query=useQuery({queryKey:key,enabled:Boolean(supabase&&agency&&auth.user),queryFn:async()=>{const {data,error}=await supabase!.from('chat_preferences').select('*').eq('agency_id',agency).eq('user_id',auth.user!.id).maybeSingle();if(error)throw error;return data||{direct_notifications:true,mention_notifications:true}}})
+ const save=useMutation({mutationFn:async(p:{direct_notifications:boolean;mention_notifications:boolean})=>{if(!supabase||!auth.user||!agency)throw new Error('Sessão necessária');const {error}=await supabase.from('chat_preferences').upsert({...p,agency_id:agency,user_id:auth.user.id},{onConflict:'agency_id,user_id'});if(error)throw error},onSuccess:()=>client.invalidateQueries({queryKey:key})})
+ return {query,save}
 }

@@ -50,3 +50,28 @@ Status: Done — botão publicado. Solicitação: entrada de arquivo aparecia co
 - [x] Gates: 154 testes, lint sem erros (avisos legados), typecheck/build e 2 E2E desktop/mobile passando com clique real no botão e filechooser. Bundle index-CpZtEP9W.js. Publicado: código `1c6476f`, Worker `3f56a177-1fe2-4569-b112-95560c1f84a6`; domínio confirmado em 1440×900 e 390×844, início/login HTTP 200 e editorial protegido, sem overflow. Nenhum dado real importado.
 
 File list: ImportClientsPage.tsx, e2e/agency-access.spec.ts e esta story.
+
+## Ficha completa do cliente e importação ampliada — 12/10/2026
+
+Status: Em andamento. Referência visual fornecida pelo usuário: ficha antiga com negócio, audiência, posicionamento e direção editorial. Requisitos: modal amplo responsivo; links Drive/logo/Maps; calendário/briefing/jornada; dados persistentes editáveis. Importação original deve preservar 18 campos conhecidos e permitir completar cadastro existente após revisão sem sobrescrever dados. Fonte Lovable 88ee1363-3966-494f-a78d-ad375651555f acessada somente para diagnóstico read-only.
+
+- [ ] Persistência de perfil com validação, permissões e migração segura.
+- [ ] Mapeamento CSV completo e preenchimento explícito de campos ausentes em duplicados.
+- [ ] Modal amplo, editor de perfil, dados e links reais com estados vazios honestos.
+- [ ] Gates, verificação banco e publicação.
+
+
+### Correção de entrega de convites — 2026-10-12
+- [x] Diagnóstico: generateLink não envia e-mail.
+- [x] Envio Auth para novos membros, com erros de SMTP/limite visíveis.
+- [x] ID do convite preservado no redirecionamento de confirmação e criação de senha.
+- [x] Verificação e implantação: a4949a1, 156 testes; Edge Function team-invite v2; Cloudflare 453317cd-2ea8-4b9f-83cb-c5c6d77caf82. SMTP e recebimento real ainda pendentes.
+Arquivos: supabase/functions/team-invite/index.ts; src/features/team/AcceptInvitationPage.tsx; src/features/settings/TeamManagementPage.tsx; src/features/settings/hooks/useAgencySettings.ts.
+
+## Recuperação dos dados dos clientes — 12/10/2026
+- [x] Perfil validado, preenchimento CSV apenas de dados ausentes, modal amplo e links reais.
+- [x] Migration aplicada e 29 clientes enriquecidos a partir do mapeamento por IDs revisado, sem sobrescrever campos existentes.
+- [x] Histórico imutável por cliente disponível com RLS e estados de aprovação originais.
+- [x] Objetivo, público, tom e posicionamento do cadastro sugeridos ao iniciar calendário, com revisão pela social media.
+- [ ] Importação completa dos documentos antigos e publicação final.
+Arquivos adicionais: src/features/clients/clientProfile.ts, profileFields.ts, components/ClientHubModal.tsx, ClientLegacyPanel.tsx; testes clientProfile/clientLegacy; migrations client_profiles_and_csv_enrichment e client_legacy_records.

@@ -1,3 +1,4 @@
+import { PROFILE_LABELS } from "@/features/clients/profileFields";
 import { useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAgencyId, usePermission } from "@/features/auth/AuthProvider";
@@ -18,6 +19,7 @@ function ImportClientsWizard() {
   const fileInput = useRef<HTMLInputElement>(null);
   const agencyId = useAgencyId(),
     allowed = usePermission("clients.create"),
+    canEdit = usePermission("clients.edit"),
     clients = useQuery({
       queryKey: ["client-import-existing", agencyId],
       enabled: !!agencyId && !!supabase && allowed,
@@ -35,6 +37,7 @@ function ImportClientsWizard() {
       },
     }),
     cache = useQueryClient();
+  const [completeExisting, setCompleteExisting] = useState(false);
   const [document, setDocument] = useState<CsvDocument | null>(null),
     [filename, setFilename] = useState(""),
     [mapping, setMapping] = useState<ColumnMapping>({}),
@@ -50,7 +53,7 @@ function ImportClientsWizard() {
     [document, mapping, clients.data],
   );
   const chosen = rows.filter(
-    (r) => selected.has(r.data.row) && !r.errors.length && !r.duplicate,
+    (r) => selected.has(r.data.row) && !r.errors.length && (!r.duplicate || (completeExisting && canEdit && !!r.data.profile)),
   );
   const missing = ["name"].filter(
     (f) => mapping[f as keyof ColumnMapping] === undefined,
@@ -83,7 +86,7 @@ function ImportClientsWizard() {
       const { data, error } = await supabase.rpc("import_clients_csv", {
         p_agency_id: agencyId,
         p_filename: filename,
-        p_rows: chosen.map((r) => r.data),
+        p_rows: chosen.map((r) => r.duplicate ? {...r.data, action:"fill_missing", existing_id:r.duplicate.id} : r.data),
       });
       if (error) throw error;
       setResult(data.results);
@@ -105,8 +108,7 @@ function ImportClientsWizard() {
       <h2 className="text-xl font-semibold">Importar clientes via CSV</h2>
       <p>
         Importação CSV disponível. Exporte manualmente seu arquivo em UTF-8. Até
-        2 MB, 500 clientes e 30 colunas. Nenhum registro existente será
-        atualizado.
+        2 MB, 500 clientes e 30 colunas. Clientes novos serão cadastrados. Você poderá completar os dados ausentes de clientes já cadastrados, com revisão e confirmação.
       </p>
       {!allowed ? (
         <p role="alert">Você precisa da permissão de criar clientes.</p>
@@ -151,6 +153,7 @@ function ImportClientsWizard() {
       )}
       {document && (
         <>
+          {canEdit && <label className="flex items-start gap-3 rounded-xl border border-orange-500/20 bg-orange-500/5 p-4 text-sm"><input type="checkbox" className="mt-1" checked={completeExisting} disabled={busy||confirm} onChange={e=>setCompleteExisting(e.target.checked)}/>Completar dados ausentes de clientes já cadastrados. Nome, status, logotipo e informações preenchidas serão preservados.</label>}
           <p>
             {filename} · {document.records.length} registros ·{" "}
             {rows.filter((r) => r.errors.length).length} inválidos ·{" "}
@@ -160,7 +163,7 @@ function ImportClientsWizard() {
           <div className="grid gap-3 md:grid-cols-4">
             {CLIENT_FIELDS.map((field) => (
               <label key={field}>
-                {{name: "Nome do cliente", slug: "Identificador (slug)", logo_url: "URL do logotipo", status: "Status"}[field]} {field === "name" && "*"}
+                {({name: "Nome do cliente", slug: "Identificador (slug)", logo_url: "URL do logotipo", status: "Status"} as Record<string,string>)[field] || PROFILE_LABELS[field]} {field === "name" && "*"}
                 <select
                   className="block w-full bg-[#202026] p-2"
                   aria-label={`Coluna ${field}`}
@@ -221,12 +224,12 @@ function ImportClientsWizard() {
                         type="checkbox"
                         aria-label={`Selecionar linha ${r.data.row}`}
                         disabled={
-                          busy || confirm || !!r.errors.length || !!r.duplicate
+                          busy || confirm || !!r.errors.length || (!!r.duplicate && (!completeExisting || !canEdit || !r.data.profile))
                         }
                         checked={
                           selected.has(r.data.row) &&
                           !r.errors.length &&
-                          !r.duplicate
+                          (!r.duplicate || (completeExisting && canEdit && !!r.data.profile))
                         }
                         onChange={(e) =>
                           setSelected((old) => {
@@ -245,11 +248,12 @@ function ImportClientsWizard() {
                       {r.data.status || "active"}
                       <br />
                       {r.data.logo_url || "Sem logotipo"}
+                      {r.data.profile && <details className="mt-2"><summary className="cursor-pointer text-orange-300">Ver {Object.keys(r.data.profile).length} dados do perfil</summary><dl className="mt-2 max-w-lg space-y-2">{Object.entries(r.data.profile).map(([key,value])=><div key={key}><dt className="font-semibold">{PROFILE_LABELS[key]||key}</dt><dd className="whitespace-pre-wrap break-words">{String(value)}</dd></div>)}</dl></details>}
                     </td>
                     <td>
                       {r.errors.join(" ")}
                       {r.duplicate
-                        ? "Já cadastrado."
+                        ? completeExisting && canEdit ? "Já cadastrado: completar somente dados ausentes." : "Já cadastrado."
                         : r.possibleSameName
                           ? "Possível mesmo cliente; revise."
                           : !r.errors.length
@@ -282,8 +286,7 @@ function ImportClientsWizard() {
             <div className="space-y-3 border border-orange-600 rounded-lg p-4">
               <p>
                 Confirme os {chosen.length} registros selecionados na tabela.
-                Somente esses valores serão cadastrados; campos não mapeados
-                serão ignorados.
+                Clientes novos serão cadastrados. Para clientes existentes selecionados, somente campos ausentes do perfil serão completados; nenhum dado preenchido será sobrescrito. Campos não mapeados serão ignorados.
               </p>
               <button
                 className="bg-[#c84408] rounded-lg p-3"

@@ -18,6 +18,7 @@ export interface Client {
   name: string
   slug: string
   logo_url: string | null
+  profile?: import("@/features/clients/clientProfile").ClientProfile
   status: 'active' | 'inactive' | 'archived'
   created_at: string
   updated_at: string

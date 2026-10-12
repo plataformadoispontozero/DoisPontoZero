@@ -18,6 +18,7 @@ export interface CreateClientPayload {
   slug?: string
   logo_url?: string | null
   status?: 'active' | 'inactive'
+  profile?: import("@/features/clients/clientProfile").ClientProfile
   contact_name?: string
   contact_email?: string
   brand_guidelines?: string
@@ -29,6 +30,7 @@ export interface UpdateClientPayload {
   slug?: string
   logo_url?: string | null
   status?: 'active' | 'inactive' | 'archived'
+  profile?: import("@/features/clients/clientProfile").ClientProfile
   contact_name?: string
   contact_email?: string
   brand_guidelines?: string
@@ -184,6 +186,7 @@ export function useCreateClient(agencyId: string) {
           slug,
           logo_url: payload.logo_url || null,
           status: payload.status || 'active',
+          profile: payload.profile || {},
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         }
@@ -199,6 +202,7 @@ export function useCreateClient(agencyId: string) {
           slug,
           logo_url: payload.logo_url || null,
           status: payload.status || 'active',
+          profile: payload.profile || {},
         })
         .select()
         .single()
@@ -236,6 +240,7 @@ export function useUpdateClient(agencyId: string) {
           slug: payload.slug,
           logo_url: payload.logo_url,
           status: payload.status,
+          profile: payload.profile,
         })
         .eq('id', payload.id).eq('agency_id', agencyId)
         .select()

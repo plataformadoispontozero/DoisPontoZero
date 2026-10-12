@@ -37,12 +37,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/Dialog'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/Sheet'
+import { ClientHubModal } from './components/ClientHubModal'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs'
 import { LoadingState } from '@/components/ui/FeedbackStates'
 import { EmptyState } from '@/components/shared/EmptyState'
@@ -426,84 +421,8 @@ export const ClientsPage: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Client Hub Sheet */}
-      {selectedClientHub && (
-        <Sheet
-          open={Boolean(selectedClientHub)}
-          side="right"
-          className="max-w-xl"
-          onOpenChange={(open) => {
-            if (!open) { setSelectedClientHub(null); if (clientId) navigate('/clients') }
-          }}
-        >
-          <SheetHeader onClose={() => setSelectedClientHub(null)}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C74410]/20 to-[#FF8759]/20 border border-[#C74410]/30 flex items-center justify-center font-bold text-sm text-[#F8F9FC]">
-                {selectedClientHub.name.slice(0, 2).toUpperCase()}
-              </div>
-              <div>
-                <SheetTitle className="text-base font-bold text-[#F8F9FC]">
-                  {selectedClientHub.name}
-                </SheetTitle>
-                <p className="text-xs text-[#B8B8C0]">Client Hub & Central da Marca</p>
-              </div>
-            </div>
-          </SheetHeader>
+      {selectedClientHub && <ClientHubModal key={selectedClientHub.id} client={selectedClientHub} onClose={() => {setSelectedClientHub(null);navigate('/clients');}} />}
 
-          <SheetContent className="space-y-6">
-              <button className="mb-4 text-orange-300" onClick={() => navigate(`/clients/${selectedClientHub.id}/workspace`)}>Abrir jornada completa do cliente →</button>
-              <Tabs defaultValue="briefings" className="w-full">
-                <TabsList className="bg-[#1C1C24] border border-[#30303B] p-1 rounded-xl flex gap-1 w-full">
-                  <TabsTrigger
-                    value="briefings"
-                    className="flex-1 text-xs py-1.5 data-[state=active]:bg-[#C74410] data-[state=active]:text-white"
-                  >
-                    Briefings
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="overview"
-                    className="flex-1 text-xs py-1.5 data-[state=active]:bg-[#C74410] data-[state=active]:text-white"
-                  >
-                    Dados da Conta
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="briefings" className="mt-4">
-                  <ClientBriefingsTab
-                    clientId={selectedClientHub.id}
-                    agencyId={DEMO_AGENCY_ID}
-                  />
-                </TabsContent>
-
-                <TabsContent value="overview" className="mt-4 space-y-4 text-xs">
-                  <Card className="bg-[#1C1C24] border-[#30303B]">
-                    <CardContent className="p-4 space-y-3">
-                      <div>
-                        <span className="text-[#98989F] font-semibold block">Identificador Slug:</span>
-                        <span className="text-[#F8F9FC] font-mono">{selectedClientHub.slug}</span>
-                      </div>
-                      <div>
-                        <span className="text-[#98989F] font-semibold block">Status da Parceria:</span>
-                        <Badge
-                          variant={selectedClientHub.status === 'active' ? 'success' : 'neutral'}
-                          className="mt-1"
-                        >
-                          {selectedClientHub.status === 'active' ? 'Ativo' : 'Inativo'}
-                        </Badge>
-                      </div>
-                      <div>
-                        <span className="text-[#98989F] font-semibold block">Cadastrado em:</span>
-                        <span className="text-[#B8B8C0]">
-                          {new Date(selectedClientHub.created_at).toLocaleDateString('pt-BR')}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
-          </SheetContent>
-        </Sheet>
-      )}
     </div>
   )
 }

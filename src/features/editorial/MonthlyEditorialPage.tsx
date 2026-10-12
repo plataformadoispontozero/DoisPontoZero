@@ -1,3 +1,4 @@
+import { readClientProfile } from "@/features/clients/clientProfile";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -77,13 +78,15 @@ export function MonthlyEditorialPage() {
     queryFn: async () => {
       const r = await supabase!
         .from("clients")
-        .select("id,name")
+        .select("id,name,profile")
         .eq("agency_id", agency)
         .order("name");
       if (r.error) throw r.error;
       return r.data;
     },
   });
+  function clientContext(clientId:string){const profile=readClientProfile(clients.data?.find(c=>c.id===clientId)?.profile);return {...emptyContext,objective:profile.monthly_objective||'',audience:profile.target_audience||'',tone:profile.tone||'',positioning:profile.positioning||profile.differential||''};}
+  useEffect(()=>{if(client&&!id&&!dirty&&clients.data)setContext(clientContext(client));},[client,id,dirty,clients.data]);
   const briefs = useQuery({
     queryKey: ["editorial-briefs", agency, client],
     enabled: !!client,
@@ -315,7 +318,7 @@ export function MonthlyEditorialPage() {
               onChange={(e) => {
                 setClient(e.target.value);
                 setBriefing("");
-                setContext(emptyContext);
+                setContext(clientContext(e.target.value));
                 setItems([]);
                 setDirty(true);
               }}
@@ -328,6 +331,7 @@ export function MonthlyEditorialPage() {
               ))}
             </select>
           </label>
+          {client&&<p className="text-xs text-orange-200">O cadastro sugere objetivo, público, tom e posicionamento. Revise estes dados e complete as lacunas antes de gerar.</p>}
           <label className="block">
             Briefing do cliente
             <select

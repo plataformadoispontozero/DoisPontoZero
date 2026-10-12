@@ -419,3 +419,12 @@ verify_jwt = false # Google callback is public; POST verifies JWT with auth.getU
 
 [functions.team-registration]
 verify_jwt = false # Registration is public; reviews require auth.getUser and service-only permission RPCs.
+
+[functions.connection-config]
+verify_jwt = false # POST validates auth.getUser and administrator permission.
+
+[functions.meta-workspace]
+verify_jwt = false # Public OAuth callback validates one-use state; POST validates auth.getUser.
+
+[functions.drive-material-approval]
+verify_jwt = false # Publish requires session; public reads require hashed expiring review token.

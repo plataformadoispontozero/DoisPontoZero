@@ -5,7 +5,7 @@ import { useAgencyId } from '@/features/auth/AuthProvider'
 // 2-Column Responsive Layout (Sidebar + Messages Feed)
 // ============================================================
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   MessageSquare,
@@ -29,7 +29,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Dialog } from '@/components/ui/Dialog'
-import { useChannels, useConversations, useMessages, useSendMessage, useCreateChannel, useAddReaction } from './hooks/useChat'
+import { useChannels, useConversations, useMessages, useSendMessage, useCreateChannel, useAddReaction, useChatMembers, useStartDirect, useMarkChatRead } from './hooks/useChat'
 import { useSquads } from '../squads/hooks/useSquads'
 import { useProjects } from '../projects/hooks/useProjects'
 import type { ChatChannel, ChatMessage, ChannelType, ChannelVisibility } from '@/types/chat'
@@ -39,8 +39,8 @@ export const ChatPage: React.FC = () => {
   const { channelId, conversationId } = useParams<{ channelId?: string; conversationId?: string }>()
   const navigate = useNavigate()
 
-  const { data: channels, isLoading: isLoadingChannels } = useChannels()
-  const { data: conversations } = useConversations()
+  const { data: channels, isLoading: isLoadingChannels, error: channelsError } = useChannels()
+  const { data: conversations, error: conversationsError } = useConversations()
   const { data: squads = [] } = useSquads(agencyId)
   const { data: projects = [] } = useProjects()
 
@@ -53,7 +53,7 @@ export const ChatPage: React.FC = () => {
   const isConversationMode = Boolean(activeConversationId)
   const activeTargetId = isConversationMode ? activeConversationId : activeChannelId
 
-  const { data: messages, isLoading: isLoadingMessages } = useMessages(activeTargetId || undefined, isConversationMode)
+  const { data: messages, isLoading: isLoadingMessages, error: messagesError } = useMessages(activeTargetId || undefined, isConversationMode)
   const sendMessageMutation = useSendMessage()
   const createChannelMutation = useCreateChannel()
   const addReactionMutation = useAddReaction()
@@ -61,6 +61,13 @@ export const ChatPage: React.FC = () => {
   const activeChannel = safeChannels.find((c) => c.id === activeChannelId)
   const activeConversation = safeConversations.find((c) => c.id === activeConversationId)
 
+  const {data:members=[],error:membersError}=useChatMembers()
+  const startDirect=useStartDirect()
+  const markRead=useMarkChatRead()
+  const [actionError,setActionError]=useState('')
+  const [selectedMembers,setSelectedMembers]=useState<string[]>([])
+  const lastMessage=messages?.at(-1)?.id
+  useEffect(()=>{if(activeTargetId&&lastMessage)markRead.mutate({target:activeTargetId,direct:isConversationMode,last:lastMessage})},[activeTargetId,lastMessage,isConversationMode])
   // Message Input State
   const [inputText, setInputText] = useState('')
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false)
@@ -74,36 +81,38 @@ export const ChatPage: React.FC = () => {
     if (!inputText.trim() || !activeTargetId) return
 
     const textToSend = inputText
-    setInputText('')
-
-    await sendMessageMutation.mutateAsync({
+    setActionError('')
+    try { await sendMessageMutation.mutateAsync({
       targetId: activeTargetId,
       isConversation: isConversationMode,
       body: textToSend,
-    })
+    });setInputText('') } catch(error){setActionError(error instanceof Error?error.message:'Não foi possível enviar. Tente novamente.')}
   }
 
   const handleCreateChannelSubmit = async () => {
     if (!newChannelName.trim()) return
-    const created = await createChannelMutation.mutateAsync({
+    setActionError('')
+    try { const created = await createChannelMutation.mutateAsync({
       name: newChannelName,
       description: newChannelDesc,
       channel_type: newChannelType,
       visibility: newChannelVisibility,
+      members:selectedMembers,
     })
     setNewChannelName('')
     setNewChannelDesc('')
     setIsCreateChannelOpen(false)
     navigate(`/chat/channels/${created.id}`)
+    } catch(error){setActionError(error instanceof Error?error.message:'Não foi possível criar canal')}
   }
 
   const handleEmojiClick = async (msgId: string, emoji: string) => {
     if (!activeTargetId) return
-    await addReactionMutation.mutateAsync({
+    try { await addReactionMutation.mutateAsync({
       targetId: activeTargetId,
       messageId: msgId,
       emoji,
-    })
+    }) } catch(error){setActionError(error instanceof Error?error.message:'Não foi possível alterar reação')}
   }
 
   return (
@@ -151,6 +160,9 @@ export const ChatPage: React.FC = () => {
           {/* Section: Mensagens Diretas */}
           <div className="space-y-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-content-tertiary px-2">Mensagens Diretas</span>
+            <select aria-label="Iniciar mensagem direta" value="" className="w-full bg-surface-subtle rounded p-2 text-content-primary" disabled={startDirect.isPending} onChange={async(e)=>{try{setActionError('');const id=await startDirect.mutateAsync(e.target.value);navigate(`/chat/direct/${id}`)}catch(error){setActionError(error instanceof Error?error.message:'Não foi possível abrir conversa')}}}>
+             <option value="">Conversar com membro...</option>{members.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}
+            </select>
             {safeConversations.map((conv) => {
               const isActive = activeConversationId === conv.id
               return (
@@ -162,7 +174,7 @@ export const ChatPage: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center space-x-2 truncate">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                    <User className="w-3 h-3 shrink-0" />
                     <span className="truncate">{conv.other_user?.name || 'Membro Agência'}</span>
                   </div>
                   {conv.unread_count && conv.unread_count > 0 ? (
@@ -204,6 +216,7 @@ export const ChatPage: React.FC = () => {
           </div>
         </div>
 
+        {(actionError||channelsError||conversationsError||messagesError||membersError||markRead.error)&&<div role="alert" className="p-3 text-sm text-red-400">{actionError||'Não foi possível sincronizar o chat. Confira sua conexão e tente novamente.'}</div>}
         {/* Message Feed */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {isLoadingMessages ? (
@@ -276,7 +289,7 @@ export const ChatPage: React.FC = () => {
             placeholder={`Enviar mensagem em #${isConversationMode ? activeConversation?.other_user?.name : activeChannel?.name || 'chat'}...`}
             className="flex-1 px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
           />
-          <Button variant="primary" size="sm" type="submit" disabled={!inputText.trim()}>
+          <Button variant="primary" size="sm" type="submit" disabled={!inputText.trim() || !activeTargetId || sendMessageMutation.isPending || Boolean(messagesError)}>
             <Send className="w-3.5 h-3.5" />
           </Button>
         </form>
@@ -336,6 +349,7 @@ export const ChatPage: React.FC = () => {
             </div>
           </div>
 
+          {newChannelVisibility==='private'&&<fieldset><legend className="text-sm">Participantes do canal privado</legend>{members.map(m=><label key={m.id} className="flex gap-2 p-1"><input type="checkbox" checked={selectedMembers.includes(m.id)} onChange={e=>setSelectedMembers(v=>e.target.checked?[...v,m.id]:v.filter(id=>id!==m.id))}/>{m.name}</label>)}<p className="text-xs">Você participa como criador.</p></fieldset>}
           <div className="flex justify-end space-x-2 pt-2">
             <Button variant="ghost" onClick={() => setIsCreateChannelOpen(false)}>
               Cancelar

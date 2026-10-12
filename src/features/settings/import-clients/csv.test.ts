@@ -38,10 +38,10 @@ describe("CSV de clientes", () => {
   it("aceita exportação portuguesa sem slug, preservando campos entre aspas", () => {
     const d = parseCsv('\uFEFFID;Nome do cliente;Status;Público-alvo\r\nexterno;Agência São José;ativo;"Empresas\nLocais"');
     const mapping = autoMapping(d.headers);
-    expect(mapping).toEqual({name:1,status:2});
+    expect(mapping).toEqual({name:1,status:2,source_id:0,target_audience:3});
     const row = previewCsv(d, mapping, [])[0];
     expect(row.errors).toEqual([]);
-    expect(row.data).toEqual({row:2,name:"Agência São José",slug:"agencia-sao-jose",status:"active"});
+    expect(row.data).toEqual({row:2,name:"Agência São José",slug:"agencia-sao-jose",status:"active",profile:{source_id:"externo",target_audience:"Empresas\nLocais"}});
     expect(d.records[0].cells[3]).toBe("Empresas\nLocais");
   });
   it("bloqueia colisões de slug gerado e não corrige slug explicitamente inválido", () => {

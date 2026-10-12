@@ -7,6 +7,7 @@ import {
   useAuth,
 } from "@/features/auth/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
+import {ProviderCredentialsForm} from "@/features/integrations/ProviderCredentialsForm";
 interface State {
   configured: boolean;
   connected: boolean;
@@ -23,7 +24,10 @@ export default function GoogleWorkspacePage() {
 function GoogleWorkspacePanel() {
   const auth = useAuth(),
     agency = useAgencyId(),
-    allowed = usePermission("settings.edit");
+    settingsAllowed = usePermission("settings.edit"),
+    productionAllowed = usePermission("tasks.edit"),
+    clientsAllowed = usePermission("clients.view"),
+    allowed = settingsAllowed || (productionAllowed && clientsAllowed);
   const [retry, setRetry] = useState(0);
   const [state, setState] = useState<State | null>(null),
     [busy, setBusy] = useState(false),
@@ -111,6 +115,7 @@ function GoogleWorkspacePanel() {
         Conecte a conta de trabalho por autorização Google. O acesso pertence ao
         seu usuário nesta agência.
       </p>
+      {settingsAllowed && <ProviderCredentialsForm key={agency} provider="google" onSaved={()=>setRetry(v=>v+1)} />}
       {!allowed && (
         <p role="alert">É necessária a permissão de editar configurações.</p>
       )}
@@ -134,7 +139,7 @@ function GoogleWorkspacePanel() {
             <li>Configure a tela de consentimento OAuth e adicione as contas da equipe como usuários de teste enquanto o aplicativo estiver em teste.</li>
             <li>Em Credenciais, crie um ID do cliente OAuth do tipo Aplicativo da Web. Uma conta de serviço não substitui esse cliente OAuth.</li>
             <li>Cadastre a origem <code className="break-all">https://doispontozero.renatodesigner.com.br</code> e o URI de redirecionamento <code className="break-all">https://pvkhlobsiszrjtblpruu.supabase.co/functions/v1/google-workspace</code>.</li>
-            <li>Em Supabase → Edge Functions → Secrets, cadastre GOOGLE_WORKSPACE_CLIENT_ID, GOOGLE_WORKSPACE_CLIENT_SECRET e GOOGLE_WORKSPACE_REDIRECT_URI. Cadastre GOOGLE_WORKSPACE_TOKEN_KEY com uma chave aleatória de 32 bytes em Base64, gerada em ambiente seguro. Não envie os segredos por chat.</li>
+            <li>Copie o Client ID e o Client Secret para o formulário seguro acima. A chave de criptografia é configurada pelo administrador técnico no backend; não precisa compartilhar segredos por chat.</li>
           </ol>
           <a className="inline-block underline text-orange-300" href="https://console.cloud.google.com/apis/credentials?project=firm-pentameter-474412-h7" target="_blank" rel="noreferrer">Abrir credenciais do Google Cloud</a>
           <button className="block underline" onClick={() => setRetry(v => v + 1)}>Verificar configuração novamente</button>
