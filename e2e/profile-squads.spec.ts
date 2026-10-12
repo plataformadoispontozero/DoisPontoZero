@@ -74,7 +74,7 @@ test('profile without photo saves identity and squad membership stays agency sco
  await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/profile');
  await page.getByLabel('Nome do perfil').fill('Pessoa revisada');await page.getByLabel('Função profissional').selectOption('designer');await page.getByLabel('Data de nascimento').fill('1990-10-12');await page.getByRole('button',{name:'Salvar perfil',exact:true}).click();
  await expect(page.getByRole('status').filter({hasText:'Perfil atualizado.'})).toBeVisible();
- await page.reload();await expect(page.getByLabel('Nome do perfil')).toHaveValue('Pessoa revisada');await expect(page.locator('header').getByText('PR',{exact:true})).toHaveText('PR');
+ await page.reload();if(page.viewportSize()!.width<768){await page.getByRole('link',{name:'Meu perfil',exact:true}).filter({visible:true}).click();await expect(page).toHaveURL(/profile/);}await expect(page.getByLabel('Nome do perfil')).toHaveValue('Pessoa revisada');await expect(page.locator('header').getByText('PR',{exact:true}).first()).toHaveText('PR');
  await page.goto('/squads');await page.getByLabel('Profissional para Squad auditado').selectOption(colleague);await page.getByRole('button',{name:'Adicionar ao squad',exact:true}).click();await expect(page.getByRole('button',{name:'Remover Colega auditado do squad'})).toBeVisible();await page.getByRole('button',{name:'Remover Colega auditado do squad'}).click();await expect(page.getByRole('button',{name:'Remover Colega auditado do squad'})).toHaveCount(0);
  expect(members).toHaveLength(0);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
 });
