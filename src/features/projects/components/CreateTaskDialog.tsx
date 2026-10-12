@@ -17,6 +17,7 @@ interface CreateTaskDialogProps {
   projectId: string
   boardId: string
   agencyId: string
+  titlePrefix?: string
 }
 
 const PRIORITY_OPTIONS = [
@@ -34,6 +35,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   projectId,
   boardId,
   agencyId,
+  titlePrefix = '',
 }) => {
   const createTask = useCreateTask()
 
@@ -75,8 +77,10 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     }
 
     try {
+      const category = columns.find(c => c.id === form.column_id)?.category
       await createTask.mutateAsync({
-        form,
+        form: { ...form, title: titlePrefix ? `${titlePrefix} ${form.title.trim()}` : form.title.trim() },
+        initialStatus: !category || category === 'backlog' ? 'open' : category,
         projectId,
         boardId,
         agencyId,

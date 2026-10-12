@@ -338,3 +338,66 @@ test('new operational events play approval, production and client motifs without
  await page.evaluate(()=>{(window as any).__played=[]});phase=3
  await expect.poll(()=>page.evaluate(()=>(window as any).__played),{timeout:20000}).toEqual([392,494,587,784])
 })
+
+
+test('production workspace groups and filters real demands and creates in its project', async ({page}) => {
+  await api(page)
+  const projectId='88888888-8888-4888-8888-888888888888', boardId='99999999-9999-4999-8999-999999999999', columnId='10101010-1010-4010-8010-101010101010'
+  const rows=[{id:'12121212-1212-4212-8212-121212121212',agency_id:agencyA,project_id:projectId,board_id:boardId,column_id:columnId,title:'[Design] Identidade da campanha',description:'Referências e arquivos',status:'open',priority:'high',due_date:'2020-01-01',archived_at:null,assignees:[{user_id:userId,profile:{full_name:'Designer da equipe'}}],project:{id:projectId,name:'Campanha de lançamento'}}]
+  let created:any, updated:any
+  await page.route('https://audit-auth.supabase.co/rest/v1/**',async route=>{
+    const u=new URL(route.request().url()), table=u.pathname.split('/').pop()
+    if(table==='tasks'){
+      if(route.request().method()==='PATCH'){updated=route.request().postDataJSON();Object.assign(rows[0],updated);return route.fulfill({json:null})}
+      if(route.request().method()==='POST'){created=route.request().postDataJSON();return route.fulfill({json:{id:'13131313-1313-4313-8313-131313131313'}})}
+      if(u.searchParams.get('select')==='position')return route.fulfill({json:[]})
+      return route.fulfill({json:u.searchParams.has('id') ? rows[0] : rows})
+    }
+    if(table==='projects')return route.fulfill({json:[{id:projectId,name:'Campanha de lançamento',status:'active'}]})
+    if(table==='board_columns')return route.fulfill({json:[{id:columnId,name:'A fazer',category:'backlog',position:1000,board_id:boardId},{id:'20202020-2020-4020-8020-202020202020',name:'Revisão',category:'review',position:2000,board_id:boardId}]})
+    if(table==='project_boards')return route.fulfill({json:{id:boardId,project_id:projectId,columns:[{id:columnId,name:'A fazer',category:'backlog',position:1000}]}})
+    return route.fallback()
+  })
+  await page.goto('/login');await page.getByLabel('E-mail',{exact:true}).fill(user.email);await page.getByLabel('Senha',{exact:true}).fill('test-only-password');await page.getByRole('button',{name:'Entrar',exact:true}).click();await expect(page).toHaveURL(/dashboard/)
+  await page.goto('/production/design')
+  await expect(page.getByRole('heading',{name:'Identidade da campanha',exact:true})).toBeVisible()
+  await page.getByLabel('Etapa',{exact:true}).selectOption('review')
+  await expect(page.getByText('Nenhuma demanda corresponde aos filtros.')).toBeVisible()
+  await page.getByLabel('Etapa',{exact:true}).selectOption('')
+  await page.getByRole('button',{name:'Nova demanda',exact:true}).click()
+  await page.getByLabel('Projeto da demanda').selectOption(projectId)
+  await page.getByRole('button',{name:'Continuar',exact:true}).click()
+  await page.locator('#task-title').fill('Carrossel de lançamento')
+  await page.getByRole('button',{name:'Criar Tarefa',exact:true}).click()
+  await expect.poll(()=>created?.title).toBe('[Design] Carrossel de lançamento')
+  expect(created.project_id).toBe(projectId);expect(created.agency_id).toBe(agencyA);expect(created.status).toBe('open')
+  await page.getByRole('button',{name:/Ver demanda/}).first().click()
+  await expect(page.locator('input').filter({hasNot:page.locator('[type=hidden]')}).first()).toBeVisible()
+  await page.locator('[role=dialog] select').filter({has:page.locator('option[value="'+columnId+'"]')}).selectOption('20202020-2020-4020-8020-202020202020')
+  await expect.poll(()=>updated?.status).toBe('review')
+  await page.keyboard.press('Escape')
+  await expect(page.locator('[role=dialog]')).toHaveCount(0)
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await page.screenshot({path:`test-results/production-${page.viewportSize()?.width}.png`,fullPage:true})
+  for(const [path,title] of [['video','Vídeo & Motion'],['traffic','Tráfego Pago']]) {
+    await page.goto('/production/'+path)
+    await expect(page.getByRole('heading',{name:title,exact:true})).toBeVisible()
+    await expect(page.getByText('Sua produção de '+title+' começa aqui.')).toBeVisible()
+    if(path==='traffic') {
+      await expect(page.getByRole('heading',{name:'Resultados dos clientes',exact:true})).toBeVisible()
+      await expect(page.getByText('Integração Meta pendente',{exact:true})).toBeVisible()
+    }
+  }
+})
+
+
+test('production workspace respects consultation permissions and displays backend failure', async ({page}) => {
+  await api(page,{owner:false})
+  await page.route('https://audit-auth.supabase.co/rest/v1/role_permissions**',route=>route.fulfill({json:[{allowed:true,permissions:{permission_key:'tasks.view'}},{allowed:true,permissions:{permission_key:'dashboard.view'}}]}))
+  await page.route('https://audit-auth.supabase.co/rest/v1/tasks**',route=>route.fulfill({status:403,json:{code:'42501',message:'permission denied'}}))
+  await page.goto('/login');await page.getByLabel('E-mail',{exact:true}).fill(user.email);await page.getByLabel('Senha',{exact:true}).fill('test-only-password');await page.getByRole('button',{name:'Entrar',exact:true}).click();await expect(page).toHaveURL(/dashboard/)
+  await page.goto('/production/design')
+  await expect(page.getByRole('alert').filter({hasText:'Não foi possível carregar a produção.'})).toBeVisible({timeout:15000})
+  await expect(page.getByRole('button',{name:'Nova demanda',exact:true})).toHaveCount(0)
+  await expect(page.getByText('Sua produção de Design começa aqui.')).toHaveCount(0)
+})

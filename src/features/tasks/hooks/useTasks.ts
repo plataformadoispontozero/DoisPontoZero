@@ -16,6 +16,7 @@ import type {
   CreateTaskForm,
   UpdateTaskForm,
   TaskFilters,
+  TaskStatus,
 } from '@/types/projects'
 
 // -------------------------
@@ -268,7 +269,9 @@ export function useCreateTask() {
       projectId,
       boardId,
       agencyId,
+      initialStatus = 'open',
     }: {
+      initialStatus?: TaskStatus
       form: CreateTaskForm
       projectId: string
       boardId: string
@@ -297,6 +300,8 @@ export function useCreateTask() {
           column_id: form.column_id,
           parent_task_id: form.parent_task_id,
           title: form.title,
+          status: initialStatus,
+          completed_at: initialStatus === 'done' ? new Date().toISOString() : null,
           description: form.description || null,
           priority: form.priority,
           start_date: form.start_date,
@@ -338,6 +343,7 @@ export function useCreateTask() {
       return task?.id
     },
     onSuccess: (_, { projectId }) => {
+      qc.invalidateQueries({ queryKey: taskKeys.all })
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
@@ -371,6 +377,7 @@ export function useUpdateTask() {
     },
     onSuccess: (_, { taskId, projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) })
+      qc.invalidateQueries({ queryKey: taskKeys.all })
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
@@ -405,6 +412,7 @@ export function useMoveTask() {
       if (error) throw error
     },
     onSuccess: (_, { projectId }) => {
+      qc.invalidateQueries({ queryKey: taskKeys.all })
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
@@ -430,6 +438,7 @@ export function useArchiveTask() {
     },
     onSuccess: (_, { taskId, projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) })
+      qc.invalidateQueries({ queryKey: taskKeys.all })
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },

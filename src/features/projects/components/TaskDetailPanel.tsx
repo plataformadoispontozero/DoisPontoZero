@@ -19,6 +19,7 @@ import {
   Send,
   AlertCircle,
 } from 'lucide-react'
+import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { Sheet, SheetHeader, SheetTitle, SheetContent } from '@/components/ui/Sheet'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -60,6 +61,7 @@ interface TaskDetailPanelProps {
   columns: BoardColumn[]
   open: boolean
   onClose: () => void
+  titlePrefix?: string
 }
 
 const PRIORITY_OPTIONS = [
@@ -76,8 +78,9 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   columns,
   open,
   onClose,
+  titlePrefix,
 }) => {
-  const { data: realTask, isLoading } = useTask(taskId ?? undefined)
+  const { data: realTask, isLoading, isError } = useTask(taskId ?? undefined)
   const { data: subtasks = [] } = useSubtasks(taskId ?? undefined)
   const { data: comments = [] } = useTaskComments(taskId ?? undefined)
   const { data: attachments = [] } = useTaskAttachments(taskId ?? undefined)
@@ -114,6 +117,8 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   }, [realTask])
 
   if (!open || !taskId) return null
+
+  if (isSupabaseConfigured && !realTask) return <Sheet open={open} onOpenChange={onClose}><SheetHeader onClose={onClose}><SheetTitle>Detalhes da demanda</SheetTitle></SheetHeader><SheetContent><p role={isError ? 'alert' : 'status'}>{isLoading ? 'Carregando demanda…' : 'Não foi possível carregar esta demanda.'}</p></SheetContent></Sheet>
 
   // Fallback demo data if realTask is null (e.g. Supabase disconnected or mocked)
   const task: Task = realTask ?? {
@@ -159,7 +164,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
       updateTask.mutate({
         taskId,
         projectId,
-        updates: { title: title.trim() },
+        updates: { title: titlePrefix && !title.trim().startsWith(titlePrefix) ? `${titlePrefix} ${title.trim()}` : title.trim() },
       })
     }
   }
@@ -183,10 +188,11 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   }
 
   const handleColumnChange = (newColumnId: string) => {
+    const category = columns.find(c => c.id === newColumnId)?.category
     updateTask.mutate({
       taskId,
       projectId,
-      updates: { column_id: newColumnId },
+      updates: { column_id: newColumnId, status: !category || category === 'backlog' ? 'open' : category, completed_at: category === 'done' ? new Date().toISOString() : null },
     })
   }
 
