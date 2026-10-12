@@ -42,7 +42,7 @@ export const DriveBrowserPage: React.FC = () => {
   const [newFileMime, setNewFileMime] = useState('application/pdf')
 
   const { data: connection } = useDriveConnection()
-  const { data: files = [], isLoading } = useDriveFiles(searchTerm, mimeFilter === 'all' ? undefined : mimeFilter)
+  const { data: files = [], isLoading, isError, refetch } = useDriveFiles(searchTerm, mimeFilter === 'all' ? undefined : mimeFilter)
   const addFileMutation = useAddDriveFileReference()
 
   const handleCopyLink = (fileId: string, url?: string | null) => {
@@ -128,7 +128,7 @@ export const DriveBrowserPage: React.FC = () => {
       </Card>
 
       {/* Files Grid */}
-      {isLoading ? (
+      {isError ? <div role="alert" className="p-6 text-status-error">Não foi possível carregar os arquivos desta agência. <Button variant="outline" onClick={() => refetch()}>Tentar novamente</Button></div> : isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-44 rounded-xl" />

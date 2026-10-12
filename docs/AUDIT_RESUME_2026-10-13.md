@@ -20,7 +20,7 @@ Suite completa: 73 arquivos e 302 testes passaram com um worker; typecheck, lint
 
 ## Publicação
 
-Gates concluídos; push e deploy autorizados em execução. Dados privados não entram no novo pacote ou commit. A retirada do Git atual não remove cópias do histórico anterior.
+Correções publicadas no GitHub e Cloudflare. Domínio oficial confirmado com o bundle atualizado; `/chat` e `/presentations` responderam HTTP 200 (smoke de rotas, não prova de operações autenticadas). Dados privados não entram no novo pacote ou commit. A retirada do Git atual não remove cópias do histórico anterior.
 
 ## Banco remoto
 
@@ -31,3 +31,6 @@ Gates concluídos; push e deploy autorizados em execução. Dados privados não 
 
 - QA de interface: 12 rotas desktop com sessão/API controladas passaram após abrir e recarregar; não substituem testes autenticados reais.
 - Backup privado e saídas Manus ausentes do índice atual e do pacote `dist`; `manus-routes.json` é apenas o manifesto público de rotas.
+
+- Commit principal: `f40d010`. Release inicial desta retomada: `7df6aca7-9d42-4ceb-9bb1-4be56a864e26`, bundle `index-CFJzMMre.js`.
+- Ajuste final: navegador Drive mostra falha com botão de tentar novamente; três testes focados, typecheck e novo build passaram antes da atualização final.
