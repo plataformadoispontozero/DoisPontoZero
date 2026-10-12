@@ -1,0 +1,91 @@
+-- Run as a database test administrator inside BEGIN/ROLLBACK. Set test.editorial_agency_id and test.editorial_owner_id with set_config(...,true) first. Never commit test fixtures.
+DO $$
+DECLARE agency uuid:=current_setting('test.editorial_agency_id')::uuid; owner_id uuid:=current_setting('test.editorial_owner_id')::uuid; client_a uuid:=gen_random_uuid();client_b uuid:=gen_random_uuid(); campaign uuid; other_campaign uuid; project uuid; token text:=repeat('a',64); ctx jsonb:='{"objective":"Teste","audience":"Público","engineVersion":"campaign-rules-1.0","forbiddenTerms":["garantia"],"topics":["Planejamento"]}'; content jsonb; revised jsonb; n integer; blocked boolean; public_view jsonb; brief uuid; template uuid; strategy_a uuid; strategy_b uuid; pillar uuid; snap jsonb; linked_ctx jsonb; linked_content jsonb; linked_campaign uuid; role_before uuid;
+BEGIN
+ PERFORM set_config('request.jwt.claim.sub',owner_id::text,true);
+ PERFORM set_config('request.jwt.claims',jsonb_build_object('sub',owner_id,'role','authenticated')::text,true);
+ INSERT INTO public.clients(id,agency_id,name,slug) VALUES(client_a,agency,'Fixture editorial A',client_a::text),(client_b,agency,'Fixture editorial B',client_b::text);
+ content:=jsonb_build_array(jsonb_build_object('date','2076-01-03','format','post','title','Guia de planejamento','copy','Planejamento documentado. Salve para consultar.','editorial',jsonb_build_object('version','campaign-rules-1.0','pillarId','monthly-priorities','theme','Planejamento','family','educational','angle','guia','signature','planejamento|educational|guia','visual','Direção sugerida, material a produzir.')));
+ campaign:=public.save_monthly_editorial(null,agency,client_a,null,'2076-01-01',ctx,content);
+ SELECT count(*) INTO n FROM public.editorial_campaign_versions WHERE campaign_id=campaign;
+ IF n<>1 THEN RAISE EXCEPTION 'Audit initial version failed'; END IF;
+ blocked:=false;
+ BEGIN PERFORM public.save_monthly_editorial(null,agency,client_a,null,'2076-02-01',ctx,jsonb_set(content,'{0,date}','"2076-02-03"'));EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Ideia já registrada para este cliente. Escolha outro ângulo.' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'History did not block duplicate'; END IF;
+ -- A distinct client may reuse the same editorial idea.
+ other_campaign:=public.save_monthly_editorial(null,agency,client_b,null,'2076-01-01',ctx,content);
+ -- Changing copy creates an immutable revision; the same campaign can retain its idea.
+ revised:=jsonb_set(content,'{0,copy}','"Planejamento revisado. Salve para consultar."');
+ PERFORM public.save_monthly_editorial(campaign,agency,client_a,null,'2076-01-01',ctx,revised);
+ SELECT count(*) INTO n FROM public.editorial_campaign_versions WHERE campaign_id=campaign;
+ IF n<>2 THEN RAISE EXCEPTION 'Audit revision failed'; END IF;
+ blocked:=false;
+ BEGIN PERFORM public.save_monthly_editorial(campaign,agency,client_a,null,'2076-01-01',ctx,jsonb_set(content,'{0,copy}','"Garantia total"'));EXCEPTION WHEN OTHERS THEN IF SQLERRM NOT LIKE 'Termo proibido encontrado:%' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Forbidden term accepted'; END IF;
+ blocked:=false;
+ BEGIN PERFORM public.save_monthly_editorial(campaign,agency,client_a,null,'2076-01-01',ctx,content||content);EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Ideia duplicada na campanha' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Within-campaign duplicate accepted'; END IF;
+ blocked:=false;
+ BEGIN UPDATE public.monthly_editorial_campaigns SET month='2076-02-01' WHERE id=campaign; EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Cliente e mês da campanha não podem ser alterados' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Campaign month mutation accepted'; END IF;
+ blocked:=false;
+ BEGIN PERFORM public.save_monthly_editorial(campaign,agency,client_a,null,'2076-01-01',ctx,revised #- '{0,editorial}'); EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Ficha editorial obrigatória para este motor' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Required metadata removal accepted'; END IF;
+ PERFORM public.save_monthly_editorial(campaign,agency,client_a,null,'2076-01-01',ctx,jsonb_set(revised,'{0,copy}','"[Completar informação aprovada]"'));
+ blocked:=false;
+ BEGIN PERFORM public.share_monthly_editorial(campaign,token); EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Complete as lacunas antes de enviar para aprovação.' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Incomplete proposal shared'; END IF;
+ PERFORM public.save_monthly_editorial(campaign,agency,client_a,null,'2076-01-01',ctx,revised);
+ PERFORM public.share_monthly_editorial(campaign,token);
+
+ public_view:=public.get_public_editorial(token);
+ IF public_view->'items'->0 ? 'editorial' THEN RAISE EXCEPTION 'Internal strategy leaked into public snapshot'; END IF;
+ PERFORM public.submit_public_editorial(token,0,'adjust','Texto sugerido','Revisar');
+ PERFORM public.save_monthly_editorial(campaign,agency,client_a,null,'2076-01-01',ctx,revised);
+ IF public.get_public_editorial(token) IS NOT NULL THEN RAISE EXCEPTION 'Old share not revoked on edit'; END IF;
+ PERFORM public.share_monthly_editorial(campaign,repeat('b',64));
+ PERFORM public.submit_public_editorial(repeat('b',64),-1,'approve','','');
+ project:=public.produce_monthly_editorial(campaign,false);
+ IF public.produce_monthly_editorial(campaign,false)<>project THEN RAISE EXCEPTION 'Production not idempotent'; END IF;
+ IF NOT EXISTS(SELECT 1 FROM public.tasks WHERE project_id=project AND description LIKE '%Direção visual%') THEN RAISE EXCEPTION 'Visual direction not passed to production'; END IF;
+ INSERT INTO public.briefing_templates(agency_id,name) VALUES(agency,'Fixture editorial template') RETURNING id INTO template;
+ INSERT INTO public.briefings(agency_id,client_id,template_id,title,created_by) VALUES(agency,client_a,template,'Fixture briefing',owner_id) RETURNING id INTO brief;
+ snap:=public.get_editorial_briefing(agency,client_a,brief);
+ linked_ctx:=ctx||jsonb_build_object('briefingRevision',snap->>'revision','topics',jsonb_build_array('Comunicação'));
+ linked_content:=jsonb_set(content,'{0,editorial,theme}','"Comunicação"');
+ linked_content:=jsonb_set(linked_content,'{0,editorial,signature}','"comunicacao|educational|guia"');
+ linked_content:=jsonb_set(linked_content,'{0,title}','"Comunicação documentada"');
+ linked_campaign:=public.save_monthly_editorial(null,agency,client_a,brief,'2076-02-01'::date,linked_ctx,jsonb_set(linked_content,'{0,date}','"2076-02-03"'));
+ UPDATE public.briefings SET template_version=template_version+1,updated_at=clock_timestamp() WHERE id=brief;
+ blocked:=false;
+ BEGIN PERFORM public.save_monthly_editorial(linked_campaign,agency,client_a,brief,'2076-02-01',linked_ctx,jsonb_set(jsonb_set(linked_content,'{0,date}','"2076-02-03"'),'{0,copy}','"Copy revisada"')); EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Briefing atualizado. Reimporte e revise a campanha antes de salvar.' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Stale briefing accepted'; END IF;
+ blocked:=false;
+ BEGIN PERFORM public.get_editorial_briefing(agency,client_b,brief);EXCEPTION WHEN insufficient_privilege THEN blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Cross-client briefing exposed'; END IF;
+ INSERT INTO public.content_strategies(agency_id,client_id,name,created_by) VALUES(agency,client_a,'Fixture strategy A',owner_id) RETURNING id INTO strategy_a;
+ INSERT INTO public.content_strategies(agency_id,client_id,name,created_by) VALUES(agency,client_b,'Fixture strategy B',owner_id) RETURNING id INTO strategy_b;
+ INSERT INTO public.editorial_pillars(agency_id,strategy_id,name,percentage,example_topics,content_formats) VALUES(agency,strategy_a,'Fixture pillar',100,ARRAY['Planejamento'],ARRAY['post']) RETURNING id INTO pillar;
+ blocked:=false;
+ BEGIN PERFORM public.save_monthly_editorial(other_campaign,agency,client_b,null,'2076-01-01',ctx||jsonb_build_object('strategyId',strategy_a),revised);EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Strategy mismatch' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Cross-client strategy accepted'; END IF;
+ blocked:=false;
+ BEGIN PERFORM public.save_monthly_editorial(other_campaign,agency,client_b,null,'2076-01-01',ctx||jsonb_build_object('strategyId',strategy_b),jsonb_set(revised,'{0,editorial,pillarId}',to_jsonb(pillar::text)));EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Pilar/tema incompatível com cliente e formato' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Cross-client pillar accepted'; END IF;
+ PERFORM public.save_editorial_repertoire(agency,'[{"id":"educational","label":"Educativa","journey":"Descoberta","angles":["guia"]}]');
+ blocked:=false;
+ BEGIN PERFORM public.save_monthly_editorial(other_campaign,agency,client_b,null,'2076-01-01',ctx,revised); EXCEPTION WHEN OTHERS THEN IF SQLERRM <> 'Repertório atualizado. Gere e revise uma nova prévia.' THEN RAISE; END IF;blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Stale repertoire accepted'; END IF;
+ PERFORM set_config('request.jwt.claim.sub',gen_random_uuid()::text,true);
+ PERFORM set_config('request.jwt.claims',jsonb_build_object('sub',gen_random_uuid(),'role','authenticated')::text,true);
+ blocked:=false;
+ BEGIN PERFORM public.save_editorial_repertoire(agency,'[{"id":"educational","label":"Educativa","journey":"Descoberta","angles":["guia"]}]');EXCEPTION WHEN insufficient_privilege THEN blocked:=true;END;
+ IF NOT blocked THEN RAISE EXCEPTION 'Unauthorized repertoire write accepted'; END IF;
+ RAISE NOTICE 'PASS: versions, history, client isolation, forbidden terms, duplicate rejection, public snapshot, approval revocation, feedback, production idempotence, visual directions, repertoire authorization';
+END $$;
+
+SET LOCAL ROLE authenticated;
+DO $$ BEGIN
+ IF EXISTS(SELECT 1 FROM public.editorial_campaign_versions) OR EXISTS(SELECT 1 FROM public.editorial_idea_registry) OR EXISTS(SELECT 1 FROM public.editorial_repertoire_versions) THEN RAISE EXCEPTION 'RLS isolation failed'; END IF;
+END $$;
+RESET ROLE;

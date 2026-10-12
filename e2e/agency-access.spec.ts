@@ -209,26 +209,79 @@ test('team-only login hides Google and keeps workspace protected', async ({ page
 })
 
 
-test('monthly generator imports briefing and respects format quantities', async ({page}) => {
-  await api(page)
-  await page.route('**/rest/v1/briefings?**', route => route.fulfill({contentType:'application/json',body:JSON.stringify([{id:'brief-test',title:'Briefing mensal',status:'approved'}])}))
-  await page.route('**/rest/v1/briefing_answers?**', route => route.fulfill({contentType:'application/json',body:JSON.stringify([
-    {answer_value:'Gerar contatos',briefing_questions:{label:'Objetivo'}},
-    {answer_value:'Empreendedores locais',briefing_questions:{label:'Público-alvo'}}
-  ])}))
-  await login(page)
-  await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
-  await page.goto('/editorial')
-  await page.getByLabel('Cliente',{exact:true}).selectOption('33333333-3333-4333-8333-333333333333')
-  await page.getByLabel('Briefing do cliente').selectOption('brief-test')
-  await expect(page.getByRole('textbox',{name:'Objetivo',exact:true})).toHaveValue('Gerar contatos')
-  await expect(page.getByRole('textbox',{name:'Público-alvo',exact:true})).toHaveValue('Empreendedores locais')
-  await page.getByLabel('Post',{exact:true}).fill('1')
-  await page.getByLabel('Reels',{exact:true}).fill('1')
-  await page.getByLabel('Carrossel',{exact:true}).fill('1')
-  await page.getByRole('button',{name:'Gerar calendário mensal',exact:true}).click()
-  await expect(page.getByLabel(/Tema do conteúdo/)).toHaveCount(3)
-})
+test("monthly generator imports briefing and respects format quantities", async ({
+  page,
+}) => {
+  await api(page);
+  await page.route("**/rest/v1/briefings?**", (route) =>
+    route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify([
+        { id: "brief-test", title: "Briefing mensal", status: "approved" },
+      ]),
+    }),
+  );
+  await page.route("**/rest/v1/rpc/get_editorial_briefing", (route) =>
+    route.fulfill({
+      json: {
+        id: "brief-test",
+        revision: "test-brief-revision",
+        updatedAt: "2026-10-12",
+        answers: [
+          { value: "Gerar contatos", label: "Objetivo" },
+          { value: "Empreendedores locais", label: "Público-alvo" },
+        ],
+      },
+    }),
+  );
+  await login(page);
+  await expect(
+    page.getByRole("heading", { name: "Visão Geral", exact: true }),
+  ).toBeVisible();
+  await page.goto("/editorial");
+  await page
+    .getByLabel("Cliente", { exact: true })
+    .selectOption("33333333-3333-4333-8333-333333333333");
+  await page.getByLabel("Briefing do cliente").selectOption("brief-test");
+  await expect(
+    page.getByRole("textbox", { name: "Objetivo", exact: true }),
+  ).toHaveValue("Gerar contatos");
+  await expect(
+    page.getByRole("textbox", { name: "Público-alvo", exact: true }),
+  ).toHaveValue("Empreendedores locais");
+  await page
+    .getByLabel("Temas aprovados para este mês", { exact: true })
+    .fill("Consultoria\nPlanejamento\nRotina");
+  await page.getByLabel("Post", { exact: true }).fill("1");
+  await page.getByLabel("Reels", { exact: true }).fill("1");
+  await page.getByLabel("Carrossel", { exact: true }).fill("1");
+  await page
+    .getByRole("button", { name: "Gerar calendário mensal", exact: true })
+    .click();
+  await expect(page.getByLabel(/Tema do conteúdo/)).toHaveCount(3);
+  await expect(
+    page.getByText("Prévia estratégica · campaign-rules-1.0"),
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("Quantidade de slides do conteúdo 3"),
+  ).toHaveValue("7");
+  await expect(
+    page.getByLabel("Quantidade de cenas do conteúdo 2"),
+  ).toHaveValue("3");
+  await page.getByLabel("Quantidade de slides do conteúdo 3").fill("5");
+  await page
+    .getByRole("button", { name: "Remontar estrutura da peça", exact: true })
+    .nth(1)
+    .click();
+  await expect(page.getByLabel("Copy do conteúdo 3")).toHaveValue(/Slide 5:/);
+  await expect(page.getByLabel("Copy do conteúdo 3")).not.toHaveValue(
+    /Slide 6:/,
+  );
+  await page.screenshot({
+    path: `test-results/editorial-engine-${page.viewportSize()?.width}.png`,
+    fullPage: true,
+  });
+});
 
 test('public editorial review accepts copy suggestions and closes after approval without login', async ({page}) => {
   await api(page)
@@ -401,3 +454,21 @@ test('production workspace respects consultation permissions and displays backen
   await expect(page.getByRole('button',{name:'Nova demanda',exact:true})).toHaveCount(0)
   await expect(page.getByText('Sua produção de Design começa aqui.')).toHaveCount(0)
 })
+
+
+test('monthly generator consumes client strategy pillars and preserves exact campaign quotas',async({page})=>{
+ await api(page,{owner:true});
+ const strategy='77777777-7777-4777-8777-777777777777';
+ await page.route('**/rest/v1/content_strategies?**',route=>route.fulfill({json:[{id:strategy,name:'Estratégia aprovada',objective:'Gerar contatos',target_audience:'Empreendedores locais',tone_of_voice:'Formal',brand_positioning:'Atendimento consultivo',restrictions:['Não mencionar desconto']}]}));
+ await page.route('**/rest/v1/editorial_pillars?**',route=>route.fulfill({json:[{id:'88888888-8888-4888-8888-888888888888',name:'Consultoria aprovada',percentage:100,example_topics:['Planejamento','Consultoria','Rotina'],content_formats:['post','carrossel','reels']}]}));
+ await login(page); await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible();
+ await page.goto('/editorial');await page.getByLabel('Cliente',{exact:true}).selectOption('33333333-3333-4333-8333-333333333333');
+ await page.getByLabel('Estratégia do cliente',{exact:true}).selectOption(strategy);
+ await expect(page.getByRole('textbox',{name:'Objetivo',exact:true})).toHaveValue('Gerar contatos');
+ await expect(page.getByRole('textbox',{name:'Restrições',exact:true})).toHaveValue('Não mencionar desconto');
+ await expect(page.getByText(/Pilares elegíveis:/)).toContainText('Consultoria aprovada');
+ await page.getByLabel('Post',{exact:true}).fill('1');await page.getByLabel('Reels',{exact:true}).fill('1');await page.getByLabel('Carrossel',{exact:true}).fill('1');
+ await page.getByRole('button',{name:'Gerar calendário mensal',exact:true}).click();
+ await expect(page.getByLabel(/Tema do conteúdo/)).toHaveCount(3);
+ await expect(page.getByText(/3 propostas; 1 posts, 1 carrosséis e 1 reels/)).toContainText('Consultoria aprovada: 3');
+});

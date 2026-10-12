@@ -5,6 +5,7 @@ const context = {
   objective: "apresentar o serviço",
   audience: "comércios locais",
   positioning: "Atendimento próximo e claro",
+  topics: ["Atendimento", "Planejamento", "Consultoria"],
 };
 describe("monthly editorial planning", () => {
   it("respects exact quantities and a leap-year month", () => {
@@ -21,7 +22,7 @@ describe("monthly editorial planning", () => {
         (i) => i.date.startsWith("2028-02-") && Number(i.date.slice(-2)) <= 29,
       ),
     ).toBe(true);
-    expect(plan[0].copy).toContain("comércios locais");
+    expect(plan[0].editorial?.audience).toBe("comércios locais");
   });
   it("rejects invalid quotas and missing strategic information", () => {
     expect(() =>

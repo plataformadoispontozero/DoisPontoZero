@@ -87,6 +87,7 @@ export function generateEditorialSuggestions(
     // Calculate interval between posts
     const interval = Math.max(1, Math.floor(periodDays / totalItems))
 
+    const usedTopics = new Set(existingIdeas.filter(idea => idea.pillar_id === pillar.id).map(idea => idea.title.trim().toLowerCase()))
     for (let i = 0; i < totalItems; i++) {
       const dayOffset = i * interval
       if (dayOffset >= periodDays) break
@@ -102,7 +103,10 @@ export function generateEditorialSuggestions(
       )
 
       const format = getRotatedFormat(pillar.content_formats, i)
-      const topic = getRotatedTopic(pillar.example_topics, i)
+      const availableTopics = pillar.example_topics.filter(topic => !usedTopics.has(topic.trim().toLowerCase()))
+      if (!availableTopics.length) continue
+      const topic = getRotatedTopic(availableTopics, i)
+      usedTopics.add(topic.trim().toLowerCase())
 
       suggestions.push({
         pillar_id: pillar.id,
