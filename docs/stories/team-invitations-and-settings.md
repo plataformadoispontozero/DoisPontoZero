@@ -1,6 +1,6 @@
 # Convites operacionais e configurações da agência
 
-Status: Ready for Review — homologado; push e publicação autorizados pelo usuário em 2026-10-12
+Status: Done — push e publicação concluídos em 2026-10-12 após autorização explícita
 
 - [x] Administrador gera convite por e-mail/papel e copia link para compartilhar.
 - [x] Novo profissional confirma convite e define a própria senha; conta existente exige login próprio.
@@ -8,7 +8,7 @@ Status: Ready for Review — homologado; push e publicação autorizados pelo us
 - [x] Alteração administrativa de papel via operação validada; sem escrita direta de vínculos.
 - [x] White Label removido da navegação; versão somente na visão geral de configurações.
 - [x] Testes e homologação.
-- [x] Nova autorização explícita de push e publicação recebida em 2026-10-12; execução nesta revisão.
+- [x] Push e publicação do frontend concluídos em 2026-10-12; versão e checagem do domínio registradas no relatório de navegação.
 
 Envio é manual pelo administrador; não há afirmação de e-mail enviado nem dependência de SMTP. Token Auth só aparece no fragmento do link retornado ao administrador autorizado; não é armazenado em logs ou tabelas públicas.
 

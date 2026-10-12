@@ -1,6 +1,6 @@
 # Dois.Zero — reestruturação da navegação
 
-Data da revisão: 12/10/2026. Implementação local, sem push, merge ou deploy desta rodada.
+Data da revisão: 12/10/2026. Validação inicial local; push e deploy concluídos após nova autorização explícita. Sem merge.
 
 ## Inspeção e estrutura
 
@@ -71,3 +71,6 @@ O usuário autorizou explicitamente push e deploy em 2026-10-12, substituindo a 
 
 ## Publicação autorizada — 2026-10-12
 Código revisado para envio à branch `codex/master-audit-15-1` e build de produção com `VITE_PUBLIC_SITE_PREVIEW=false`. Publicação direcionada ao Worker existente `doispontozero`, preservando domínio, DNS e banco. As migrations e o serviço de convite já estavam ativos; não são reaplicados nesta etapa.
+
+
+Publicação concluída: commit de código `056a0876a2ab373ccc077a65833627ea26c99c9e`, branch `codex/master-audit-15-1`; Worker versão `3a9779fb-2a7f-4b4e-8bc7-71abba120730`. Build de produção `index-d19BTmzT.js` confirmado no domínio https://doispontozero.renatodesigner.com.br. Verificação de navegador em 1440×900 e 390×844: `/login` HTTP 200; `/settings/team` HTTP 200 e redireciona visitantes sem sessão ao login; `/accept-invitation` HTTP 200 e apresenta a página de convite. Nenhuma tela apresentou overflow horizontal. Esta checagem não executou aceite de convite real nem sessão administrativa em produção. Backend e DNS preservados.
