@@ -57,3 +57,5 @@ Sem teste de envio a uma conta Google real nesta etapa. Docs atuais Google Drive
 - Preview indisponível usa mensagem e preserva original. Formatos declarados incluem imagens/vídeos suportados, PDF, PSD, AI e ZIP; arquivos até 500 MiB, previews até 2 MiB.
 - Testes reais de Designer/Videomaker, envio de PNG/MP4 e destino Google permanecem pendentes porque não foi disponibilizada sessão legítima de usuário. Nenhum arquivo/pasta foi enviado/criado em cliente real. CodeRabbit indisponível.
 - Relatório detalhado: docs/DEMAND_DRIVE_IMPLEMENTATION.md.
+
+- Publicação confirmada: GitHub `8647d6a`, Cloudflare `5e040ef6-21e6-4283-9dbf-faae039de16b`; domínio `/tasks` com `index-BFxqI8DP.js`.
