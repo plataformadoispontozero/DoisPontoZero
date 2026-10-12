@@ -44,7 +44,7 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
         </Link>
       </div>
 
-      <DriveBriefingsPanel clientId={clientId}/>
+      <DriveBriefingsPanel clientId={clientId} showDiscovery={false}/>
       {isError ? <p role="alert" className="rounded-xl border border-orange-500/30 p-4 text-sm">Não foi possível carregar os briefings deste cliente. Tente novamente.</p> : isLoading ? (
         <div className="space-y-2">
           {[1, 2].map((i) => (

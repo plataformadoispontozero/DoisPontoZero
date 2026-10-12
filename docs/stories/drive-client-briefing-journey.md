@@ -137,3 +137,7 @@ Artefatos de seed locais: `/Users/designer/Documents/Codex/2026-10-12/modelos-br
 - Há conexão central cadastrada, mas leitura real de documentos e OAuth não foram homologados nesta execução. CodeRabbit indisponível.
 
 - Publicação confirmada: commit funcional `e52fe17` enviado ao GitHub; Cloudflare `50df9232-c821-4c3a-b2ef-caefb8e61255`. Worker e domínio oficial entregam `index-FGJWY57t.js`.
+
+## Simplificação da ficha do cliente
+- Controle Buscar briefs no Drive removido da ficha; documentos já espelhados e revisão continuam disponíveis. Painel vazio é ocultado. Descoberta permanece na área geral de Briefings.
+- Quatro testes existentes do painel, typecheck, lint e build aprovados. Nenhuma alteração de banco ou importação.
