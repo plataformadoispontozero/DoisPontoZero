@@ -80,3 +80,5 @@ Arquivos: migration google_agency_connection gerada pela CLI; googleAgencyConnec
 - E2E editorial de geração, revisão e payload salvo passou nos três viewports com backend simulado; não constitui homologação real de OAuth.
 - Migração central Google aplicada como `20261012134754`; Google Workspace v7, connection-config v3 e drive-material-approval v4 ativos. RPCs centrais bloqueados para anon/authenticated e tabela privada com RLS.
 - Conta Google real e consentimento dos escopos ainda dependem da configuração e autorização pelo administrador. CodeRabbit indisponível.
+
+- Push funcional confirmado: `9160854`, branch `codex/master-audit-15-1`. Cloudflare versão `a0f5dd93-6d83-49f0-8115-bbf4e8264d68`; domínio oficial entrega `index-CkW_TDU3.js`, CSP do Picker preservado.
