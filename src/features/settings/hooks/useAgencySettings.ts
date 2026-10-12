@@ -572,7 +572,7 @@ export function useAgencyTeam(agencyId?: string) {
         throw new Error(body?.error || 'Não foi possível preparar o convite. Tente novamente.')
       }
       if (!data?.inviteUrl || !data?.invitationId) throw new Error('O servidor não confirmou o convite.')
-      return data as {inviteUrl: string; invitationId: string; existingAccount: boolean}
+      return data as {inviteUrl: string; invitationId: string; existingAccount: boolean; emailSent?: boolean}
     },
     onSuccess: () => { void queryClient.invalidateQueries({queryKey:['agencyInvitations',agencyId]}) },
   })

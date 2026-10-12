@@ -17,9 +17,10 @@ export function AcceptInvitationPage() {
   const [verified, setVerified] = useState(false),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
-  const id = params.get("id") || "",
+  const query = new URLSearchParams(window.location.search);
+  const id = params.get("id") || query.get("id") || "",
     hash = params.get("token_hash") || "",
-    isNew = !!hash;
+    isNew = !!hash || query.get("setup") === "1";
   async function accept(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -30,7 +31,7 @@ export function AcceptInvitationPage() {
       if (isNew && (password.length < 8 || password !== confirm))
         throw Error("Use pelo menos 8 caracteres e confirme a mesma senha.");
       if (isNew) {
-        if (!verified) {
+        if (!verified && hash) {
           const result = await supabase.auth.verifyOtp({
             token_hash: hash,
             type: "invite",
@@ -41,6 +42,10 @@ export function AcceptInvitationPage() {
             );
           setVerified(true);
           window.history.replaceState(null, "", "/accept-invitation#id=" + id);
+        }
+        if (!hash) {
+          const session = await supabase.auth.getUser();
+          if (session.error || !session.data.user) throw Error("Abra o link recebido por e-mail para definir sua senha.");
         }
         const updated = await supabase.auth.updateUser({
           password,

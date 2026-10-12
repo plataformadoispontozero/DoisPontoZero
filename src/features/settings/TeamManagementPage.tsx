@@ -31,8 +31,8 @@ export const TeamManagementPage: React.FC = () => {
     setIsSubmitting(true)
     try {
       const result = await inviteMember({ email: inviteEmail, roleId: inviteRoleId })
-      setInviteLink(result.inviteUrl)
-      toast.success('Convite criado. Copie o link e envie ao profissional.')
+      setInviteLink(result.emailSent ? "" : result.inviteUrl)
+      toast.success(result.emailSent ? 'Convite enviado por e-mail. Peça ao profissional para conferir também o spam.' : 'Esta conta já existe. Copie o link e envie ao profissional.')
       setInviteEmail('')
       setIsInviteOpen(false)
     } catch (error) {
@@ -71,7 +71,7 @@ export const TeamManagementPage: React.FC = () => {
       {!canInvite && <p>Você não tem permissão para convidar membros desta agência.</p>}
       {inviteLink && <section className="space-y-3 rounded-xl border border-orange-400/40 p-4" aria-label="Convite criado">
         <h2 className="font-semibold">Convite pronto para compartilhar</h2>
-        <p className="text-sm text-[#B8B8C0]">Copie e envie diretamente ao convidado. Válido por até 1 hora. Nenhum e-mail foi enviado automaticamente; para substituir um link vencido, gere um novo convite.</p>
+        <p className="text-sm text-[#B8B8C0]">Esta conta já existe e usa o login habitual. Compartilhe este link com o convidado; para substituir um link vencido, gere um novo convite.</p>
         <Input aria-label="Link do convite" readOnly value={inviteLink} />
         <Button onClick={async()=>{try{await navigator.clipboard.writeText(inviteLink);toast.success('Link copiado.')}catch{toast.error('Selecione o link e copie manualmente.')}}}>Copiar link do convite</Button>
         <Button variant="ghost" onClick={()=>setInviteLink('')}>Ocultar link</Button>
@@ -148,7 +148,7 @@ export const TeamManagementPage: React.FC = () => {
                   Convite seguro com validade de 1 hora
                 </span>
                 <p>
-                  Você receberá um link para enviar ao colaborador. Ele define a própria senha; contas existentes usam seu login habitual.
+                  Novos membros recebem o convite por e-mail e definem a própria senha. Para contas existentes, compartilhe o link; elas usam seu login habitual.
                 </p>
               </div>
 
@@ -157,7 +157,7 @@ export const TeamManagementPage: React.FC = () => {
                   Cancelar
                 </Button>
                 <Button type="submit" variant="accent" size="sm" loading={isSubmitting} disabled={!canInvite || !roleOptions.some(r => r.value === inviteRoleId)}>
-                  Gerar Convite
+                  Enviar Convite
                 </Button>
               </div>
             </form>

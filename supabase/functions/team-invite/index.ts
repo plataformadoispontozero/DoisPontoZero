@@ -26,16 +26,21 @@ Deno.serve(async (req:Request)=>{
   const admin=createClient(url,secret,{auth:{persistSession:false,autoRefreshToken:false}})
   const target=await admin.rpc('team_invitation_auth_target',{p_email:email})
   if(target.error) throw Error('Falha ao verificar destinatário.')
-  let hash=''
-  // Confirmed accounts always log in themselves; never expose recovery/magic links to an inviter.
-  if(!target.data || (target.data.invited && !target.data.confirmed)) {
-   const link=await admin.auth.admin.generateLink({type:'invite',email,options:{redirectTo:site+'/accept-invitation'}})
-   if(link.error||!link.data.properties?.hashed_token) throw Error('Não foi possível preparar o link de convite. Tente novamente.')
-   hash=link.data.properties.hashed_token
-  }
+  const existingAccount=!!target.data && !(target.data.invited && !target.data.confirmed)
   const fragment=new URLSearchParams({id:invitationId!})
-  if(hash) fragment.set('token_hash',hash)
-  return reply({invitationId,inviteUrl:site+'/accept-invitation#'+fragment.toString(),existingAccount:!hash})
+  const inviteUrl=site+'/accept-invitation#'+fragment.toString()
+  if(!existingAccount) {
+   // Auth sends the email itself. The invitation ID survives the verification redirect.
+   const sent=await admin.auth.admin.inviteUserByEmail(email,{redirectTo:site+'/accept-invitation?id='+encodeURIComponent(invitationId!)+'&setup=1'})
+   if(sent.error) {
+    const code=sent.error.code||''
+    if(code==='over_email_send_rate_limit') throw Error('Limite de envio de e-mails atingido. Aguarde ou configure SMTP no Supabase.')
+    if(code==='email_address_not_authorized') throw Error('O Supabase ainda não permite enviar para este endereço. Configure SMTP para convidar a equipe.')
+    throw Error('Não foi possível enviar o e-mail de convite: '+sent.error.message)
+   }
+  }
+  // Existing accounts authenticate themselves; never give their login tokens to the inviter.
+  return reply({invitationId,inviteUrl,existingAccount,emailSent:!existingAccount})
  } catch(error) {
   if(invitationId) await caller.rpc('revoke_team_invitation',{p_id:invitationId,p_agency:(await caller.from('agency_invitations').select('agency_id').eq('id',invitationId).single()).data?.agency_id})
   return reply({error:error instanceof Error?error.message:'Não foi possível preparar o convite.'},400)
