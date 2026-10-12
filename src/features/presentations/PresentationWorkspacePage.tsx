@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft, Eye, Send, FileCode, History, Plus, Trash2, ChevronUp, ChevronDown,
-  Globe, Copy, Lock, ExternalLink, RefreshCw, FolderPlus, Image as ImageIcon, Video,
-  CheckCircle, AlertCircle, FileText, Sparkles, Layers, ShieldCheck, Download,
+  ArrowLeft, Eye, History, Plus, Trash2, ChevronUp, ChevronDown,
+  Globe, Copy, ExternalLink, RefreshCw, FolderPlus, Image as ImageIcon, Video,
+  AlertCircle, FileText, Sparkles, Layers, ShieldCheck, Download,
   Search, Link as LinkIcon, HardDrive, Check
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
@@ -39,7 +39,7 @@ export const PresentationWorkspacePage: React.FC = () => {
     isCreatingLink
   } = useSinglePresentation(presentationId);
 
-  const { driveFiles, isLoadingFiles, addDriveFile, isAddingFile, connection } = useDrive();
+  const { driveFiles, isLoadingFiles, addDriveFile, isAddingFile } = useDrive();
 
   // Tab State: 'editor' | 'preview' | 'publish' | 'versions'
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'publish' | 'versions'>('editor');

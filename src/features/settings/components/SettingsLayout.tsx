@@ -42,7 +42,7 @@ export const settingsTabs: SettingsTabItem[] = [
   { id: 'apps', label: 'Apps e notificações', path: '/settings/apps', icon: MonitorCheck },
   { id: 'security', label: 'Segurança', path: '/settings/security', icon: ShieldAlert },
   { id: 'activity', label: 'Atividades', path: '/settings/activity', icon: Activity },
-  { id: 'diagnostics', label: 'Diagnósticos', path: '/settings/diagnostics', icon: Cpu },
+  { id: 'diagnostics', label: 'Diagnósticos', path: '/settings/diagnostics', icon: Cpu, badge: 'TÉCNICO' },
 ]
 
 export const SettingsLayout: React.FC = () => {
