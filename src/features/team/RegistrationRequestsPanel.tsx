@@ -8,7 +8,7 @@ import { memberRoleOptions } from './memberRoleOptions'
 import { professions } from './teamProfessions'
 interface RequestRow {id:string;email:string;full_name:string;profession:string;status:string;created_at:string}
 export function RegistrationRequestsPanel({roles}:{roles:{id:string;name:string;description?:string|null}[]}){
- const auth=useAuth(),agencyId=useAgencyId(),permission=usePermission('members.edit')
+ const auth=useAuth(),agencyId=useAgencyId(),permission=usePermission('members.registration.review')
  const canReview=permission&&['OWNER','ADMIN','MANAGER'].includes(auth.activeAgency?.roleName||'')
  const cache=useQueryClient(),[selected,setSelected]=useState<Record<string,string>>({}),[confirmed,setConfirmed]=useState<Record<string,boolean>>({}),[busy,setBusy]=useState(''),[error,setError]=useState(''),[message,setMessage]=useState('')
  const options=memberRoleOptions(roles.filter(role=>role.name!=='ADMIN'||auth.activeAgency?.roleName==='OWNER'))

@@ -46,4 +46,6 @@ Files: src/features/team/TeamRegistrationPage.tsx; src/features/team/Registratio
 
 Migration aplicada: 20261012084523_team_registration_review.sql. RLS confirmado, APIs privilegiadas service_role somente, confirmação global preservada. Arquivos adicionais: supabase/config.toml; src/types/notifications.ts; src/features/team/teamProfessions.ts; src/features/team/TeamRegistrationPage.test.tsx; src/features/team/RegistrationRequestsPanel.test.tsx; src/features/team/team-registration.database.test.ts.
 
-Validação isolada do cadastro e central: lint sem erros (avisos existentes), typecheck, 167 testes em 42 arquivos e build aprovados. Cadastro homologado em desktop/tablet/mobile com backend simulado e sem criar contas reais; sem overflow. Migration publicada pelo agente principal com timestamp 20261012084523. CodeRabbit indisponível; nenhum passe presumido.
+Permissão dedicada de revisão implantada: migration 20261012085000_team_registration_reviewer_permission.sql. Gestor aprova Colaborador; atribuição Administrador exclusiva do proprietário. 5 testes DB aprovados; members.edit preservada.
+
+Validação final isolada: lint sem erros, typecheck, 168 testes em 42 arquivos e build passaram. Cadastro em desktop/tablet/mobile homologado com backend simulado sem criar contas reais. CodeRabbit indisponível; nenhum passe declarado. Publicação aguarda checagem de produção.

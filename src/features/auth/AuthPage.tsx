@@ -44,7 +44,7 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
         if (error) throw error
         setPassword(''); setConfirmation(''); setMessage('Senha atualizada. Você pode acessar sua agência.')
       }
-    } catch { setError(mode === 'login' ? 'Não foi possível entrar. Confira e-mail e senha ou tente novamente.' : 'Não foi possível concluir. Confira o link de recuperação e tente novamente.') }
+    } catch (failure) { setError(mode === 'login' && (failure as {code?:string})?.code === 'email_not_confirmed' ? 'Sua conta ainda não está liberada. Aguarde a aprovação do responsável pela equipe.' : mode === 'login' ? 'Não foi possível entrar. Confira e-mail e senha ou tente novamente.' : 'Não foi possível concluir. Confira o link de recuperação e tente novamente.') }
     finally { setBusy(false) }
   }
   return <main className="dz-auth-page">
