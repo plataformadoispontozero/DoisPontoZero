@@ -18,7 +18,6 @@ describe('legacy strategy history',()=>{
 
 describe('frequency and date handling',()=>{
  it('understands written frequencies such as three times per week',()=>{
-  const topics=Array.from({length:20},(_,i)=>`Tema ${i+1}`)
   const result=generateEditorialSuggestions([
    {...pillar,percentage:50,posting_frequency:'3 vezes por semana',example_topics:topics},
    {...pillar,id:'p2',name:'Outro',percentage:50,posting_frequency:'1x por semana',example_topics:['Outro tema']},
