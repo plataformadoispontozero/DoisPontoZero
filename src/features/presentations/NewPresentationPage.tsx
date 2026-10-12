@@ -21,6 +21,7 @@ export const NewPresentationPage: React.FC = () => {
   const { data: clients,isError:clientsError } = useClients(agency);
   const { createPresentation, isCreating } = usePresentations();
 
+  const [createError, setCreateError] = useState<string | null>(null);
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Form State
@@ -46,6 +47,7 @@ export const NewPresentationPage: React.FC = () => {
   const handleCreate = async () => {
     if (!selectedClientId || !title) return;
 
+    setCreateError(null);
     try {
       const created = await createPresentation({
         client_id: selectedClientId,
@@ -62,12 +64,13 @@ export const NewPresentationPage: React.FC = () => {
         navigate('/presentations');
       }
     } catch (err) {
-      console.error('Erro ao criar apresentação:', err);
+      setCreateError((err as { message?: string })?.message || 'Não foi possível criar a apresentação. Tente novamente.');
     }
   };
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-12">
+      {createError && <p role="alert" className="text-status-error">{createError}</p>}
       {clientsError&&<p role="alert">Não foi possível carregar os clientes desta agência.</p>}
       {/* Top Bar */}
       <div className="flex items-center justify-between border-b border-surface-border pb-4">

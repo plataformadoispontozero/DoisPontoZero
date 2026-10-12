@@ -1,6 +1,5 @@
 import { EditorialPieceEditor } from "./EditorialPieceEditor";
 import { briefingEditorialContext, missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
-import { currentDriveReview,useDriveBriefDocuments,type DriveBriefDocument } from '@/features/briefing/driveDocuments';
 import { readClientProfile } from "@/features/clients/clientProfile";
 import { useEffect, useRef,useState } from "react";
 import { Link, useSearchParams,useLocation,useNavigate } from "react-router-dom";
@@ -81,20 +80,6 @@ export function MonthlyEditorialPage() {
   const [topicDraft,setTopicDraft]=useState("");
   const [topicsReviewed,setTopicsReviewed]=useState(false);
   const inputs = useCampaignInputs(agency, client, context.strategyId, id);
-  const driveBriefs=useDriveBriefDocuments(client||undefined);
-  const identity=useRef('');identity.current=`${agency}:${client}:${id}`;
-  async function applyDriveBrief(document:DriveBriefDocument){
-    if(document.client_id!==client||document.agency_id!==agency||!currentDriveReview(document)||id)return;
-    const key=identity.current;setBusy(true);setNotice('');
-    try{const r=await supabase!.functions.invoke('google-workspace',{body:{action:'client-drive-document-read',agencyId:agency,clientId:client,documentId:document.google_file_id}});
-      if(r.error||r.data?.error)throw Error('Não foi possível conferir o documento no Drive.');
-      if((r.data.document?.version||r.data.version)!==document.reviewed_version){await cache.invalidateQueries({queryKey:['drive-brief-documents',agency]});throw Error('O documento mudou no Drive. Revise novamente na área de Briefings.');}
-      if(identity.current!==key)return;
-      const reviewed=document.reviewed_context;
-      setContext(old=>({...old,objective:reviewed.objective||old.objective,audience:reviewed.audience||old.audience,tone:reviewed.tone||old.tone,positioning:reviewed.positioning||old.positioning,restrictions:reviewed.restrictions||old.restrictions,topics:reviewed.topics?.length?reviewed.topics:old.topics,changeNote:`Contexto revisado do Drive: ${document.name} · documento ${document.id} · versão ${document.reviewed_version}`}));
-      setItems([]);setDirty(true);setNotice('Contexto do Drive aplicado ao rascunho. Confira os campos e quantidades antes de gerar.');
-    }catch(e){if(identity.current===key)setNotice(e instanceof Error?e.message:'Não foi possível aplicar o documento.');}finally{if(identity.current===key)setBusy(false);}
-  }
   const clients = useQuery({
     queryKey: ["editorial-clients", agency],
     enabled: !!agency,
@@ -348,7 +333,6 @@ export function MonthlyEditorialPage() {
             <Button disabled={locked||!topicsReviewed||!topicDraft.trim()} onClick={()=>{setContext(old=>({...old,topics:[...new Set([...(old.topics||[]),...topicDraft.split('\n').map(t=>t.trim()).filter(Boolean)])],changeNote:'Temas sugeridos pelo cadastro/histórico revisados pela equipe'}));setItems([]);setDirty(true);setNotice('Temas revisados aplicados. Confira objetivo, público, restrições e quantidades antes de gerar.');}}>Aplicar temas revisados</Button>
           </section>}
           {client&&<p className="text-xs text-orange-200">O cadastro sugere objetivo, público, tom e posicionamento. Revise estes dados e complete as lacunas antes de gerar.</p>}
-          {client&&<section className="space-y-2 rounded-xl border border-orange-500/20 p-4"><h2 className="font-semibold">Contexto dos briefs no Drive</h2><p className="text-sm text-zinc-300">Escolha um documento revisado para orientar esta campanha. A aplicação confere se a versão no Drive continua igual.</p>{driveBriefs.isError?<p role="alert">Não foi possível consultar os briefs espelhados.</p>:driveBriefs.data?.filter(d=>d.client_id===client&&currentDriveReview(d)).map(d=><Button key={d.id} disabled={busy||!!id||locked} onClick={()=>void applyDriveBrief(d)}>Usar contexto de {d.name}</Button>)}<Link className="block text-sm text-orange-200 underline" to={`/clients/${client}`}>Consultar e revisar briefs na ficha do cliente</Link></section>}
           {!!historicalBriefs.data?.length&&<div className="rounded-lg border border-orange-500/20 p-3 space-y-2"><p className="text-sm">Briefings importados da plataforma anterior</p>{historicalBriefs.data.map(record=><button key={record.id} type="button" disabled={!!id||busy} className="block text-sm text-orange-200 underline disabled:opacity-50" onClick={()=>applyHistoricalBrief(record)}>Usar dados do briefing {record.source_created_at?new Date(record.source_created_at).toLocaleDateString('pt-BR'):''}</button>)}<p className="text-xs text-zinc-300">A aplicação substitui apenas os campos presentes no documento. Revise os dados e complete temas, fatos e restrições.</p></div>}
           <label className="block">
             Briefing do cliente

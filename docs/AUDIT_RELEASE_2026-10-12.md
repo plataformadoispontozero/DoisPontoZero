@@ -37,3 +37,7 @@
 ## Próximo passo operacional
 
 Aplicar a migration no projeto Supabase `pvkhlobsiszrjtblpruu` com `supabase db push` autenticado ou pelo SQL Editor. Depois, repetir os testes de integração de banco e validar a criação/abertura de um link público de apresentação em ambiente autenticado.
+
+## Atualização em 13/10/2026
+
+A RPC de links foi confirmada aplicada no Supabase remoto. A suite repetida com um worker passou após corrigir o fuso do fixture de aniversário (73 arquivos, 302 testes). Ver o relatório de retomada em `docs/AUDIT_RESUME_2026-10-13.md` para correções e limites de validação atuais.

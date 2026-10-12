@@ -39,7 +39,7 @@ export const PresentationWorkspacePage: React.FC = () => {
     isCreatingLink
   } = useSinglePresentation(presentationId);
 
-  const { driveFiles, isLoadingFiles, addDriveFile, isAddingFile } = useDrive();
+  const { driveFiles, isLoadingFiles, isFilesError, refetchFiles, addDriveFile, isAddingFile } = useDrive();
 
   // Tab State: 'editor' | 'preview' | 'publish' | 'versions'
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'publish' | 'versions'>('editor');
@@ -129,15 +129,15 @@ export const PresentationWorkspacePage: React.FC = () => {
       }
     } else {
       // Modo 'link' direto
-      if (!newAssetName.trim()) {
-        toast.error('Informe o nome do material.');
+      if (!newAssetName.trim() || !newAssetUrl.trim()) {
+        toast.error('Informe o nome e o link do material no Google Drive.');
         return;
       }
       try {
         const createdRef = await addDriveFile({
           name: newAssetName.trim(),
           mime_type: newAssetMime,
-          web_view_link: newAssetUrl.trim() || undefined,
+          web_view_link: newAssetUrl.trim(),
         });
         await addAsset({
           section_id: selectedSection.id,
@@ -175,17 +175,20 @@ export const PresentationWorkspacePage: React.FC = () => {
   };
 
   const handlePublish = async () => {
-    await publishPresentation();
+    try { await publishPresentation(); toast.success('Apresentação publicada.'); }
+    catch (err) { toast.error((err as {message?: string})?.message || 'Não foi possível publicar.'); }
   };
 
   const handleGenerateLink = async () => {
+    try {
     const token = await createPublicLink();
     if (token) {
       const fullUrl = `${window.location.origin}/showcase/${token}`;
-      navigator.clipboard.writeText(fullUrl);
+      await navigator.clipboard.writeText(fullUrl);
       setCopiedLink(fullUrl);
       setTimeout(() => setCopiedLink(null), 4000);
     }
+    } catch (err) { toast.error((err as {message?: string})?.message || 'Não foi possível gerar ou copiar o link.'); }
   };
 
   return (
@@ -542,11 +545,15 @@ export const PresentationWorkspacePage: React.FC = () => {
                       </p>
                     )}
 
+                    {sec.content?.subtitle && <p className="text-content-secondary">{sec.content.subtitle}</p>}
+                    {sec.content?.text && <p className="text-sm text-content-secondary whitespace-pre-wrap">{sec.content.text}</p>}
+                    {Array.isArray(sec.content?.list) && <ul className="list-disc pl-6 text-content-secondary">{sec.content.list.map((item: string, index: number) => <li key={index}>{item}</li>)}</ul>}
                     {secAssets.length > 0 && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                         {secAssets.map((ast: PresentationAsset) => (
                           <div key={ast.id} className="p-4 border border-surface-border rounded-lg bg-surface-subtle text-center space-y-2">
-                            <ImageIcon className="w-8 h-8 text-brand-primary mx-auto" />
+                            {ast.file_reference?.thumbnail_reference ? <img src={ast.file_reference.thumbnail_reference} alt={ast.title} className="w-full h-40 object-contain" /> : <ImageIcon className="w-8 h-8 text-brand-primary mx-auto" />}
+                            {ast.file_reference?.web_view_link && <a href={ast.file_reference.web_view_link} target="_blank" rel="noreferrer" className="text-brand-primary underline">Abrir material no Drive</a>}
                             <h4 className="text-xs font-semibold text-content-primary">{ast.title}</h4>
                             <span className="text-[10px] text-content-tertiary">{ast.description || 'Google Drive File'}</span>
                           </div>
@@ -570,7 +577,7 @@ export const PresentationWorkspacePage: React.FC = () => {
               <div>
                 <h2 className="text-lg font-bold text-content-primary">Publicação e Link de Compartilhamento</h2>
                 <p className="text-xs text-content-secondary">
-                  Gere um link seguro e imutável para apresentar este material diretamente ao seu cliente.
+                  Gere um link seguro para apresentar este material diretamente ao seu cliente.
                 </p>
               </div>
             </div>
@@ -756,7 +763,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                 />
               </div>
 
-              {isLoadingFiles ? (
+              {isFilesError ? <div role="alert" className="p-4 text-status-error">Não foi possível carregar os arquivos. <Button variant="outline" onClick={() => refetchFiles()}>Tentar novamente</Button></div> : isLoadingFiles ? (
                 <div className="p-8 text-center text-xs text-content-secondary">
                   <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-2 text-brand-primary" />
                   Carregando arquivos do Google Drive...
@@ -916,7 +923,7 @@ export const PresentationWorkspacePage: React.FC = () => {
               <Button
                 size="sm"
                 onClick={handleAddAssetSubmit}
-                disabled={driveImportMode === 'browse' ? !selectedDriveFileId : !newAssetName.trim()}
+                disabled={driveImportMode === 'browse' ? !selectedDriveFileId : (!newAssetName.trim() || !newAssetUrl.trim())}
                 loading={isAddingFile}
               >
                 Vincular à Seção

@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useAgencyId, usePermission } from "@/features/auth/AuthProvider";
 import { useClient } from "./hooks/useClients";
 import { supabase } from "@/lib/supabase/client";
-import { DriveBriefingsPanel } from '@/features/briefing/DriveBriefingsPanel';
 interface RecordItem {
   id: string;
   name?: string;
@@ -182,7 +181,6 @@ export default function ClientWorkspacePage() {
           </article>
         ))}
       </div>
-      {briefsAllowed&&clientId&&<DriveBriefingsPanel clientId={clientId}/>}
       <div className="flex flex-wrap gap-3" aria-label="Atalhos da jornada do cliente">
         {strategyAllowed&&<Link className="rounded-lg border border-orange-500/30 p-3" to={`/strategy/new?clientId=${clientId}`}>Criar estratégia deste cliente</Link>}
         {presentationsAllowed&&<Link className="rounded-lg border border-orange-500/30 p-3" to={`/presentations/new?clientId=${clientId}`}>Criar apresentação deste cliente</Link>}

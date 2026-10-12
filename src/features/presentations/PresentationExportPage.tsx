@@ -13,19 +13,26 @@ export const PresentationExportPage: React.FC = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
   const navigate = useNavigate();
 
-  const { presentation, sections, assets, isLoading } = useSinglePresentation(presentationId);
+  const { presentation, sections, assets, isLoading, isError } = useSinglePresentation(presentationId);
   const [isExporting, setIsExporting] = useState(false);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
-  if (isLoading || !presentation) {
+  if (isLoading) {
     return (
       <div className="p-12 text-center text-content-secondary">
         <div className="animate-spin w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full mx-auto mb-4" />
         <p className="text-sm">Carregando dados para exportação...</p>
       </div>
     );
+  }
+
+  if (isError || !presentation) {
+    return <div role="alert" className="p-12 text-center text-status-error">
+      <p>{isError ? 'Não foi possível carregar a apresentação para exportação.' : 'Apresentação não encontrada.'}</p>
+      <Button variant="outline" onClick={() => navigate('/presentations')}>Voltar às apresentações</Button>
+    </div>
   }
 
   const buildPdfModel = async () => {

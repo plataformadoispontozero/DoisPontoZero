@@ -12,7 +12,6 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useBriefings } from '@/features/briefing/hooks/useBriefings'
 import { BRIEFING_STATUS_CONFIG } from '@/types/briefing'
-import { DriveBriefingsPanel } from '@/features/briefing/DriveBriefingsPanel'
 
 export interface ClientBriefingsTabProps {
   clientId: string
@@ -44,7 +43,6 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
         </Link>
       </div>
 
-      <DriveBriefingsPanel clientId={clientId} showDiscovery={false}/>
       {isError ? <p role="alert" className="rounded-xl border border-orange-500/30 p-4 text-sm">Não foi possível carregar os briefings deste cliente. Tente novamente.</p> : isLoading ? (
         <div className="space-y-2">
           {[1, 2].map((i) => (

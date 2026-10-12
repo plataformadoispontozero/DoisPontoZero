@@ -149,7 +149,7 @@ export function usePresentations() {
               *,
               clients (name, logo_url),
               presentation_sections (*),
-              presentation_assets (*)
+              presentation_assets (*, file_reference:drive_file_references(*))
             `)
             .eq('agency_id', agencyId)
             .order('created_at', { ascending: false })
@@ -200,7 +200,7 @@ export function usePresentation(presentationId?: string) {
               *,
               clients (name, logo_url),
               presentation_sections (*),
-              presentation_assets (*)
+              presentation_assets (*, file_reference:drive_file_references(*))
             `)
             .eq('id', presentationId)
             .eq('agency_id', agencyId)
@@ -519,11 +519,11 @@ export function useUpdatePresentation() {
               .update(updates)
               .eq('id', payload.id)
               .eq('agency_id', agencyId)
-              .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*)')
+              .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*, file_reference:drive_file_references(*))')
               .single()
           : supabase
               .from('presentations')
-              .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*)')
+              .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*, file_reference:drive_file_references(*))')
               .eq('id', payload.id)
               .eq('agency_id', agencyId)
               .single()
@@ -557,7 +557,7 @@ export function useUpdatePresentation() {
             agency_id: agencyId,
             presentation_id: payload.id,
             section_id: asset.section_id || null,
-            file_reference_id: (asset.file_reference_id && /^[0-9a-f-]{36}$/i.test(asset.file_reference_id)) ? asset.file_reference_id : null,
+            file_reference_id: asset.file_reference_id || null,
             title: asset.title,
             description: asset.description || null,
             position: asset.position,
@@ -575,7 +575,7 @@ export function useUpdatePresentation() {
         }
         const { data: refreshed, error: refreshError } = await supabase
           .from('presentations')
-          .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*)')
+          .select('*, clients(name, logo_url), presentation_sections(*), presentation_assets(*, file_reference:drive_file_references(*))')
           .eq('id', payload.id)
           .eq('agency_id', agencyId)
           .single()

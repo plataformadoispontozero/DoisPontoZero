@@ -28,6 +28,7 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { Select } from '@/components/ui/Select'
 import { Dialog } from '@/components/ui/Dialog'
 import { useChannels, useConversations, useMessages, useSendMessage, useCreateChannel, useAddReaction, useChatMembers, useStartDirect, useMarkChatRead } from './hooks/useChat'
 import { useSquads } from '../squads/hooks/useSquads'
@@ -61,11 +62,22 @@ export const ChatPage: React.FC = () => {
   const activeChannel = safeChannels.find((c) => c.id === activeChannelId)
   const activeConversation = safeConversations.find((c) => c.id === activeConversationId)
 
-  const {data:members=[],error:membersError}=useChatMembers()
+  const {data:members=[],error:membersError,isLoading:isLoadingMembers}=useChatMembers()
   const startDirect=useStartDirect()
   const markRead=useMarkChatRead()
   const [actionError,setActionError]=useState('')
   const [selectedMembers,setSelectedMembers]=useState<string[]>([])
+  const [directMember, setDirectMember] = useState('')
+  const [directFailed, setDirectFailed] = useState(false)
+  const errorMessage = (error: unknown, fallback: string) => error && typeof error === 'object' && 'message' in error && typeof error.message === 'string' ? error.message : fallback
+  const openDirect = async (memberId: string) => {
+    if (!memberId || startDirect.isPending) return
+    setDirectMember(memberId); setActionError(''); setDirectFailed(false)
+    try {
+      const id = await startDirect.mutateAsync(memberId)
+      setDirectMember(''); navigate(`/chat/direct/${id}`)
+    } catch (error) { setDirectFailed(true); setActionError(errorMessage(error, 'Não foi possível abrir conversa. Tente novamente.')) }
+  }
   const lastMessage=messages?.at(-1)?.id
   useEffect(()=>{if(activeTargetId&&lastMessage)markRead.mutate({target:activeTargetId,direct:isConversationMode,last:lastMessage})},[activeTargetId,lastMessage,isConversationMode])
   // Message Input State
@@ -97,13 +109,16 @@ export const ChatPage: React.FC = () => {
       description: newChannelDesc,
       channel_type: newChannelType,
       visibility: newChannelVisibility,
-      members:selectedMembers,
+      members:newChannelVisibility === 'private' ? selectedMembers : [],
     })
     setNewChannelName('')
     setNewChannelDesc('')
+    setSelectedMembers([])
+    setNewChannelType('general')
+    setNewChannelVisibility('agency')
     setIsCreateChannelOpen(false)
     navigate(`/chat/channels/${created.id}`)
-    } catch(error){setActionError(error instanceof Error?error.message:'Não foi possível criar canal')}
+    } catch(error){setActionError(errorMessage(error, 'Não foi possível criar canal'))}
   }
 
   const handleEmojiClick = async (msgId: string, emoji: string) => {
@@ -125,7 +140,7 @@ export const ChatPage: React.FC = () => {
             <MessageSquare className="w-4 h-4 mr-1.5 text-brand-primary" />
             Team Chat
           </h2>
-          <Button variant="ghost" size="sm" onClick={() => setIsCreateChannelOpen(true)}>
+          <Button variant="ghost" size="sm" aria-label="Criar novo canal" onClick={() => {setSelectedMembers([]); setNewChannelVisibility('agency'); setNewChannelType('general'); setActionError(''); setIsCreateChannelOpen(true)}}>
             <Plus className="w-4 h-4" />
           </Button>
         </div>
@@ -160,9 +175,12 @@ export const ChatPage: React.FC = () => {
           {/* Section: Mensagens Diretas */}
           <div className="space-y-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-content-tertiary px-2">Mensagens Diretas</span>
-            <select aria-label="Iniciar mensagem direta" value="" className="w-full bg-surface-subtle rounded p-2 text-content-primary" disabled={startDirect.isPending} onChange={async(e)=>{try{setActionError('');const id=await startDirect.mutateAsync(e.target.value);navigate(`/chat/direct/${id}`)}catch(error){setActionError(error instanceof Error?error.message:'Não foi possível abrir conversa')}}}>
-             <option value="">Conversar com membro...</option>{members.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}
-            </select>
+            <Select aria-label="Iniciar mensagem direta" value={directMember} style={{ colorScheme: 'dark' }} disabled={startDirect.isPending || isLoadingMembers || Boolean(membersError) || members.length === 0} onChange={e => void openDirect(e.target.value)}>
+              <option value="">{isLoadingMembers ? 'Carregando membros...' : membersError ? 'Falha ao carregar membros' : members.length === 0 ? 'Nenhum outro membro ativo' : 'Conversar com membro...'}</option>
+              {members.map(member => <option key={member.id} value={member.id}>{member.name}</option>)}
+            </Select>
+            {startDirect.isPending && <p role="status" className="px-2 text-content-secondary">Abrindo conversa...</p>}
+            {directFailed && directMember && <Button variant="ghost" size="sm" disabled={startDirect.isPending || Boolean(membersError)} onClick={() => void openDirect(directMember)}>Tentar abrir conversa novamente</Button>}
             {safeConversations.map((conv) => {
               const isActive = activeConversationId === conv.id
               return (
@@ -304,7 +322,7 @@ export const ChatPage: React.FC = () => {
       </div>
 
       {/* DIALOG: CREATE CHANNEL */}
-      <Dialog open={isCreateChannelOpen} onOpenChange={setIsCreateChannelOpen}>
+      <Dialog open={isCreateChannelOpen} onOpenChange={open => {setIsCreateChannelOpen(open); if (!open) {setSelectedMembers([]); setActionError('')}}}>
         <div className="p-6 space-y-4">
           <h3 className="text-base font-bold text-content-primary">Criar Novo Canal</h3>
           <div>
@@ -332,7 +350,9 @@ export const ChatPage: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-content-secondary mb-1">Tipo de Canal</label>
-              <select
+              <Select
+                aria-label="Tipo de Canal"
+                style={{ colorScheme: 'dark' }}
                 value={newChannelType}
                 onChange={(e) => setNewChannelType(e.target.value as ChannelType)}
                 className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
@@ -341,28 +361,30 @@ export const ChatPage: React.FC = () => {
                 <option value="squad">Squad</option>
                 <option value="project">Projeto</option>
                 <option value="custom">Personalizado</option>
-              </select>
+              </Select>
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-content-secondary mb-1">Visibilidade</label>
-              <select
+              <Select
+                aria-label="Visibilidade"
+                style={{ colorScheme: 'dark' }}
                 value={newChannelVisibility}
-                onChange={(e) => setNewChannelVisibility(e.target.value as ChannelVisibility)}
+                onChange={(e) => {setNewChannelVisibility(e.target.value as ChannelVisibility); setSelectedMembers([])}}
                 className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
               >
                 <option value="agency">Toda Agência (Público)</option>
                 <option value="private">Privado</option>
-              </select>
+              </Select>
             </div>
           </div>
 
           {newChannelVisibility==='private'&&<fieldset><legend className="text-sm">Participantes do canal privado</legend>{members.map(m=><label key={m.id} className="flex gap-2 p-1"><input type="checkbox" checked={selectedMembers.includes(m.id)} onChange={e=>setSelectedMembers(v=>e.target.checked?[...v,m.id]:v.filter(id=>id!==m.id))}/>{m.name}</label>)}<p className="text-xs">Você participa como criador.</p></fieldset>}
           <div className="flex justify-end space-x-2 pt-2">
-            <Button variant="ghost" onClick={() => setIsCreateChannelOpen(false)}>
+            <Button variant="ghost" onClick={() => {setIsCreateChannelOpen(false);setSelectedMembers([]);setActionError('')}}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleCreateChannelSubmit} disabled={!newChannelName.trim()}>
+            <Button variant="primary" onClick={handleCreateChannelSubmit} disabled={!newChannelName.trim() || createChannelMutation.isPending || (newChannelVisibility === 'private' && (isLoadingMembers || Boolean(membersError)))}>
               Criar Canal
             </Button>
           </div>

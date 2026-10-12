@@ -128,28 +128,20 @@ export function useDriveFiles(search?: string, mimeType?: string) {
 
   return useQuery({
     queryKey: ['drive_files', agencyId, search, mimeType],
+    enabled: !isSupabaseConfigured || Boolean(agencyId),
     queryFn: async (): Promise<DriveFileReference[]> => {
-      if (isSupabaseConfigured && supabase && agencyId) {
-        try {
-          let query = supabase.from('drive_file_references').select('*').eq('agency_id', agencyId)
-          if (search) query = query.ilike('name', `%${search}%`)
-          if (mimeType) query = query.eq('mime_type', mimeType)
-          const { data, error: backendError2 } = await query
-          if (backendError2) {
-            console.warn('Erro ao consultar drive_file_references no Supabase, usando arquivos locais:', backendError2.message)
-          } else if (data && data.length > 0) {
-            return data
-          }
-        } catch (err) {
-          console.warn('Falha na consulta ao Supabase drive_file_references, usando fallback:', err)
-        }
+      if (isSupabaseConfigured && supabase) {
+        if (!agencyId) throw new Error('Sessão e agência são obrigatórias.')
+        let query = supabase.from('drive_file_references').select('*').eq('agency_id', agencyId)
+        if (search) query = query.ilike('name', `%${search}%`)
+        if (mimeType) query = query.eq('mime_type', mimeType)
+        const { data, error } = await query
+        if (error) throw error
+        return data || []
       }
-
-      return demoFilesStore.filter((f) => {
-        const matchesSearch = !search || f.name.toLowerCase().includes(search.toLowerCase())
-        const matchesMime = !mimeType || f.mime_type === mimeType
-        return matchesSearch && matchesMime
-      })
+      return demoFilesStore.filter((f) =>
+        (!search || f.name.toLowerCase().includes(search.toLowerCase())) &&
+        (!mimeType || f.mime_type === mimeType))
     },
   })
 }
@@ -188,11 +180,16 @@ export function useAddDriveFileReference() {
         updated_at: new Date().toISOString(),
       }
 
-      // Adiciona na store local de arquivos
-      demoFilesStore = [newRef, ...demoFilesStore]
-
-      if (isSupabaseConfigured && supabase && agencyId) {
-        try {
+      if (isSupabaseConfigured && supabase) {
+        if (!agencyId) throw new Error('Sessão e agência são obrigatórias.')
+        const driveUrl = new URL(payload.web_view_link || '')
+        if (driveUrl.protocol !== 'https:' || !['drive.google.com', 'docs.google.com'].includes(driveUrl.hostname)) {
+          throw new Error('Informe um link HTTPS válido do Google Drive.')
+        }
+        const driveId = payload.google_file_id || driveUrl.searchParams.get('id') || driveUrl.pathname.match(/\/(?:d|folders)\/([\w-]+)/)?.[1]
+        if (!driveId || !/^[\w-]{10,}$/.test(driveId)) throw new Error('O link não identifica um arquivo ou pasta do Google Drive.')
+        newRef.google_file_id = driveId
+        {
           const { data, error } = await supabase
             .from('drive_file_references')
             .insert({
@@ -209,13 +206,13 @@ export function useAddDriveFileReference() {
             .select('*')
             .single()
 
-          if (!error && data) {
-            newRef.id = data.id
-          }
-        } catch (err) {
-          console.warn('Erro ao inserir em drive_file_references no Supabase (mantido em memória):', err)
+          if (error) throw error
+          if (!data) throw new Error('O arquivo não foi salvo.')
+          queryClient.invalidateQueries({ queryKey: ['drive_files', agencyId] })
+          return data
         }
       }
+      demoFilesStore = [newRef, ...demoFilesStore]
 
       queryClient.invalidateQueries({ queryKey: ['drive_files'] })
       return newRef
@@ -334,6 +331,7 @@ export function useDrive() {
     driveFiles: driveFilesQuery.data || [],
     isLoadingConnection: connectionQuery.isLoading,
     isLoadingFiles: driveFilesQuery.isLoading,
+    isFilesError: driveFilesQuery.isError,
     refetchFiles: driveFilesQuery.refetch,
     addDriveFile: addDriveFileMutation.mutateAsync,
     isAddingFile: addDriveFileMutation.isPending,

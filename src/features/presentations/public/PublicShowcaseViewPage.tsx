@@ -21,6 +21,7 @@ interface ShowcaseData {
     title: string;
     description: string;
     position: number;
+    content?: {text?: string; subtitle?: string; list?: string[]};
   }>;
   assets: Array<{
     id: string;
@@ -161,6 +162,9 @@ export const PublicShowcaseViewPage: React.FC = () => {
                   </div>
                 )}
 
+                {sec.content?.subtitle && <p className="text-lg text-slate-300">{sec.content.subtitle}</p>}
+                {sec.content?.text && <p className="text-sm text-slate-300 whitespace-pre-wrap">{sec.content.text}</p>}
+                {Array.isArray(sec.content?.list) && <ul className="list-disc pl-6 text-slate-300">{sec.content.list.map((item, i) => <li key={i}>{item}</li>)}</ul>}
                 {/* Section Assets / Media Showcase */}
                 {secAssets.length > 0 && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
@@ -170,7 +174,7 @@ export const PublicShowcaseViewPage: React.FC = () => {
                         className="group relative bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-indigo-500/50 transition-all duration-300 space-y-4"
                       >
                         <div className="aspect-video bg-slate-950 rounded-xl border border-slate-800/60 flex items-center justify-center relative overflow-hidden group-hover:border-indigo-500/30">
-                          <ImageIcon className="w-10 h-10 text-indigo-400/60" />
+                          {asset.thumbnail_reference ? <img src={asset.thumbnail_reference} alt={asset.title} loading="lazy" className="w-full h-full object-contain" /> : <ImageIcon className="w-10 h-10 text-indigo-400/60" />}
                         </div>
 
                         <div>

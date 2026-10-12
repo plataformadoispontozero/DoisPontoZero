@@ -35,7 +35,6 @@ import { EmptyState } from '@/components/shared/EmptyState'
 import { useBriefings, useCreatePublicLink } from './hooks/useBriefings'
 import { BRIEFING_STATUS_CONFIG, type BriefingStatus } from '@/types/briefing'
 import { toast } from '@/components/ui/Toast'
-import { DriveBriefingsPanel } from './DriveBriefingsPanel'
 
 const DEMO_AGENCY_ID = 'demo-agency'
 
@@ -84,7 +83,6 @@ export const BriefingPage: React.FC = () => {
         }
       />
 
-      <DriveBriefingsPanel />
       {/* Real KPIs Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
