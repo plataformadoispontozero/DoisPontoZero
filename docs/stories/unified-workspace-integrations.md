@@ -77,3 +77,5 @@ Arquivos: supabase/functions/team-invite/index.ts; src/features/team/AcceptInvit
 Arquivos adicionais: src/features/clients/clientProfile.ts, profileFields.ts, components/ClientHubModal.tsx, ClientLegacyPanel.tsx; testes clientProfile/clientLegacy; migrations client_profiles_and_csv_enrichment e client_legacy_records.
 
 Reconciliação final do histórico: 23 briefings, 43 estratégias, 103 calendários, 326 demandas e 71 registros de vídeo = 566. Verificação do agente de migração: nenhum duplicado, mapeamento inválido ou credencial nos registros importados. Esses documentos preservam estados antigos e não criam novas aprovações.
+
+Ficha e histórico publicados: 3f96a87 / Cloudflare ae4dcac2-8e57-473d-b3e9-5d231a2a4185. Banco verificado: 29 perfis vinculados; 21 com audiência e 26 com pasta Drive; 566 documentos históricos sem binários/base64 ou credenciais. Uso de briefing histórico no calendário exige revisão dos campos pela social media e mantém referência da origem.
