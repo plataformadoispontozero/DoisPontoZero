@@ -43,10 +43,10 @@ Hotfix CSV/Google publicado em 12/10/2026: código `d843200`, Worker `ad2451af-f
 
 ## Botão de seleção CSV — 12/10/2026
 
-Status: Ready for Review. Solicitação: entrada de arquivo aparecia como texto nativo sem botão visível.
+Status: Done — botão publicado. Solicitação: entrada de arquivo aparecia como texto nativo sem botão visível.
 
 - [x] Botão explícito Selecionar arquivo CSV/Trocar arquivo CSV, com foco por teclado e estado ocupado.
 - [x] Nome do arquivo selecionado e orientação sobre prévia, revisão e confirmação.
-- [x] Gates: 154 testes, lint sem erros (avisos legados), typecheck/build e 2 E2E desktop/mobile passando com clique real no botão e filechooser. Bundle index-CpZtEP9W.js. Publicação em andamento.
+- [x] Gates: 154 testes, lint sem erros (avisos legados), typecheck/build e 2 E2E desktop/mobile passando com clique real no botão e filechooser. Bundle index-CpZtEP9W.js. Publicado: código `1c6476f`, Worker `3f56a177-1fe2-4569-b112-95560c1f84a6`; domínio confirmado em 1440×900 e 390×844, início/login HTTP 200 e editorial protegido, sem overflow. Nenhum dado real importado.
 
 File list: ImportClientsPage.tsx, e2e/agency-access.spec.ts e esta story.
