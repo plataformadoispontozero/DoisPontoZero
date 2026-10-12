@@ -35,6 +35,7 @@ import { EmptyState } from '@/components/shared/EmptyState'
 import { useBriefings, useCreatePublicLink } from './hooks/useBriefings'
 import { BRIEFING_STATUS_CONFIG, type BriefingStatus } from '@/types/briefing'
 import { toast } from '@/components/ui/Toast'
+import { DriveBriefingsPanel } from './DriveBriefingsPanel'
 
 const DEMO_AGENCY_ID = 'demo-agency'
 
@@ -83,12 +84,13 @@ export const BriefingPage: React.FC = () => {
         }
       />
 
+      <DriveBriefingsPanel />
       {/* Real KPIs Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4 space-y-1">
             <div className="flex items-center justify-between text-xs text-[#B8B8C0]">
-              <span>Briefings Ativos</span>
+              <span>Formulários Ativos</span>
               <FileText className="w-3.5 h-3.5 text-[#C74410]" />
             </div>
             <div className="text-2xl font-bold text-[#F8F9FC]">{totalActive}</div>
@@ -197,7 +199,7 @@ export const BriefingPage: React.FC = () => {
       ) : briefings.length === 0 ? (
         <EmptyState
           icon={FileText}
-          title="Nenhum briefing cadastrado"
+          title="Nenhum briefing de formulário cadastrado"
           subtitle="Entrada Padronizada de Demandas Criativas"
           description="Crie briefings vinculados aos seus clientes a partir dos modelos oficiais. Gere links de preenchimento protegidos e exporte PDFs profissionais."
           statusBadge="Briefing Studio Ativo"

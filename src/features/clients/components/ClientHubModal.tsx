@@ -10,6 +10,7 @@ import { useUpdateClient } from '../hooks/useClients';
 import { PROFILE_FIELDS } from '../profileFields';
 import { readClientProfile, validateClientProfile, type ClientProfile } from '../clientProfile';
 import { ClientBriefingsTab } from './ClientBriefingsTab';
+import { ClientPresentationsTab } from './ClientPresentationsTab';
 import { ClientLegacyPanel } from './ClientLegacyPanel';
 import { ClientDrivePanel } from '@/features/integrations/ClientDrivePanel';
 import type { Client } from '@/types/projects';
@@ -22,6 +23,7 @@ const actionStyle='rounded-lg border border-white/15 px-4 py-2.5 text-sm font-me
 export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}) {
  const dialog=useRef<HTMLDialogElement>(null), navigate=useNavigate(), agency=useAgencyId();
  const canEdit=usePermission('clients.edit'),canStrategy=usePermission('strategy.view'),canBriefs=usePermission('briefings.view');
+ const canPresentations=usePermission('presentations.view');
  const update=useUpdateClient(agency);
  const [section,setSection]=useState('Visão geral'),[editing,setEditing]=useState(false);
  const [draft,setDraft]=useState<ClientProfile>(()=>readClientProfile(client.profile));
@@ -64,12 +66,13 @@ export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}
   </header>
   <div className="flex min-h-0 flex-1 flex-col md:flex-row">
    <nav aria-label="Seções da ficha do cliente" className="flex shrink-0 gap-1 overflow-x-auto border-b border-white/10 p-3 md:w-52 md:flex-col md:border-b-0 md:border-r">
-    {['Visão geral','Dados e links','Arquivos no Drive','Histórico',...(canBriefs?['Briefings']:[]),...(canStrategy?['Calendário']:[])].map(item=><button key={item} aria-current={section===item?'page':undefined} className={`shrink-0 rounded-lg px-4 py-3 text-left text-sm ${section===item?'bg-orange-500/15 text-orange-300':'text-zinc-300 hover:bg-white/5'}`} onClick={()=>{setSection(item);setEditing(false);}}>{item}</button>)}
+    {['Visão geral','Dados e links','Arquivos no Drive','Histórico',...(canBriefs?['Briefings']:[]),...(canStrategy?['Calendário']:[]),...(canPresentations?['Apresentações']:[])].map(item=><button key={item} aria-current={section===item?'page':undefined} className={`shrink-0 rounded-lg px-4 py-3 text-left text-sm ${section===item?'bg-orange-500/15 text-orange-300':'text-zinc-300 hover:bg-white/5'}`} onClick={()=>{setSection(item);setEditing(false);}}>{item}</button>)}
    </nav>
    <main className="min-w-0 flex-1 overflow-y-auto p-4 md:p-6">
     {section==='Histórico'&&<ClientLegacyPanel clientId={client.id}/>}
     {section==='Arquivos no Drive'&&<ClientDrivePanel clientId={client.id}/>}
     {section==='Briefings'&&<ClientBriefingsTab clientId={client.id} agencyId={agency}/>}
+    {section==='Apresentações'&&<ClientPresentationsTab clientId={client.id} clientName={client.name}/>}
     {section==='Calendário'&&<div className="space-y-4"><h3 className="text-xl font-semibold">Calendários do cliente</h3>{campaigns.isError?<p role="alert">Não foi possível carregar os calendários.</p>:campaigns.isPending?<p>Carregando calendários…</p>:!campaigns.data?.length?<p className="text-zinc-300">Nenhum calendário cadastrado nesta plataforma.</p>:campaigns.data.map(c=><button key={c.id} className={`${actionStyle} block w-full text-left`} onClick={()=>navigate(`/editorial?clientId=${client.id}&campaignId=${c.id}`)}>{c.month} · {c.status} <ExternalLink className="ml-2 inline h-4 w-4"/></button>)}<ClientLegacyPanel clientId={client.id} sourceKinds={['calendarios']}/></div>}
     {(section==='Visão geral'||section==='Dados e links')&&<>
      <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">{[['Calendários',canStrategy?(campaigns.isError?'Indisponível':campaigns.data?.length??'…'):'Sem acesso'],['Conteúdos por mês',display('monthly_content_count')],['Ticket médio',profile.average_ticket===undefined?'Não informado':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(profile.average_ticket)],['Plano',display('plan')]].map(([label,value])=><div key={String(label)} className="rounded-xl border border-white/10 bg-white/[0.03] p-4"><p className="text-xs text-zinc-400">{label}</p><p className="mt-2 break-words font-semibold">{value}</p></div>)}</div>

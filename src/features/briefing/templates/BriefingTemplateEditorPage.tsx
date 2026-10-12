@@ -1,3 +1,4 @@
+import { INITIAL_BRIEFING_TEMPLATES } from "../constants/initialTemplates"
 import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -5,8 +6,8 @@ import { useAgencyId } from '@/features/auth/AuthProvider'
 // /briefings/templates/new e /briefings/templates/:templateId/edit
 // ============================================================
 
-import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom'
 import {
   Plus,
   Trash2,
@@ -83,8 +84,10 @@ export const BriefingTemplateEditorPage: React.FC = () => {
   const DEMO_AGENCY_ID = useAgencyId()
 
   const { templateId } = useParams<{ templateId: string }>()
+  const [params]=useSearchParams()
+  const saveRequest=useRef(crypto.randomUUID())
   const navigate = useNavigate()
-  const { data: existingTemplate, isLoading } = useBriefingTemplate(templateId)
+  const { data: existingTemplate, isLoading } = useBriefingTemplate(templateId,DEMO_AGENCY_ID)
   const createTemplate = useCreateTemplate(DEMO_AGENCY_ID)
 
   // Form State
@@ -115,6 +118,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
 
+  useEffect(()=>{if(templateId)return;const starter=INITIAL_BRIEFING_TEMPLATES.find(t=>t.id===params.get('starterId'));if(!starter)return;setName(starter.name);setDescription(starter.description);setCategory(starter.category);const mapped=starter.sections.map(s=>({...s,questions:s.questions.map(q=>({...q,options:q.options||[]}))}));setSections(mapped);setSelectedQuestionId(mapped[0]?.questions[0]?.id||'');setHasUnsavedChanges(true);},[templateId,params]);
   // Load existing template if editing
   useEffect(() => {
     if (existingTemplate) {
@@ -150,7 +154,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
   }, [existingTemplate])
 
   // Mark unsaved changes on mutation
-  const markDirty = () => setHasUnsavedChanges(true)
+  const markDirty = () => {saveRequest.current=crypto.randomUUID();setHasUnsavedChanges(true)}
 
   // Current active question
   let activeQuestion: BuilderQuestion | null = null
@@ -303,6 +307,9 @@ export const BriefingTemplateEditorPage: React.FC = () => {
     try {
       await createTemplate.mutateAsync({
         name: name.trim(),
+        status:isPublishing?"published":"draft",
+        source_template_id:templateId||null,
+        save_request_id:saveRequest.current,
         description: description.trim() || undefined,
         category,
         sections: sections.map((sec, sIdx) => ({
@@ -326,7 +333,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
       toast.success(isPublishing ? 'Template publicado com sucesso!' : 'Rascunho salvo com sucesso!')
       navigate('/briefings/templates')
     } catch (err) {
-      toast.error(`Erro ao salvar modelo: ${String(err)}`)
+      toast.error(err instanceof Error ? err.message : 'Não foi possível salvar o modelo. Verifique os campos e as permissões.')
     }
   }
 
@@ -358,16 +365,18 @@ export const BriefingTemplateEditorPage: React.FC = () => {
             <Eye className="w-3.5 h-3.5" />
             <span>Prévia</span>
           </Button>
-          <Button variant="secondary" size="sm" onClick={() => handleSave(false)}>
+          <Button variant="secondary" size="sm" disabled={createTemplate.isPending} onClick={() => handleSave(false)}>
             <Save className="w-3.5 h-3.5" />
             <span>Salvar Rascunho</span>
           </Button>
-          <Button variant="primary" size="sm" onClick={() => handleSave(true)}>
+          <Button variant="primary" size="sm" disabled={createTemplate.isPending} onClick={() => handleSave(true)}>
             <Check className="w-3.5 h-3.5" />
             <span>Publicar Modelo</span>
           </Button>
         </div>
       </div>
+
+      {templateId&&<p className="rounded-xl border border-orange-500/25 p-3 text-sm text-orange-200">Salvar cria uma nova versão deste modelo. As perguntas e respostas das versões anteriores permanecem preservadas.</p>}
 
       {/* Meta Config Card */}
       <Card>
@@ -375,6 +384,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
           <div>
             <label className="text-xs font-medium text-[#B8B8C0] block mb-1">Nome do Modelo</label>
             <Input
+              aria-label="Nome do Modelo"
               value={name}
               onChange={(e) => {
                 setName(e.target.value)

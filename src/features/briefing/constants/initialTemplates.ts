@@ -1,7 +1,7 @@
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 06: BRIEFING STUDIO
-// 5 Official Initial Templates (Branding, Social Media, Motion, Audiovisual, Campanha)
+// 6 Official Initial Templates (Branding, Social Media, Motion, Audiovisual, Campanha)
 // ============================================================
 
 import type { BriefingTemplate, BriefingSection, BriefingQuestion } from '@/types/briefing'
@@ -764,6 +764,30 @@ export const INITIAL_BRIEFING_TEMPLATES: InitialTemplateDefinition[] = [
           },
         ],
       },
+    ],
+  },
+  {
+    id:'tpl-paid-media-v1',name:'Tráfego Pago & Campanhas de Conversão',category:'paid_media',
+    description:'Oferta, público, investimento, canais e mensuração para planejar mídia paga com segurança.',
+    sections:[
+      {id:'sec-pm-1',title:'Negócio, oferta e objetivo',questions:[
+        {id:'q-pm-1-1',question_key:'objective',label:'Qual é o objetivo principal da campanha?',question_type:'long_text',is_required:true,placeholder:'Ex.: gerar contatos qualificados para a equipe comercial.'},
+        {id:'q-pm-1-2',question_key:'paid_offer',label:'Qual produto ou serviço será divulgado e qual é a oferta?',question_type:'long_text',is_required:true,description:'Informe condições reais, disponibilidade e prazo da oferta.'},
+        {id:'q-pm-1-3',question_key:'positioning',label:'Quais diferenciais podem ser comunicados com comprovação?',question_type:'long_text',is_required:false},
+      ]},
+      {id:'sec-pm-2',title:'Público e canais',questions:[
+        {id:'q-pm-2-1',question_key:'target_audience',label:'Quem é o público-alvo e quais necessidades ele apresenta?',question_type:'long_text',is_required:true},
+        {id:'q-pm-2-2',question_key:'paid_regions',label:'Quais regiões e localidades devem receber os anúncios?',question_type:'short_text',is_required:true},
+        {id:'q-pm-2-3',question_key:'paid_channels',label:'Quais canais devem ser considerados?',question_type:'multiple_choice',is_required:true,options:[{id:'pm-meta',label:'Meta (Instagram e Facebook)',value:'meta'},{id:'pm-google',label:'Google Ads',value:'google'},{id:'pm-tiktok',label:'TikTok Ads',value:'tiktok'},{id:'pm-evaluate',label:'Quero orientação da equipe',value:'evaluate'}]},
+      ]},
+      {id:'sec-pm-3',title:'Investimento, conversão e mensuração',questions:[
+        {id:'q-pm-3-1',question_key:'paid_monthly_budget',label:'Qual o orçamento mensal disponível para mídia (R$)?',question_type:'number',is_required:true,description:'Informe o valor destinado aos anúncios, separado do serviço da agência.'},
+        {id:'q-pm-3-2',question_key:'paid_conversion',label:'Qual ação define uma conversão para o negócio?',question_type:'short_text',is_required:true,placeholder:'Ex.: formulário enviado, mensagem no WhatsApp ou compra concluída.'},
+        {id:'q-pm-3-3',question_key:'paid_kpis',label:'Quais metas e indicadores serão acompanhados?',question_type:'long_text',is_required:true,description:'Separe objetivos de resultados já comprovados; metas não são garantias.'},
+        {id:'q-pm-3-4',question_key:'paid_landing_page',label:'Qual é o link da página de destino?',question_type:'url',is_required:false},
+        {id:'q-pm-3-5',question_key:'restrictions',label:'Quais restrições, alegações ou temas devem ser evitados?',question_type:'long_text',is_required:false},
+        {id:'q-pm-3-6',question_key:'paid_account_access',label:'As contas de anúncios e a mensuração já estão preparadas?',question_type:'long_text',is_required:false,description:'Informe somente os identificadores das contas, o estado da mensuração e o responsável por conceder acesso. Não envie senhas, tokens ou chaves; a autorização será feita pela integração oficial.'},
+      ]},
     ],
   },
 ]

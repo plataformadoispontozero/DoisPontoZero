@@ -82,3 +82,23 @@ test('profile-only calendar requires reviewed suggestions and saves generated re
  await expect(page.getByRole('status').filter({hasText:'Campanha salva.'})).toBeVisible();
  expect(saved.p_client).toBe(clientId);expect(saved.p_agency).toBe(agencyA);expect(saved.p_items).toHaveLength(3);expect(saved.p_context.approvedFacts||[]).toEqual([]);expect(saved.p_context.topics).toHaveLength(2);expect(saved.p_items.find((x:any)=>x.format==='carousel').editorial.slides).toHaveLength(7);
 });
+
+test('Drive briefing mirror shares reviewed context between briefing, client and calendar',async({page})=>{
+ await api(page,{owner:true});const clientId='33333333-3333-4333-8333-333333333333';
+ let document:any={id:'88888888-8888-4888-8888-888888888888',agency_id:agencyA,client_id:clientId,google_file_id:'drive-brief-document-123',name:'Briefing estratégico auditado',mime_type:'text/plain',path:'02 BRIEFINGS & DOCS/Briefing.txt',version:'2',reviewed_version:null,reviewed_at:null,reviewed_context:{},available:true,can_read_text:true,synced_at:new Date().toISOString()};
+ await page.route('**/rest/v1/client_drive_documents?**',route=>route.fulfill({json:[document]}));
+ await page.route('**/functions/v1/google-workspace',route=>{const body=route.request().postDataJSON();expect(body.agencyId).toBe(agencyA);expect(body.clientId).toBe(clientId);return route.fulfill({json:body.action==='client-drive-documents'?{documents:[],scan:{complete:true}}:{document:{version:'2'},text:'Posicionamento: soluções técnicas para empresas.'}});});
+ await page.route('**/rest/v1/rpc/save_client_drive_review',route=>{const body=route.request().postDataJSON();document={...document,reviewed_context:body.p_context,reviewed_version:body.p_version,reviewed_at:new Date().toISOString()};return route.fulfill({json:document.id});});
+ await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/briefings');
+ await page.getByLabel('Cliente para consultar briefs no Drive').selectOption(clientId);
+ await page.getByRole('button',{name:'Buscar briefs no Drive'}).click();
+ await page.getByRole('button',{name:'Revisar contexto',exact:true}).click();
+ await expect(page.getByText('Posicionamento: soluções técnicas para empresas.',{exact:true})).toBeVisible();
+ await page.getByLabel('Objetivo',{exact:true}).fill('Atrair empresas interessadas');await page.getByLabel('Público-alvo',{exact:true}).fill('Gestores de empresas');await page.getByLabel('Posicionamento e diferenciais').fill('Soluções técnicas para empresas');await page.getByLabel('Temas e ideias (um por linha)').fill('Como escolher soluções técnicas\nDúvidas de gestores');
+ await page.getByLabel('Conferi o documento e revisei as informações acima').check();await page.getByRole('button',{name:'Salvar contexto revisado',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Contexto revisado salvo'})).toBeVisible();
+ await page.goto('/clients/'+clientId);await page.getByRole('navigation',{name:'Seções da ficha do cliente'}).getByRole('button',{name:'Briefings',exact:true}).click();
+ await expect(page.getByText('Briefing estratégico auditado',{exact:true})).toBeVisible();await expect(page.getByRole('link',{name:'Usar no calendário'})).toBeVisible();
+ await page.getByRole('link',{name:'Usar no calendário'}).click();await page.getByRole('button',{name:'Usar contexto de Briefing estratégico auditado'}).click();
+ await expect(page.getByRole('textbox',{name:'Objetivo',exact:true})).toHaveValue('Atrair empresas interessadas');await expect(page.getByRole('textbox',{name:'Público-alvo',exact:true})).toHaveValue('Gestores de empresas');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+});

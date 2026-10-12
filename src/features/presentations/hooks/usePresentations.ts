@@ -138,7 +138,8 @@ export function usePresentations() {
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   const query = useQuery({
-    queryKey: ['presentations'],
+    queryKey: ['presentations',agencyId],
+    enabled: !isSupabaseConfigured||!!agencyId,
     queryFn: async (): Promise<Presentation[]> => {
       if (isSupabaseConfigured && supabase) {
         try {

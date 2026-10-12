@@ -124,15 +124,15 @@ export function useBriefingTemplates(agencyId: string) {
   })
 }
 
-export function useBriefingTemplate(templateId?: string) {
+export function useBriefingTemplate(templateId?: string, agencyId?: string) {
   return useQuery<BriefingTemplate | null>({
-    queryKey: ['briefing_template', templateId],
+    queryKey: ['briefing_template', agencyId, templateId],
     queryFn: async () => {
       if (!templateId) return null
 
       // Check defaults first
       const defaultMatch = INITIAL_BRIEFING_TEMPLATES.find((t) => t.id === templateId)
-      if (defaultMatch) {
+      if (defaultMatch && !isSupabaseConfigured) {
         return getInitialTemplatesMapped('demo-agency').find((t) => t.id === templateId) ?? null
       }
 
@@ -146,12 +146,13 @@ export function useBriefingTemplate(templateId?: string) {
           questions:briefing_questions(*)
         `)
         .eq('id', templateId)
+        .eq('agency_id', agencyId!)
         .single()
 
       if (error) throw error
       return data as BriefingTemplate
     },
-    enabled: Boolean(templateId),
+    enabled: Boolean(templateId && agencyId),
   })
 }
 
@@ -162,6 +163,9 @@ export function useCreateTemplate(agencyId: string) {
     mutationFn: async (payload: {
       name: string
       description?: string
+      status?: 'draft'|'published'
+      source_template_id?: string|null
+      save_request_id?: string
       category: BriefingTemplate['category']
       sections: {
         title: string
@@ -183,62 +187,9 @@ export function useCreateTemplate(agencyId: string) {
         return { id: `local-${Date.now()}`, ...payload }
       }
 
-      // 1. Insert template
-      const { data: template, error: tplError } = await supabase
-        .from('briefing_templates')
-        .insert({
-          agency_id: agencyId,
-          name: payload.name,
-          description: payload.description,
-          category: payload.category,
-          status: 'draft',
-          version: 1,
-        })
-        .select()
-        .single()
-
-      if (tplError) throw tplError
-
-      // 2. Insert sections and questions
-      for (const sec of payload.sections) {
-        const { data: section, error: secError } = await supabase
-          .from('briefing_sections')
-          .insert({
-            agency_id: agencyId,
-            template_id: template.id,
-            title: sec.title,
-            description: sec.description,
-            position: sec.position,
-          })
-          .select()
-          .single()
-
-        if (secError) throw secError
-
-        if (sec.questions.length > 0) {
-          const questionsPayload = sec.questions.map((q) => ({
-            agency_id: agencyId,
-            template_id: template.id,
-            section_id: section.id,
-            question_key: q.question_key,
-            label: q.label,
-            description: q.description,
-            question_type: q.question_type,
-            is_required: q.is_required,
-            position: q.position,
-            options: q.options ?? [],
-            validation_rules: q.validation_rules ?? {},
-          }))
-
-          const { error: qError } = await supabase
-            .from('briefing_questions')
-            .insert(questionsPayload)
-
-          if (qError) throw qError
-        }
-      }
-
-      return template
+      const {data,error}=await supabase.rpc('save_briefing_template',{p_agency:agencyId,p_source_template:payload.source_template_id||null,p_payload:{...payload,status:payload.status||'draft',save_request_id:payload.save_request_id||crypto.randomUUID()}})
+      if(error)throw new Error(error.message)
+      return data as BriefingTemplate
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['briefing_templates', agencyId] })

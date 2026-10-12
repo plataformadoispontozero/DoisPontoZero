@@ -1,3 +1,5 @@
+import { useDriveBriefDocuments, currentDriveReview } from "@/features/briefing/driveDocuments"
+import { supabase } from "@/lib/supabase/client"
 import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -5,8 +7,10 @@ import { useAgencyId } from '@/features/auth/AuthProvider'
 // Route: /strategy/new
 // ============================================================
 
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useClients } from "@/features/clients/hooks/useClients"
+import { readClientProfile } from "@/features/clients/clientProfile"
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Compass,
   ArrowLeft,
@@ -70,15 +74,34 @@ const initialForm: FormData = {
 export const NewStrategyPage: React.FC = () => {
   const DEMO_AGENCY_ID = useAgencyId()
 
+  const [params] = useSearchParams()
+  const clients=useClients(DEMO_AGENCY_ID)
   const navigate = useNavigate()
   const createStrategy = useCreateStrategy(DEMO_AGENCY_ID)
 
-  const [form, setForm] = useState<FormData>(initialForm)
+  const [form, setForm] = useState<FormData>(()=>({...initialForm,client_id:params.get("clientId")}))
+  const driveDocuments=useDriveBriefDocuments(form.client_id||undefined)
+  const [driveDocument,setDriveDocument]=useState(params.get('driveDocumentId')||'')
+  const [driveBusy,setDriveBusy]=useState(false)
+  const [driveError,setDriveError]=useState('')
   const [step, setStep] = useState(0) // 0 = identity, 1 = strategic, 2 = channels & period
   const [tempCompetitor, setTempCompetitor] = useState('')
   const [tempKeyMessage, setTempKeyMessage] = useState('')
   const [tempRestriction, setTempRestriction] = useState('')
 
+  function applyClientProfile(clientId:string, current:FormData):FormData { const profile=readClientProfile(clients.data?.find(c=>c.id===clientId)?.profile);return {...current,client_id:clientId||null,objective:current.objective||profile.monthly_objective||'',target_audience:current.target_audience||profile.target_audience||'',tone_of_voice:current.tone_of_voice||profile.tone||'',brand_positioning:current.brand_positioning||profile.positioning||profile.differential||''}; }
+  useEffect(()=>{if(form.client_id&&clients.data)setForm(old=>applyClientProfile(old.client_id||'',old));},[clients.data]);
+  async function applyDriveContext(){
+   const document=driveDocuments.data?.find(d=>d.id===driveDocument&&d.client_id===form.client_id&&d.agency_id===DEMO_AGENCY_ID);
+   if(!document||!currentDriveReview(document)||!supabase){setDriveError('Selecione um documento deste cliente com revisão vigente.');return;}
+   setDriveBusy(true);setDriveError('');const selectedClient=form.client_id;
+   try{const r=await supabase.functions.invoke('google-workspace',{body:{action:'client-drive-document-read',agencyId:DEMO_AGENCY_ID,clientId:selectedClient,documentId:document.google_file_id}});
+    if(r.error||r.data?.error)throw Error('Não foi possível verificar o documento no Google Drive.');
+    const version=r.data.document?.version||r.data.version;if(!version||version!==document.reviewed_version)throw Error('O documento mudou no Drive. Revise sua versão atual em Briefings antes de aplicar.');
+    const c=document.reviewed_context;
+    setForm(old=>old.client_id!==selectedClient?old:{...old,objective:c.objective||old.objective,target_audience:c.audience||old.target_audience,tone_of_voice:c.tone||old.tone_of_voice,brand_positioning:c.positioning||old.brand_positioning,restrictions:c.restrictions?[...new Set([...old.restrictions,c.restrictions])]:old.restrictions,description:[old.description,`Fonte revisada: Drive ${document.name} · documento ${document.id} · versão ${version}`].filter(Boolean).join('\n')});
+   }catch(e){setDriveError(e instanceof Error?e.message:'Não foi possível aplicar o contexto revisado.');}finally{setDriveBusy(false);}
+  }
   const updateField = <K extends keyof FormData>(field: K, value: FormData[K]) => {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
@@ -102,6 +125,7 @@ export const NewStrategyPage: React.FC = () => {
   }
 
   const handleSubmit = async () => {
+    if(!form.client_id||!clients.data?.some(c=>c.id===form.client_id)){toast.error('Selecione um cliente desta agência.');return;}
     if (!form.name.trim()) {
       toast.error('Nome da estratégia é obrigatório.')
       return
@@ -115,6 +139,7 @@ export const NewStrategyPage: React.FC = () => {
     try {
       const result = await createStrategy.mutateAsync({
         name: form.name.trim(),
+        client_id: form.client_id,
         description: form.description || undefined,
         objective: form.objective || undefined,
         target_audience: form.target_audience || undefined,
@@ -205,6 +230,11 @@ export const NewStrategyPage: React.FC = () => {
               <Compass className="w-4 h-4 text-[#C74410]" />
               Identidade da Estratégia
             </div>
+
+            <label className="block space-y-2 text-sm">Cliente da estratégia<select aria-label="Cliente da estratégia" value={form.client_id||''} disabled={clients.isLoading||clients.isError} className="w-full rounded-lg border border-white/15 bg-[#17171d] p-3 text-white" onChange={e=>{setForm(applyClientProfile(e.target.value,{...initialForm}));setDriveDocument('');setDriveError('');setTempCompetitor('');setTempKeyMessage('');setTempRestriction('');}}><option value="">Selecione um cliente</option>{clients.data?.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+            {clients.isError&&<p role="alert">Não foi possível carregar os clientes. Tente novamente antes de salvar.</p>}
+            {form.client_id&&<p className="text-sm text-orange-200">Dados do cadastro sugeridos para revisão. Edite o diagnóstico e adicione pilares/temas antes de usar no calendário.</p>}
+            {form.client_id&&<section className="rounded-xl border border-orange-500/25 p-4 space-y-3"><h2 className="font-semibold">Contexto revisado do Drive</h2><p className="text-sm text-zinc-300">Aplique apenas uma leitura revisada deste cliente. A versão é conferida no Drive antes de copiar os campos.</p>{driveDocuments.isError&&<p role="alert">Não foi possível carregar os documentos revisados.</p>}<label className="block text-sm">Documento revisado<select aria-label="Documento revisado" value={driveDocument} disabled={driveBusy||driveDocuments.isPending} className="w-full rounded-lg border border-white/15 bg-[#17171d] p-3" onChange={e=>{setDriveDocument(e.target.value);setDriveError('');}}><option value="">Selecione um documento</option>{driveDocuments.data?.filter(d=>d.client_id===form.client_id).map(d=><option value={d.id} key={d.id} disabled={!currentDriveReview(d)}>{d.name}{currentDriveReview(d)?' · revisão vigente':' · revisão pendente'}</option>)}</select></label><Button disabled={driveBusy||!driveDocument} onClick={()=>void applyDriveContext()}>{driveBusy?'Verificando versão…':'Aplicar contexto revisado do Drive'}</Button>{driveError&&<p role="alert">{driveError}</p>}</section>}
 
             <div className="space-y-4">
               <div className="space-y-1.5">
@@ -527,7 +557,7 @@ export const NewStrategyPage: React.FC = () => {
                 variant="primary"
                 size="sm"
                 onClick={handleSubmit}
-                disabled={createStrategy.isPending || !form.name.trim()}
+                disabled={createStrategy.isPending || driveBusy || !form.name.trim() || !form.client_id || clients.isError}
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{createStrategy.isPending ? 'Criando...' : 'Criar Estratégia'}</span>

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAgencyId, usePermission } from "@/features/auth/AuthProvider";
 import { useClient } from "./hooks/useClients";
 import { supabase } from "@/lib/supabase/client";
+import { DriveBriefingsPanel } from '@/features/briefing/DriveBriefingsPanel';
 interface RecordItem {
   id: string;
   name?: string;
@@ -34,6 +35,7 @@ export default function ClientWorkspacePage() {
   const briefsAllowed = usePermission("briefings.view"),
     strategyAllowed = usePermission("strategy.view"),
     projectsAllowed = usePermission("projects.view");
+  const presentationsAllowed=usePermission('presentations.view'),productionAllowed=usePermission('tasks.view');
   const briefs = useRecords("briefings", briefsAllowed),
     strategies = useRecords("content_strategies", strategyAllowed),
     campaigns = useRecords("monthly_editorial_campaigns", strategyAllowed),
@@ -71,7 +73,7 @@ export default function ClientWorkspacePage() {
       title: "Briefing",
       data: briefs,
       allowed: briefsAllowed,
-      url: (r: RecordItem) => `/briefings/${r.id}`,
+      url: (r: RecordItem) => `/briefings/${r.id}/responses`,
     },
     {
       title: "Estratégia",
@@ -179,6 +181,12 @@ export default function ClientWorkspacePage() {
             )}
           </article>
         ))}
+      </div>
+      {briefsAllowed&&clientId&&<DriveBriefingsPanel clientId={clientId}/>}
+      <div className="flex flex-wrap gap-3" aria-label="Atalhos da jornada do cliente">
+        {strategyAllowed&&<Link className="rounded-lg border border-orange-500/30 p-3" to={`/strategy/new?clientId=${clientId}`}>Criar estratégia deste cliente</Link>}
+        {presentationsAllowed&&<Link className="rounded-lg border border-orange-500/30 p-3" to={`/presentations/new?clientId=${clientId}`}>Criar apresentação deste cliente</Link>}
+        {productionAllowed&&['design','video','traffic'].map(department=><Link key={department} className="rounded-lg border border-orange-500/30 p-3" to={`/production/${department}?clientId=${clientId}`}>{department==='design'?'Design':department==='video'?'Vídeo e Motion':'Tráfego pago'}</Link>)}
       </div>
       <p>
         A aprovação da campanha autoriza a geração de produção. Sugestões de

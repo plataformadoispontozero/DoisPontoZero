@@ -11,8 +11,8 @@ import { BRIEFING_CATEGORY_CONFIG, BRIEFING_STATUS_CONFIG, QUESTION_TYPE_CONFIG 
 import type { Briefing } from '@/types/briefing'
 
 describe('Briefing Studio — Domain & PDF Model', () => {
-  it('contains all 5 official initial templates with valid structure', () => {
-    expect(INITIAL_BRIEFING_TEMPLATES.length).toBe(5)
+  it('contains all official initial templates with valid structure', () => {
+    expect(INITIAL_BRIEFING_TEMPLATES.length).toBe(6)
 
     const categories = INITIAL_BRIEFING_TEMPLATES.map((t) => t.category)
     expect(categories).toContain('branding')
@@ -20,6 +20,7 @@ describe('Briefing Studio — Domain & PDF Model', () => {
     expect(categories).toContain('motion')
     expect(categories).toContain('audiovisual')
     expect(categories).toContain('campaign')
+    expect(categories).toContain('paid_media')
 
     for (const tpl of INITIAL_BRIEFING_TEMPLATES) {
       expect(tpl.name).toBeTruthy()

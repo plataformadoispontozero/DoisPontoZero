@@ -12,6 +12,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useBriefings } from '@/features/briefing/hooks/useBriefings'
 import { BRIEFING_STATUS_CONFIG } from '@/types/briefing'
+import { DriveBriefingsPanel } from '@/features/briefing/DriveBriefingsPanel'
 
 export interface ClientBriefingsTabProps {
   clientId: string
@@ -29,7 +30,7 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-bold text-[#F8F9FC]">Briefings da Conta</h3>
+          <h3 className="text-sm font-bold text-[#F8F9FC]">Briefings de formulário da conta</h3>
           <p className="text-xs text-[#B8B8C0]">
             Histórico de questionários e alinhamentos de escopo deste cliente.
           </p>
@@ -43,6 +44,7 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
         </Link>
       </div>
 
+      <DriveBriefingsPanel clientId={clientId}/>
       {isLoading ? (
         <div className="space-y-2">
           {[1, 2].map((i) => (
@@ -56,7 +58,7 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
               <FileText className="w-5 h-5" />
             </div>
             <div className="text-sm font-bold text-[#F8F9FC]">
-              Nenhum briefing vinculado a esta conta
+              Nenhum briefing de formulário vinculado a esta conta
             </div>
             <p className="text-xs text-[#B8B8C0] max-w-sm mx-auto">
               Inicie um novo briefing criativo a partir dos modelos oficiais da agência.

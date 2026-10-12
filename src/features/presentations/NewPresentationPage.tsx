@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect,useState } from 'react';
+import { useNavigate,useSearchParams } from 'react-router-dom';
+import { useAgencyId } from '@/features/auth/AuthProvider';
 import { ArrowLeft, ArrowRight, Check, Sparkles, FolderKanban, Calendar, FileText, LayoutTemplate } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -16,7 +17,8 @@ const MONTHS = [
 
 export const NewPresentationPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: clients } = useClients();
+  const agency=useAgencyId(),[params]=useSearchParams();
+  const { data: clients,isError:clientsError } = useClients(agency);
   const { createPresentation, isCreating } = usePresentations();
 
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
@@ -31,6 +33,7 @@ export const NewPresentationPage: React.FC = () => {
 
   const safeClients: Client[] = clients || [];
   const selectedClient = safeClients.find((c: Client) => c.id === selectedClientId);
+  useEffect(()=>{const requested=params.get('clientId');if(requested&&clients?.some(c=>c.id===requested)&&!selectedClientId){setSelectedClientId(requested);}},[clients,params,selectedClientId]);
 
   const handleClientSelect = (clientId: string) => {
     setSelectedClientId(clientId);
@@ -65,6 +68,7 @@ export const NewPresentationPage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-12">
+      {clientsError&&<p role="alert">Não foi possível carregar os clientes desta agência.</p>}
       {/* Top Bar */}
       <div className="flex items-center justify-between border-b border-surface-border pb-4">
         <div className="flex items-center space-x-3">

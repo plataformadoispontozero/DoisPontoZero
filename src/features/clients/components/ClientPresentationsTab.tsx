@@ -14,7 +14,7 @@ interface ClientPresentationsTabProps {
 
 export const ClientPresentationsTab: React.FC<ClientPresentationsTabProps> = ({ clientId, clientName }) => {
   const navigate = useNavigate();
-  const { presentations, isLoading } = usePresentations();
+  const { presentations, isLoading,isError } = usePresentations();
 
   const clientPresentations: PresentationType[] = (presentations || []).filter((p: PresentationType) => p.client_id === clientId);
 
@@ -31,13 +31,13 @@ export const ClientPresentationsTab: React.FC<ClientPresentationsTabProps> = ({ 
           </p>
         </div>
 
-        <Button size="sm" onClick={() => navigate('/presentations/new')}>
+        <Button size="sm" onClick={() => navigate(`/presentations/new?clientId=${clientId}`)}>
           <Plus className="w-4 h-4 mr-1.5" />
           Nova Apresentação
         </Button>
       </div>
 
-      {isLoading ? (
+      {isError ? <p role="alert">Não foi possível carregar as apresentações deste cliente.</p>:isLoading ? (
         <div className="p-8 text-center text-xs text-content-secondary">Carregando apresentações...</div>
       ) : clientPresentations.length === 0 ? (
         <Card className="p-8 text-center space-y-3 border border-dashed border-surface-border">
@@ -46,7 +46,7 @@ export const ClientPresentationsTab: React.FC<ClientPresentationsTabProps> = ({ 
           <p className="text-xs text-content-secondary max-w-sm mx-auto">
             Crie apresentações editoriais para demonstrar a evolução das campanhas e mídias criadas.
           </p>
-          <Button size="sm" variant="outline" onClick={() => navigate('/presentations/new')}>
+          <Button size="sm" variant="outline" onClick={() => navigate(`/presentations/new?clientId=${clientId}`)}>
             Criar Primeira Apresentação
           </Button>
         </Card>

@@ -1,6 +1,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.117.3'
 import { providerConfiguration, type ProviderConfiguration } from '../_shared/providerConfig.ts'
 import { folderIdFromUrl, validateDriveUpload, isGoogleUploadUrl, isFolderDescendant } from './drive.ts'
+import {discoverClientDriveDocuments,readClientDriveDocument,DriveDocumentUnavailableError} from './documents.ts'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2.117.3/cors'
 const env=(key:string)=>Deno.env.get(key)||''
 const origin=env('GOOGLE_WORKSPACE_APP_ORIGIN')||'https://doispontozero.renatodesigner.com.br'
@@ -55,12 +56,13 @@ Deno.serve(async(req:Request)=>{
   const raw=await req.text();if(raw.length>4096)return reply({error:'Solicitação inválida.'},400)
   const body=JSON.parse(raw),agency=body.agencyId
   if(typeof agency!=='string'||!/^[0-9a-f-]{36}$/i.test(agency))return reply({error:'Agência inválida.'},400)
-  const productionAction=['client-drive-list','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
+  const documentAction=['client-drive-documents','client-drive-document-read'].includes(body.action)
+  const productionAction=['client-drive-documents','client-drive-document-read','client-drive-list','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
   const can=async(permission:string)=>{const r=await caller.rpc('has_agency_permission',{p_agency_id:agency,p_permission_key:permission});return !r.error&&r.data===true}
   const adminAccess=await caller.rpc('google_workspace_permission',{p_agency:agency});const centralAdmin=!adminAccess.error&&adminAccess.data===true
   if(body.action==='client-picker-session'&&!centralAdmin)return reply({error:'Somente administrador pode autorizar a pasta no Google central da agência.'},403)
   if(productionAction){
-   if(!await can('clients.view')||(body.action!=='client-drive-list'&&!await can('tasks.edit')))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
+   if(!await can('clients.view')||(documentAction?!await can('briefings.view'):(body.action!=='client-drive-list'&&!await can('tasks.edit'))))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
   }else if(body.action==='status'){
    if(!centralAdmin&&!await can('clients.view'))return reply({error:'Permissão necessária.'},403)
   }else if(!centralAdmin)return reply({error:'Somente administrador pode configurar a conexão central da agência.'},403)
@@ -133,6 +135,25 @@ Deno.serve(async(req:Request)=>{
    if(!check.ok)return reply({error:'Esta pasta não está autorizada para o aplicativo Google ou para sua conta. O link da pasta sozinho não concede acesso. Use Autorizar pasta existente para selecionar a pasta cadastrada, ou vincule uma pasta criada pelo aplicativo.'},403)
    const metadata=await check.json()
    if(metadata.mimeType!=='application/vnd.google-apps.folder'||metadata.trashed)return reply({error:'A pasta do cliente não está disponível.'},409)
+   if(body.action==='client-drive-documents'){
+    const result=await discoverClientDriveDocuments(folder,token.access_token)
+    if(result.documents.length){
+     const rows=result.documents.map(d=>({agency_id:agency,client_id:body.clientId,google_file_id:d.id,name:d.name,mime_type:d.mimeType,path:d.path,version:d.version,modified_time:d.modifiedTime||null,size:d.size||null,web_view_link:d.webViewLink||null,can_read_text:d.canReadText,available:true,synced_at:new Date().toISOString()}))
+     // Service writes only source metadata. Reviewed context/version/by/at fields are never included or overwritten.
+     const indexed=await admin.from('client_drive_documents').upsert(rows,{onConflict:'agency_id,client_id,google_file_id'})
+     if(indexed.error)return reply({error:'Não foi possível sincronizar o índice de documentos. Os dados revisados foram preservados.'},503)
+    }
+    if(result.scan.complete){let query=admin.from('client_drive_documents').update({available:false}).eq('agency_id',agency).eq('client_id',body.clientId);if(result.documents.length)query=query.not('google_file_id','in',`(${result.documents.map(d=>d.id).join(',')})`);const missing=await query;if(missing.error)return reply({error:'Não foi possível atualizar a disponibilidade dos documentos. As revisões foram preservadas.'},503)}
+    return reply(result)
+   }
+   if(body.action==='client-drive-document-read'){
+    if(typeof body.documentId!=='string')return reply({error:'Documento inválido.'},400)
+    try{const result=await readClientDriveDocument(folder,body.documentId,token.access_token),d=result.document;
+     const prior=await admin.from('client_drive_documents').select('path').eq('agency_id',agency).eq('client_id',body.clientId).eq('google_file_id',d.id).maybeSingle();if(prior.error)return reply({error:'Não foi possível consultar o índice de documentos.'},503);
+     if(prior.data?.path)d.path=prior.data.path;
+     const indexed=await admin.from('client_drive_documents').upsert({agency_id:agency,client_id:body.clientId,google_file_id:d.id,name:d.name,mime_type:d.mimeType,path:d.path,version:d.version,modified_time:d.modifiedTime||null,size:d.size||null,web_view_link:d.webViewLink||null,can_read_text:d.canReadText,available:true,synced_at:new Date().toISOString()},{onConflict:'agency_id,client_id,google_file_id'});if(indexed.error)return reply({error:'Não foi possível atualizar a versão do documento. Atualize antes de revisar.'},503);return reply(result);
+    }catch(error){if(error instanceof DriveDocumentUnavailableError){const missing=await admin.from('client_drive_documents').update({available:false}).eq('agency_id',agency).eq('client_id',body.clientId).eq('google_file_id',body.documentId);if(missing.error)return reply({error:'Não foi possível atualizar a disponibilidade do documento.'},503);return reply({error:error.message},404)}throw error}
+   }
    if(body.action==='client-drive-upload-start'){
     const invalid=validateDriveUpload(body);if(invalid)return reply({error:invalid},400)
     if(!metadata.isAppAuthorized)return reply({error:'O administrador precisa autorizar esta pasta pelo Google Picker antes do envio. A conexão permite ler arquivos existentes, mas grava somente em pastas autorizadas para o aplicativo.'},403)

@@ -1,8 +1,8 @@
 import { ClientMetaPanel } from "@/features/integrations/ClientMetaPanel";
 import { ClientDrivePanel } from "@/features/integrations/ClientDrivePanel";
 import { useClients } from "@/features/clients/hooks/useClients";
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect,useState } from "react";
+import { Link, useParams,useSearchParams } from "react-router-dom";
 import {
   Plus,
   LayoutGrid,
@@ -59,7 +59,9 @@ function ProductionWorkspace({ department }: { department: string }) {
   const canCreate = usePermission("tasks.create"),
     canEdit = usePermission("tasks.edit");
   const clients = useClients(agencyId);
+  const [params]=useSearchParams();
   const [materialClient, setMaterialClient] = useState("");
+  useEffect(()=>{const requested=params.get('clientId');if(requested&&clients.data?.some(c=>c.id===requested))setMaterialClient(requested);},[params,clients.data]);
   const query = useTasks({ search: config?.prefix || "" });
   const projects = useProjects(canCreate ? agencyId : undefined);
   const [search, setSearch] = useState(""),

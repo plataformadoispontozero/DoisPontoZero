@@ -1,3 +1,4 @@
+import { INITIAL_BRIEFING_TEMPLATES } from "../constants/initialTemplates"
 import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -77,6 +78,8 @@ export const BriefingTemplatesPage: React.FC = () => {
           </div>
         }
       />
+
+      <section className="space-y-3" aria-label="Modelos iniciais personalizáveis"><h2 className="text-lg font-semibold">Comece com um modelo da agência</h2><p className="text-sm text-zinc-300">Personalize as perguntas e salve ou publique. Estes pontos de partida só se tornam modelos cadastrados após salvar.</p><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{INITIAL_BRIEFING_TEMPLATES.map(t=><article className="rounded-xl border border-white/15 p-4 space-y-3" key={t.id}><h3 className="font-semibold">{t.name}</h3><p className="text-sm text-zinc-400">{t.description}</p><p className="text-xs text-zinc-400">{t.sections.reduce((n,s)=>n+s.questions.length,0)} perguntas · editável</p><Link className="inline-block rounded-lg bg-orange-700 px-3 py-2 text-sm text-white" to={`/briefings/templates/new?starterId=${t.id}`}>Personalizar modelo de {t.name}</Link></article>)}</div></section>
 
       {/* Filter and search bar */}
       <Card>
