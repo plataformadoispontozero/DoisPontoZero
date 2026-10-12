@@ -4,6 +4,7 @@
 // TanStack Query Hooks for Briefings, Templates, Questions & Public Links
 // ============================================================
 
+import { useAgencyId } from '@/features/auth/AuthProvider'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 import type {
@@ -237,8 +238,9 @@ export function useBriefings(agencyId: string, filters?: { status?: BriefingStat
 }
 
 export function useBriefing(briefingId?: string) {
+  const agencyId=useAgencyId()
   return useQuery<Briefing | null>({
-    queryKey: ['briefing', briefingId],
+    queryKey: ['briefing', agencyId, briefingId],
     queryFn: async () => {
       if (!briefingId) return null
       if (!isSupabaseConfigured || !supabase) return null
@@ -256,13 +258,14 @@ export function useBriefing(briefingId?: string) {
           answers:briefing_answers(*),
           public_links:briefing_public_links(*)
         `)
+        .eq('agency_id',agencyId)
         .eq('id', briefingId)
         .single()
 
       if (error) throw error
       return data as Briefing
     },
-    enabled: Boolean(briefingId),
+    enabled: Boolean(briefingId&&agencyId),
   })
 }
 
@@ -376,7 +379,7 @@ export function useUpdateBriefingStatus(agencyId: string, briefingId: string) {
       return data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['briefing', briefingId] })
+      queryClient.invalidateQueries({ queryKey: ['briefing', agencyId, briefingId] })
       queryClient.invalidateQueries({ queryKey: ['briefings', agencyId] })
     },
   })
@@ -431,7 +434,7 @@ export function useCreatePublicLink(agencyId: string, briefingId: string) {
       return { rawToken, publicUrl, tokenHash }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['briefing', briefingId] })
+      queryClient.invalidateQueries({ queryKey: ['briefing', agencyId, briefingId] })
       queryClient.invalidateQueries({ queryKey: ['briefings', agencyId] })
     },
   })
@@ -453,7 +456,7 @@ export function useRevokePublicLink(agencyId: string, briefingId: string) {
       return { success: true }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['briefing', briefingId] })
+      queryClient.invalidateQueries({ queryKey: ['briefing', agencyId, briefingId] })
     },
   })
 }

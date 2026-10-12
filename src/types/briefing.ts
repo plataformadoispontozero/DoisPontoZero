@@ -118,6 +118,10 @@ export interface BriefingQuestion {
 // 4. Briefing
 // -------------------------
 export interface Briefing {
+  source_system?: string | null
+  source_status?: string | null
+  migration_review_pending?: boolean
+  migrated_at?: string | null
   id: string
   agency_id: string
   client_id: string | null

@@ -1,3 +1,4 @@
+import { MigratedBriefingHistory } from './MigratedBriefingHistory'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
@@ -305,12 +306,13 @@ export const BriefingResponsesPage: React.FC = () => {
         </CardContent>
       </Card>
 
+      {realBriefing?.source_system==='lovable'&&<><section className="rounded-xl border border-orange-500/25 p-5"><h2 className="font-semibold">Briefing migrado do Lovable</h2><p className="mt-2 text-sm text-zinc-300">Status na origem: {realBriefing.source_status||'Não informado'}. As respostas e datas foram preservadas. O rascunho aguarda revisão na nova plataforma; a migração não concede aprovação.</p></section><MigratedBriefingHistory briefingId={realBriefing.id}/></>}
       {/* Sections and Questions with Answers */}
       <div className="space-y-6">
-        {briefing.template?.sections?.map((sec, sIdx) => {
+        {[...(briefing.template?.sections||[])].sort((a,b)=>a.position-b.position).map((sec, sIdx) => {
           const secQuestions = (briefing.template?.questions || []).filter(
             (q) => q.section_id === sec.id
-          )
+          ).sort((a,b)=>a.position-b.position)
 
           return (
             <Card key={sec.id} className="border-[#30303B] overflow-hidden">
@@ -337,7 +339,7 @@ export const BriefingResponsesPage: React.FC = () => {
                   let displayVal = '— Não respondido —'
 
                   if (rawAns !== undefined && rawAns !== null && rawAns !== '') {
-                    if (Array.isArray(rawAns)) {
+                    if (typeof rawAns==='boolean') {displayVal=rawAns?'Sim':'Não'} else if (Array.isArray(rawAns)) {
                       displayVal = rawAns
                         .map((v) => q.options?.find((o) => o.value === v)?.label || v)
                         .join(', ')

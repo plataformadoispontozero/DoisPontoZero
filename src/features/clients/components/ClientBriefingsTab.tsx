@@ -24,7 +24,7 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
   agencyId = 'demo-agency',
 }) => {
   const navigate = useNavigate()
-  const { data: briefings = [], isLoading } = useBriefings(agencyId, { clientId })
+  const { data: briefings = [], isLoading, isError } = useBriefings(agencyId, { clientId })
 
   return (
     <div className="space-y-4">
@@ -45,7 +45,7 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
       </div>
 
       <DriveBriefingsPanel clientId={clientId}/>
-      {isLoading ? (
+      {isError ? <p role="alert" className="rounded-xl border border-orange-500/30 p-4 text-sm">Não foi possível carregar os briefings deste cliente. Tente novamente.</p> : isLoading ? (
         <div className="space-y-2">
           {[1, 2].map((i) => (
             <div key={i} className="h-16 rounded-xl bg-[#1C1C24] animate-pulse" />
@@ -93,6 +93,7 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
                     <span className="text-xs text-[#98989F]">V{b.template_version}.0</span>
                   </div>
                   <h4 className="text-sm font-bold text-[#F8F9FC] truncate">{b.title}</h4>
+                  {b.source_system === 'lovable' && <p className="text-xs text-orange-300">Migrado do Lovable{b.migration_review_pending ? ' · aguardando revisão' : ''}</p>}
                   <div className="text-[11px] text-[#98989F] flex items-center gap-2">
                     <span>Criado em: {new Date(b.created_at).toLocaleDateString('pt-BR')}</span>
                     {b.submitted_at && (

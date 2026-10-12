@@ -181,3 +181,10 @@ Usar apenas esse JSON perderia um calendário e todo o histórico de alteraçõe
 SELECT adicional: `audit_log` não tem entidade identificada como briefing nem registro associado por `entidade_id` a um briefing existente. Não foram encontrados nomes de chaves de briefing/resposta em `calendarios.conteudo_estruturado` nem `clientes.entregaveis_contratados`. Descrições ou estratégias não foram contadas como novos briefings. O histórico identificado continua sendo as 554 linhas de `briefing_historico`.
 
 **Estado:** zero alterações na origem, zero importações definitivas no destino e piloto ainda sujeito à confirmação exigida no documento do usuário.
+
+## Piloto Ambience autorizado e executado
+
+- Apenas um briefing importado no destino: `cc5f33d5-236f-41c2-9abc-c31ce09bb50e` ([abrir respostas](https://doispontozero.renatodesigner.com.br/briefings/cc5f33d5-236f-41c2-9abc-c31ce09bb50e/responses)).
+- 54 respostas JSON e 19 versões, incluindo 18 alterações históricas; origem somente leitura. Segunda execução idempotente, sem duplicação.
+- Snapshot e datas iguais ao registro legado; zero respostas divergentes. Rascunho aguardando revisão, sem atribuição de autor ou aprovação atual.
+- Restam 22 briefs e 536 alterações históricas fora do piloto; quatro autores ainda sem vínculo. Nenhuma autorização de importação geral.
