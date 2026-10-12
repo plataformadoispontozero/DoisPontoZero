@@ -40,3 +40,10 @@ Pedido completo em anexo de 12/10/2026 exige começar somente pela auditoria/dry
 - [x] Conteúdos presentes são idênticos após sanitização; histórico de 554 alterações não incluído no arquivo.
 - [x] Detectados 148 nomes de campos sensíveis; nenhuma string binária data:base64; nenhum valor sensível impresso.
 - [x] Relatório de reconciliação privado salvo fora do repositório; zero writes em banco.
+
+## Backup adicional do usuário
+
+- [x] JSON comparado localmente: 29 clientes, 23 briefings idênticos, 102 calendários idênticos e 326 demandas idênticas.
+- [x] Identificado um calendário ausente e ausência dos 554 históricos nesse export; preservar os backups completos.
+- [x] SELECT adicional em audit_log e chaves JSON não encontrou fonte extra de briefing/histórico.
+- [x] Conciliação privada fora do Git; nenhuma gravação em banco.

@@ -163,3 +163,21 @@ Seis clientes têm `briefing:null`; não fabricar um briefing para preencher ess
 O backup contém 148 campos com nomes sensíveis (incluindo `token_aprovacao` e `acesso_*`, contagem não comprova credencial válida). Não copiá-lo para Git nem tratar o arquivo como payload administrativo direto. Comparação excluiu esses campos e não imprimiu conteúdo de respostas/credenciais. Não foram encontradas strings binárias `data:...;base64` nesta varredura. Arquivo bruto permaneceu em Downloads.
 
 Relatório privado da reconciliação: `/Users/designer/Documents/Codex/2026-10-12/briefing-audit/provided-export-reconciliation.json`. Registra IDs faltantes e conflitos sem respostas. O único calendário ausente deve ser recuperado pela origem live, não eliminado do destino. Nenhuma nova fonte de briefing foi descoberta neste backup. O próximo passo continua sendo apresentação do dry run e confirmação do piloto, conforme o pedido completo.
+
+## Conciliação do backup fornecido pelo usuário
+
+Arquivo analisado em 12/10/2026: `backup-agencia-2026-10-12.json`, aproximadamente 8 MB. Leitura local; nenhuma importação ou inclusão do arquivo no Git. Comparação por UUID original e conteúdo normalizado/sanitizado, sem nomes como chave.
+
+| Coleção do arquivo | Quantidade | Comparação com a auditoria |
+|---|---:|---|
+| clientes | 29 | Seis sem briefing |
+| clientes[].briefing | 23 | UUIDs únicos, todos idênticos; nenhum extra ou ausente |
+| clientes[].calendarios | 102 | Todos idênticos; um dos 103 calendários auditados ausente |
+| clientes[].demandas | 326 | UUIDs únicos, todos idênticos; nenhum extra ou ausente |
+| briefing_historico | Não incluído | Os 554 históricos exigem o backup separado da origem |
+
+Usar apenas esse JSON perderia um calendário e todo o histórico de alterações de briefing. Não há conflito de conteúdo nas coleções comparadas. Relatório agregado privado: `/Users/designer/Documents/Codex/2026-10-12/briefing-audit/provided-backup-comparison.json`.
+
+SELECT adicional: `audit_log` não tem entidade identificada como briefing nem registro associado por `entidade_id` a um briefing existente. Não foram encontrados nomes de chaves de briefing/resposta em `calendarios.conteudo_estruturado` nem `clientes.entregaveis_contratados`. Descrições ou estratégias não foram contadas como novos briefings. O histórico identificado continua sendo as 554 linhas de `briefing_historico`.
+
+**Estado:** zero alterações na origem, zero importações definitivas no destino e piloto ainda sujeito à confirmação exigida no documento do usuário.
