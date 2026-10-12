@@ -18,3 +18,14 @@ export function validateDriveUpload(value: {name?: unknown; mimeType?: unknown; 
 export function isGoogleUploadUrl(value: string): boolean {
   try { const u = new URL(value); return u.protocol === 'https:' && u.hostname === 'www.googleapis.com' && !u.username && !u.password && u.pathname === '/upload/drive/v3/files' && u.searchParams.get('uploadType') === 'resumable' && !!u.searchParams.get('upload_id'); } catch { return false; }
 }
+// Follow a bounded parent chain; cycles, missing metadata and excessive depth fail closed.
+export async function isFolderDescendant(folderId:string,rootId:string,parents:(id:string)=>Promise<string[]>):Promise<boolean>{
+ if(folderId===rootId)return false;
+ const visited=new Set<string>();let pending=[folderId];
+ for(let depth=0;depth<20&&pending.length;depth++){
+  const next:string[]=[];
+  for(const id of pending){if(visited.has(id))continue;visited.add(id);if(visited.size>50)return false;const parentIds=await parents(id);if(parentIds.includes(rootId))return true;for(const parent of parentIds)if(!visited.has(parent))next.push(parent);}
+  pending=next;
+ }
+ return false;
+}

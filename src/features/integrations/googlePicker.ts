@@ -33,9 +33,9 @@ export async function authorizeClientFolder(session:PickerSession):Promise<void>
   let picker:Picker;
   const callback=(data:PickerData)=>{
    if(data.action===pickerApi.Action.CANCEL){picker.setVisible(false);reject(Error('Autorização da pasta cancelada.'));}
-   if(data.action===pickerApi.Action.PICKED){picker.setVisible(false);if(selectedFolderMatches(session.folderId,data.docs||[]))resolve();else reject(Error('Selecione a pasta vinculada ao cadastro deste cliente. Para trocar a pasta, um gestor precisa editar o cliente primeiro.'));}
+   if(data.action===pickerApi.Action.PICKED){picker.setVisible(false);if(selectedFolderMatches(session.folderId,data.docs||[]))resolve();else reject(Error('Selecione a pasta vinculada ao cadastro ou à configuração da agência. A seleção não altera a pasta configurada.'));}
   };
-  picker=new pickerApi.PickerBuilder().addView(view).setOAuthToken(session.accessToken).setDeveloperKey(session.apiKey).setAppId(session.appId).setOrigin(window.location.origin).setTitle('Autorize a pasta cadastrada para este cliente').setCallback(callback).build();
+  picker=new pickerApi.PickerBuilder().addView(view).setOAuthToken(session.accessToken).setDeveloperKey(session.apiKey).setAppId(session.appId).setOrigin(window.location.origin).setTitle('Autorize a pasta configurada na plataforma').setCallback(callback).build();
   picker.setVisible(true);
  });
 }

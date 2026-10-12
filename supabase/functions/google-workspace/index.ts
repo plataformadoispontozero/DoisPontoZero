@@ -1,11 +1,11 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.117.3'
 import { providerConfiguration, type ProviderConfiguration } from '../_shared/providerConfig.ts'
-import { folderIdFromUrl, validateDriveUpload, isGoogleUploadUrl } from './drive.ts'
+import { folderIdFromUrl, validateDriveUpload, isGoogleUploadUrl, isFolderDescendant } from './drive.ts'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2.117.3/cors'
 const env=(key:string)=>Deno.env.get(key)||''
 const origin=env('GOOGLE_WORKSPACE_APP_ORIGIN')||'https://doispontozero.renatodesigner.com.br'
 const redirect=env('GOOGLE_WORKSPACE_REDIRECT_URI')
-const scopes=['openid','email','https://www.googleapis.com/auth/drive.file','https://www.googleapis.com/auth/calendar.events.readonly']
+const scopes=['openid','email','https://www.googleapis.com/auth/drive.file','https://www.googleapis.com/auth/drive.readonly','https://www.googleapis.com/auth/calendar.events.readonly']
 const configured=()=>!!(env('GOOGLE_WORKSPACE_TOKEN_KEY')||env('INTEGRATION_CONFIG_KEY'))
 const base64=(a:Uint8Array)=>btoa(String.fromCharCode(...a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')
 const nonce=()=>base64(crypto.getRandomValues(new Uint8Array(32)))
@@ -22,6 +22,7 @@ Deno.serve(async(req:Request)=>{
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers})
  if(requestOrigin&&!allowedOrigins.has(requestOrigin))return reply({error:'Origem não permitida.'},403)
  const admin=createClient(env('SUPABASE_URL'),env('SUPABASE_SERVICE_ROLE_KEY'),{auth:{persistSession:false,autoRefreshToken:false}})
+ async function connection(action:string,agency:string,user?:string){const r=await admin.rpc('google_workspace_connection',{p_action:action,p_agency:agency,p_user:user});if(r.error)throw Error('Conexão central indisponível.');return r.data}
  async function secret(action:string,agency?:string,user?:string,h?:string,ciphertext?:string){const {data,error}=await admin.rpc('google_workspace_secret',{p_action:action,p_agency:agency,p_user:user,p_hash:h,p_ciphertext:ciphertext});if(error)throw Error('Armazenamento indisponível.');return data}
  let requestConfig:ProviderConfiguration|null=null
  async function tokens(params:Record<string,string>){const r=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({...params,client_id:requestConfig?.clientId||env('GOOGLE_WORKSPACE_CLIENT_ID'),client_secret:requestConfig?.clientSecret||env('GOOGLE_WORKSPACE_CLIENT_SECRET')})});if(!r.ok)throw Error('Autorização Google não concluída.');return r.json()}
@@ -42,7 +43,8 @@ Deno.serve(async(req:Request)=>{
    const accountResponse=await fetch('https://openidconnect.googleapis.com/v1/userinfo',{headers:{Authorization:`Bearer ${token.access_token}`}});if(!accountResponse.ok)throw Error('Conta não verificada.')
    const account=await accountResponse.json();if(!account.sub||!account.email_verified)throw Error('Conta não verificada.')
    if(!token.refresh_token)throw Error('Autorização offline necessária.')
-   await secret('save',stored.agency,stored.user,undefined,await seal({...token,expires_at:Date.now()+token.expires_in*1000,account:{id:account.sub,email:account.email}}))
+   const connected=await admin.rpc('google_workspace_connect',{p_agency:stored.agency,p_user:stored.user,p_ciphertext:await seal({...token,expires_at:Date.now()+token.expires_in*1000,account:{id:account.sub,email:account.email}})})
+   if(connected.error){await fetch('https://oauth2.googleapis.com/revoke',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({token:token.access_token})});return back('access_denied')}
    return back('connected')
   }
   if(req.method!=='POST')return reply({error:'Método inválido.'},405)
@@ -55,11 +57,13 @@ Deno.serve(async(req:Request)=>{
   if(typeof agency!=='string'||!/^[0-9a-f-]{36}$/i.test(agency))return reply({error:'Agência inválida.'},400)
   const productionAction=['client-drive-list','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
   const can=async(permission:string)=>{const r=await caller.rpc('has_agency_permission',{p_agency_id:agency,p_permission_key:permission});return !r.error&&r.data===true}
+  const adminAccess=await caller.rpc('google_workspace_permission',{p_agency:agency});const centralAdmin=!adminAccess.error&&adminAccess.data===true
+  if(body.action==='client-picker-session'&&!centralAdmin)return reply({error:'Somente administrador pode autorizar a pasta no Google central da agência.'},403)
   if(productionAction){
    if(!await can('clients.view')||(body.action!=='client-drive-list'&&!await can('tasks.edit')))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
-  }else{
-   const access=await caller.rpc('google_workspace_permission',{p_agency:agency});if(access.error||access.data!==true)return reply({error:'Permissão de editar configurações necessária.'},403)
-  }
+  }else if(body.action==='status'){
+   if(!centralAdmin&&!await can('clients.view'))return reply({error:'Permissão necessária.'},403)
+  }else if(!centralAdmin)return reply({error:'Somente administrador pode configurar a conexão central da agência.'},403)
   requestConfig=await providerConfiguration(admin,agency,'google')
   if(!configured()||!requestConfig)return productionAction?reply({error:'Configure e autorize a integração Google antes de acessar os materiais.'},409):reply({configured:false,connected:false})
   if(body.action==='start'){
@@ -67,16 +71,34 @@ Deno.serve(async(req:Request)=>{
    const params=new URLSearchParams({client_id:requestConfig.clientId,redirect_uri:requestConfig?.redirectUri||redirect,response_type:'code',scope:scopes.join(' '),access_type:'offline',prompt:'consent',state,code_challenge:await hash(verifier),code_challenge_method:'S256',include_granted_scopes:'true'})
    return reply({url:`https://accounts.google.com/o/oauth2/v2/auth?${params}`})
   }
-  const stored=await secret('read',agency,user.id)
-  if(!stored.ciphertext)return productionAction?reply({error:'Sua conta Google ainda não está conectada. Solicite ao administrador a conexão de trabalho.'},409):reply({configured:true,connected:false})
+  const central=await connection('read',agency)
+  const connector=central.user
+  if(!connector)return productionAction?reply({error:'A agência ainda não tem uma conta Google central conectada. Solicite a conexão ao administrador.'},409):reply({configured:true,connected:false,central:true})
+  const stored=await secret('read',agency,connector)
+  if(!stored.ciphertext)return productionAction?reply({error:'A conta Google central da agência ainda não está autorizada. Solicite a conexão ao administrador.'},409):reply({configured:true,connected:false})
   let token=await open(stored.ciphertext)
-  if(body.action==='status')return reply({configured:true,connected:true,email:token.account.email,scopes:token.scope.split(' ')})
+  const requiresReauthorization=!scopes.filter(s=>s.startsWith('https:')).every(s=>String(token.scope||'').split(' ').includes(s))
+  if(body.action==='status'){
+   if(requiresReauthorization)return reply({configured:true,connected:false,central:true,requiresReauthorization:true})
+   try{if(token.expires_at<Date.now()+60000){const fresh=await tokens({grant_type:'refresh_token',refresh_token:token.refresh_token});token={...token,...fresh,refresh_token:token.refresh_token,expires_at:Date.now()+fresh.expires_in*1000};await secret('save',agency,connector,undefined,await seal(token))}
+    const health=await fetch('https://openidconnect.googleapis.com/v1/userinfo',{headers:{Authorization:`Bearer ${token.access_token}`}});if(!health.ok)return reply({configured:true,connected:false,central:true,requiresReauthorization:true});
+    const root=folderIdFromUrl(requestConfig.rootFolderUrl);let rootFolderReady=false
+    if(root){const rootResponse=await fetch(`https://www.googleapis.com/drive/v3/files/${root}?fields=mimeType,trashed,isAppAuthorized,capabilities(canAddChildren)&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${token.access_token}`}});if(rootResponse.ok){const m=await rootResponse.json();rootFolderReady=m.mimeType==='application/vnd.google-apps.folder'&&!m.trashed&&m.isAppAuthorized===true&&m.capabilities?.canAddChildren===true}}
+    return reply({configured:true,connected:true,central:true,requiresReauthorization:false,rootFolderConfigured:!!root,rootFolderReady,email:token.account.email,scopes:String(token.scope||'').split(' ')})
+   }catch{return reply({configured:true,connected:false,central:true,requiresReauthorization:true})}
+  }
+  if(requiresReauthorization&&body.action!=='disconnect')return reply({error:'O administrador precisa reconectar o Google para permitir a leitura dos arquivos existentes.'},409)
   if(body.action==='disconnect'){
    const revoke=await fetch('https://oauth2.googleapis.com/revoke',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({token:token.refresh_token})})
    if(!revoke.ok)return reply({error:'Não foi possível revogar no Google. Tente novamente.'},502)
-   await secret('delete',agency,user.id);return reply({configured:true,connected:false})
+   await connection('delete',agency,user.id);await secret('delete',agency,connector);return reply({configured:true,connected:false})
   }
-  if(token.expires_at<Date.now()+60000){const fresh=await tokens({grant_type:'refresh_token',refresh_token:token.refresh_token});token={...token,...fresh,refresh_token:token.refresh_token,expires_at:Date.now()+fresh.expires_in*1000};await secret('save',agency,user.id,undefined,await seal(token))}
+  if(token.expires_at<Date.now()+60000){const fresh=await tokens({grant_type:'refresh_token',refresh_token:token.refresh_token});token={...token,...fresh,refresh_token:token.refresh_token,expires_at:Date.now()+fresh.expires_in*1000};await secret('save',agency,connector,undefined,await seal(token))}
+  if(body.action==='root-picker-session'){
+   const folder=folderIdFromUrl(requestConfig.rootFolderUrl);if(!folder)return reply({error:'Cadastre uma pasta raiz nas configurações Google da agência.'},409)
+   if(!requestConfig.apiKey||!requestConfig.projectNumber)return reply({error:'Configure a API Key pública do Google Picker e o número do projeto.'},409)
+   return reply({accessToken:token.access_token,apiKey:requestConfig.apiKey,appId:requestConfig.projectNumber,folderId:folder})
+  }
   if(productionAction){
    if(typeof body.clientId!=='string'||!/^[0-9a-f-]{36}$/i.test(body.clientId))return reply({error:'Cliente inválido.'},400)
    // The authenticated client applies tenant RLS; never accept an arbitrary folder ID from the browser.
@@ -85,7 +107,10 @@ Deno.serve(async(req:Request)=>{
    if(body.action==='client-drive-create-folder'){
     if(!await can('clients.edit'))return reply({error:'Permissão de editar cliente necessária.'},403)
     if(client.data.profile?.drive_url)return reply({error:'Este cliente já possui uma pasta vinculada. Revise o cadastro antes de criar outra.'},409)
-    const created=await fetch('https://www.googleapis.com/drive/v3/files?fields=id,webViewLink',{method:'POST',headers:{Authorization:`Bearer ${token.access_token}`,'Content-Type':'application/json'},body:JSON.stringify({name:`Dois.Zero · Cliente ${client.data.id}`,mimeType:'application/vnd.google-apps.folder',appProperties:{agencyId:agency,clientId:body.clientId}})})
+    const root=folderIdFromUrl(requestConfig.rootFolderUrl)
+    if(!root)return reply({error:'Configure e autorize a pasta raiz da agência antes de criar pastas de clientes.'},409)
+    if(root){const checkRoot=await fetch(`https://www.googleapis.com/drive/v3/files/${root}?fields=id,mimeType,trashed,isAppAuthorized,capabilities(canAddChildren)`,{headers:{Authorization:`Bearer ${token.access_token}`}});if(!checkRoot.ok)return reply({error:'A pasta raiz configurada não está disponível para a conta central.'},403);const m=await checkRoot.json();if(m.trashed||m.mimeType!=='application/vnd.google-apps.folder'||!m.isAppAuthorized||!m.capabilities?.canAddChildren)return reply({error:'Autorize a pasta raiz pelo Google Picker antes de criar pastas de clientes.'},403)}
+    const created=await fetch('https://www.googleapis.com/drive/v3/files?fields=id,webViewLink',{method:'POST',headers:{Authorization:`Bearer ${token.access_token}`,'Content-Type':'application/json'},body:JSON.stringify({name:`Dois.Zero · Cliente ${client.data.id}`,mimeType:'application/vnd.google-apps.folder',...(root?{parents:[root]}:{}),appProperties:{agencyId:agency,clientId:body.clientId}})})
     if(!created.ok)return reply({error:'Não foi possível criar a pasta no Google Drive.'},502)
     const folderData=await created.json(),driveUrl=`https://drive.google.com/drive/folders/${folderData.id}`
     const saved=await caller.from('clients').update({profile:{...client.data.profile,drive_url:driveUrl}}).eq('agency_id',agency).eq('id',body.clientId).select('id').maybeSingle()
@@ -94,18 +119,23 @@ Deno.serve(async(req:Request)=>{
    }
    const folder=folderIdFromUrl(client.data.profile?.drive_url)
    if(!folder)return reply({error:'Cadastre o link da pasta do Drive no perfil deste cliente.'},409)
+   const root=folderIdFromUrl(requestConfig.rootFolderUrl)
+   if(!root)return reply({error:'O administrador precisa configurar a pasta raiz da agência antes de acessar os materiais dos clientes.'},409)
+   const withinRoot=await isFolderDescendant(folder,root,async(id)=>{const r=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=parents,trashed&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${token.access_token}`}});if(!r.ok)throw Error('Pasta não disponível.');const m=await r.json();return m.trashed?[]:(m.parents||[])})
+   if(!withinRoot)return reply({error:'A pasta cadastrada para este cliente não está dentro da pasta raiz da agência. Solicite a revisão do cadastro ao administrador.'},403)
    if(body.action==='client-picker-session'){
     if(!requestConfig.apiKey||!requestConfig.projectNumber)return reply({error:'Configure a chave pública do Google Picker e o número do projeto em Integrações → Google.'},409)
     // Google Picker requires this user's drive.file access token. Browser keeps it only in memory for this picker session.
     return reply({accessToken:token.access_token,apiKey:requestConfig.apiKey,appId:requestConfig.projectNumber,folderId:folder})
    }
    const googleHeaders={Authorization:`Bearer ${token.access_token}`}
-   const check=await fetch(`https://www.googleapis.com/drive/v3/files/${folder}?fields=id,mimeType,trashed,capabilities(canAddChildren)&supportsAllDrives=true`,{headers:googleHeaders})
+   const check=await fetch(`https://www.googleapis.com/drive/v3/files/${folder}?fields=id,mimeType,trashed,isAppAuthorized,capabilities(canAddChildren)&supportsAllDrives=true`,{headers:googleHeaders})
    if(!check.ok)return reply({error:'Esta pasta não está autorizada para o aplicativo Google ou para sua conta. O link da pasta sozinho não concede acesso. Use Autorizar pasta existente para selecionar a pasta cadastrada, ou vincule uma pasta criada pelo aplicativo.'},403)
    const metadata=await check.json()
    if(metadata.mimeType!=='application/vnd.google-apps.folder'||metadata.trashed)return reply({error:'A pasta do cliente não está disponível.'},409)
    if(body.action==='client-drive-upload-start'){
     const invalid=validateDriveUpload(body);if(invalid)return reply({error:invalid},400)
+    if(!metadata.isAppAuthorized)return reply({error:'O administrador precisa autorizar esta pasta pelo Google Picker antes do envio. A conexão permite ler arquivos existentes, mas grava somente em pastas autorizadas para o aplicativo.'},403)
     if(!metadata.capabilities?.canAddChildren)return reply({error:'Sua conta Google não pode enviar arquivos a esta pasta.'},403)
     const response=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true&fields=id,name,mimeType,webViewLink,modifiedTime,size',{method:'POST',headers:{...googleHeaders,'Content-Type':'application/json; charset=UTF-8','X-Upload-Content-Type':body.mimeType,'X-Upload-Content-Length':String(body.size)},body:JSON.stringify({name:body.name.trim(),parents:[folder],appProperties:{agencyId:agency,clientId:body.clientId}})})
     const uploadUrl=response.headers.get('Location')||''

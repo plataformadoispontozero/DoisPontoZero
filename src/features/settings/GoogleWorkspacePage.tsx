@@ -8,9 +8,14 @@ import {
 } from "@/features/auth/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
 import {ProviderCredentialsForm} from "@/features/integrations/ProviderCredentialsForm";
+import {authorizeClientFolder} from "@/features/integrations/googlePicker";
 interface State {
   configured: boolean;
   connected: boolean;
+  central?: boolean;
+  rootFolderConfigured?: boolean;
+  rootFolderReady?: boolean;
+  requiresReauthorization?: boolean;
   email?: string;
 }
 export default function GoogleWorkspacePage() {
@@ -25,9 +30,9 @@ function GoogleWorkspacePanel() {
   const auth = useAuth(),
     agency = useAgencyId(),
     settingsAllowed = usePermission("settings.edit"),
-    productionAllowed = usePermission("tasks.edit"),
     clientsAllowed = usePermission("clients.view"),
-    allowed = settingsAllowed || (productionAllowed && clientsAllowed);
+    canManage = settingsAllowed && ["OWNER", "ADMIN"].includes(auth.activeAgency?.roleName || ""),
+    allowed = canManage || clientsAllowed;
   const [retry, setRetry] = useState(0);
   const [state, setState] = useState<State | null>(null),
     [busy, setBusy] = useState(false),
@@ -95,7 +100,8 @@ function GoogleWorkspacePanel() {
         if (target.origin !== "https://accounts.google.com")
           throw Error("Endereço de autorização inválido.");
         window.location.assign(target.href);
-      } else if (name === "drive-list") setFiles(data.files);
+      } else if (name === "root-picker-session") {await authorizeClientFolder(data);setState(await request("status"));}
+      else if (name === "drive-list") setFiles(data.files);
       else if (name === "calendar-list") setEvents(data.events);
       else {
         setState(data);
@@ -112,10 +118,10 @@ function GoogleWorkspacePanel() {
     <section className="space-y-5">
       <h2 className="text-xl font-semibold">Google Agenda e Drive</h2>
       <p>
-        Conecte a conta de trabalho por autorização Google. O acesso pertence ao
-        seu usuário nesta agência.
+        Conecte uma única conta de trabalho da agência. A equipe acessa os
+        arquivos dos clientes pela plataforma, sem conectar contas Google pessoais.
       </p>
-      {settingsAllowed && <ProviderCredentialsForm key={agency} provider="google" onSaved={()=>setRetry(v=>v+1)} />}
+      {canManage && <ProviderCredentialsForm key={agency} provider="google" onSaved={()=>setRetry(v=>v+1)} />}
       {!allowed && (
         <p role="alert">É necessária a permissão de editar configurações.</p>
       )}
@@ -145,12 +151,15 @@ function GoogleWorkspacePanel() {
           <button className="block underline" onClick={() => setRetry(v => v + 1)}>Verificar configuração novamente</button>
         </div>
       )}
+      {state?.requiresReauthorization && <p role="status" className="text-orange-300">O administrador precisa reconectar o Google para autorizar a leitura dos materiais já existentes e manter a conexão central da agência.</p>}
       {state?.connected ? (
         <>
-          <p>Conta autorizada: {state.email}</p>
-          <div className="flex gap-3 flex-wrap">
+          <p>Conta central autorizada: {state.email}</p>
+          {!state.rootFolderReady && <p role="status" className="text-orange-300">{state.rootFolderConfigured ? "A pasta raiz ainda precisa estar disponível e autorizada pelo Google Picker para gravação." : "Configure a pasta raiz da agência para acessar os materiais dos clientes."}</p>}
+          {canManage && <div className="flex gap-3 flex-wrap">
             {[
-              ["drive-list", "Consultar arquivos autorizados"],
+              ["drive-list", "Consultar arquivos da conta central"],
+              ["root-picker-session", "Autorizar pasta raiz para gravação"],
               ["calendar-list", "Consultar próximos 30 dias"],
               ["disconnect", "Desconectar Google"],
             ].map(([name, label]) => (
@@ -163,21 +172,19 @@ function GoogleWorkspacePanel() {
                 {label}
               </button>
             ))}
-          </div>
+          </div>}
         </>
       ) : (
         <button
           className="bg-[#c84408] rounded-lg p-3"
-          disabled={!allowed || busy || !state?.configured}
+          disabled={!canManage || busy || !state?.configured}
           onClick={() => void action("start")}
         >
-          Conectar Google Agenda e Drive
+          Conectar conta central Google da agência
         </button>
       )}
       <p>
-        Drive: somente arquivos autorizados para este aplicativo (drive.file).
-        Agenda: eventos da conta autorizada. A consulta não importa nem modifica
-        dados da plataforma.
+        Drive: leitura dos arquivos existentes (drive.readonly) e gravação somente em pastas autorizadas para o aplicativo (drive.file). Agenda: eventos da conta central. A equipe consulta apenas a pasta vinculada ao cliente nas áreas de produção. O administrador configura e revoga a conexão.
       </p>
       {files.length > 0 && (
         <div>

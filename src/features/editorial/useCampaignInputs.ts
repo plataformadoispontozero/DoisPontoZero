@@ -1,3 +1,4 @@
+import { legacyCalendarHistory } from "./editorialContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase/client";
 import {
@@ -83,6 +84,14 @@ export function useCampaignInputs(
           throw Error(
             "Histórico excede o limite de consulta; geração bloqueada para evitar leitura incompleta.",
           );
+      }
+      // Imported calendar status is historical; all original structured topics remain in reuse checks.
+      for(let page=0;page<100;page++){
+        const result=await supabase!.from('client_legacy_records').select('id,payload').eq('agency_id',agency).eq('client_id',client).eq('source_kind','calendarios').order('id').range(page*100,page*100+99);
+        if(result.error)throw result.error;
+        all.push(...legacyCalendarHistory(client,result.data||[]));
+        if((result.data||[]).length<100)break;
+        if(page===99)throw Error('Histórico importado excede o limite de consulta; geração bloqueada para evitar repetição.');
       }
       // Include discarded/archived ideas through all client strategies, not just the selected strategy.
       const sr = await supabase!

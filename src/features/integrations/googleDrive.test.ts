@@ -17,3 +17,19 @@ describe('Private Google Drive material contract',()=>{
   expect(isGoogleUploadUrl('https://www.googleapis.com/drive/v3/files?uploadType=resumable&upload_id=abc')).toBe(false);
  });
 });
+
+describe('Central agency root folder confinement',()=>{
+ it('accepts descendants only, rejects the agency root itself and folders outside it',async()=>{
+  const {isFolderDescendant}=await import('../../../supabase/functions/google-workspace/drive');
+  const parents=async(id:string)=>({client:['campaign'],campaign:['agencyRoot'],outsider:['otherRoot']}[id]||[]);
+  expect(await isFolderDescendant('client','agencyRoot',parents)).toBe(true);
+  expect(await isFolderDescendant('agencyRoot','agencyRoot',parents)).toBe(false);
+  expect(await isFolderDescendant('outsider','agencyRoot',parents)).toBe(false);
+ });
+ it('fails closed on cycles, excessive depth and inaccessible parent metadata',async()=>{
+  const {isFolderDescendant}=await import('../../../supabase/functions/google-workspace/drive');
+  expect(await isFolderDescendant('one','root',async id=>id==='one'?['two']:['one'])).toBe(false);
+  expect(await isFolderDescendant('0','root',async id=>[String(Number(id)+1)])).toBe(false);
+  await expect(isFolderDescendant('client','root',async()=>{throw Error('inaccessible');})).rejects.toThrow('inaccessible');
+ });
+});

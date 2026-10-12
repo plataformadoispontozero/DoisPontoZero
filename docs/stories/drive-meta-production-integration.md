@@ -57,3 +57,26 @@ Google Picker preparado para autorizar pastas legadas com escopo drive.file; exi
 Gates do complemento: lint sem erros, typecheck/build e 186 testes em 49 arquivos; testes do seletor e da validação da pasta. Produção autenticada simulada em três viewports verifica query clients por agência UUID e consultas Drive/Meta com clientId/agencyId. Homologação real de Picker/OAuth continua pendente de credenciais e autorização. CodeRabbit indisponível.
 
 Publicação final verificada em 12/10/2026: funcional 3f96a87; Cloudflare ae4dcac2-8e57-473d-b3e9-5d231a2a4185; bundle index-DhD6KgTg.js no domínio oficial e Workers. Google-workspace v6, connection-config v2, Meta v1, Drive review v3. CSP do Picker e upload confirmada em produção. Testes com sessão e dados simulados em produção passaram nos três tamanhos: clientes consultados por agência UUID, cliente selecionado enviado nas chamadas Drive/Meta, sem acessos reais às contas. API Cloudflare respondeu de forma transitória malformada na primeira tentativa; única repetição concluiu e a propagação foi verificada.
+
+## Conexão Google central da agência
+Requisito atualizado pelo usuário: usar uma única conta Google da agência no Meu Drive, sem autorização pessoal da equipe. O administrador autoriza `drive.readonly` para os arquivos legados e `drive.file` para gravar apenas em pastas autorizadas. Documentação oficial Google de scopes consultada novamente em 12/10/2026; a autorização Google deve ser refeita e pode exigir habilitar os novos scopes no consentimento.
+
+- [x] Pointer privado de conexão por agência; credenciais criptografadas existentes preservadas.
+- [x] Apenas OWNER/ADMIN ativo com settings.edit pode iniciar/revogar OAuth ou obter sessão Picker.
+- [x] Callback revalida papel ativo; grava token + pointer atomicamente. Nova autorização é revogada se a transação falhar.
+- [x] Equipe usa cliente específico com clients.view/tasks.edit, nunca recebe token central nem acessa lista geral de Drive/Agenda.
+- [x] Pasta raiz obrigatória. Pasta de cliente precisa ser descendente da raiz; ciclos/profundidade excessiva/inacessibilidade falham de forma segura.
+- [x] Upload exige isAppAuthorized do Drive para a pasta do cliente; readonly não vira autorização geral de escrita.
+- [x] Publish/read/respond/file da aprovação validam pasta dentro da raiz atual com token central server-only.
+- [x] Status testa Google e renova token antes de informar conta saudável; mostra reconexão quando scopes faltam, expiração/revogação ou falha.
+- [x] UI de integração inclui pasta raiz e autorização pelo Picker. Membros de produção não precisam conectar Google pessoal.
+- [ ] OAuth real, leitura de arquivo legado e upload real aguardam autorização humana no Google.
+
+Arquivos: migration google_agency_connection gerada pela CLI; googleAgencyConnection.database.test.ts; googleCentralAuthorization.test.ts; google-workspace/index.ts; google-workspace/drive.ts; _shared/googleWorkspace.ts; _shared/providerConfig.ts; connection-config/index.ts; drive-material-approval/index.ts; ProviderCredentialsForm.tsx; GoogleWorkspacePage.tsx; ClientDrivePanel.tsx; googlePicker.ts; googleDrive.test.ts.
+
+### Validação combinada de publicação — 12/10/2026
+
+- 203 testes em 52 arquivos passaram; lint, typecheck via build e build de produção passaram.
+- E2E editorial de geração, revisão e payload salvo passou nos três viewports com backend simulado; não constitui homologação real de OAuth.
+- Migração central Google aplicada como `20261012134754`; Google Workspace v7, connection-config v3 e drive-material-approval v4 ativos. RPCs centrais bloqueados para anon/authenticated e tabela privada com RLS.
+- Conta Google real e consentimento dos escopos ainda dependem da configuração e autorização pelo administrador. CodeRabbit indisponível.

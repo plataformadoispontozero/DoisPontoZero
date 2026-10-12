@@ -35,3 +35,28 @@ Fase 2 (não parte desta primeira evolução): sazonalidade/datas preferidas; ex
 - `docs/ANALISE_MOTOR_EDITORIAL.md`
 - `docs/CODEX_CAMPAIGN_EDITORIAL_ENGINE.md`
 - `docs/stories/campaign-editorial-engine.md`
+
+## Correção incremental — fontes importadas e preparação de temas (12/10/2026)
+
+Status: Validado localmente; publicação pendente.
+
+Problema: clientes com perfil preenchido e sem pilares nativos não tinham temas elegíveis. O comando de geração era rejeitado e a ficha de calendários mostrava somente campanhas nativas, ocultando documentos históricos nessa seção.
+
+- [x] Sugestões com fonte explícita a partir de nicho/posicionamento do cadastro, campos reconhecidos de briefing e focos extraídos da estratégia histórica.
+- [x] Edição e confirmação explícita pela equipe antes de aplicar temas; nenhuma promoção automática a fatos aprovados.
+- [x] Mensagem clara dos campos obrigatórios ausentes (objetivo, público e temas/pilares).
+- [x] Temas/títulos estruturados de calendários históricos participam da checagem de repetição, inclusive registros rejeitados; isolamento por cliente.
+- [x] Calendários históricos visíveis na seção Calendário do cliente com rótulo de histórico e estados originais preservados.
+- [x] Typecheck e 21 testes direcionados aprovados; 9 E2E de perfil → revisão → geração → payload de salvamento, briefing e estratégia aprovados em desktop/tablet/mobile. Lint sem erros (avisos preexistentes e de estado em efeitos) e build aprovados. APIs controladas; não constituem homologação real de RLS/dados de produção.
+- [ ] Push e deploy confirmados por DevOps.
+
+Arquivos desta correção: `src/features/editorial/editorialContext.ts`, `editorialContext.test.ts`, `MonthlyEditorialPage.tsx`, `useCampaignInputs.ts`; `src/features/clients/components/ClientHubModal.tsx`, `ClientLegacyPanel.tsx`; `e2e/editorial-profile.spec.ts`.
+
+Limites: documentos históricos permanecem imutáveis, sem aprovações nativas presumidas. Sem migração de esquema e sem campanha real gravada nesta correção. Textos longos livres não são convertidos automaticamente em fatos/pilares; os blocos intermediários da geração ainda exigem complementação humana.
+
+### Validação combinada de publicação — 12/10/2026
+
+- 203 testes em 52 arquivos passaram; lint, typecheck via build e build de produção passaram.
+- E2E editorial de geração, revisão e payload salvo passou nos três viewports com backend simulado; não constitui homologação real de OAuth.
+- Migração central Google aplicada como `20261012134754`; Google Workspace v7, connection-config v3 e drive-material-approval v4 ativos. RPCs centrais bloqueados para anon/authenticated e tabela privada com RLS.
+- Conta Google real e consentimento dos escopos ainda dependem da configuração e autorização pelo administrador. CodeRabbit indisponível.

@@ -1,3 +1,4 @@
+import { missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
 import { readClientProfile } from "@/features/clients/clientProfile";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -71,6 +72,8 @@ export function MonthlyEditorialPage() {
   const [pieceSizes, setPieceSizes] = useState<
     Record<number, { size: number; seconds: number }>
   >({});
+  const [topicDraft,setTopicDraft]=useState("");
+  const [topicsReviewed,setTopicsReviewed]=useState(false);
   const inputs = useCampaignInputs(agency, client, context.strategyId, id);
   const clients = useQuery({
     queryKey: ["editorial-clients", agency],
@@ -88,6 +91,9 @@ export function MonthlyEditorialPage() {
   function clientContext(clientId:string){const profile=readClientProfile(clients.data?.find(c=>c.id===clientId)?.profile);return {...emptyContext,objective:profile.monthly_objective||'',audience:profile.target_audience||'',tone:profile.tone||'',positioning:profile.positioning||profile.differential||''};}
   useEffect(()=>{if(client&&!id&&!dirty&&clients.data)setContext(clientContext(client));},[client,id,dirty,clients.data]);
   const historicalBriefs=useQuery({queryKey:['editorial-legacy-briefs',agency,client],enabled:!!client,queryFn:async()=>{const r=await supabase!.from('client_legacy_records').select('id,payload,source_created_at').eq('agency_id',agency).eq('client_id',client).eq('source_kind','briefings').order('source_created_at',{ascending:false});if(r.error)throw r.error;return r.data as {id:string;payload:Record<string,unknown>;source_created_at:string|null}[];}});
+  const historicalStrategies=useQuery({queryKey:['editorial-legacy-strategies',agency,client],enabled:!!client,queryFn:async()=>{const r=await supabase!.from('client_legacy_records').select('id,payload,source_created_at').eq('agency_id',agency).eq('client_id',client).eq('source_kind','estrategias_mensais').order('source_created_at',{ascending:false});if(r.error)throw r.error;return r.data as {id:string;payload:Record<string,unknown>}[];}});
+  const topicSuggestions=suggestEditorialTopics(readClientProfile(clients.data?.find(c=>c.id===client)?.profile),historicalBriefs.data||[],historicalStrategies.data||[]);
+  useEffect(()=>{setTopicDraft('');setTopicsReviewed(false);},[client]);
   function applyHistoricalBrief(record:{id:string;payload:Record<string,unknown>}){const text=(key:string)=>typeof record.payload[key]==='string'?(record.payload[key] as string).slice(0,4000):'';setContext(old=>({...old,objective:text('objetivo_principal')||old.objective,audience:text('persona_descricao')||old.audience,tone:text('tom_de_voz')||old.tone,positioning:text('diferenciais')||old.positioning,restrictions:text('palavras_proibidas')||old.restrictions,changeNote:`Dados revisados do briefing histórico ${record.id}`}));setDirty(true);setNotice('Dados do briefing anterior sugeridos. Confira os campos antes de gerar; o histórico original foi preservado.');}
   const briefs = useQuery({
     queryKey: ["editorial-briefs", agency, client],
@@ -296,7 +302,7 @@ export function MonthlyEditorialPage() {
         briefs.isError ||
         details.isError ||
         campaigns.isError ||
-        feedback.isError) && (
+        feedback.isError || historicalBriefs.isError || historicalStrategies.isError) && (
         <p role="alert">
           Não foi possível carregar dados. Nenhum conteúdo de demonstração
           substitui essa falha.
@@ -333,6 +339,15 @@ export function MonthlyEditorialPage() {
               ))}
             </select>
           </label>
+          {client&&<section className="space-y-3 rounded-xl border border-orange-500/25 p-4" aria-label="Preparar temas do calendário">
+            <h2 className="font-semibold">Preparar temas do mês</h2>
+            <p className="text-sm text-zinc-300">O cadastro não define sozinho uma linha editorial. Revise as sugestões de temas antes de usá-las; elas não são fatos ou resultados aprovados.</p>
+            {(historicalBriefs.isFetching||historicalStrategies.isFetching)?<p role="status">Consultando fontes históricas…</p>:null}
+            {topicSuggestions.length>0&&<><ul className="space-y-2 text-sm">{topicSuggestions.map(s=><li key={s.text}>{s.text}<span className="block text-xs text-zinc-400">{s.source}</span></li>)}</ul><Button disabled={locked||historicalBriefs.isFetching||historicalStrategies.isFetching} onClick={()=>{setTopicDraft(topicSuggestions.map(s=>s.text).join('\n'));setTopicsReviewed(false);}}>Preparar sugestões para revisão</Button></>}
+            <label className="block text-sm">Temas sugeridos para revisar<textarea aria-label="Temas sugeridos para revisar" className={control} rows={4} value={topicDraft} disabled={locked} onChange={e=>{setTopicDraft(e.target.value);setTopicsReviewed(false);}}/></label>
+            <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={topicsReviewed} disabled={locked} onChange={e=>setTopicsReviewed(e.target.checked)}/>Revisei os temas e quero usá-los neste rascunho</label>
+            <Button disabled={locked||!topicsReviewed||!topicDraft.trim()} onClick={()=>{setContext(old=>({...old,topics:[...new Set([...(old.topics||[]),...topicDraft.split('\n').map(t=>t.trim()).filter(Boolean)])],changeNote:'Temas sugeridos pelo cadastro/histórico revisados pela equipe'}));setItems([]);setDirty(true);setNotice('Temas revisados aplicados. Confira objetivo, público, restrições e quantidades antes de gerar.');}}>Aplicar temas revisados</Button>
+          </section>}
           {client&&<p className="text-xs text-orange-200">O cadastro sugere objetivo, público, tom e posicionamento. Revise estes dados e complete as lacunas antes de gerar.</p>}
           {!!historicalBriefs.data?.length&&<div className="rounded-lg border border-orange-500/20 p-3 space-y-2"><p className="text-sm">Briefings importados da plataforma anterior</p>{historicalBriefs.data.map(record=><button key={record.id} type="button" disabled={!!id} className="block text-sm text-orange-200 underline disabled:opacity-50" onClick={()=>applyHistoricalBrief(record)}>Usar dados do briefing {record.source_created_at?new Date(record.source_created_at).toLocaleDateString('pt-BR'):''}</button>)}<p className="text-xs text-zinc-300">A aplicação substitui apenas os campos presentes no documento. Revise os dados e complete temas, fatos e restrições.</p></div>}
           <label className="block">
@@ -630,12 +645,15 @@ export function MonthlyEditorialPage() {
               inputs.repertoire.isError ||
               inputs.strategies.isFetching ||
               inputs.strategies.isError ||
+              historicalBriefs.isFetching || historicalStrategies.isFetching || historicalBriefs.isError || historicalStrategies.isError ||
               (!!context.strategyId &&
                 (inputs.pillars.isFetching || inputs.pillars.isError))
             }
             variant="primary"
             onClick={() => {
               try {
+                const missing=missingEditorialInputs(context,inputs.pillars.data||[]);
+                if(missing.length)throw Error(`Antes de gerar, complete: ${missing.join("; ")}. Use a área Preparar temas do mês para revisar sugestões.`);
                 const engineContext = {
                   ...context,
                   engineVersion: ENGINE_VERSION,

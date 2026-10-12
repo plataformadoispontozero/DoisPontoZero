@@ -25,7 +25,7 @@ describe('Google Drive Feature Suite', () => {
   it('renders the Google OAuth panel without a simulated connection or status', async () => {
     render(<DriveConnectionsPage />, { wrapper });
     expect(screen.getByRole('heading', {name:'Google Agenda e Drive'})).toBeInTheDocument();
-    expect(screen.getByRole('button', {name:'Conectar Google Agenda e Drive'})).toBeDisabled();
+    expect(screen.getByRole('button', {name:'Conectar conta central Google da agência'})).toBeDisabled();
   });
 
   it('renders Google Drive file browser with controls', async () => {
