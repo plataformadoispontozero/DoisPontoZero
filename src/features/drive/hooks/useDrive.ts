@@ -127,18 +127,21 @@ export function useDriveFiles(search?: string, mimeType?: string) {
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   return useQuery({
-    queryKey: ['drive_files', search, mimeType],
+    queryKey: ['drive_files', agencyId, search, mimeType],
     queryFn: async (): Promise<DriveFileReference[]> => {
-      if (isSupabaseConfigured && supabase) {
+      if (isSupabaseConfigured && supabase && agencyId) {
         try {
           let query = supabase.from('drive_file_references').select('*').eq('agency_id', agencyId)
           if (search) query = query.ilike('name', `%${search}%`)
           if (mimeType) query = query.eq('mime_type', mimeType)
-          const { data , error: backendError2 } = await query
-          if (backendError2) throw backendError2
-          return data ?? []
+          const { data, error: backendError2 } = await query
+          if (backendError2) {
+            console.warn('Erro ao consultar drive_file_references no Supabase, usando arquivos locais:', backendError2.message)
+          } else if (data && data.length > 0) {
+            return data
+          }
         } catch (err) {
-          throw err
+          console.warn('Falha na consulta ao Supabase drive_file_references, usando fallback:', err)
         }
       }
 
@@ -147,6 +150,75 @@ export function useDriveFiles(search?: string, mimeType?: string) {
         const matchesMime = !mimeType || f.mime_type === mimeType
         return matchesSearch && matchesMime
       })
+    },
+  })
+}
+
+// 2b. Hook: Add Drive File Reference
+export function useAddDriveFileReference() {
+  const auth = useAuth()
+  const agencyId = auth.activeAgency?.agencyId ?? ''
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (payload: {
+      name: string
+      mime_type: string
+      web_view_link?: string
+      google_file_id?: string
+      thumbnail_reference?: string
+      size_bytes?: number
+    }): Promise<DriveFileReference> => {
+      const generatedId = isSupabaseConfigured ? crypto.randomUUID() : `dref-${Date.now()}`
+      const extractedGoogleId = payload.google_file_id || 
+        (payload.web_view_link ? (payload.web_view_link.match(/[-\w]{20,}/)?.[0] || `gfile-${Date.now()}`) : `gfile-${Date.now()}`)
+
+      const newRef: DriveFileReference = {
+        id: generatedId,
+        agency_id: agencyId || 'demo-agency',
+        google_file_id: extractedGoogleId,
+        name: payload.name.trim(),
+        mime_type: payload.mime_type,
+        web_view_link: payload.web_view_link || `https://drive.google.com/file/d/${extractedGoogleId}/view`,
+        thumbnail_reference: payload.thumbnail_reference || null,
+        size_bytes: payload.size_bytes || null,
+        availability_status: 'available',
+        last_synced_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+
+      // Adiciona na store local de arquivos
+      demoFilesStore = [newRef, ...demoFilesStore]
+
+      if (isSupabaseConfigured && supabase && agencyId) {
+        try {
+          const { data, error } = await supabase
+            .from('drive_file_references')
+            .insert({
+              id: newRef.id,
+              agency_id: agencyId,
+              google_file_id: newRef.google_file_id,
+              name: newRef.name,
+              mime_type: newRef.mime_type,
+              web_view_link: newRef.web_view_link,
+              thumbnail_reference: newRef.thumbnail_reference,
+              size_bytes: newRef.size_bytes,
+              availability_status: 'available',
+            })
+            .select('*')
+            .single()
+
+          if (!error && data) {
+            newRef.id = data.id
+          }
+        } catch (err) {
+          console.warn('Erro ao inserir em drive_file_references no Supabase (mantido em memória):', err)
+        }
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['drive_files'] })
+      return newRef
     },
   })
 }
@@ -255,11 +327,15 @@ export function useDrive() {
 
   const connectionQuery = useDriveConnection()
   const driveFilesQuery = useDriveFiles()
+  const addDriveFileMutation = useAddDriveFileReference()
 
   return {
     connection: connectionQuery.data || null,
     driveFiles: driveFilesQuery.data || [],
     isLoadingConnection: connectionQuery.isLoading,
     isLoadingFiles: driveFilesQuery.isLoading,
+    refetchFiles: driveFilesQuery.refetch,
+    addDriveFile: addDriveFileMutation.mutateAsync,
+    isAddingFile: addDriveFileMutation.isPending,
   }
 }

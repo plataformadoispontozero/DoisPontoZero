@@ -3,12 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Eye, Send, FileCode, History, Plus, Trash2, ChevronUp, ChevronDown,
   Globe, Copy, Lock, ExternalLink, RefreshCw, FolderPlus, Image as ImageIcon, Video,
-  CheckCircle, AlertCircle, FileText, Sparkles, Layers, ShieldCheck, Download
+  CheckCircle, AlertCircle, FileText, Sparkles, Layers, ShieldCheck, Download,
+  Search, Link as LinkIcon, HardDrive, Check
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Dialog } from '../../components/ui/Dialog';
+import { toast } from '../../components/ui/Toast';
 import { useSinglePresentation, SECTION_TYPES } from './hooks/usePresentations';
 import { useDrive } from '../drive/hooks/useDrive';
 import { PresentationSectionType, PresentationSection, PresentationAsset } from '../../types/presentations';
@@ -37,7 +39,7 @@ export const PresentationWorkspacePage: React.FC = () => {
     isCreatingLink
   } = useSinglePresentation(presentationId);
 
-  const { driveFiles } = useDrive();
+  const { driveFiles, isLoadingFiles, addDriveFile, isAddingFile, connection } = useDrive();
 
   // Tab State: 'editor' | 'preview' | 'publish' | 'versions'
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'publish' | 'versions'>('editor');
@@ -55,7 +57,12 @@ export const PresentationWorkspacePage: React.FC = () => {
 
   // Add Drive File dialog
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
+  const [driveImportMode, setDriveImportMode] = useState<'browse' | 'link'>('browse');
   const [selectedDriveFileId, setSelectedDriveFileId] = useState('');
+  const [driveSearch, setDriveSearch] = useState('');
+  const [newAssetName, setNewAssetName] = useState('');
+  const [newAssetUrl, setNewAssetUrl] = useState('');
+  const [newAssetMime, setNewAssetMime] = useState('application/pdf');
 
   // Public link notification
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
@@ -98,17 +105,56 @@ export const PresentationWorkspacePage: React.FC = () => {
   };
 
   const handleAddAssetSubmit = async () => {
-    if (!selectedSection || !selectedDriveFileId) return;
-    const driveFile = driveFiles.find((f: DriveFileReference) => f.id === selectedDriveFileId);
-    await addAsset({
-      section_id: selectedSection.id,
-      file_reference_id: selectedDriveFileId,
-      title: driveFile?.name || 'Arquivo do Drive',
-      description: driveFile?.mime_type || '',
-      position: activeSectionAssets.length
-    });
-    setSelectedDriveFileId('');
-    setIsAddAssetOpen(false);
+    if (!selectedSection) return;
+
+    if (driveImportMode === 'browse') {
+      if (!selectedDriveFileId) {
+        toast.error('Selecione um arquivo da lista para vincular.');
+        return;
+      }
+      const driveFile = driveFiles.find((f: DriveFileReference) => f.id === selectedDriveFileId);
+      try {
+        await addAsset({
+          section_id: selectedSection.id,
+          file_reference_id: selectedDriveFileId,
+          title: driveFile?.name || 'Arquivo do Drive',
+          description: driveFile?.mime_type || '',
+          position: activeSectionAssets.length
+        });
+        toast.success('Material do Google Drive vinculado com sucesso!');
+        setSelectedDriveFileId('');
+        setIsAddAssetOpen(false);
+      } catch (err: any) {
+        toast.error('Erro ao vincular material: ' + (err?.message || 'Falha inesperada'));
+      }
+    } else {
+      // Modo 'link' direto
+      if (!newAssetName.trim()) {
+        toast.error('Informe o nome do material.');
+        return;
+      }
+      try {
+        const createdRef = await addDriveFile({
+          name: newAssetName.trim(),
+          mime_type: newAssetMime,
+          web_view_link: newAssetUrl.trim() || undefined,
+        });
+        await addAsset({
+          section_id: selectedSection.id,
+          file_reference_id: createdRef.id,
+          title: createdRef.name,
+          description: createdRef.mime_type,
+          position: activeSectionAssets.length
+        });
+        toast.success('Material do Google Drive adicionado e vinculado!');
+        setNewAssetName('');
+        setNewAssetUrl('');
+        setSelectedDriveFileId('');
+        setIsAddAssetOpen(false);
+      } catch (err: any) {
+        toast.error('Erro ao adicionar material: ' + (err?.message || 'Falha inesperada'));
+      }
+    }
   };
 
   const handleMoveSection = async (index: number, direction: 'up' | 'down') => {
@@ -656,31 +702,226 @@ export const PresentationWorkspacePage: React.FC = () => {
 
       {/* DIALOG: ADD ASSET FROM DRIVE */}
       <Dialog open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen}>
-        <div className="p-6 space-y-4">
-          <h3 className="text-lg font-bold text-content-primary">Importar Material do Google Drive</h3>
-          <p className="text-xs text-content-secondary">
-            Selecione um arquivo sincronizado a partir das suas contas e pastas autorizadas.
-          </p>
-
-          <div>
-            <label className="block text-xs font-semibold text-content-secondary mb-1">Arquivo Sincronizado</label>
-            <select
-              value={selectedDriveFileId}
-              onChange={e => setSelectedDriveFileId(e.target.value)}
-              className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
-            >
-              <option value="">Selecione um arquivo do Drive...</option>
-              {driveFiles.map((file: DriveFileReference) => (
-                <option key={file.id} value={file.id}>
-                  {file.name} ({file.mime_type})
-                </option>
-              ))}
-            </select>
+        <div className="p-6 space-y-5 max-w-xl">
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-content-primary flex items-center">
+                <HardDrive className="w-5 h-5 mr-2 text-brand-primary" />
+                Importar Material do Google Drive
+              </h3>
+              <p className="text-xs text-content-secondary mt-1">
+                Selecione um arquivo já indexado da agência ou vincule diretamente qualquer arquivo ou pasta do Google Drive.
+              </p>
+            </div>
           </div>
 
-          <div className="flex justify-end space-x-2 pt-2">
-            <Button variant="ghost" onClick={() => setIsAddAssetOpen(false)}>Cancelar</Button>
-            <Button onClick={handleAddAssetSubmit} disabled={!selectedDriveFileId}>Vincular Arquivo</Button>
+          {/* Mode Selector Tabs */}
+          <div className="flex items-center space-x-2 border-b border-surface-border pb-3">
+            <button
+              type="button"
+              onClick={() => setDriveImportMode('browse')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                driveImportMode === 'browse'
+                  ? 'bg-brand-primary text-white shadow-sm'
+                  : 'bg-surface-subtle text-content-secondary hover:text-content-primary'
+              }`}
+            >
+              Arquivos Sincronizados ({driveFiles.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setDriveImportMode('link')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
+                driveImportMode === 'link'
+                  ? 'bg-brand-primary text-white shadow-sm'
+                  : 'bg-surface-subtle text-content-secondary hover:text-content-primary'
+              }`}
+            >
+              <LinkIcon className="w-3.5 h-3.5 mr-1" />
+              Vincular por Link do Drive
+            </button>
+          </div>
+
+          {/* TAB 1: BROWSE FILES */}
+          {driveImportMode === 'browse' && (
+            <div className="space-y-3">
+              <div className="relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+                <input
+                  type="text"
+                  placeholder="Filtrar arquivos por nome..."
+                  value={driveSearch}
+                  onChange={e => setDriveSearch(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
+                />
+              </div>
+
+              {isLoadingFiles ? (
+                <div className="p-8 text-center text-xs text-content-secondary">
+                  <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-2 text-brand-primary" />
+                  Carregando arquivos do Google Drive...
+                </div>
+              ) : (() => {
+                const filtered = driveFiles.filter((f: DriveFileReference) =>
+                  !driveSearch || f.name.toLowerCase().includes(driveSearch.toLowerCase())
+                );
+
+                if (filtered.length === 0) {
+                  return (
+                    <div className="p-6 border border-dashed border-surface-border rounded-lg text-center space-y-2">
+                      <p className="text-xs text-content-tertiary">
+                        {driveFiles.length === 0
+                          ? 'Nenhum arquivo indexado no momento.'
+                          : 'Nenhum arquivo encontrado com este termo.'}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setDriveImportMode('link')}
+                        className="text-xs text-brand-primary hover:underline font-semibold"
+                      >
+                        Vincular um arquivo colando o link do Google Drive →
+                      </button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="max-h-56 overflow-y-auto space-y-2 pr-1">
+                    {filtered.map((file: DriveFileReference) => {
+                      const isSelected = selectedDriveFileId === file.id;
+                      const isVideo = file.mime_type.includes('video');
+                      const isImage = file.mime_type.includes('image');
+
+                      return (
+                        <div
+                          key={file.id}
+                          onClick={() => setSelectedDriveFileId(file.id)}
+                          className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center justify-between ${
+                            isSelected
+                              ? 'border-brand-primary bg-brand-primary/10 shadow-sm'
+                              : 'border-surface-border bg-surface-subtle hover:border-surface-border/80 hover:bg-surface-subtle/80'
+                          }`}
+                        >
+                          <div className="flex items-center space-x-3 min-w-0">
+                            <div className="p-2 rounded bg-surface-card border border-surface-border shrink-0">
+                              {isVideo ? (
+                                <Video className="w-4 h-4 text-purple-400" />
+                              ) : isImage ? (
+                                <ImageIcon className="w-4 h-4 text-emerald-400" />
+                              ) : (
+                                <FileText className="w-4 h-4 text-blue-400" />
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-xs font-semibold text-content-primary truncate">{file.name}</p>
+                              <p className="text-[10px] text-content-tertiary">
+                                {file.mime_type} {file.size_bytes ? `• ${(file.size_bytes / (1024 * 1024)).toFixed(1)} MB` : ''}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center space-x-2 shrink-0">
+                            {file.web_view_link && (
+                              <a
+                                href={file.web_view_link}
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={e => e.stopPropagation()}
+                                className="p-1 text-content-tertiary hover:text-content-primary rounded hover:bg-surface-card"
+                                title="Visualizar original no Drive"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                              isSelected ? 'border-brand-primary bg-brand-primary text-white' : 'border-surface-border'
+                            }`}>
+                              {isSelected && <Check className="w-2.5 h-2.5" />}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* TAB 2: LINK DIRECTLY */}
+          {driveImportMode === 'link' && (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-content-secondary mb-1">
+                  Título de Identificação do Material *
+                </label>
+                <input
+                  type="text"
+                  value={newAssetName}
+                  onChange={e => setNewAssetName(e.target.value)}
+                  placeholder="Ex: Entrega 01 - Carrossel de Lançamento"
+                  className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-content-secondary mb-1">
+                  Link / URL do Google Drive
+                </label>
+                <input
+                  type="text"
+                  value={newAssetUrl}
+                  onChange={e => setNewAssetUrl(e.target.value)}
+                  placeholder="https://drive.google.com/file/d/..."
+                  className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
+                />
+                <p className="text-[10px] text-content-tertiary mt-1">
+                  Insira o link de compartilhamento ou visualização do arquivo ou pasta no Drive.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-content-secondary mb-1">Formato do Material</label>
+                <select
+                  value={newAssetMime}
+                  onChange={e => setNewAssetMime(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
+                >
+                  <option value="application/pdf">Documento / Apresentação (PDF)</option>
+                  <option value="video/mp4">Vídeo de Entrega (MP4)</option>
+                  <option value="image/png">Imagem / Criativo Estático (PNG / JPG)</option>
+                  <option value="application/vnd.google-apps.presentation">Google Slides</option>
+                  <option value="application/vnd.google-apps.folder">Pasta Compartilhada do Drive</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* Modal Footer with Settings Link & Actions */}
+          <div className="pt-3 border-t border-surface-border flex items-center justify-between">
+            <a
+              href="/drive/connections"
+              target="_blank"
+              rel="noreferrer"
+              className="text-[11px] text-brand-primary hover:underline flex items-center"
+            >
+              <HardDrive className="w-3 h-3 mr-1" />
+              Configurar Conexão do Google Workspace
+            </a>
+
+            <div className="flex space-x-2">
+              <Button variant="ghost" size="sm" onClick={() => setIsAddAssetOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleAddAssetSubmit}
+                disabled={driveImportMode === 'browse' ? !selectedDriveFileId : !newAssetName.trim()}
+                loading={isAddingFile}
+              >
+                Vincular à Seção
+              </Button>
+            </div>
           </div>
         </div>
       </Dialog>

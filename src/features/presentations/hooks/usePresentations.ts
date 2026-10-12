@@ -557,7 +557,7 @@ export function useUpdatePresentation() {
             agency_id: agencyId,
             presentation_id: payload.id,
             section_id: asset.section_id || null,
-            file_reference_id: asset.file_reference_id || null,
+            file_reference_id: (asset.file_reference_id && /^[0-9a-f-]{36}$/i.test(asset.file_reference_id)) ? asset.file_reference_id : null,
             title: asset.title,
             description: asset.description || null,
             position: asset.position,

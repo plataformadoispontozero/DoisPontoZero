@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { X, ExternalLink, Pencil, CalendarDays, FileText, ArrowRight } from 'lucide-react';
+import { X, ExternalLink, Pencil, CalendarDays, FileText, ArrowRight, MessageCircle, User } from 'lucide-react';
 import { useAgencyId, usePermission } from '@/features/auth/AuthProvider';
 import { supabase } from '@/lib/supabase/client';
 import { toast } from '@/components/ui/Toast';
@@ -32,6 +32,23 @@ export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}
  const campaigns=useQuery({queryKey:['client-profile-campaigns',agency,client.id],enabled:!!supabase&&canStrategy,queryFn:async()=>{
   const {data,error}=await supabase!.from('monthly_editorial_campaigns').select('id,month,status').eq('agency_id',agency).eq('client_id',client.id).order('created_at',{ascending:false}).limit(100);
   if(error)throw error;return data as {id:string;month:string;status:string}[];
+ }});
+ const contacts=useQuery({queryKey:['client-briefing-contacts',agency,client.id],enabled:!!supabase&&Boolean(agency&&client.id),queryFn:async()=>{
+  const {data,error}=await supabase!.from('briefings').select('id,answers:briefing_answers(question:briefing_questions(question_key),answer_value)').eq('agency_id',agency).eq('client_id',client.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
+  if(error||!data)return null;
+  const map:Record<string,string>={};
+  for(const ans of (data.answers as {question?:{question_key?:string}|null;answer_value:unknown}[]||[])){
+   const key=ans.question?.question_key;
+   if(key&&ans.answer_value!==null&&ans.answer_value!==undefined){
+    map[key]=typeof ans.answer_value==='string'?ans.answer_value:JSON.stringify(ans.answer_value);
+   }
+  }
+  return {
+   responsavel:map['responsavel_cliente']||null,
+   whatsapp:map['contato_whatsapp']||null,
+   horario:map['melhor_horario_contato']||null,
+   reuniao:map['dia_reuniao_mensal']||null,
+  };
  }});
  useEffect(()=>{
   const element=dialog.current;if(!element)return;
