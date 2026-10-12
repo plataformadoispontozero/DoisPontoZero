@@ -1,6 +1,6 @@
 # Evolução do motor editorial de campanhas
 
-Status: Implementado e validado; backend aplicado. Interface aguarda push/deploy.
+Status: Implementado, validado e publicado. Backend aplicado; push e deploy confirmados.
 
 Fonte: especificação enviada pelo usuário em 12/10/2026. Escopo: Fase 1 incremental, sem IA, preservando aprovação e produção. Padrões confirmados: distribuição automática ajustável; prévia; sete slides; reels 30s; repertório editável apenas por OWNER/ADMIN/MANAGER; repetição bloqueada.
 
@@ -16,7 +16,7 @@ Fase 2 (não parte desta primeira evolução): sazonalidade/datas preferidas; ex
 
 ## Evidências
 
-131 testes unitários; 72 regressões de interface (desktop/tablet/mobile); testes finais de geração/aprovação e integração estratégia/pilares; SQL real em rollback antes/depois da migration; typecheck, lint sem erros e build. Ver `docs/CODEX_CAMPAIGN_EDITORIAL_ENGINE.md` para limites, avisos e implantação. Não foi publicado frontend nesta rodada.
+131 testes unitários; 72 regressões de interface (desktop/tablet/mobile); testes finais de geração/aprovação e integração estratégia/pilares; SQL real em rollback antes/depois da migration; typecheck, lint sem erros e build. Ver `docs/CODEX_CAMPAIGN_EDITORIAL_ENGINE.md` para limites, avisos e implantação. Código publicado: `e487494`; Worker `0930289d-8b18-4bd6-82e6-4b54ecc7f4a1`.
 
 ## File list
 

@@ -1,6 +1,6 @@
 # Motor editorial de campanhas — primeira evolução
 
-Implementado em 12/10/2026 a partir da especificação enviada. O motor usa regras determinísticas, sem IA. Preserva calendário mensal, revisão, link público de aprovação e produção idempotente. A nova interface está no código local; ainda não foi enviada ao GitHub/Cloudflare nesta rodada.
+Implementado em 12/10/2026 a partir da especificação enviada. O motor usa regras determinísticas, sem IA. Preserva calendário mensal, revisão, link público de aprovação e produção idempotente. A nova interface foi enviada ao GitHub e publicada no Cloudflare nesta rodada.
 
 ## Operação da social media
 
@@ -38,11 +38,11 @@ Ainda pendentes da especificação ampliada: editor livre de blocos/CTAs, distri
 ## Validação e implantação
 
 - 131 testes unitários em 30 arquivos: quotas, mês, estruturas, duração, histórico/descartadas, client isolation, lacunas, restrições, repertório, pesos, esgotamento, concisão e lote máximo.
-- 72 cenários de regressão de interface em desktop/tablet/mobile; geração e aprovação repetidas após as alterações finais. Testes de interface usam API controlada e não substituem RLS real.
+- 72 cenários de regressão de interface em desktop/tablet/mobile; 6 execuções finais de geração/aprovação e 3 cenários adicionais de integração com estratégia/pilares passaram. Testes de interface usam API controlada e não substituem RLS real.
 - Testes SQL reais, em transações revertidas: versões, repetição entre campanhas, duplicidade interna, outro cliente, termo proibido, remoção de ficha, mês imutável, briefing desatualizado, estratégia/pilar de outro cliente, lacunas antes do compartilhamento, snapshot público, feedback, revogação/aprovação, produção idempotente e autorização de repertório. Nenhum fixture permaneceu no projeto.
 - Typecheck e build de produção passaram. Lint sem erros; permanecem avisos existentes, incluindo o efeito de importação do briefing.
 - Migration aplicada em `pvkhlobsiszrjtblpruu`: `20261012033627_campaign_editorial_engine.sql`. Verificação posterior confirmou ausência de permissão anônima nas novas RPCs e de escrita direta no histórico.
 - Advisors não adicionaram avisos de caminho mutável/RLS. As duas RPCs autenticadas aparecem no aviso genérico de SECURITY DEFINER: uso intencional com autorização explícita. Avisos anteriores do projeto continuam fora desta alteração.
-- Push e deploy da nova interface ainda não realizados nesta rodada.
+- Push confirmado: `e487494ac7581a52a53e64f275f7bc6410b22119`, branch `codex/master-audit-15-1`. Worker publicado: `0930289d-8b18-4bd6-82e6-4b54ecc7f4a1`; bundle `index-DPnTtuTf.js`. Domínio verificado em desktop/mobile: início/login HTTP 200, editorial exige sessão, sem overflow. Fluxos autenticados foram validados com API controlada e SQL real; não houve homologação manual autenticada no domínio com uma campanha real.
 
 Teste SQL reproduzível: `supabase/tests/campaign_editorial_engine.sql`. Executar como administrador de teste, dentro de `BEGIN`/`ROLLBACK`, definindo `test.editorial_agency_id` e `test.editorial_owner_id` com `set_config(...,true)` antes. Nunca confirmar os fixtures. Os testes pressupõem repertório inicial sem versões persistidas e um proprietário ativo autorizado; usar ambiente de homologação para execuções futuras.

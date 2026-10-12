@@ -1,5 +1,7 @@
 # Análise do motor editorial — Dois.Zero
 
+Registro histórico do estado anterior à evolução do motor. O funcionamento atualizado está em [Motor editorial de campanhas](CODEX_CAMPAIGN_EDITORIAL_ENGINE.md). As lacunas abaixo não representam, por si só, o estado atual.
+
 Extraído da documentação e do código do sistema em 12/10/2026. Esta análise não consulta calendários privados de clientes nem altera dados ou motores.
 
 ## Fontes internas
