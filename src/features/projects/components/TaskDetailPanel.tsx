@@ -19,6 +19,7 @@ import {
   Send,
   AlertCircle,
 } from 'lucide-react'
+import {DemandProductionFiles} from '@/features/integrations/DemandProductionFiles'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { Sheet, SheetHeader, SheetTitle, SheetContent } from '@/components/ui/Sheet'
 import { Button } from '@/components/ui/Button'
@@ -594,7 +595,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                 </TabsTrigger>
                 <TabsTrigger value="attachments" className="text-xs gap-1">
                   <Paperclip className="w-3.5 h-3.5" />
-                  <span>Anexos ({attachments.length})</span>
+                  <span>Arquivos ({attachments.length})</span>
                 </TabsTrigger>
                 <TabsTrigger value="activity" className="text-xs gap-1">
                   <Activity className="w-3.5 h-3.5" />
@@ -754,18 +755,10 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
               {/* Attachments Tab */}
               <TabsContent value="attachments" className="space-y-3 pt-3">
-                <div className="p-6 border-2 border-dashed border-[#30303B] rounded-xl text-center space-y-2">
-                  <Paperclip className="w-6 h-6 text-[#98989F] mx-auto" />
-                  <p className="text-xs text-[#B8B8C0]">
-                    Arraste arquivos ou clique para fazer upload
-                  </p>
-                  <p className="text-[11px] text-[#98989F]">
-                    Imagens, PDFs, vídeos ou briefs criativos até 50MB.
-                  </p>
-                </div>
+                {isSupabaseConfigured && <DemandProductionFiles key={`${agencyId}:${taskId}`} taskId={taskId}/>}
 
                 <div className="space-y-2">
-                  {attachments.map((file) => (
+                  {attachments.filter(file => !file.storage_path?.startsWith('drive:')).map((file) => (
                     <div
                       key={file.id}
                       className="flex items-center justify-between p-2.5 bg-[#14141A] border border-[#30303B] rounded-xl text-xs"

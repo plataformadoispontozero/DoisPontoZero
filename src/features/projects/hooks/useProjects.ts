@@ -102,6 +102,7 @@ async function fetchProjectBoard(projectId: string, agencyId: string): Promise<P
         id, user_id, assigned_at,
         profile:profiles(id, full_name, avatar_url)
       ),
+      attachment_counts:task_attachments(count),
       checklists:task_checklists(
         id, title, position,
         items:task_checklist_items(id, title, is_completed, position)
@@ -116,7 +117,7 @@ async function fetchProjectBoard(projectId: string, agencyId: string): Promise<P
 
   const cols = (columns ?? []).map((col) => ({
     ...col,
-    tasks: (tasks ?? []).filter((t: { column_id: string }) => t.column_id === col.id),
+    tasks: (tasks ?? []).filter((t: { column_id: string }) => t.column_id === col.id).map(t=>({...t,attachments_count:t.attachment_counts?.[0]?.count||0})),
   }))
 
   return { ...board, columns: cols } as unknown as ProjectBoard

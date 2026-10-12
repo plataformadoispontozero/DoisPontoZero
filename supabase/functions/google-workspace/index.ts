@@ -2,6 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.117.3'
 import { providerConfiguration, type ProviderConfiguration } from '../_shared/providerConfig.ts'
 import { folderIdFromUrl, validateDriveUpload, isGoogleUploadUrl, isFolderDescendant } from './drive.ts'
 import {discoverClientDriveDocuments,readClientDriveDocument,DriveDocumentUnavailableError} from './documents.ts'
+import {handleTaskDrive} from './taskDrive.ts'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2.117.3/cors'
 const env=(key:string)=>Deno.env.get(key)||''
 const origin=env('GOOGLE_WORKSPACE_APP_ORIGIN')||'https://doispontozero.renatodesigner.com.br'
@@ -56,14 +57,17 @@ Deno.serve(async(req:Request)=>{
   const raw=await req.text();if(raw.length>4096)return reply({error:'Solicitação inválida.'},400)
   const body=JSON.parse(raw),agency=body.agencyId
   if(typeof agency!=='string'||!/^[0-9a-f-]{36}$/i.test(agency))return reply({error:'Agência inválida.'},400)
+  const taskAction=typeof body.action==='string'&&body.action.startsWith('task-drive-')
+  let taskContext:Record<string,unknown>|null=null
+  if(taskAction){const result=await caller.rpc('task_drive_context',{p_agency:agency,p_task:body.taskId,p_write:!['task-drive-list','task-drive-preview'].includes(body.action)});if(result.error||!result.data)return reply({error:'Acesso à demanda atribuída e ao cliente necessário.'},403);taskContext=result.data}
   const documentAction=['client-drive-documents','client-drive-document-read'].includes(body.action)
-  const productionAction=['client-drive-documents','client-drive-document-read','client-drive-list','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
+  const productionAction=taskAction||['client-drive-documents','client-drive-document-read','client-drive-list','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
   const can=async(permission:string)=>{const r=await caller.rpc('has_agency_permission',{p_agency_id:agency,p_permission_key:permission});return !r.error&&r.data===true}
   const adminAccess=await caller.rpc('google_workspace_permission',{p_agency:agency});const centralAdmin=!adminAccess.error&&adminAccess.data===true
   if(body.action==='client-picker-session'&&!centralAdmin)return reply({error:'Somente administrador pode autorizar a pasta no Google central da agência.'},403)
-  if(productionAction){
+  if(productionAction&&!taskAction){
    if(!await can('clients.view')||(documentAction?!await can('briefings.view'):(body.action!=='client-drive-list'&&!await can('tasks.edit'))))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
-  }else if(body.action==='status'){
+  }else if(taskAction){ /* Business permissions were checked by task_drive_context. */ }else if(body.action==='status'){
    if(!centralAdmin&&!await can('clients.view'))return reply({error:'Permissão necessária.'},403)
   }else if(!centralAdmin)return reply({error:'Somente administrador pode configurar a conexão central da agência.'},403)
   requestConfig=await providerConfiguration(admin,agency,'google')
@@ -99,8 +103,9 @@ Deno.serve(async(req:Request)=>{
   if(body.action==='root-picker-session'){
    const folder=folderIdFromUrl(requestConfig.rootFolderUrl);if(!folder)return reply({error:'Cadastre uma pasta raiz nas configurações Google da agência.'},409)
    if(!requestConfig.apiKey||!requestConfig.projectNumber)return reply({error:'Configure a API Key pública do Google Picker e o número do projeto.'},409)
-   return reply({accessToken:token.access_token,apiKey:requestConfig.apiKey,appId:requestConfig.projectNumber,folderId:folder})
+   return reply({accessToken:token.access_token,apiKey:requestConfig.apiKey,appId:requestConfig.projectNumber,folderId:folder,rootId:clientFolder,folder:{id:metadata.id,name:metadata.name,parentId:metadata.parents?.[0]||null,canUpload:metadata.isAppAuthorized===true&&metadata.capabilities?.canAddChildren===true,isAppAuthorized:metadata.isAppAuthorized===true}})
   }
+  if(taskAction&&taskContext)return handleTaskDrive({body,context:taskContext as never,admin,accessToken:token.access_token,configuration:requestConfig,centralAdmin,userId:user.id,headers})
   if(productionAction){
    if(typeof body.clientId!=='string'||!/^[0-9a-f-]{36}$/i.test(body.clientId))return reply({error:'Cliente inválido.'},400)
    // The authenticated client applies tenant RLS; never accept an arbitrary folder ID from the browser.
@@ -119,19 +124,25 @@ Deno.serve(async(req:Request)=>{
     if(saved.error||!saved.data){await fetch(`https://www.googleapis.com/drive/v3/files/${folderData.id}`,{method:'DELETE',headers:{Authorization:`Bearer ${token.access_token}`}});return reply({error:'Não foi possível vincular a pasta ao cliente.'},409)}
     return reply({folderId:folderData.id,driveUrl})
    }
-   const folder=folderIdFromUrl(client.data.profile?.drive_url)
+   const clientFolder=folderIdFromUrl(client.data.profile?.drive_url)
+   let folder=clientFolder
    if(!folder)return reply({error:'Cadastre o link da pasta do Drive no perfil deste cliente.'},409)
    const root=folderIdFromUrl(requestConfig.rootFolderUrl)
    if(!root)return reply({error:'O administrador precisa configurar a pasta raiz da agência antes de acessar os materiais dos clientes.'},409)
    const withinRoot=await isFolderDescendant(folder,root,async(id)=>{const r=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=parents,trashed&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${token.access_token}`}});if(!r.ok)throw Error('Pasta não disponível.');const m=await r.json();return m.trashed?[]:(m.parents||[])})
    if(!withinRoot)return reply({error:'A pasta cadastrada para este cliente não está dentro da pasta raiz da agência. Solicite a revisão do cadastro ao administrador.'},403)
+   if(body.folderId!==undefined){
+    if(typeof body.folderId!=='string'||!/^[A-Za-z0-9_-]{10,200}$/.test(body.folderId))return reply({error:'Pasta inválida.'},400)
+    if(body.folderId!==clientFolder&&!await isFolderDescendant(body.folderId,clientFolder!,async(id)=>{const r=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=parents,mimeType,trashed&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${token.access_token}`}});if(!r.ok)return [];const m=await r.json();return m.trashed||m.mimeType==='application/vnd.google-apps.shortcut'?[]:(m.parents||[])}))return reply({error:'Esta pasta não pertence ao cliente.'},403)
+    folder=body.folderId
+   }
    if(body.action==='client-picker-session'){
     if(!requestConfig.apiKey||!requestConfig.projectNumber)return reply({error:'Configure a chave pública do Google Picker e o número do projeto em Integrações → Google.'},409)
     // Google Picker requires this user's drive.file access token. Browser keeps it only in memory for this picker session.
     return reply({accessToken:token.access_token,apiKey:requestConfig.apiKey,appId:requestConfig.projectNumber,folderId:folder})
    }
    const googleHeaders={Authorization:`Bearer ${token.access_token}`}
-   const check=await fetch(`https://www.googleapis.com/drive/v3/files/${folder}?fields=id,mimeType,trashed,isAppAuthorized,capabilities(canAddChildren)&supportsAllDrives=true`,{headers:googleHeaders})
+   const check=await fetch(`https://www.googleapis.com/drive/v3/files/${folder}?fields=id,name,parents,mimeType,trashed,isAppAuthorized,capabilities(canAddChildren)&supportsAllDrives=true`,{headers:googleHeaders})
    if(!check.ok)return reply({error:'Esta pasta não está autorizada para o aplicativo Google ou para sua conta. O link da pasta sozinho não concede acesso. Use Autorizar pasta existente para selecionar a pasta cadastrada, ou vincule uma pasta criada pelo aplicativo.'},403)
    const metadata=await check.json()
    if(metadata.mimeType!=='application/vnd.google-apps.folder'||metadata.trashed)return reply({error:'A pasta do cliente não está disponível.'},409)
@@ -168,7 +179,7 @@ Deno.serve(async(req:Request)=>{
    const params=new URLSearchParams({pageSize:'100',fields:'nextPageToken,files(id,name,mimeType,webViewLink,modifiedTime,size)',q:`'${folder}' in parents and trashed=false`,orderBy:'modifiedTime desc',supportsAllDrives:'true',includeItemsFromAllDrives:'true',...(page?{pageToken:page}:{})})
    const result=await fetch(`https://www.googleapis.com/drive/v3/files?${params}`,{headers:googleHeaders})
    if(!result.ok)return reply({error:'Não foi possível consultar a pasta do cliente.'},502)
-   const data=await result.json();return reply({files:data.files||[],nextPageToken:data.nextPageToken||null,folderId:folder})
+   const data=await result.json();return reply({files:data.files||[],nextPageToken:data.nextPageToken||null,folderId:folder,rootId:clientFolder,folder:{id:metadata.id,name:metadata.name,parentId:metadata.parents?.[0]||null,canUpload:metadata.isAppAuthorized===true&&metadata.capabilities?.canAddChildren===true,isAppAuthorized:metadata.isAppAuthorized===true}})
   }
   let target=''
   if(body.action==='drive-list')target='https://www.googleapis.com/drive/v3/files?pageSize=100&fields=files(id,name,mimeType,webViewLink,modifiedTime)&q=trashed%3Dfalse'

@@ -16,7 +16,7 @@ async function productionHandler(){
  return {handler:handler!,adminRpc,providerConfiguration};
 }
 describe('Central Google production authorization',()=>{
- it.each(['start','disconnect','drive-list','calendar-list','root-picker-session','client-picker-session'])('does not expose central tokens or full account access through %s to production members',async(action)=>{
+ it.each(['start','disconnect','drive-list','calendar-list','root-picker-session','client-picker-session','task-drive-picker-session','task-drive-upload-start','task-drive-preview','task-drive-list'])('does not expose central tokens or full account access through %s to production members',async(action)=>{
   const {handler,adminRpc,providerConfiguration}=await productionHandler();
   const response=await handler(new Request('https://backend.example/google-workspace',{method:'POST',headers:{Authorization:'Bearer user-jwt',Origin:'https://doispontozero.renatodesigner.com.br','Content-Type':'application/json'},body:JSON.stringify({agencyId:agency,clientId:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',action})}));
   expect(response.status).toBe(403);const data=await response.json();expect(data.accessToken).toBeUndefined();expect(data.refresh_token).toBeUndefined();expect(data.url).toBeUndefined();expect(adminRpc).not.toHaveBeenCalled();expect(providerConfiguration).not.toHaveBeenCalled();

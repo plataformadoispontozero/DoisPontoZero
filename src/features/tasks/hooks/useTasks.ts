@@ -78,7 +78,8 @@ async function fetchTasks(filters: TaskFilters, agencyId: string): Promise<Task[
         profile:profiles(id, full_name, avatar_url)
       ),
       column:board_columns(id, name, color, category),
-      project:projects(id, name)
+      project:projects(id, name),
+      attachment_counts:task_attachments(count)
     `)
     .is('archived_at', null)
     .is('parent_task_id', null)
@@ -94,7 +95,7 @@ async function fetchTasks(filters: TaskFilters, agencyId: string): Promise<Task[
 
   const { data, error } = await query
   if (error) throw error
-  return (data as unknown as Task[]) ?? []
+  return ((data ?? []) as unknown as (Task & {attachment_counts?:{count:number}[]})[]).map(t=>({...t,attachments_count:t.attachment_counts?.[0]?.count||0}))
 }
 
 // -------------------------
