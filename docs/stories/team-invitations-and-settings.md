@@ -23,3 +23,27 @@ Convite homologado com contas temporárias: novo usuário, reemissão, senha, ac
 Validação: 113 testes unitários; 66 testes Playwright da agência em três viewports; typecheck e lint aprovados (avisos preexistentes). Evidências e lista de arquivos em `docs/CODEX_NAVIGATION_RESTRUCTURE.md`.
 
 Regressão do site público: 21 testes aprovados. Build final aprovado e diff sem erros de whitespace.
+
+## Central de notificações em Configurações — 2026-10-12
+
+Status: Ready for Review. Solicitação do usuário: preferências acessíveis em Configurações e relatório de notificações.
+
+- [x] Central disponível em /settings/notifications, com histórico do próprio destinatário na agência ativa.
+- [x] Filtros por leitura e tipo, contagens calculadas somente dos registros recebidos.
+- [x] Erros de consulta e de atualização visíveis; preferências de som existentes mantidas.
+- [x] Solicitações de cadastro encaminham o administrador à gestão de equipe.
+
+Arquivos: src/features/notifications/NotificationsPage.tsx; src/features/notifications/notificationHistory.ts; src/features/notifications/notificationHistory.test.ts; src/features/settings/components/SettingsLayout.tsx.
+
+Validação da central: typecheck aprovado; 3 testes direcionados aprovados; lint sem erros, com avisos preexistentes. Rota final e verificação global ficam na integração da story.
+
+## Cadastro da equipe com aprovação — 2026-10-12
+- [x] Formulário público solicita nome, e-mail, senha e profissão; não concede vínculo ativo.
+- [x] Administrador/gestor confere identidade e atribui papel protegido antes de ativar.
+- [x] Solicitação gera notificação privada aos revisores autorizados.
+- [ ] Testes de isolamento, permissões, validação e implantação concluídos.
+Files: src/features/team/TeamRegistrationPage.tsx; src/features/team/RegistrationRequestsPanel.tsx; src/features/auth/AuthPage.tsx; src/app/router/index.tsx; src/features/settings/TeamManagementPage.tsx; backend team-registration e migration associada.
+
+Migration aplicada: 20261012084523_team_registration_review.sql. RLS confirmado, APIs privilegiadas service_role somente, confirmação global preservada. Arquivos adicionais: supabase/config.toml; src/types/notifications.ts; src/features/team/teamProfessions.ts; src/features/team/TeamRegistrationPage.test.tsx; src/features/team/RegistrationRequestsPanel.test.tsx; src/features/team/team-registration.database.test.ts.
+
+Validação isolada do cadastro e central: lint sem erros (avisos existentes), typecheck, 167 testes em 42 arquivos e build aprovados. Cadastro homologado em desktop/tablet/mobile com backend simulado e sem criar contas reais; sem overflow. Migration publicada pelo agente principal com timestamp 20261012084523. CodeRabbit indisponível; nenhum passe presumido.

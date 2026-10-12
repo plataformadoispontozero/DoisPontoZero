@@ -26,6 +26,7 @@ export const router = createBrowserRouter([
     }),
   },
   { path: "/login", element: <AuthPage /> },
+  { path: "/register", lazy: async () => ({ Component: (await import("@/features/team/TeamRegistrationPage")).TeamRegistrationPage }) },
   { path: "/forgot-password", element: <AuthPage mode="forgot" /> },
   {
     path: "/accept-invitation",
@@ -645,6 +646,7 @@ export const router = createBrowserRouter([
               ).default,
             }),
           },
+          { path: "notifications", lazy: async () => ({ Component: (await import("@/features/notifications/NotificationsPage")).NotificationsPage }) },
           {
             path: "apps",
             lazy: async () => ({

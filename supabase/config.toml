@@ -416,3 +416,6 @@ enabled = true
 
 [functions.google-workspace]
 verify_jwt = false # Google callback is public; POST verifies JWT with auth.getUser before any action.
+
+[functions.team-registration]
+verify_jwt = false # Registration is public; reviews require auth.getUser and service-only permission RPCs.

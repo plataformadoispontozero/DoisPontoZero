@@ -60,7 +60,7 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
         <div className="dz-auth-lock"><LockKeyhole size={24} /></div>
         <p className="dz-auth-eyebrow">ACESSO RESTRITO À EQUIPE</p>
         <h1 id="auth-title">{title}</h1>
-        <p className="dz-auth-description">{mode === 'login' ? 'Entre com o e-mail e a senha da sua conta de equipe. Precisa de acesso? Fale com o administrador da agência.' : mode === 'forgot' ? 'Informe o e-mail da sua conta para receber as instruções de recuperação.' : 'Escolha uma nova senha para voltar ao seu workspace.'}</p>
+        <p className="dz-auth-description">{mode === 'login' ? 'Entre com o e-mail e a senha da sua conta de equipe. Ainda não tem acesso? Envie seu cadastro para aprovação.' : mode === 'forgot' ? 'Informe o e-mail da sua conta para receber as instruções de recuperação.' : 'Escolha uma nova senha para voltar ao seu workspace.'}</p>
         {!isSupabaseConfigured && <p role="alert">Supabase não configurado. O acesso administrativo permanece protegido.</p>}
         <form onSubmit={submit} className="space-y-5">
           {mode !== 'reset' && <div><label htmlFor="auth-email">E-mail</label><Input id="auth-email" type="email" autoComplete="email" placeholder="voce@agencia.com" required value={email} onChange={e => setEmail(e.target.value)} /></div>}
@@ -71,6 +71,7 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
           <Button className="w-full" size="lg" type="submit" variant="primary" loading={busy} disabled={busy || !supabase || (mode === 'reset' && !auth.session)}>{mode === 'login' ? 'Entrar' : mode === 'forgot' ? 'Enviar instruções' : 'Atualizar senha'}<ArrowUpRight size={18} /></Button>
         </form>
         {mode === 'login' ? <Link to="/forgot-password" className="dz-auth-recovery">Esqueci minha senha</Link> : <Link to="/login" className="dz-auth-recovery">Voltar ao login</Link>}
+        {mode === 'login' && <Link to="/register" className="dz-auth-recovery">Cadastrar na equipe</Link>}
         <p className="dz-auth-client-note">É cliente? Briefings e aprovações são acessados pelos links enviados pela agência, sem precisar entrar no workspace.</p>
       </section>
     </div>

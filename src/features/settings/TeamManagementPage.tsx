@@ -1,3 +1,4 @@
+import { RegistrationRequestsPanel } from '@/features/team/RegistrationRequestsPanel'
 import { memberRoleOptions } from '@/features/team/memberRoleOptions'
 import React, { useState } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
@@ -67,6 +68,7 @@ export const TeamManagementPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
+      <RegistrationRequestsPanel roles={roles} />
       {isError && <p role="alert">Não foi possível carregar os dados da equipe. Nenhum registro de demonstração substitui esta falha.</p>}
       {!canInvite && <p>Você não tem permissão para convidar membros desta agência.</p>}
       {inviteLink && <section className="space-y-3 rounded-xl border border-orange-400/40 p-4" aria-label="Convite criado">
