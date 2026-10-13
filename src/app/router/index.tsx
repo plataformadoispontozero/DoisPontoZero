@@ -79,6 +79,10 @@ export const router = createBrowserRouter([
     element: <ProtectedWorkspace />,
     children: [
       {
+        path: "social-media",
+        lazy: async () => ({Component: (await import("@/features/social-media/SocialMediaPage")).SocialMediaPage}),
+      },
+      {
         path: "editorial",
         lazy: async () => ({
           Component: (await import("@/features/editorial/MonthlyEditorialPage"))

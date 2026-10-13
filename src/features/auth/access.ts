@@ -32,6 +32,7 @@ export function routePermission(path: string): string | null {
   const module = segments[0];
   if (module === "team")
     return segments[1] === "new" ? "members.invite" : "members.view";
+  if (module === "social-media") return "strategy.view";
   if (module === "editorial") return "strategy.view";
   if (module === "production") return "tasks.view";
   if (module === "traffic") return "traffic.view";

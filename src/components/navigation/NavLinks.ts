@@ -29,6 +29,7 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
+  {id:"social-media",label:"Social Media",path:"/social-media",icon:Compass,section:"tools",description:"Operação editorial por cliente, aprovação e produção."},
   {
     id: "design",
     label: "Design",

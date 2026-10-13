@@ -1,3 +1,5 @@
+import {PresentationMaterialReviews} from './PresentationMaterialReviews';
+import {usePresentationReviews,latestMaterialReviews} from './hooks/usePresentationReviews';
 import React, { useState } from 'react';
 import {useQueryClient} from '@tanstack/react-query';
 import {Select} from '@/components/ui/Select';
@@ -49,6 +51,7 @@ export const PresentationWorkspacePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'publish' | 'versions'>('editor');
 
   // Preview device mode
+  const materialReviews=usePresentationReviews(presentationId);
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 
   // Selected Section for editing
@@ -137,6 +140,7 @@ export const PresentationWorkspacePage: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
+      <PresentationMaterialReviews reviews={materialReviews.data||[]} assets={assets} error={materialReviews.isError}/>
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-orange-500/20 bg-gradient-to-r from-orange-500/10 to-transparent p-4 text-sm"><span className="font-semibold text-orange-300">{presentation.client_name || 'Apresentação do cliente'}</span><span className="text-zinc-400">{sections.length} seções · {assets.length} materiais</span><Button variant="ghost" size="sm" onClick={()=>setActiveTab('preview')}>Ver apresentação <Eye className="ml-2 h-4 w-4"/></Button></div>
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-surface-border pb-4">
@@ -419,7 +423,7 @@ export const PresentationWorkspacePage: React.FC = () => {
           {/* Frame simulator */}
           <div className="flex justify-center">
             <div
-              className={`bg-surface-card border border-surface-border rounded-xl shadow-2xl transition-all duration-300 p-8 space-y-12 ${
+              className={`bg-surface-card border border-surface-border rounded-xl shadow-2xl transition-all duration-300 min-w-0 overflow-hidden ${
                 previewDevice === 'desktop'
                   ? 'w-full max-w-5xl'
                   : previewDevice === 'tablet'
@@ -427,7 +431,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                   : 'w-full max-w-[390px]'
               }`}
             >
-              <PresentationPreview presentation={presentation} sections={sections} assets={assets}/>
+              <PresentationPreview presentation={presentation} sections={sections} assets={assets} reviews={latestMaterialReviews(materialReviews.data||[])}/>
             </div>
           </div>
         </div>

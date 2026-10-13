@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import { type MaterialDecision } from '../hooks/usePresentationReviews';
 import { AlertCircle } from 'lucide-react';
 import { supabase } from '../../../lib/supabase/client';
 import { PresentationPreview, type PreviewPresentation, type PreviewSection, type PreviewAsset } from '../PresentationPreview';
@@ -14,11 +15,24 @@ interface ShowcaseData {
 export const PublicShowcaseViewPage: React.FC = () => {
   const { publicToken } = useParams<{ publicToken: string }>();
 
+  const tokenRef=useRef(publicToken);tokenRef.current=publicToken;
+  const [loadedToken,setLoadedToken]=useState<string|undefined>(undefined);
   const [data, setData] = useState<ShowcaseData | null>(null);
+  const [reviewLoadError,setReviewLoadError]=useState(false);
+  const [reviews,setReviews]=useState<Record<string,{decision:MaterialDecision;note:string}>>({});
+  const onReview=async(assetId:string,decision:MaterialDecision,note:string)=>{
+    if(!supabase||!publicToken) throw new Error('Conexão indisponível.');
+    const {data:review,error:reviewError}=await supabase.rpc('submit_showcase_material_review',{p_token:publicToken,p_asset:assetId,p_decision:decision,p_note:note});
+    if(reviewError) throw new Error(reviewError.message);
+    if(!review?.id) throw new Error('Não foi possível salvar a avaliação.');
+    if(tokenRef.current!==publicToken)return;
+    setReviews(current=>({...current,[assetId]:{decision:review.decision,note:review.note}}));
+  };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let active=true;setLoading(true);setData(null);setReviews({});setError(null);setReviewLoadError(false);
     async function fetchShowcase() {
       if (!publicToken) {
         setError('Token de acesso não fornecido.');
@@ -28,7 +42,7 @@ export const PublicShowcaseViewPage: React.FC = () => {
 
       try {
         if (!supabase) {
-          setError('Servidor de dados não configurado.');
+          setLoadedToken(publicToken);setError('Servidor de dados não configurado.');
           setLoading(false);
           return;
         }
@@ -36,6 +50,7 @@ export const PublicShowcaseViewPage: React.FC = () => {
           p_token: publicToken,
         });
 
+        if(!active)return;
         if (rpcError) throw rpcError;
         if (!showcaseResult || showcaseResult.error) {
           setError(showcaseResult?.error || 'Apresentação não encontrada ou expirada.');
@@ -44,18 +59,25 @@ export const PublicShowcaseViewPage: React.FC = () => {
         }
 
         setData(showcaseResult as ShowcaseData);
+        const history=await supabase.rpc('get_showcase_material_reviews',{p_token:publicToken});
+        if(!active)return;
+        setReviewLoadError(!!history.error);
+        const restored:Record<string,{decision:MaterialDecision;note:string}>={};
+        if(!history.error&&Array.isArray(history.data)) for(const entry of history.data) if(!restored[entry.asset_id]) restored[entry.asset_id]={decision:entry.decision,note:entry.note};
+        setReviews(restored);
       } catch (err: any) {
+        if(!active)return;
         console.error('Erro ao buscar showcase público:', err);
         setError('Não foi possível carregar esta apresentação.');
       } finally {
-        setLoading(false);
+        if(active){setLoading(false);setLoadedToken(publicToken);}
       }
     }
 
-    fetchShowcase();
+    void fetchShowcase();return()=>{active=false};
   }, [publicToken]);
 
-  if (loading) {
+  if (loading||loadedToken!==publicToken) {
     return (
       <div className="min-h-screen bg-[#101012] flex flex-col items-center justify-center p-6 text-white space-y-4">
         <div className="animate-spin w-10 h-10 border-2 border-orange-500 border-t-transparent rounded-full" />
@@ -76,5 +98,5 @@ export const PublicShowcaseViewPage: React.FC = () => {
     );
   }
 
-  return <div className="min-h-screen bg-[#101012] p-0 sm:p-4"><PresentationPreview presentation={{...data.presentation, client_name:data.client?.name || data.presentation.client_name, client_logo_url:data.client?.logo_url || data.presentation.client_logo_url}} sections={data.sections} assets={data.assets} /></div>;
+  return <div className="min-h-screen bg-[#101012] p-0 sm:p-4">{reviewLoadError&&<p role="alert" className="p-4 text-sm text-orange-300">Não foi possível carregar as avaliações anteriores. Atualize a página para tentar novamente.</p>}<PresentationPreview presentation={{...data.presentation, client_name:data.client?.name || data.presentation.client_name, client_logo_url:data.client?.logo_url || data.presentation.client_logo_url}} sections={data.sections} assets={data.assets} reviews={reviews} onReview={onReview} /></div>;
 };

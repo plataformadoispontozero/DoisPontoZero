@@ -21,7 +21,7 @@ export const navigationGroups = [
   {
     id: "strategy",
     label: "ESTRATÉGIA & CONTEÚDO",
-    items: ["strategy", "editorial"],
+    items: ["social-media", "strategy", "editorial"],
   },
   {
     id: "communication",
