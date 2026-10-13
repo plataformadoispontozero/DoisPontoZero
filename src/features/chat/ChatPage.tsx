@@ -29,6 +29,8 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Select } from '@/components/ui/Select'
+import {WorkRooms} from './WorkRooms'
+import {useRoomPresence} from './hooks/useRoomPresence'
 import { Dialog } from '@/components/ui/Dialog'
 import { useChannels, useConversations, useMessages, useSendMessage, useCreateChannel, useAddReaction, useChatMembers, useStartDirect, useMarkChatRead } from './hooks/useChat'
 import { useSquads } from '../squads/hooks/useSquads'
@@ -49,7 +51,8 @@ export const ChatPage: React.FC = () => {
   const safeConversations = conversations || []
 
   // Active Target Selection
-  const activeChannelId = channelId || (!conversationId && safeChannels[0]?.id ? safeChannels[0].id : null)
+  const activeChannelId = channelId || null
+  const roomPresence=useRoomPresence(channelId)
   const activeConversationId = conversationId || null
   const isConversationMode = Boolean(activeConversationId)
   const activeTargetId = isConversationMode ? activeConversationId : activeChannelId
@@ -82,6 +85,10 @@ export const ChatPage: React.FC = () => {
   useEffect(()=>{if(activeTargetId&&lastMessage)markRead.mutate({target:activeTargetId,direct:isConversationMode,last:lastMessage})},[activeTargetId,lastMessage,isConversationMode])
   // Message Input State
   const [inputText, setInputText] = useState('')
+  const [roomSearch,setRoomSearch]=useState('')
+  const showingRooms=!channelId&&!conversationId
+  const visibleChannels=safeChannels.filter(room=>!roomSearch.trim()||room.name.toLocaleLowerCase('pt-BR').includes(roomSearch.toLocaleLowerCase('pt-BR')))
+  const openCreate=()=>{setSelectedMembers([]);setNewChannelVisibility('agency');setNewChannelType('general');setActionError('');setIsCreateChannelOpen(true)}
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false)
   const [newChannelName, setNewChannelName] = useState('')
   const [newChannelDesc, setNewChannelDesc] = useState('')
@@ -131,26 +138,28 @@ export const ChatPage: React.FC = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-8.5rem)] flex flex-col md:flex-row bg-surface-card border border-surface-border rounded-xl overflow-hidden animate-in fade-in duration-200">
+    <div className="h-[calc(100dvh-8.5rem)] min-h-[540px] max-h-[1000px] flex flex-col md:flex-row bg-surface-card border border-surface-border rounded-xl overflow-hidden animate-in fade-in duration-200">
       {/* SIDEBAR DE CONVERSAS E CANAIS */}
-      <div className="w-full md:w-72 border-r border-surface-border flex flex-col bg-surface-subtle/50 shrink-0">
+      <div className="w-full md:w-72 max-h-56 md:max-h-none border-r border-surface-border flex flex-col bg-surface-subtle/50 shrink-0">
         {/* Sidebar Header */}
         <div className="p-3 border-b border-surface-border flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-content-secondary flex items-center">
             <MessageSquare className="w-4 h-4 mr-1.5 text-brand-primary" />
-            Team Chat
+            Team Chat · Salas
           </h2>
-          <Button variant="ghost" size="sm" aria-label="Criar novo canal" onClick={() => {setSelectedMembers([]); setNewChannelVisibility('agency'); setNewChannelType('general'); setActionError(''); setIsCreateChannelOpen(true)}}>
+          <Button variant="ghost" size="sm" aria-label="Criar novo canal" onClick={openCreate}>
             <Plus className="w-4 h-4" />
           </Button>
         </div>
 
         {/* Channels & DMs Navigation */}
         <div className="flex-1 overflow-y-auto p-3 space-y-4 text-xs">
+          <button className="w-full rounded-xl border border-orange-500/20 bg-orange-500/5 px-3 py-2 text-left font-semibold text-orange-300" onClick={()=>navigate('/chat')}>Visão das salas</button>
+          <label className="block space-y-2">Buscar salas<input className="w-full rounded-lg border border-white/15 bg-black/20 p-2 text-white" value={roomSearch} onChange={e=>setRoomSearch(e.target.value)} placeholder="Nome da sala..."/></label>
           {/* Section: Canais */}
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-content-tertiary px-2">Canais</span>
-            {safeChannels.map((chan) => {
+            <span className="text-[10px] font-bold uppercase tracking-wider text-content-tertiary px-2">Salas de trabalho</span>
+            {visibleChannels.map((chan) => {
               const isActive = activeChannelId === chan.id && !isConversationMode
               return (
                 <button
@@ -206,7 +215,9 @@ export const ChatPage: React.FC = () => {
       </div>
 
       {/* ÁREA CENTRAL DE MENSAGENS */}
-      <div className="flex-1 flex flex-col h-full bg-surface-card overflow-hidden">
+      <div className="min-w-0 min-h-0 flex-1 flex flex-col h-full bg-surface-card overflow-hidden">
+        {(actionError||channelsError||conversationsError||messagesError||membersError||markRead.error)&&<div role="alert" className="p-3 text-sm text-red-400">{actionError||'Não foi possível sincronizar o chat. Confira sua conexão e tente novamente.'}</div>}
+        {showingRooms?<div className="flex-1 overflow-y-auto"><WorkRooms rooms={visibleChannels} onEnter={id=>navigate(`/chat/channels/${id}`)} onCreate={openCreate}/></div>:<>
         {/* Chat Header */}
         <div className="p-3.5 border-b border-surface-border flex items-center justify-between bg-surface-card">
           <div className="flex items-center space-x-2">
@@ -228,15 +239,15 @@ export const ChatPage: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/chat/settings')}>
+            <Button variant="ghost" size="sm" aria-label="Configurações das salas" onClick={() => navigate('/chat/settings')}>
               <Settings className="w-3.5 h-3.5" />
             </Button>
           </div>
         </div>
 
-        {(actionError||channelsError||conversationsError||messagesError||membersError||markRead.error)&&<div role="alert" className="p-3 text-sm text-red-400">{actionError||'Não foi possível sincronizar o chat. Confira sua conexão e tente novamente.'}</div>}
+        {!isConversationMode&&<div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-3 text-xs text-zinc-400" aria-label="Presença na sala">{roomPresence.isError?<span role="status">Presença indisponível. As mensagens continuam disponíveis.</span>:roomPresence.isFetching&&!roomPresence.data?<span>Verificando presença…</span>:<><span title="Atividade na sala nos últimos dois minutos">Presentes nesta sala</span>{roomPresence.data?.map(person=><span key={person.user_id} className="flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">{person.avatar_url?<img src={person.avatar_url} alt="" className="h-5 w-5 rounded-full"/>:<span aria-hidden="true" className="h-2 w-2 rounded-full bg-orange-400"/>}{person.name||'Membro da equipe'}</span>)}</>}</div>}
         {/* Message Feed */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="min-h-0 flex-1 overflow-y-auto p-5 space-y-5 bg-gradient-to-b from-white/[0.01] to-transparent">
           {isLoadingMessages ? (
             <div className="p-8 text-center text-xs text-content-tertiary">
               <div className="animate-spin w-5 h-5 border-2 border-brand-primary border-t-transparent rounded-full mx-auto mb-2" />
@@ -258,11 +269,7 @@ export const ChatPage: React.FC = () => {
               )
               return (
               <div key={msg.id} className="flex items-start space-x-3 group">
-                <img
-                  src={msg.sender_avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100'}
-                  alt={msg.sender_name}
-                  className="w-8 h-8 rounded-full border border-surface-border shrink-0 mt-0.5 object-cover"
-                />
+                {msg.sender_avatar?<img src={msg.sender_avatar} alt={msg.sender_name||'Membro da equipe'} className="h-9 w-9 rounded-xl object-cover"/>:<div aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 font-semibold text-orange-300">{(msg.sender_name||'M').slice(0,1).toUpperCase()}</div>}
 
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center space-x-2">
@@ -272,7 +279,7 @@ export const ChatPage: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="text-xs text-content-secondary leading-relaxed bg-surface-subtle p-3 rounded-lg border border-surface-border inline-block max-w-xl">
+                  <div className="text-xs text-content-secondary leading-relaxed bg-white/[0.03] p-4 rounded-2xl border border-white/10 inline-block max-w-xl whitespace-pre-wrap break-words">
                     {msg.body}
                   </div>
 
@@ -319,6 +326,7 @@ export const ChatPage: React.FC = () => {
             <Send className="w-3.5 h-3.5" />
           </Button>
         </form>
+        </>}
       </div>
 
       {/* DIALOG: CREATE CHANNEL */}

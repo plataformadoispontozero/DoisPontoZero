@@ -77,8 +77,10 @@ export function MonthlyEditorialPage() {
   const [selectedPiece,setSelectedPiece]=useState<number|null>(null),[formatFilter,setFormatFilter]=useState('all');
   const pieceDialog=useRef<HTMLDialogElement>(null);
   useEffect(()=>{const dialog=pieceDialog.current;if(!dialog)return;if(selectedPiece!==null&&!dialog.open)dialog.showModal();else if(selectedPiece===null&&dialog.open)dialog.close();},[selectedPiece]);
-  const [topicDraft,setTopicDraft]=useState("");
-  const [topicsReviewed,setTopicsReviewed]=useState(false);
+  const [wizardStep,setWizardStep]=useState(0);
+  const editedFields=useRef(new Set<string>());
+  const selectedBriefClient=useRef("");
+
   const inputs = useCampaignInputs(agency, client, context.strategyId, id);
   const clients = useQuery({
     queryKey: ["editorial-clients", agency],
@@ -98,10 +100,9 @@ export function MonthlyEditorialPage() {
   const historicalBriefs=useQuery({queryKey:['editorial-legacy-briefs',agency,client],enabled:!!client,queryFn:async()=>{const r=await supabase!.from('client_legacy_records').select('id,payload,source_created_at').eq('agency_id',agency).eq('client_id',client).eq('source_kind','briefings').order('source_created_at',{ascending:false});if(r.error)throw r.error;return r.data as {id:string;payload:Record<string,unknown>;source_created_at:string|null}[];}});
   const historicalStrategies=useQuery({queryKey:['editorial-legacy-strategies',agency,client],enabled:!!client,queryFn:async()=>{const r=await supabase!.from('client_legacy_records').select('id,payload,source_created_at').eq('agency_id',agency).eq('client_id',client).eq('source_kind','estrategias_mensais').order('source_created_at',{ascending:false});if(r.error)throw r.error;return r.data as {id:string;payload:Record<string,unknown>}[];}});
   const topicSuggestions=suggestEditorialTopics(readClientProfile(clients.data?.find(c=>c.id===client)?.profile),historicalBriefs.data||[],historicalStrategies.data||[]);
-  useEffect(()=>{setTopicDraft('');setTopicsReviewed(false);},[client]);
+
   useEffect(()=>{if(!client||id||items.length||historicalBriefs.isPending||historicalStrategies.isPending||!topicSuggestions.length)return;setContext(old=>old.topics?.length?old:{...old,topics:topicSuggestions.map(t=>t.text)});},[client,id,items.length,historicalBriefs.data,historicalStrategies.data]);
 
-  function applyHistoricalBrief(record:{id:string;payload:Record<string,unknown>}){const text=(key:string)=>typeof record.payload[key]==='string'?(record.payload[key] as string).slice(0,4000):'';setContext(old=>({...old,objective:text('objetivo_principal')||old.objective,audience:text('persona_descricao')||old.audience,tone:text('tom_de_voz')||old.tone,positioning:text('diferenciais')||old.positioning,restrictions:text('palavras_proibidas')||old.restrictions,changeNote:`Dados revisados do briefing histórico ${record.id}`}));setDirty(true);setNotice('Dados do briefing anterior sugeridos. Confira os campos antes de gerar; o histórico original foi preservado.');}
   const briefs = useQuery({
     queryKey: ["editorial-briefs", agency, client],
     enabled: !!client,
@@ -135,7 +136,7 @@ export function MonthlyEditorialPage() {
       };
     },
   });
-  useEffect(()=>{if(client&&!id&&!briefing&&briefs.data?.length)setBriefing(briefs.data[0].id);},[client,id,briefing,briefs.data]);
+  useEffect(()=>{if(client&&!id&&briefs.data&&!briefs.isFetching&&selectedBriefClient.current!==client){selectedBriefClient.current=client;if(!briefing&&briefs.data.length)setBriefing(briefs.data[0].id);}},[client,id,briefing,briefs.data,briefs.isFetching]);
   const campaigns = useQuery({
     queryKey: ["monthly-editorial", agency],
     enabled: !!agency,
@@ -176,7 +177,7 @@ export function MonthlyEditorialPage() {
   });
   useEffect(() => {
     if (details.data && !id) {
-      setContext(old=>({...old,...details.data}));
+      setContext(old=>({...old,...Object.fromEntries(Object.entries(details.data!).filter(([key])=>!editedFields.current.has(key)))}));
       setDirty(true);
     }
   }, [details.data, id]);
@@ -197,6 +198,9 @@ export function MonthlyEditorialPage() {
   const active = campaigns.data?.find((c) => c.id === id) || (linked.data?.id === id ? linked.data : null),
     locked = !!active?.project_id;
   function newCampaign() {
+    setWizardStep(0);
+    editedFields.current.clear();
+    selectedBriefClient.current="";
     setId(null);
     setItems([]);
     setPieceSizes({});
@@ -292,14 +296,17 @@ export function MonthlyEditorialPage() {
         </p>
       )}
       <div className="flex flex-wrap gap-3">
-        <Button onClick={()=>{newCampaign();navigate(`/editorial/new${client?'?clientId='+client:''}`);}}>Criar calendário</Button>
+        {!creating&&<Button onClick={()=>{newCampaign();navigate(`/editorial/new${client?'?clientId='+client:''}`);}}>Criar calendário</Button>}
         {creating&&<Link className="text-sm text-orange-200 underline" to="/editorial">Voltar aos calendários</Link>}
         {campaigns.isFetching && (
           <span role="status">Atualizando campanhas…</span>
         )}
       </div>
-      {creating&&<div className="grid md:grid-cols-2 gap-6">
-        <section className="space-y-4 rounded-2xl border border-white/10 p-5">
+      {creating&&<nav aria-label="Etapas do calendário" className="grid grid-cols-2 gap-2 md:grid-cols-4">{['Cliente e briefing','Direção editorial','Formatos e volume','Revisar e gerar'].map((label,index)=><button key={label} type="button" aria-current={wizardStep===index?'step':undefined} disabled={!client&&index>0} onClick={()=>setWizardStep(index)} className={`rounded-xl border p-3 text-left text-sm disabled:opacity-40 ${wizardStep===index?'border-orange-500 bg-orange-500/15 text-orange-200':'border-white/10 text-zinc-300'}`}><span className="block text-xs mb-1">ETAPA {index+1}</span>{label}</button>)}</nav>}
+      {creating&&<div className={`grid gap-6 ${wizardStep===1?"md:grid-cols-2":""}`}>
+        <section hidden={wizardStep!==0&&wizardStep!==1} className="space-y-4 rounded-2xl border border-white/10 p-5">
+          <div hidden={wizardStep!==0}>
+          <h2 className="text-xl font-semibold mb-4">De qual cliente é a campanha?</h2>
           <label className="block">
             Cliente
             <select
@@ -308,6 +315,7 @@ export function MonthlyEditorialPage() {
               value={client}
               disabled={!!id||busy}
               onChange={(e) => {
+                editedFields.current.clear();selectedBriefClient.current="";
                 setClient(e.target.value);
                 setBriefing("");
                 setContext(clientContext(e.target.value));
@@ -323,17 +331,7 @@ export function MonthlyEditorialPage() {
               ))}
             </select>
           </label>
-          {client&&<section className="space-y-3 rounded-xl border border-orange-500/25 p-4" aria-label="Preparar temas do calendário">
-            <h2 className="font-semibold">Preparar temas do mês</h2>
-            <p className="text-sm text-zinc-300">O cadastro não define sozinho uma linha editorial. Revise as sugestões de temas antes de usá-las; elas não são fatos ou resultados aprovados.</p>
-            {(historicalBriefs.isFetching||historicalStrategies.isFetching)?<p role="status">Consultando fontes históricas…</p>:null}
-            {topicSuggestions.length>0&&<><ul className="space-y-2 text-sm">{topicSuggestions.map(s=><li key={s.text}>{s.text}<span className="block text-xs text-zinc-400">{s.source}</span></li>)}</ul><Button disabled={locked||historicalBriefs.isFetching||historicalStrategies.isFetching} onClick={()=>{setTopicDraft(topicSuggestions.map(s=>s.text).join('\n'));setTopicsReviewed(false);}}>Preparar sugestões para revisão</Button></>}
-            <label className="block text-sm">Temas sugeridos para revisar<textarea aria-label="Temas sugeridos para revisar" className={control} rows={4} value={topicDraft} disabled={locked} onChange={e=>{setTopicDraft(e.target.value);setTopicsReviewed(false);}}/></label>
-            <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={topicsReviewed} disabled={locked} onChange={e=>setTopicsReviewed(e.target.checked)}/>Revisei os temas e quero usá-los neste rascunho</label>
-            <Button disabled={locked||!topicsReviewed||!topicDraft.trim()} onClick={()=>{setContext(old=>({...old,topics:[...new Set([...(old.topics||[]),...topicDraft.split('\n').map(t=>t.trim()).filter(Boolean)])],changeNote:'Temas sugeridos pelo cadastro/histórico revisados pela equipe'}));setItems([]);setDirty(true);setNotice('Temas revisados aplicados. Confira objetivo, público, restrições e quantidades antes de gerar.');}}>Aplicar temas revisados</Button>
-          </section>}
           {client&&<p className="text-xs text-orange-200">O cadastro sugere objetivo, público, tom e posicionamento. Revise estes dados e complete as lacunas antes de gerar.</p>}
-          {!!historicalBriefs.data?.length&&<div className="rounded-lg border border-orange-500/20 p-3 space-y-2"><p className="text-sm">Briefings importados da plataforma anterior</p>{historicalBriefs.data.map(record=><button key={record.id} type="button" disabled={!!id||busy} className="block text-sm text-orange-200 underline disabled:opacity-50" onClick={()=>applyHistoricalBrief(record)}>Usar dados do briefing {record.source_created_at?new Date(record.source_created_at).toLocaleDateString('pt-BR'):''}</button>)}<p className="text-xs text-zinc-300">A aplicação substitui apenas os campos presentes no documento. Revise os dados e complete temas, fatos e restrições.</p></div>}
           <label className="block">
             Briefing do cliente
             <select
@@ -373,6 +371,8 @@ export function MonthlyEditorialPage() {
             respostas e complete o que faltar; a geração usa regras de
             planejamento, sem inventar fatos do cliente.
           </p>
+          </div><div hidden={wizardStep!==1}>
+          <h2 className="text-xl font-semibold mb-4">O que vamos comunicar?</h2>
           {(
             [
               "objective",
@@ -398,15 +398,17 @@ export function MonthlyEditorialPage() {
                 value={context[k]}
                 disabled={locked}
                 onChange={(e) => {
+                  editedFields.current.add(k);
                   setContext({ ...context, [k]: e.target.value });
                   setDirty(true);
                 }}
               />
             </label>
           ))}
-        </section>
-        <section className="space-y-4 rounded-2xl border border-white/10 p-5">
-          <h2 className="text-xl">Quantidades do mês</h2>
+        </div></section>
+        <section hidden={wizardStep===0} className="space-y-4 rounded-2xl border border-white/10 p-5">
+          <div hidden={wizardStep!==1}>
+          <h2 className="text-xl font-semibold">Temas e referências</h2>
           <label className="block">
             Estratégia do cliente
             <select
@@ -480,9 +482,11 @@ export function MonthlyEditorialPage() {
               Reimportar briefing vigente
             </Button>
           )}
+          <label className="block">Temas da campanha<textarea className={control} rows={5} disabled={locked} placeholder="Um tema por linha" value={(context.topics||[]).join("\n")} onChange={e=>{editedFields.current.add("topics");setContext({...context,topics:e.target.value.split("\n").filter(v=>v.trim())});setDirty(true);}}/></label>
+          <p className="text-xs text-zinc-400">As sugestões usam o cadastro e histórico do cliente. Ajuste os temas para esta campanha.</p>
+          <details className="rounded-xl border border-white/10 p-3"><summary className="cursor-pointer text-sm text-orange-200">Fatos, termos e direção visual (opcional)</summary><div className="space-y-4 mt-4">
           {(
             [
-              "topics",
               "approvedFacts",
               "forbiddenTerms",
               "avoidedTopics",
@@ -491,7 +495,7 @@ export function MonthlyEditorialPage() {
             <label className="block" key={key}>
               {
                 {
-                  topics: "Temas aprovados para este mês",
+                  topics: "Temas da campanha",
                   approvedFacts: "Informações factuais aprovadas",
                   forbiddenTerms: "Termos proibidos",
                   avoidedTopics: "Temas a evitar",
@@ -504,6 +508,7 @@ export function MonthlyEditorialPage() {
                 placeholder="Um item por linha"
                 value={(context[key] || []).join("\n")}
                 onChange={(e) => {
+                  editedFields.current.add(key);
                   setContext({
                     ...context,
                     [key]: e.target.value.split("\n").filter((v) => v.trim()),
@@ -526,11 +531,15 @@ export function MonthlyEditorialPage() {
               value={context.visualGuidance || ""}
               disabled={locked}
               onChange={(e) => {
+                editedFields.current.add("visualGuidance");
                 setContext({ ...context, visualGuidance: e.target.value });
                 setDirty(true);
               }}
             />
           </label>
+          </div></details>
+          </div><div hidden={wizardStep!==2}>
+          <h2 className="text-xl font-semibold mb-4">Defina as entregas deste mês</h2>
           <div className="grid grid-cols-2 gap-3">
             <label>
               Slides por carrossel
@@ -584,6 +593,26 @@ export function MonthlyEditorialPage() {
               />
             </label>
           </div>
+          {(["post", "reels", "carousel"] as EditorialFormat[]).map((f) => (
+            <label className="block" key={f}>
+              {formatNames[f]}
+              <Input
+                type="number"
+                min="0"
+                max="30"
+                step="1"
+                value={counts[f]}
+                disabled={locked}
+                onChange={(e) =>
+                  setCounts({ ...counts, [f]: Number(e.target.value) })
+                }
+              />
+            </label>
+          ))}
+          </div><div hidden={wizardStep!==3}>
+          <h2 className="text-xl font-semibold mb-4">Confira sua campanha</h2>
+          <div className="rounded-xl border border-orange-500/25 bg-orange-500/5 p-4 mb-4"><p className="font-semibold">{name} · {month}</p><p className="text-sm text-zinc-300 mt-2">{counts.post} posts · {counts.reels} reels · {counts.carousel} carrosséis</p><p className="text-sm text-zinc-300">{context.carouselSlides??7} slides por carrossel · {context.reelsScenes??3} cenas por reel · {context.reelsSeconds??30} segundos</p><p className="text-sm mt-3">Objetivo: {context.objective||'Complete na direção editorial'}</p></div>
+          {missingEditorialInputs(context,inputs.pillars.data||[]).length>0&&<p role="status" className="text-orange-200 mb-4">Complete na etapa Direção editorial: {missingEditorialInputs(context,inputs.pillars.data||[]).join('; ')}.</p>}
           {(inputs.history.isError ||
             inputs.repertoire.isError ||
             inputs.pillars.isError ||
@@ -601,28 +630,14 @@ export function MonthlyEditorialPage() {
               families={inputs.repertoire.data.families}
             />
           )}
-          {(["post", "reels", "carousel"] as EditorialFormat[]).map((f) => (
-            <label className="block" key={f}>
-              {formatNames[f]}
-              <Input
-                type="number"
-                min="0"
-                max="30"
-                step="1"
-                value={counts[f]}
-                disabled={locked}
-                onChange={(e) =>
-                  setCounts({ ...counts, [f]: Number(e.target.value) })
-                }
-              />
-            </label>
-          ))}
           <Button
             disabled={
               busy ||
+              missingEditorialInputs(context,inputs.pillars.data||[]).length>0 ||
+              counts.post+counts.reels+counts.carousel===0 ||
               !client ||
               locked ||
-              details.isFetching ||
+              details.isFetching || details.isError ||
               inputs.history.isFetching ||
               inputs.history.isError ||
               inputs.repertoire.isFetching ||
@@ -637,7 +652,7 @@ export function MonthlyEditorialPage() {
             onClick={() => void action(async() => {
                 const effectiveContext={...context,topics:context.topics?.length?context.topics:topicSuggestions.map(t=>t.text)};
                 const missing=missingEditorialInputs(effectiveContext,inputs.pillars.data||[]);
-                if(missing.length)throw Error(`Antes de gerar, complete: ${missing.join("; ")}. Use a área Preparar temas do mês para revisar sugestões.`);
+                if(missing.length)throw Error(`Antes de gerar, complete: ${missing.join("; ")}. Volte à etapa Direção editorial para completar os dados.`);
                 const engineContext = {
                   ...effectiveContext,
                   engineVersion: ENGINE_VERSION,
@@ -685,24 +700,9 @@ export function MonthlyEditorialPage() {
               />
             </label>
           )}
-          <h2 className="text-xl">Campanhas salvas</h2>
-          {campaigns.data?.length === 0 && <p>Nenhuma campanha cadastrada.</p>}
-          {campaigns.data?.map((c) => (
-            <button
-              type="button"
-              className="block w-full rounded-lg border border-white/10 p-3 text-left"
-              key={c.id}
-              onClick={() => {load(c);navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`);}}
-            >
-              {clients.data?.find((x) => x.id === c.client_id)?.name ||
-                "Cliente"}{" "}
-              — {c.month.slice(0, 7)}
-              <span className="block text-xs text-orange-300">
-                {statusNames[c.status]}
-              </span>
-            </button>
-          ))}
+          </div>
         </section>
+        <div className="flex justify-between gap-3 md:col-span-full"><Button disabled={wizardStep===0||busy} onClick={()=>setWizardStep(step=>Math.max(0,step-1))}>Anterior</Button>{wizardStep<3&&<Button variant="primary" disabled={!client||busy||details.isFetching} onClick={()=>setWizardStep(step=>Math.min(3,step+1))}>Continuar</Button>}</div>
       </div>}
       {!creating&&<section className="space-y-3"><h2 className="text-xl font-semibold">Campanhas do cliente</h2>{campaigns.isError?<p role="alert">Não foi possível carregar as campanhas.</p>:campaigns.isPending?<p>Carregando campanhas…</p>:!campaigns.data?.length?<p>Nenhum calendário salvo. Crie uma campanha para organizar as demandas.</p>:<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{campaigns.data.map(c=><button key={c.id} aria-pressed={c.id===id} className={`rounded-xl border p-4 text-left ${c.id===id?'border-orange-500 bg-orange-500/10':'border-white/10'}`} onClick={()=>{load(c);setSelectedPiece(null);navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`);}}><p className="font-semibold">{clients.data?.find(x=>x.id===c.client_id)?.name||'Cliente'} · {c.month.slice(0,7)}</p><p className="text-sm text-orange-200">{statusNames[c.status]||c.status} · {c.items.length} conteúdos</p></button>)}</div>}</section>}
       {!creating&&items.length > 0 && (

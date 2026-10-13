@@ -24,6 +24,7 @@ import {
   Clock,
   Pause,
   Archive,
+  Trash2,
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Button } from '@/components/ui/Button'
@@ -32,15 +33,22 @@ import { Badge } from '@/components/ui/Badge'
 import { Input } from '@/components/ui/Input'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/shared/EmptyState'
-import { useStrategies } from './hooks/useStrategy'
-import { STRATEGY_STATUS_CONFIG, type StrategyStatus } from '@/types/strategy'
+import { useStrategies, useDeleteStrategy } from './hooks/useStrategy'
+import { STRATEGY_STATUS_CONFIG, type StrategyStatus, type ContentStrategy } from '@/types/strategy'
 
-const DEMO_AGENCY_ID = 'demo-agency'
 
 export const StrategyPage: React.FC = () => {
   const DEMO_AGENCY_ID = useAgencyId()
 
   const navigate = useNavigate()
+  const deleteStrategy = useDeleteStrategy(DEMO_AGENCY_ID)
+  const [deleting, setDeleting] = useState<ContentStrategy | null>(null)
+  const [deleteError, setDeleteError] = useState('')
+  async function confirmDelete() {
+    if (!deleting || deleteStrategy.isPending) return
+    try { await deleteStrategy.mutateAsync(deleting.id); setDeleting(null); setDeleteError('') }
+    catch (error) { setDeleteError(error && typeof error === 'object' && 'message' in error ? String(error.message) : 'Não foi possível apagar. Tente novamente.') }
+  }
   const [statusFilter, setStatusFilter] = useState<StrategyStatus | 'all'>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -67,6 +75,13 @@ export const StrategyPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
+      {deleting && <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"><section role="alertdialog" aria-modal="true" aria-labelledby="strategy-delete-title" className="w-full max-w-md rounded-2xl border border-white/15 bg-[#19191f] p-6 space-y-4">
+        <h2 id="strategy-delete-title" className="text-lg font-semibold">Apagar estratégia?</h2>
+        <p className="text-sm text-zinc-300">{deleting.name}</p>
+        <p className="text-sm text-zinc-400">Esta ação apaga o rascunho e seus pilares e ideias sem produção. Estratégias vinculadas a calendário, proposta ou produção são preservadas.</p>
+        {deleteError && <p role="alert" className="text-sm text-red-300">{deleteError}</p>}
+        <div className="flex justify-end gap-3"><Button variant="secondary" disabled={deleteStrategy.isPending} onClick={() => setDeleting(null)}>Cancelar</Button><Button disabled={deleteStrategy.isPending} onClick={() => void confirmDelete()}>{deleteStrategy.isPending ? 'Apagando…' : 'Confirmar exclusão'}</Button></div>
+      </section></div>}
       <PageHeader
         title="Strategy Studio"
         subtitle="Planejamento estratégico, pilares editoriais e calendário de conteúdo."
@@ -247,6 +262,7 @@ export const StrategyPage: React.FC = () => {
                       )}
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-3">
+                      <button type="button" aria-label={`Apagar estratégia ${strategy.name}`} title="Apagar estratégia" className="p-2 rounded-lg text-zinc-400 hover:text-red-300 hover:bg-red-500/10" onClick={event => { event.stopPropagation(); setDeleting(strategy); setDeleteError('') }}><Trash2 className="w-4 h-4" /></button>
                       <Badge variant={statusCfg.badgeVariant}>
                         {statusIcon(strategy.status)}
                         <span className="ml-1">{statusCfg.label}</span>

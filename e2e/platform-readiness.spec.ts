@@ -21,7 +21,10 @@ async function api(page: Page, options: { member?: boolean; owner?: boolean; fai
     if (url.pathname.endsWith('/token')) return respond({ access_token: token, refresh_token: 'audit-refresh-only', token_type: 'bearer', expires_in: 3600, user })
     if (url.pathname.endsWith('/user')) return respond(user)
     if (url.pathname.endsWith('/logout')) return route.fulfill({ status: 204 })
+    if (table === 'chat_directory') return respond({channels:[{id:'99999999-9999-4999-8999-999999999999',agency_id:agencyA,name:'Design',description:'Criação e direção visual',channel_type:'project',visibility:'agency',unread_count:2}],conversations:[]})
+    if (table === 'chat_work_room_presence') return respond([])
     if (table === 'profiles') return respond([{ full_name: 'Usuário de teste' }])
+    if (table === 'agency_members' && url.searchParams.get('select')?.includes('profiles:user_id')) return respond([{user_id:'88888888-8888-4888-8888-888888888888',profiles:{full_name:'Membro de teste',avatar_url:null}}])
     if (table === 'agency_members') return respond(options.member === false || options.inactive ? [] : [agencyA,agencyB].map((id,index) => ({ agency_id: id, role_id: roleId, agencies: { id, name: `Agência ${index ? 'B':'A'}`, status: 'active' }, roles: { id: roleId, name: options.owner === false ? 'VIEWER':'OWNER' } })))
     if (table === 'role_permissions') return respond([{ allowed: true, permissions: { permission_key: 'dashboard.view' } }])
     if (options.agenda && table === 'meetings') return respond([
@@ -62,10 +65,10 @@ async function login(page: Page) {
 }
 
 // Route smoke uses controlled authenticated APIs; it does not prove production RLS.
-for (const path of ['/dashboard','/clients','/briefings','/editorial','/projects','/tasks','/production/design','/production/video','/production/traffic','/proposals/new','/meetings/new','/settings']) {
+for (const path of ['/dashboard','/clients','/briefings','/editorial','/projects','/tasks','/production/design','/production/video','/production/traffic','/proposals/new','/meetings/new','/settings','/strategy/new','/editorial/new','/chat']) {
  test('authenticated route refresh '+path,async({page})=>{
   const crashes:string[]=[];page.on('pageerror',e=>crashes.push(e.message));
-  const reads=await api(page);await login(page);await expect(page).toHaveURL(/\/dashboard$/);await page.goto(path);
+  const reads=await api(page);await login(page);await expect(page).toHaveURL(/\/dashboard$/, {timeout:15000});await page.goto(path);
   await expect(page).toHaveURL(new RegExp(path+'$'));
   await expect(page.locator('main')).toBeVisible();await expect(page.locator('main')).not.toContainText('Unexpected Application Error');
   await page.reload();await expect(page.locator('main')).toBeVisible();
@@ -73,3 +76,16 @@ for (const path of ['/dashboard','/clients','/briefings','/editorial','/projects
   expect(crashes).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
  });
 }
+
+test('work room overview filters real rooms and enters their conversation',async({page},testInfo)=>{
+ await api(page);await login(page);await expect(page).toHaveURL(/\/dashboard$/, {timeout:15000});await page.goto('/chat');
+ await expect(page.getByRole('heading',{name:'Um espaço para criar juntos.'})).toBeVisible();
+ await page.screenshot({path:testInfo.outputPath('work-rooms.png'),fullPage:true});
+ await page.getByPlaceholder('Nome da sala...').fill('nada-encontrado');
+ await expect(page.getByText(/Nenhuma sala disponível/)).toBeVisible();
+ await page.getByPlaceholder('Nome da sala...').fill('Design');
+ await page.getByRole('button',{name:/Design Criação e direção visual/}).click();
+ await expect(page).toHaveURL(/\/chat\/channels\/99999999-9999-4999-8999-999999999999$/);
+ await expect(page.getByPlaceholder(/Enviar mensagem/)).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
+});

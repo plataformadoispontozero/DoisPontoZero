@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ChatPage } from './ChatPage'
+vi.mock('./hooks/useRoomPresence',()=>({useRoomPresence:()=>({data:[],isError:false,isFetching:false})}))
 const state = vi.hoisted(() => ({ loading: false, error: null as Error | null, create: vi.fn(), direct: vi.fn() }))
 vi.mock('@/features/auth/AuthProvider', () => ({ useAgencyId: () => 'agency' }))
 vi.mock('../squads/hooks/useSquads', () => ({ useSquads: () => ({ data: [] }) }))

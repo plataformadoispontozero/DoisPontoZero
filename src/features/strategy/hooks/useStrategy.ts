@@ -449,6 +449,23 @@ export function useUpdateStrategy(agencyId: string, strategyId: string) {
   })
 }
 
+export function useDeleteStrategy(agencyId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (strategyId: string) => {
+      if (!isSupabaseConfigured || !supabase) throw new Error('Conecte a plataforma antes de apagar uma estratégia.')
+      const { data, error } = await supabase.rpc('delete_content_strategy', { p_agency_id: agencyId, p_strategy_id: strategyId })
+      if (error) throw error
+      return data
+    },
+    onSuccess: (_data, strategyId) => {
+      queryClient.invalidateQueries({ queryKey: ['strategies', agencyId] })
+      queryClient.removeQueries({ queryKey: ['strategy', strategyId] })
+      queryClient.invalidateQueries({ queryKey: ['editorial-strategies', agencyId] })
+    },
+  })
+}
+
 // ============================================================
 // EDITORIAL PILLARS
 // ============================================================
