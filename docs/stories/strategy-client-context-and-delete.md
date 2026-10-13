@@ -26,3 +26,6 @@ Validação local: 15 testes específicos passaram; typecheck e lint sem erros. 
 - PASS: rollback no Supabase com papel authenticated; exclusão temporária e isolamento validados, nenhum dado de teste persistido.
 - Migration aplicada: `20261013000947_strategy_delete_guard.sql`.
 - Status: Ready for Review; publicação global em andamento.
+
+## Publicação
+Push/deploy concluídos: commit `7d11ad7`, Cloudflare `eb1f3cce-8a57-4363-988b-7a7b03665100`, bundle público `index-DkveCMNt.js` confirmado. Validação documentada em `docs/qa/strategy-editorial-work-rooms-2026-10-13.md`.

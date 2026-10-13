@@ -23,4 +23,9 @@ Três versões criadas anteriormente via MCP tinham SQL byte a byte igual aos ar
 
 APIs controladas: estes E2E comprovam frontend/responsividade, não acesso real a Google ou autenticação de membros em produção. A presença/exclusão foram verificadas separadamente no banco via rollback.
 
-Publicação: pacote Cloudflare dry-run aprovado, push/deploy em andamento.
+## Publicação concluída
+- Commit funcional: `7d11ad7`; push em `codex/master-audit-15-1`.
+- Cloudflare Worker: `doispontozero`; versão `eb1f3cce-8a57-4363-988b-7a7b03665100`.
+- Domínio da agência retornou `/assets/index-DkveCMNt.js`, igual ao build validado.
+- Migrations remotas canônicas: `20261013000947`, `20261013001151`.
+- Limites: áudio/vídeo não implementados; acesso real do Google e uso simultâneo por membros não verificados por este conjunto de testes.

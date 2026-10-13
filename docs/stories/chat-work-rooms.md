@@ -28,3 +28,6 @@ File list: src/features/chat/ChatPage.tsx; src/features/chat/WorkRooms.tsx; src/
 - Sem áudio/vídeo nesta entrega; preferência do usuário ainda pendente.
 
 Arquivo adicional: src/features/chat/WorkRooms.test.tsx; e2e/platform-readiness.spec.ts.
+
+## Publicação
+Push/deploy concluídos: commit `7d11ad7`, Cloudflare `eb1f3cce-8a57-4363-988b-7a7b03665100`, bundle público `index-DkveCMNt.js` confirmado. Validação documentada em `docs/qa/strategy-editorial-work-rooms-2026-10-13.md`.
