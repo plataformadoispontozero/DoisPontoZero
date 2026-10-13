@@ -7,9 +7,10 @@ export interface DialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   children: React.ReactNode
+  className?: string
 }
 
-export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) => {
+export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children, className }) => {
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onOpenChange(false)
@@ -40,7 +41,7 @@ export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) 
       <div
         role="dialog"
         aria-modal="true"
-        className="relative z-50 w-full max-w-lg rounded-2xl border border-[#30303B] bg-[#1C1C24] p-6 shadow-2xl animate-in zoom-in-95 duration-200"
+        className={cn('relative z-50 w-full max-w-lg rounded-2xl border border-[#30303B] bg-[#1C1C24] p-6 shadow-2xl animate-in zoom-in-95 duration-200', className)}
       >
         {children}
       </div>

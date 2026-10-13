@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import {useQueryClient} from '@tanstack/react-query';
+import {Select} from '@/components/ui/Select';
+import {PresentationSectionEditor} from './PresentationSectionEditor';
+import {PresentationPreview} from './PresentationPreview';
+import {ClientPresentationDrivePicker} from './ClientPresentationDrivePicker';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Eye, History, Plus, Trash2, ChevronUp, ChevronDown,
@@ -12,13 +17,14 @@ import { Badge } from '../../components/ui/Badge';
 import { Dialog } from '../../components/ui/Dialog';
 import { toast } from '../../components/ui/Toast';
 import { useSinglePresentation, SECTION_TYPES } from './hooks/usePresentations';
-import { useDrive } from '../drive/hooks/useDrive';
+
 import { PresentationSectionType, PresentationSection, PresentationAsset } from '../../types/presentations';
-import type { DriveFileReference } from '../../types/drive';
+
 
 export const PresentationWorkspacePage: React.FC = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
   const navigate = useNavigate();
+  const cache = useQueryClient();
 
   const {
     presentation,
@@ -31,7 +37,6 @@ export const PresentationWorkspacePage: React.FC = () => {
     updateSection,
     deleteSection,
     reorderSections,
-    addAsset,
     removeAsset,
     publishPresentation,
     createPublicLink,
@@ -39,7 +44,6 @@ export const PresentationWorkspacePage: React.FC = () => {
     isCreatingLink
   } = useSinglePresentation(presentationId);
 
-  const { driveFiles, isLoadingFiles, isFilesError, refetchFiles, addDriveFile, isAddingFile } = useDrive();
 
   // Tab State: 'editor' | 'preview' | 'publish' | 'versions'
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'publish' | 'versions'>('editor');
@@ -57,13 +61,6 @@ export const PresentationWorkspacePage: React.FC = () => {
 
   // Add Drive File dialog
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
-  const [driveImportMode, setDriveImportMode] = useState<'browse' | 'link'>('browse');
-  const [selectedDriveFileId, setSelectedDriveFileId] = useState('');
-  const [driveSearch, setDriveSearch] = useState('');
-  const [newAssetName, setNewAssetName] = useState('');
-  const [newAssetUrl, setNewAssetUrl] = useState('');
-  const [newAssetMime, setNewAssetMime] = useState('application/pdf');
-
   // Public link notification
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
 
@@ -104,59 +101,6 @@ export const PresentationWorkspacePage: React.FC = () => {
     setIsAddSectionOpen(false);
   };
 
-  const handleAddAssetSubmit = async () => {
-    if (!selectedSection) return;
-
-    if (driveImportMode === 'browse') {
-      if (!selectedDriveFileId) {
-        toast.error('Selecione um arquivo da lista para vincular.');
-        return;
-      }
-      const driveFile = driveFiles.find((f: DriveFileReference) => f.id === selectedDriveFileId);
-      try {
-        await addAsset({
-          section_id: selectedSection.id,
-          file_reference_id: selectedDriveFileId,
-          title: driveFile?.name || 'Arquivo do Drive',
-          description: driveFile?.mime_type || '',
-          position: activeSectionAssets.length
-        });
-        toast.success('Material do Google Drive vinculado com sucesso!');
-        setSelectedDriveFileId('');
-        setIsAddAssetOpen(false);
-      } catch (err: any) {
-        toast.error('Erro ao vincular material: ' + (err?.message || 'Falha inesperada'));
-      }
-    } else {
-      // Modo 'link' direto
-      if (!newAssetName.trim() || !newAssetUrl.trim()) {
-        toast.error('Informe o nome e o link do material no Google Drive.');
-        return;
-      }
-      try {
-        const createdRef = await addDriveFile({
-          name: newAssetName.trim(),
-          mime_type: newAssetMime,
-          web_view_link: newAssetUrl.trim(),
-        });
-        await addAsset({
-          section_id: selectedSection.id,
-          file_reference_id: createdRef.id,
-          title: createdRef.name,
-          description: createdRef.mime_type,
-          position: activeSectionAssets.length
-        });
-        toast.success('Material do Google Drive adicionado e vinculado!');
-        setNewAssetName('');
-        setNewAssetUrl('');
-        setSelectedDriveFileId('');
-        setIsAddAssetOpen(false);
-      } catch (err: any) {
-        toast.error('Erro ao adicionar material: ' + (err?.message || 'Falha inesperada'));
-      }
-    }
-  };
-
   const handleMoveSection = async (index: number, direction: 'up' | 'down') => {
     if (
       (direction === 'up' && index === 0) ||
@@ -193,6 +137,7 @@ export const PresentationWorkspacePage: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
+      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-orange-500/20 bg-gradient-to-r from-orange-500/10 to-transparent p-4 text-sm"><span className="font-semibold text-orange-300">{presentation.client_name || 'Apresentação do cliente'}</span><span className="text-zinc-400">{sections.length} seções · {assets.length} materiais</span><Button variant="ghost" size="sm" onClick={()=>setActiveTab('preview')}>Ver apresentação <Eye className="ml-2 h-4 w-4"/></Button></div>
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-surface-border pb-4">
         <div className="flex items-center space-x-3">
@@ -208,13 +153,13 @@ export const PresentationWorkspacePage: React.FC = () => {
               </Badge>
             </div>
             <p className="text-xs text-content-secondary mt-0.5">
-              Cliente ID: {presentation.client_id} &bull; Período: {presentation.period_month}/{presentation.period_year}
+              {presentation.client_name || 'Cliente'} &bull; Período: {presentation.period_month}/{presentation.period_year}
             </p>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center bg-surface-subtle p-1 rounded-lg border border-surface-border space-x-1">
+        <div className="flex max-w-full flex-wrap items-center gap-1 bg-surface-subtle p-1 rounded-xl border border-surface-border">
           <button
             onClick={() => setActiveTab('editor')}
             className={`px-3 py-1.5 text-xs font-medium rounded-md flex items-center transition-all ${
@@ -224,7 +169,7 @@ export const PresentationWorkspacePage: React.FC = () => {
             }`}
           >
             <Layers className="w-3.5 h-3.5 mr-1.5" />
-            Builder Visual
+            Editar apresentação
           </button>
 
           <button
@@ -277,7 +222,7 @@ export const PresentationWorkspacePage: React.FC = () => {
       {activeTab === 'editor' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Sections Structure */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-3 space-y-4 min-w-0">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-content-primary flex items-center">
                 <Layers className="w-4 h-4 mr-1.5 text-brand-primary" />
@@ -301,7 +246,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-content-secondary uppercase tracking-wider">
-                      {sec.section_type}
+                      {SECTION_TYPES.find(t=>t.type===sec.section_type)?.label||sec.section_type}
                     </span>
                     <div className="flex items-center space-x-1" onClick={e => e.stopPropagation()}>
                       <button
@@ -337,7 +282,7 @@ export const PresentationWorkspacePage: React.FC = () => {
           </div>
 
           {/* Center Column: Section Canvas Editor */}
-          <div className="lg:col-span-6 space-y-4">
+          <div className="lg:col-span-6 min-w-0 space-y-4">
             {selectedSection ? (
               <Card className="p-6 space-y-6">
                 <div className="flex items-center justify-between border-b border-surface-border pb-3">
@@ -357,43 +302,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                   </Button>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-content-secondary mb-1">Título da Seção</label>
-                    <input
-                      type="text"
-                      value={selectedSection.title}
-                      onChange={e => updateSection({ sectionId: selectedSection.id, updates: { title: e.target.value } })}
-                      className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-content-secondary mb-1">Tipo de Layout</label>
-                    <select
-                      value={selectedSection.section_type}
-                      onChange={e => updateSection({ sectionId: selectedSection.id, updates: { section_type: e.target.value as PresentationSectionType } })}
-                      className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
-                    >
-                      {SECTION_TYPES.map((st) => (
-                        <option key={st.type} value={st.type}>
-                          {st.label} - {st.description}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-content-secondary mb-1">Contexto Criativo / Texto Explicativo</label>
-                    <textarea
-                      rows={5}
-                      value={selectedSection.description || ''}
-                      onChange={e => updateSection({ sectionId: selectedSection.id, updates: { description: e.target.value } })}
-                      placeholder="Esta peça foi desenvolvida para reforçar a presença de marca..."
-                      className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary resize-none"
-                    />
-                  </div>
-                </div>
+                <PresentationSectionEditor key={selectedSection.id} section={selectedSection} onSave={updates=>updateSection({sectionId:selectedSection.id,updates})}/>
 
                 {/* Section Assets */}
                 <div className="pt-4 border-t border-surface-border space-y-3">
@@ -409,13 +318,14 @@ export const PresentationWorkspacePage: React.FC = () => {
 
                   {activeSectionAssets.length === 0 ? (
                     <div className="p-6 border border-dashed border-surface-border rounded-lg text-center text-xs text-content-tertiary">
-                      Nenhum material do Google Drive vinculado a esta seção ainda.
+                      Selecione uma pasta do cliente para adicionar imagens, vídeos e documentos a esta seção.
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
                       {activeSectionAssets.map((asset: PresentationAsset) => (
-                        <div key={asset.id} className="p-3 border border-surface-border rounded-lg bg-surface-subtle flex items-start justify-between">
-                          <div>
+                        <div key={asset.id} className="overflow-hidden rounded-2xl border border-white/10 bg-black/20 p-3 flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            {asset.file_reference?.thumbnail_reference && <img src={asset.file_reference.thumbnail_reference} alt={asset.title} loading="lazy" className="mb-3 h-40 w-full rounded-xl object-contain bg-black/20"/>}
                             <div className="flex items-center space-x-1 text-brand-primary mb-1">
                               <ImageIcon className="w-3.5 h-3.5" />
                               <span className="text-xs font-semibold truncate max-w-[140px]">{asset.title}</span>
@@ -442,7 +352,7 @@ export const PresentationWorkspacePage: React.FC = () => {
           </div>
 
           {/* Right Column: Properties & Tips */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-3 space-y-4 min-w-0">
             <Card className="p-4 space-y-3">
               <h3 className="text-xs font-bold text-content-primary uppercase tracking-wider flex items-center">
                 <Sparkles className="w-4 h-4 mr-1.5 text-brand-primary" />
@@ -460,7 +370,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                 Status da Publicação
               </h3>
               <p className="text-xs text-content-secondary leading-relaxed">
-                Esta apresentação é visualizada com a identidade White Label da sua agência e do cliente.
+                Organize a narrativa, confira a prévia e publique quando os materiais estiverem prontos.
               </p>
               <Button
                 variant="outline"
@@ -513,56 +423,11 @@ export const PresentationWorkspacePage: React.FC = () => {
                 previewDevice === 'desktop'
                   ? 'w-full max-w-5xl'
                   : previewDevice === 'tablet'
-                  ? 'w-[768px]'
-                  : 'w-[390px]'
+                  ? 'w-full max-w-[768px]'
+                  : 'w-full max-w-[390px]'
               }`}
             >
-              {/* Cover Slide Header */}
-              <div className="border-b border-surface-border pb-8 text-center space-y-3">
-                <Badge variant="accent">DOIS.ZERO SHOWCASE</Badge>
-                <h1 className="text-2xl font-extrabold text-content-primary tracking-tight">{presentation.title}</h1>
-                <p className="text-sm text-content-secondary">
-                  Período: {presentation.period_month}/{presentation.period_year}
-                </p>
-                {presentation.description && (
-                  <p className="text-xs text-content-tertiary max-w-lg mx-auto italic">{presentation.description}</p>
-                )}
-              </div>
-
-              {/* Sections list */}
-              {sections.map((sec: PresentationSection) => {
-                const secAssets = assets.filter((a: PresentationAsset) => a.section_id === sec.id);
-                return (
-                  <div key={sec.id} className="space-y-4 border-b border-surface-border/60 pb-8 last:border-b-0">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-brand-primary uppercase tracking-widest">{sec.section_type}</span>
-                      <h2 className="text-lg font-bold text-content-primary">{sec.title}</h2>
-                    </div>
-
-                    {sec.description && (
-                      <p className="text-xs text-content-secondary leading-relaxed bg-surface-subtle p-4 rounded-lg border border-surface-border">
-                        {sec.description}
-                      </p>
-                    )}
-
-                    {sec.content?.subtitle && <p className="text-content-secondary">{sec.content.subtitle}</p>}
-                    {sec.content?.text && <p className="text-sm text-content-secondary whitespace-pre-wrap">{sec.content.text}</p>}
-                    {Array.isArray(sec.content?.list) && <ul className="list-disc pl-6 text-content-secondary">{sec.content.list.map((item: string, index: number) => <li key={index}>{item}</li>)}</ul>}
-                    {secAssets.length > 0 && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                        {secAssets.map((ast: PresentationAsset) => (
-                          <div key={ast.id} className="p-4 border border-surface-border rounded-lg bg-surface-subtle text-center space-y-2">
-                            {ast.file_reference?.thumbnail_reference ? <img src={ast.file_reference.thumbnail_reference} alt={ast.title} className="w-full h-40 object-contain" /> : <ImageIcon className="w-8 h-8 text-brand-primary mx-auto" />}
-                            {ast.file_reference?.web_view_link && <a href={ast.file_reference.web_view_link} target="_blank" rel="noreferrer" className="text-brand-primary underline">Abrir material no Drive</a>}
-                            <h4 className="text-xs font-semibold text-content-primary">{ast.title}</h4>
-                            <span className="text-[10px] text-content-tertiary">{ast.description || 'Google Drive File'}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              <PresentationPreview presentation={presentation} sections={sections} assets={assets}/>
             </div>
           </div>
         </div>
@@ -689,7 +554,7 @@ export const PresentationWorkspacePage: React.FC = () => {
 
           <div>
             <label className="block text-xs font-semibold text-content-secondary mb-1">Tipo de Layout</label>
-            <select
+            <Select style={{colorScheme: 'dark'}}
               value={newPresentationSectionType}
               onChange={e => setNewPresentationSectionType(e.target.value as PresentationSectionType)}
               className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
@@ -697,7 +562,7 @@ export const PresentationWorkspacePage: React.FC = () => {
               {SECTION_TYPES.map((st) => (
                 <option key={st.type} value={st.type}>{st.label}</option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div className="flex justify-end space-x-2 pt-2">
@@ -708,8 +573,8 @@ export const PresentationWorkspacePage: React.FC = () => {
       </Dialog>
 
       {/* DIALOG: ADD ASSET FROM DRIVE */}
-      <Dialog open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen}>
-        <div className="p-6 space-y-5 max-w-xl">
+      <Dialog open={isAddAssetOpen} onOpenChange={setIsAddAssetOpen} className="max-w-3xl">
+        <div className="max-h-[80vh] overflow-y-auto space-y-5">
           <div className="flex items-start justify-between">
             <div>
               <h3 className="text-lg font-bold text-content-primary flex items-center">
@@ -717,219 +582,13 @@ export const PresentationWorkspacePage: React.FC = () => {
                 Importar Material do Google Drive
               </h3>
               <p className="text-xs text-content-secondary mt-1">
-                Selecione um arquivo já indexado da agência ou vincule diretamente qualquer arquivo ou pasta do Google Drive.
+                Navegue pela pasta do cliente e escolha os materiais para esta seção.
               </p>
             </div>
           </div>
 
-          {/* Mode Selector Tabs */}
-          <div className="flex items-center space-x-2 border-b border-surface-border pb-3">
-            <button
-              type="button"
-              onClick={() => setDriveImportMode('browse')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                driveImportMode === 'browse'
-                  ? 'bg-brand-primary text-white shadow-sm'
-                  : 'bg-surface-subtle text-content-secondary hover:text-content-primary'
-              }`}
-            >
-              Arquivos Sincronizados ({driveFiles.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setDriveImportMode('link')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
-                driveImportMode === 'link'
-                  ? 'bg-brand-primary text-white shadow-sm'
-                  : 'bg-surface-subtle text-content-secondary hover:text-content-primary'
-              }`}
-            >
-              <LinkIcon className="w-3.5 h-3.5 mr-1" />
-              Vincular por Link do Drive
-            </button>
-          </div>
+          {selectedSection && <ClientPresentationDrivePicker clientId={presentation.client_id} presentationId={presentation.id} sectionId={selectedSection.id} onCancel={()=>setIsAddAssetOpen(false)} onLinked={()=>{void cache.invalidateQueries({queryKey:['presentation',presentation.agency_id,presentation.id]});void cache.invalidateQueries({queryKey:['presentations',presentation.agency_id]});setIsAddAssetOpen(false)}}/>}
 
-          {/* TAB 1: BROWSE FILES */}
-          {driveImportMode === 'browse' && (
-            <div className="space-y-3">
-              <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
-                <input
-                  type="text"
-                  placeholder="Filtrar arquivos por nome..."
-                  value={driveSearch}
-                  onChange={e => setDriveSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
-                />
-              </div>
-
-              {isFilesError ? <div role="alert" className="p-4 text-status-error">Não foi possível carregar os arquivos. <Button variant="outline" onClick={() => refetchFiles()}>Tentar novamente</Button></div> : isLoadingFiles ? (
-                <div className="p-8 text-center text-xs text-content-secondary">
-                  <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-2 text-brand-primary" />
-                  Carregando arquivos do Google Drive...
-                </div>
-              ) : (() => {
-                const filtered = driveFiles.filter((f: DriveFileReference) =>
-                  !driveSearch || f.name.toLowerCase().includes(driveSearch.toLowerCase())
-                );
-
-                if (filtered.length === 0) {
-                  return (
-                    <div className="p-6 border border-dashed border-surface-border rounded-lg text-center space-y-2">
-                      <p className="text-xs text-content-tertiary">
-                        {driveFiles.length === 0
-                          ? 'Nenhum arquivo indexado no momento.'
-                          : 'Nenhum arquivo encontrado com este termo.'}
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setDriveImportMode('link')}
-                        className="text-xs text-brand-primary hover:underline font-semibold"
-                      >
-                        Vincular um arquivo colando o link do Google Drive →
-                      </button>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="max-h-56 overflow-y-auto space-y-2 pr-1">
-                    {filtered.map((file: DriveFileReference) => {
-                      const isSelected = selectedDriveFileId === file.id;
-                      const isVideo = file.mime_type.includes('video');
-                      const isImage = file.mime_type.includes('image');
-
-                      return (
-                        <div
-                          key={file.id}
-                          onClick={() => setSelectedDriveFileId(file.id)}
-                          className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center justify-between ${
-                            isSelected
-                              ? 'border-brand-primary bg-brand-primary/10 shadow-sm'
-                              : 'border-surface-border bg-surface-subtle hover:border-surface-border/80 hover:bg-surface-subtle/80'
-                          }`}
-                        >
-                          <div className="flex items-center space-x-3 min-w-0">
-                            <div className="p-2 rounded bg-surface-card border border-surface-border shrink-0">
-                              {isVideo ? (
-                                <Video className="w-4 h-4 text-purple-400" />
-                              ) : isImage ? (
-                                <ImageIcon className="w-4 h-4 text-emerald-400" />
-                              ) : (
-                                <FileText className="w-4 h-4 text-blue-400" />
-                              )}
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-xs font-semibold text-content-primary truncate">{file.name}</p>
-                              <p className="text-[10px] text-content-tertiary">
-                                {file.mime_type} {file.size_bytes ? `• ${(file.size_bytes / (1024 * 1024)).toFixed(1)} MB` : ''}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center space-x-2 shrink-0">
-                            {file.web_view_link && (
-                              <a
-                                href={file.web_view_link}
-                                target="_blank"
-                                rel="noreferrer"
-                                onClick={e => e.stopPropagation()}
-                                className="p-1 text-content-tertiary hover:text-content-primary rounded hover:bg-surface-card"
-                                title="Visualizar original no Drive"
-                              >
-                                <ExternalLink className="w-3.5 h-3.5" />
-                              </a>
-                            )}
-                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                              isSelected ? 'border-brand-primary bg-brand-primary text-white' : 'border-surface-border'
-                            }`}>
-                              {isSelected && <Check className="w-2.5 h-2.5" />}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          )}
-
-          {/* TAB 2: LINK DIRECTLY */}
-          {driveImportMode === 'link' && (
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-semibold text-content-secondary mb-1">
-                  Título de Identificação do Material *
-                </label>
-                <input
-                  type="text"
-                  value={newAssetName}
-                  onChange={e => setNewAssetName(e.target.value)}
-                  placeholder="Ex: Entrega 01 - Carrossel de Lançamento"
-                  className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-content-secondary mb-1">
-                  Link / URL do Google Drive
-                </label>
-                <input
-                  type="text"
-                  value={newAssetUrl}
-                  onChange={e => setNewAssetUrl(e.target.value)}
-                  placeholder="https://drive.google.com/file/d/..."
-                  className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
-                />
-                <p className="text-[10px] text-content-tertiary mt-1">
-                  Insira o link de compartilhamento ou visualização do arquivo ou pasta no Drive.
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-content-secondary mb-1">Formato do Material</label>
-                <select
-                  value={newAssetMime}
-                  onChange={e => setNewAssetMime(e.target.value)}
-                  className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
-                >
-                  <option value="application/pdf">Documento / Apresentação (PDF)</option>
-                  <option value="video/mp4">Vídeo de Entrega (MP4)</option>
-                  <option value="image/png">Imagem / Criativo Estático (PNG / JPG)</option>
-                  <option value="application/vnd.google-apps.presentation">Google Slides</option>
-                  <option value="application/vnd.google-apps.folder">Pasta Compartilhada do Drive</option>
-                </select>
-              </div>
-            </div>
-          )}
-
-          {/* Modal Footer with Settings Link & Actions */}
-          <div className="pt-3 border-t border-surface-border flex items-center justify-between">
-            <a
-              href="/drive/connections"
-              target="_blank"
-              rel="noreferrer"
-              className="text-[11px] text-brand-primary hover:underline flex items-center"
-            >
-              <HardDrive className="w-3 h-3 mr-1" />
-              Configurar Conexão do Google Workspace
-            </a>
-
-            <div className="flex space-x-2">
-              <Button variant="ghost" size="sm" onClick={() => setIsAddAssetOpen(false)}>
-                Cancelar
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleAddAssetSubmit}
-                disabled={driveImportMode === 'browse' ? !selectedDriveFileId : (!newAssetName.trim() || !newAssetUrl.trim())}
-                loading={isAddingFile}
-              >
-                Vincular à Seção
-              </Button>
-            </div>
-          </div>
         </div>
       </Dialog>
     </div>

@@ -2,6 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.117.3'
 import { providerConfiguration, type ProviderConfiguration } from '../_shared/providerConfig.ts'
 import { folderIdFromUrl, validateDriveUpload, isGoogleUploadUrl, isFolderDescendant } from './drive.ts'
 import {discoverClientDriveDocuments,readClientDriveDocument,DriveDocumentUnavailableError} from './documents.ts'
+import {verifiedPresentationFiles} from './presentationDrive.ts'
 import {handleTaskDrive} from './taskDrive.ts'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2.117.3/cors'
 const env=(key:string)=>Deno.env.get(key)||''
@@ -61,12 +62,12 @@ Deno.serve(async(req:Request)=>{
   let taskContext:Record<string,unknown>|null=null
   if(taskAction){const result=await caller.rpc('task_drive_context',{p_agency:agency,p_task:body.taskId,p_write:!['task-drive-list','task-drive-preview'].includes(body.action)});if(result.error||!result.data)return reply({error:'Acesso à demanda atribuída e ao cliente necessário.'},403);taskContext=result.data}
   const documentAction=['client-drive-documents','client-drive-document-read'].includes(body.action)
-  const productionAction=taskAction||['client-drive-documents','client-drive-document-read','client-drive-list','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
+  const productionAction=taskAction||['client-drive-documents','client-drive-document-read','client-drive-list','presentation-drive-link','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
   const can=async(permission:string)=>{const r=await caller.rpc('has_agency_permission',{p_agency_id:agency,p_permission_key:permission});return !r.error&&r.data===true}
   const adminAccess=await caller.rpc('google_workspace_permission',{p_agency:agency});const centralAdmin=!adminAccess.error&&adminAccess.data===true
   if(body.action==='client-picker-session'&&!centralAdmin)return reply({error:'Somente administrador pode autorizar a pasta no Google central da agência.'},403)
   if(productionAction&&!taskAction){
-   if(!await can('clients.view')||(documentAction?!await can('briefings.view'):(body.action!=='client-drive-list'&&!await can('tasks.edit'))))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
+   if(!await can('clients.view')||(documentAction?!await can('briefings.view'):(body.action==='presentation-drive-link'?!await can('presentations.edit'):(body.action!=='client-drive-list'&&!await can('tasks.edit')))))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
   }else if(taskAction){ /* Business permissions were checked by task_drive_context. */ }else if(body.action==='status'){
    if(!centralAdmin&&!await can('clients.view'))return reply({error:'Permissão necessária.'},403)
   }else if(!centralAdmin)return reply({error:'Somente administrador pode configurar a conexão central da agência.'},403)
@@ -103,7 +104,7 @@ Deno.serve(async(req:Request)=>{
   if(body.action==='root-picker-session'){
    const folder=folderIdFromUrl(requestConfig.rootFolderUrl);if(!folder)return reply({error:'Cadastre uma pasta raiz nas configurações Google da agência.'},409)
    if(!requestConfig.apiKey||!requestConfig.projectNumber)return reply({error:'Configure a API Key pública do Google Picker e o número do projeto.'},409)
-   return reply({accessToken:token.access_token,apiKey:requestConfig.apiKey,appId:requestConfig.projectNumber,folderId:folder,rootId:clientFolder,folder:{id:metadata.id,name:metadata.name,parentId:metadata.parents?.[0]||null,canUpload:metadata.isAppAuthorized===true&&metadata.capabilities?.canAddChildren===true,isAppAuthorized:metadata.isAppAuthorized===true}})
+   return reply({accessToken:token.access_token,apiKey:requestConfig.apiKey,appId:requestConfig.projectNumber,folderId:folder})
   }
   if(taskAction&&taskContext)return handleTaskDrive({body,context:taskContext as never,admin,accessToken:token.access_token,configuration:requestConfig,centralAdmin,userId:user.id,headers})
   if(productionAction){
@@ -146,6 +147,29 @@ Deno.serve(async(req:Request)=>{
    if(!check.ok)return reply({error:'Esta pasta não está autorizada para o aplicativo Google ou para sua conta. O link da pasta sozinho não concede acesso. Use Autorizar pasta existente para selecionar a pasta cadastrada, ou vincule uma pasta criada pelo aplicativo.'},403)
    const metadata=await check.json()
    if(metadata.mimeType!=='application/vnd.google-apps.folder'||metadata.trashed)return reply({error:'A pasta do cliente não está disponível.'},409)
+   if(body.action==='presentation-drive-link'){
+    const presentation=await caller.from('presentations').select('id').eq('id',body.presentationId).eq('agency_id',agency).eq('client_id',body.clientId).maybeSingle()
+    const section=await caller.from('presentation_sections').select('id').eq('id',body.sectionId).eq('presentation_id',body.presentationId).eq('agency_id',agency).maybeSingle()
+    if(presentation.error||!presentation.data||section.error||!section.data)return reply({error:'Apresentação ou seção não pertence a este cliente.'},403)
+    let files;try{files=await verifiedPresentationFiles(folder!,body.fileIds,token.access_token)}catch(error){return reply({error:error instanceof Error?error.message:'Materiais inválidos.'},400)}
+    const last=await caller.from('presentation_assets').select('position').eq('agency_id',agency).eq('presentation_id',body.presentationId).eq('section_id',body.sectionId).order('position',{ascending:false}).limit(1).maybeSingle()
+    if(last.error)return reply({error:'Não foi possível consultar a ordem dos materiais.'},503)
+    let nextPosition=(last.data?.position??-1)+1
+    const linked=[]
+    for(const file of files){
+     const prior=await caller.from('drive_file_references').select('id').eq('agency_id',agency).eq('google_file_id',file.google_file_id).limit(1).maybeSingle()
+     if(prior.error)return reply({error:'Não foi possível consultar os materiais.'},503)
+     const saved=prior.data?await caller.from('drive_file_references').update(file).eq('agency_id',agency).eq('id',prior.data.id).select('id').single():await caller.from('drive_file_references').insert({agency_id:agency,...file}).select('id').single()
+     if(saved.error||!saved.data)return reply({error:'Não foi possível indexar os materiais.'},503)
+     const existing=await caller.from('presentation_assets').select('id').eq('agency_id',agency).eq('presentation_id',body.presentationId).eq('section_id',body.sectionId).eq('file_reference_id',saved.data.id).limit(1).maybeSingle()
+     if(existing.error)return reply({error:'Não foi possível consultar a seção.'},503)
+     if(existing.data){linked.push(existing.data);continue}
+     const asset=await caller.from('presentation_assets').insert({agency_id:agency,presentation_id:body.presentationId,section_id:body.sectionId,file_reference_id:saved.data.id,title:file.name,position:nextPosition++}).select('*,file_reference:drive_file_references(*)').single()
+     if(asset.error)return reply({error:'Não foi possível vincular os materiais. Atualize e tente novamente.'},503)
+     linked.push(asset.data)
+    }
+    return reply({assets:linked})
+   }
    if(body.action==='client-drive-documents'){
     const result=await discoverClientDriveDocuments(folder,token.access_token)
     if(result.documents.length){
