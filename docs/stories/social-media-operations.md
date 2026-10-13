@@ -13,3 +13,6 @@ Verificação: 3 testes de operação, navegação/permissões existentes e 6 E2
 
 ## QA Results
 Gates finais aprovados: lint, typecheck, build, 345 testes únicos e 9 E2E dos fluxos novos. Detalhes de revalidação e limites em `docs/qa/social-media-and-presentation-reviews-2026-10-13.md`. SQL remoto com rollback validado; nenhum dado de teste persistido.
+
+## Publicação
+Concluída: commit `fb609e8`, Cloudflare `b9c1704f-bfed-437c-ae11-1f7daa7aa8bb`, bundle público `index-CEEgLE6o.js` confirmado. Migration de avaliações aplicada; dados de teste revertidos.

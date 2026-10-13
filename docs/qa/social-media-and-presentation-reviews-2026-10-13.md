@@ -23,4 +23,11 @@ Os avisos do advisor sobre as duas bridges públicas SECURITY DEFINER são inten
 - A qualidade da imagem depende da fonte do Google; solicitações maiores têm fallback.
 - Uso de arquivos reais do Drive e avaliação real por um cliente ainda dependem de teste com os links autorizados da agência.
 
-Publicação em andamento; cache `supabase/.temp/cli-latest` excluído do commit.
+## Publicação concluída
+- Commit funcional `fb609e8`; push em `codex/master-audit-15-1`.
+- Cloudflare Worker `doispontozero`: versão `b9c1704f-bfed-437c-ae11-1f7daa7aa8bb`.
+- Domínio `/social-media` retornou HTTP200 com `/assets/index-CEEgLE6o.js`, correspondente ao build final.
+- Migration remota `20261013143738` confirmada; anon sem SELECT/INSERT no catálogo de avaliações.
+- Confirmação após rollback: zero apresentações e avaliações temporárias.
+- Cache `supabase/.temp/cli-latest` excluído do commit.
+
