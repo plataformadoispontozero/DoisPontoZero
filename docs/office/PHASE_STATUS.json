@@ -15,13 +15,14 @@
   "phase_02": {
     "implementation": "complete",
     "technical_validation": "verified",
-    "homologation": "pending",
+    "homologation": "accepted",
     "production_enabled": false,
-    "evidence": "docs/qa/office-phase02-2026-10-14.md"
+    "evidence": "docs/qa/office-phase02-2026-10-14.md",
+    "acceptance": "Homologo a fase 02 — aceite explícito do usuário"
   },
   "review_url": "https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/office",
   "phase_03": {
-    "status": "blocked",
-    "reason": "Requires explicit acceptance of Phase 02. Not started."
+    "status": "ready",
+    "reason": "Phase 02 explicitly accepted by user. Not started."
   }
 }

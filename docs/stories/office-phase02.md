@@ -15,7 +15,7 @@ Modelo persistente mínimo, reutilizando Chat, agência, perfil, papel, squad e 
 - [x] Cinco testes de SQL/RLS com duas agências, squads e preferências.
 - [x] 434 testes de regressão, typecheck, lint, build e diagnóstico desktop/celular (2 cenários).
 - [x] Publicação do diagnóstico em homologação; HTML público corresponde ao build.
-- [ ] Aceite do responsável. Fase 03 bloqueada.
+- [x] Aceite explícito do responsável: “Homologo a fase 02”. Fase 03 liberada, ainda não iniciada.
 
 ## Arquivos
 - supabase/migrations/20261014184243_office_phase02_tenant_data.sql

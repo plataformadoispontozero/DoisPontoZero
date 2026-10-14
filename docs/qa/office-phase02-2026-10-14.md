@@ -30,3 +30,6 @@ Referências consultadas: changelog Supabase em 14/10/2026; https://supabase.com
 
 ## Publicação
 Worker separado doispontozero-office-homologacao atualizado; versão 92cc8999-5c5c-4730-a063-5f2fdad8bd5e. HTML público conferido byte a byte com o build. URL: https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/settings/diagnostics. Upload teve retry automático da Cloudflare e concluiu com sucesso. Nenhum deploy no frontend principal.
+
+## Aceite do responsável
+O usuário confirmou “Homologo a fase 02”. Fase 02 homologada e encerrada. Este aceite substitui a pendência humana indicada acima; Fase 03 liberada, ainda não iniciada.
