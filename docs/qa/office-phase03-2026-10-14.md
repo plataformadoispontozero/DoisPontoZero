@@ -41,3 +41,6 @@ Os testes de interação acima usam transporte controlado. Não há ainda teste 
 Revisão usa os dados/autenticação reais da agência, sem cópia isolada. Frontend principal continua com a flag desligada. Fase 03 implementada e verificada por testes automáticos; homologação humana e multiusuário real pendentes. Fase 04 não iniciada.
 
 Documentação consultada: https://supabase.com/docs/guides/realtime/presence, https://supabase.com/docs/guides/realtime/authorization e https://supabase.com/docs/guides/troubleshooting/realtime-handling-silent-disconnections-in-backgrounded-applications-592794.
+
+## Publicação verificada
+Worker separado doispontozero-office-homologacao; versão cb29b22e-21b3-4c6e-b508-aeb27e3267c8. HTML e dois bundles (principal e diagnósticos) comparados byte a byte com o build. URLs: https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/office e /settings/diagnostics. Nenhum deploy no frontend principal.

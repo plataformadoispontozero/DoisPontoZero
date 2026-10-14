@@ -15,7 +15,7 @@ Presença global sem mídia, após aceite explícito das Fases 01 e 02. Reutiliz
 - [x] 10 cenários de navegador desktop/celular: 8 com flag ligada, 2 com flag desligada.
 - [x] SQL remoto com identidade autorizada e rollback; WSS real anônimo recusado.
 - [x] Typecheck, lint e build; aviso novo de Fast Refresh corrigido.
-- [ ] Publicação e conferência do diagnóstico de homologação.
+- [x] Publicação e conferência: HTML, bundle principal e diagnóstico correspondem ao build validado.
 - [ ] Homologação com dois membros reais: presença, navegação, refresh, saída e reconexão.
 - [ ] Aceite do responsável. Fase 04 bloqueada.
 
