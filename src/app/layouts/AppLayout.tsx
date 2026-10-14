@@ -12,7 +12,7 @@ import { TopBar } from '@/components/navigation/TopBar'
 export const AppLayout: React.FC = () => {
   const auth = useAuth()
   const queryClient = useQueryClient()
-  const queryLabels: Record<string,string> = {notifications:'notificações',dashboard:'indicadores do dashboard','agency-agenda':'agenda',agencyBranding:'identidade visual',agencyPreferences:'preferências',agencyDocumentSettings:'configuração de documentos',agencyPortalSettings:'portal',meetings:'reuniões',meeting:'reunião',clients:'clientes',projects:'projetos',tasks:'tarefas',squads:'squads',briefings:'briefings',strategies:'estratégias',proposals:'propostas',presentations:'apresentações','permission-matrix':'permissões'}
+  const queryLabels: Record<string,string> = {notifications:'notificações',dashboard:'indicadores do dashboard','agency-agenda':'agenda',agencyBranding:'identidade visual',agencyPreferences:'preferências',agencyDocumentSettings:'configuração de documentos',agencyPortalSettings:'portal',meetings:'reuniões',meeting:'reunião',clients:'clientes',projects:'projetos',tasks:'tarefas',squads:'squads',briefings:'briefings',strategies:'estratégias',presentations:'apresentações','permission-matrix':'permissões'}
   const failedAreas = useSyncExternalStore(
     callback => queryClient.getQueryCache().subscribe(callback),
     () => [...new Set(queryClient.getQueryCache().getAll().filter(query => query.isActive() && query.state.status === 'error').map(query => queryLabels[String(query.queryKey[0])] || 'dados da página'))].sort().join(', '),

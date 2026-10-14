@@ -664,7 +664,7 @@ export const BriefingTemplateEditorPage: React.FC = () => {
                       placeholder="Ex: target_audience"
                     />
                     <span className="text-[10px] text-[#98989F] mt-0.5 block">
-                      Usado na extração para Strategy e Proposal Studios.
+                      Usado na extração para o planejamento estratégico.
                     </span>
                   </div>
 

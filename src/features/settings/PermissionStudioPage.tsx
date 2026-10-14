@@ -21,7 +21,7 @@ export const PermissionStudioPage = () => {
       if (auth.isDemo || !supabase) return { roles: initialRoles, permissions: initialPermissions, grants: [] as any[] }
       const [roleResult, permissionResult] = await Promise.all([
         supabase.from('roles').select('id, name').eq('agency_id', agencyId).order('name'),
-        supabase.from('permissions').select('id, permission_key, module, description').order('permission_key'),
+        supabase.from('permissions').select('id, permission_key, module, description').neq('module', 'proposals').order('permission_key'),
       ])
       if (roleResult.error) throw roleResult.error
       if (permissionResult.error) throw permissionResult.error

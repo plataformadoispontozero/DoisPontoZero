@@ -66,14 +66,14 @@ async function login(page: Page) {
 }
 
 // Route smoke uses controlled authenticated APIs; it does not prove production RLS.
-for (const path of ['/dashboard','/clients','/briefings','/editorial','/social-media','/projects','/tasks','/production/design','/production/video','/production/traffic','/proposals/new','/meetings/new','/settings','/strategy/new','/editorial/new','/chat']) {
+for (const path of ['/dashboard','/clients','/briefings','/editorial','/social-media','/projects','/tasks','/production/design','/production/video','/production/traffic','/meetings/new','/settings','/strategy/new','/editorial/new','/chat']) {
  test('authenticated route refresh '+path,async({page})=>{
   const crashes:string[]=[];page.on('pageerror',e=>crashes.push(e.message));
   const reads=await api(page);await login(page);await expect(page).toHaveURL(/\/dashboard$/, {timeout:15000});await page.goto(path);
   await expect(page).toHaveURL(new RegExp(path+'$'));
   await expect(page.locator('main')).toBeVisible();await expect(page.locator('main')).not.toContainText('Unexpected Application Error');
   await page.reload();await expect(page.locator('main')).toBeVisible();
-  if(path==='/proposals/new'||path==='/meetings/new') {await expect(page.getByText('Cliente da agência A',{exact:true})).toBeAttached();expect(reads).toContain('eq.'+agencyA);expect(reads).not.toContain('eq.demo-agency');}
+  if(path==='/meetings/new') {await expect(page.getByText('Cliente da agência A',{exact:true})).toBeAttached();expect(reads).toContain('eq.'+agencyA);expect(reads).not.toContain('eq.demo-agency');}
   expect(crashes).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
  });
 }

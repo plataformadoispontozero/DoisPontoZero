@@ -11,7 +11,6 @@ import { TasksPage } from '@/features/tasks/TasksPage'
 import { SquadsPage } from '@/features/squads/SquadsPage'
 import { BriefingPage } from '@/features/briefing/BriefingPage'
 import { StrategyPage } from '@/features/strategy/StrategyPage'
-import { ProposalsPage } from '@/features/proposals/ProposalsPage'
 import { MeetingsPage } from '@/features/meetings/MeetingsPage'
 import { ChatPage } from '@/features/chat/ChatPage'
 import { PresentationsPage } from '@/features/presentations/PresentationsPage'
@@ -31,7 +30,6 @@ const routes = [
       { path: 'squads', element: <SquadsPage /> },
       { path: 'briefings', element: <BriefingPage /> },
       { path: 'strategy', element: <StrategyPage /> },
-      { path: 'proposals', element: <ProposalsPage /> },
       { path: 'meetings', element: <MeetingsPage /> },
       { path: 'chat', element: <ChatPage /> },
       { path: 'presentations', element: <PresentationsPage /> },
@@ -40,7 +38,7 @@ const routes = [
   },
 ]
 
-describe('All 13 Phase 01 Functional Routes Render Test', () => {
+describe('All 12 Phase 01 Functional Routes Render Test', () => {
   const testRoute = (initialPath: string, expectedHeadingMatch: RegExp | string) => {
     const memoryRouter = createMemoryRouter(routes, {
       initialEntries: [initialPath],
@@ -88,9 +86,6 @@ describe('All 13 Phase 01 Functional Routes Render Test', () => {
     testRoute('/strategy', /Strategy Studio|Estratégia & Diagnósticos/i)
   })
 
-  it('renders route: /proposals (Propostas)', () => {
-    testRoute('/proposals', /Proposal Studio|Propostas & Orçamentos/i)
-  })
 
   it('renders route: /meetings (Reuniões)', () => {
     testRoute('/meetings', /Meeting Hub|Reuniões & Alinhamentos/i)

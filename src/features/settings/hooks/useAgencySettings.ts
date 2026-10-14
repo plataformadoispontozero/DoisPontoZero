@@ -113,9 +113,6 @@ export const initialPermissions: PermissionDefinition[] = [
   { id: 'p18', permission_key: 'briefings.export', module: 'briefings', description: 'Exportar briefings para PDF' },
   { id: 'p19', permission_key: 'strategy.view', module: 'strategy', description: 'Visualizar diagnósticos e planejamento' },
   { id: 'p20', permission_key: 'strategy.edit', module: 'strategy', description: 'Criar e editar pilares e pautas' },
-  { id: 'p21', permission_key: 'proposals.view', module: 'proposals', description: 'Visualizar propostas comerciais' },
-  { id: 'p22', permission_key: 'proposals.create', module: 'proposals', description: 'Gerar e editar propostas' },
-  { id: 'p23', permission_key: 'proposals.export', module: 'proposals', description: 'Exportar e publicar propostas' },
   { id: 'p24', permission_key: 'drive.view', module: 'drive', description: 'Acessar arquivos e conexões de Drive' },
   { id: 'p25', permission_key: 'presentations.view', module: 'presentations', description: 'Visualizar apresentações executivas' },
   { id: 'p26', permission_key: 'meetings.view', module: 'meetings', description: 'Acessar agenda e reuniões' },
@@ -197,18 +194,6 @@ export const initialInvitations: AgencyInvitation[] = [
 ]
 
 export const initialActivityEvents: ActivityEvent[] = [
-  {
-    id: 'act-101',
-    agency_id: DEMO_AGENCY_ID,
-    actor_user_id: 'usr-001',
-    actor_name: 'Lucas Silveira',
-    actor_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-    event_type: 'proposals.published',
-    resource_type: 'proposal',
-    resource_id: 'prop-001',
-    summary: 'Publicou a Proposta Comercial de Rebranding para a Vanguarda Tech.',
-    created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-  },
   {
     id: 'act-102',
     agency_id: DEMO_AGENCY_ID,

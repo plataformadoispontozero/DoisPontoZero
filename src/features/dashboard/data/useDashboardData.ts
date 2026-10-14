@@ -18,7 +18,7 @@ export function useDashboardData() {
         supabase.from('projects').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).eq('status', 'active'),
         supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).in('status', ['open','in_progress','review']),
         supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).in('status', ['open','in_progress','review']).gte('due_date', now.toISOString().slice(0,10)).lte('due_date', end.toISOString().slice(0,10)),
-        supabase.from('proposals').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).eq('status', 'internal_review'),
+        supabase.from('monthly_editorial_campaigns').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).eq('status', 'pending'),
         supabase.from('projects').select('id,name,status,due_date,clients(name)').eq('agency_id', agencyId).order('updated_at', { ascending: false }).limit(5),
         supabase.from('tasks').select('id,title,priority,status,due_date,projects(name,clients(name)),task_assignees!inner(user_id)').eq('agency_id', agencyId).eq('task_assignees.user_id', auth.user?.id || '').in('status',['open','in_progress','review']).order('due_date', { ascending: true }).limit(5),
         supabase.from('meetings').select('id,title,starts_at,location_type,meeting_url').eq('agency_id', agencyId).eq('status','scheduled').gte('starts_at', now.toISOString()).order('starts_at', { ascending: true }).limit(3),

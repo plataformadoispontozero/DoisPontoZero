@@ -61,7 +61,6 @@ export function routePermission(path: string): string | null {
       "squads",
       "briefings",
       "strategy",
-      "proposals",
       "drive",
       "presentations",
       "meetings",

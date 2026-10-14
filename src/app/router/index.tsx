@@ -45,7 +45,7 @@ export const router = createBrowserRouter([
       ).PublicEditorialApprovalPage,
     }),
   },
-  // Public standalone routes for external clients (Briefing, Proposal, Showcase)
+  // Public standalone routes for external clients (Briefing, Showcase)
   {
     path: "/b/:publicToken",
     lazy: async () => ({
@@ -55,12 +55,8 @@ export const router = createBrowserRouter([
     }),
   },
   {
-    path: "/p/:publicToken",
-    lazy: async () => ({
-      Component: (
-        await import("@/features/proposals/public/PublicProposalViewPage")
-      ).PublicProposalViewPage,
-    }),
+    path: "/p/*",
+    lazy: async () => ({ Component: (await import("@/features/retired/RetiredProposalPage")).RetiredProposalPage }),
   },
   {
     path: "/showcase/:publicToken",
@@ -327,90 +323,7 @@ export const router = createBrowserRouter([
             .StrategyWorkspacePage,
         }),
       },
-      {
-        path: "proposals",
-        lazy: async () => ({
-          Component: (await import("@/features/proposals/ProposalsPage"))
-            .ProposalsPage,
-        }),
-      },
-      {
-        path: "proposals/new",
-        lazy: async () => ({
-          Component: (await import("@/features/proposals/NewProposalPage"))
-            .NewProposalPage,
-        }),
-      },
-      {
-        path: "proposals/templates",
-        lazy: async () => ({
-          Component: (
-            await import("@/features/proposals/ProposalTemplatesPage")
-          ).ProposalTemplatesPage,
-        }),
-      },
-      {
-        path: "proposals/templates/new",
-        lazy: async () => ({
-          Component: (
-            await import("@/features/proposals/ProposalTemplatesPage")
-          ).ProposalTemplatesPage,
-        }),
-      },
-      {
-        path: "proposals/templates/:templateId/edit",
-        lazy: async () => ({
-          Component: (
-            await import("@/features/proposals/ProposalTemplatesPage")
-          ).ProposalTemplatesPage,
-        }),
-      },
-      {
-        path: "proposals/services",
-        lazy: async () => ({
-          Component: (await import("@/features/proposals/ServiceCatalogPage"))
-            .ServiceCatalogPage,
-        }),
-      },
-      {
-        path: "proposals/:proposalId",
-        lazy: async () => ({
-          Component: (
-            await import("@/features/proposals/ProposalWorkspacePage")
-          ).ProposalWorkspacePage,
-        }),
-      },
-      {
-        path: "proposals/:proposalId/edit",
-        lazy: async () => ({
-          Component: (
-            await import("@/features/proposals/ProposalWorkspacePage")
-          ).ProposalWorkspacePage,
-        }),
-      },
-      {
-        path: "proposals/:proposalId/preview",
-        lazy: async () => ({
-          Component: (
-            await import("@/features/proposals/ProposalWorkspacePage")
-          ).ProposalWorkspacePage,
-        }),
-      },
-      {
-        path: "proposals/:proposalId/versions",
-        lazy: async () => ({
-          Component: (
-            await import("@/features/proposals/ProposalWorkspacePage")
-          ).ProposalWorkspacePage,
-        }),
-      },
-      {
-        path: "proposals/:proposalId/export",
-        lazy: async () => ({
-          Component: (await import("@/features/proposals/ProposalExportPage"))
-            .ProposalExportPage,
-        }),
-      },
+      { path: "proposals/*", element: <Navigate to="/dashboard" replace /> },
       {
         path: "meetings",
         lazy: async () => ({

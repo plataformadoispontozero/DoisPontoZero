@@ -154,19 +154,6 @@ export const ClientExperiencePage: React.FC = () => {
               </span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] flex items-center justify-between">
-              <div>
-                <span className="font-semibold text-xs text-[#F8F9FC] block">
-                  Propostas Comerciais Interativas
-                </span>
-                <span className="text-[10px] text-[#B8B8C0] font-mono">
-                  /p/:publicToken
-                </span>
-              </div>
-              <span className="text-[10px] font-bold text-[#FF8759] uppercase px-2 py-0.5 rounded bg-[#FF8759]/10">
-                Ativo
-              </span>
-            </div>
 
             <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] flex items-center justify-between">
               <div>

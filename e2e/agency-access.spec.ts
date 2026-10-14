@@ -149,9 +149,9 @@ for (const scenario of [
   await expect(page.getByText('Admin Operações',{exact:true})).toHaveCount(0)
 })
 
-test('public proposal without a verified token cannot show a fixture or require login',async ({page}) => {
+test('retired public proposal never loads private content or requires login',async ({page}) => {
   await api(page); await page.goto('/p/invalid-token')
-  await expect(page.getByRole('heading',{name:'Link Inválido ou Expirado'})).toBeVisible()
+  await expect(page.getByRole('heading',{name:'Área de propostas descontinuada'})).toBeVisible()
   await expect(page).toHaveURL(/\/p\/invalid-token$/)
   await expect(page.getByText('Acme Corp Brasil',{exact:true})).toHaveCount(0)
 })

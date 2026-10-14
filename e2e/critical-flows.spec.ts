@@ -27,10 +27,6 @@ test.describe('Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais', () =>
     await expect(page.getByText(/Strategy Studio/i).first()).toBeVisible()
   })
 
-  test('Fluxo 05: Proposal Studio & Motor Comercial', async ({ page }) => {
-    await page.goto('/proposals')
-    await expect(page.getByText(/Proposal Studio/i).first()).toBeVisible()
-  })
 
   test('Fluxo 06: Meeting Hub & Pautas Operacionais', async ({ page }) => {
     await page.goto('/meetings')

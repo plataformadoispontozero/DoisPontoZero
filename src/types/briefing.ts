@@ -243,7 +243,7 @@ export interface BriefingActivity {
 }
 
 // ------------------------------------------------------------
-// STRATEGY & PROPOSAL PREPARATION (Requisitos 18 e 19)
+// STRATEGY PREPARATION
 // ------------------------------------------------------------
 export interface StrategyBriefingExtraction {
   briefingId: string
@@ -259,17 +259,6 @@ export interface StrategyBriefingExtraction {
   rawExtractedData: Record<string, any>
 }
 
-export interface ProposalBriefingExtraction {
-  briefingId: string
-  clientId?: string
-  scopeOverview?: string
-  requestedServices?: string[]
-  deliverables?: string[]
-  targetDates?: string[]
-  budgetRange?: string
-  commercialNotes?: string
-  rawExtractedData: Record<string, any>
-}
 
 // ------------------------------------------------------------
 // STATUS & CONFIG HELPERS

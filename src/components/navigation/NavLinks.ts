@@ -10,7 +10,6 @@ import {
   Users2,
   FileText,
   Compass,
-  FileCheck2,
   CalendarDays,
   MessageSquare,
   Presentation,
@@ -137,14 +136,6 @@ export const navItems: NavItem[] = [
     icon: Compass,
     section: "tools",
     description: "Diagnósticos, personas e planejamento de contas.",
-  },
-  {
-    id: "proposals",
-    label: "Propostas",
-    path: "/proposals",
-    icon: FileCheck2,
-    section: "tools",
-    description: "Orçamentos comerciais e precificação de squad.",
   },
   {
     id: "meetings",

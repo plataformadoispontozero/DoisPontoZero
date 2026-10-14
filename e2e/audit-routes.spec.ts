@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const routes = ['/dashboard', '/calendar', '/clients', '/projects', '/tasks', '/squads', '/briefings', '/strategy', '/proposals', '/drive', '/presentations', '/meetings', '/chat', '/notifications', '/settings']
+const routes = ['/dashboard', '/calendar', '/clients', '/projects', '/tasks', '/squads', '/briefings', '/strategy', '/drive', '/presentations', '/meetings', '/chat', '/notifications', '/settings']
 
 for (const route of routes) {
   test(`render and refresh ${route}`, async ({ page }, testInfo) => {

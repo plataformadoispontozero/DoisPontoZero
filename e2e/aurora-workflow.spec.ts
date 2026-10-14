@@ -50,3 +50,17 @@ test('reads a complete carousel and edits its full text without truncation',asyn
 test('reads script scenes in individual blocks',async({page})=>{
  await setup(page,'[Videomaker]','reels\n\nContexto do roteiro.\n\nCena 1 (8s): Abertura\nNa tela: Texto 1\nCena 2 (12s): Desenvolvimento\nNa tela: Texto 2\nCena 3 (10s): Convite\nLegenda: Legenda do roteiro');await page.goto('/production/video');await page.getByRole('button',{name:/Arte Aurora/}).click();const dialog=page.getByRole('dialog');await expect(dialog.getByText('Roteiro · 3 cenas')).toBeVisible();expect(await dialog.getByRole('heading',{name:/^Cena \d/}).count()).toBe(3);await expect(dialog.getByRole('heading',{name:'Legenda'})).toBeAttached();
 });
+
+test('retired internal proposal URLs return to the dashboard without querying proposals',async({page})=>{
+ const reads:string[]=[];page.on('request',request=>{if(/supabase\.co.*(?:proposals|proposal)/.test(request.url()))reads.push(request.url());});
+ await setup(page);
+ for(const path of ['/proposals','/proposals/new','/proposals/templates/new','/proposals/services','/proposals/old-id','/proposals/old-id/edit','/proposals/old-id/export','/proposals/old-id/preview','/proposals/old-id/versions']){
+  await page.goto(path);await expect(page).toHaveURL(/\/dashboard$/);await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible();
+ }
+ await expect(page.getByRole('link',{name:'Propostas',exact:true})).toHaveCount(0);expect(reads).toEqual([]);
+});
+
+test('old public proposal links show retirement without any backend lookup',async({page})=>{
+ const reads:string[]=[];page.on('request',request=>{if(request.url().includes('supabase.co'))reads.push(request.url());});
+ await page.goto('/p/old-public-token');await expect(page.getByRole('heading',{name:'Área de propostas descontinuada'})).toBeVisible();await expect(page.getByRole('link',{name:'Ir para o site da agência'})).toHaveAttribute('href','/');expect(reads).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});

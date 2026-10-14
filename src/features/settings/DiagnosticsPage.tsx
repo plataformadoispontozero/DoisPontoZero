@@ -21,7 +21,7 @@ import {
 
 export const DiagnosticsPage: React.FC = () => {
   const isSupabaseActive = isSupabaseConfigured
-  const phases = (phaseStatusData.phases || []) as any[]
+  const phases = (phaseStatusData.phases || []).filter(phase => phase.id !== 'phase-08') as any[]
 
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'in_progress' | 'not_started'>('all')

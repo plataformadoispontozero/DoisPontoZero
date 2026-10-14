@@ -4,8 +4,8 @@ export const navigationGroups = [
   { id: "panel", label: "PAINEL", items: ["dashboard", "calendar"] },
   {
     id: "commercial",
-    label: "CLIENTES & COMERCIAL",
-    items: ["clients", "briefings", "proposals"],
+    label: "CLIENTES & BRIEFINGS",
+    items: ["clients", "briefings"],
   },
   {
     id: "projects",
