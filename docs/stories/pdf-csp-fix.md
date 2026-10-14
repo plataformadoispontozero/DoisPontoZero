@@ -11,7 +11,7 @@ O gerador @react-pdf/renderer usa WebAssembly. A política HTTP publicada não p
 - [x] Assinatura %PDF- do download do briefing confirmada.
 - [x] 427 testes de regressão, typecheck e lint.
 - [x] Build de produção.
-- [ ] Push, deploy e cabeçalho público confirmado.
+- [x] Push, deploy e cabeçalho público confirmado nas rotas do briefing e diagnósticos.
 
 ## Arquivos
 - public/_headers
@@ -19,3 +19,4 @@ O gerador @react-pdf/renderer usa WebAssembly. A política HTTP publicada não p
 - docs/RELEASE_STATUS.json
 - docs/stories/pdf-csp-fix.md
 - docs/qa/pdf-csp-fix-2026-10-14.md
+- docs/qa/pdf-csp-public-verification-2026-10-14.json

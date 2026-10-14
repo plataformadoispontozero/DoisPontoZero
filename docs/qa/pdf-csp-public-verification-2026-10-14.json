@@ -1,0 +1,36 @@
+{
+  "routes": [
+    {
+      "route": "/briefings/2019c9ee-4bcf-468d-9ad2-acb5229c9c9a/export",
+      "policy_matches": true,
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://challenges.cloudflare.com https://apis.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; frame-src 'self' blob: https://challenges.cloudflare.com https://docs.google.com https://drive.google.com; connect-src https://apis.google.com https://www.googleapis.com https://challenges.cloudflare.com 'self' https://*.supabase.co wss://*.supabase.co https://fonts.googleapis.com; media-src 'self' blob:; object-src 'none'; frame-ancestors 'self';"
+    },
+    {
+      "route": "/settings/diagnostics",
+      "policy_matches": true,
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://challenges.cloudflare.com https://apis.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; frame-src 'self' blob: https://challenges.cloudflare.com https://docs.google.com https://drive.google.com; connect-src https://apis.google.com https://www.googleapis.com https://challenges.cloudflare.com 'self' https://*.supabase.co wss://*.supabase.co https://fonts.googleapis.com; media-src 'self' blob:; object-src 'none'; frame-ancestors 'self';"
+    }
+  ],
+  "assets": [
+    {
+      "asset": "assets/index-DDPj-kFV.js",
+      "matches": true,
+      "sha256": "ae3af02c63cbbf25036efdc645938df5718c990f8b82799696f9eb85031db02a"
+    },
+    {
+      "asset": "assets/BriefingExportPage-Cfh1yf33.js",
+      "matches": true,
+      "sha256": "3aeed0e3e2b8ecba7f1f3c4d2a02270a5d06bccd0282bdf8a396417de214a942"
+    },
+    {
+      "asset": "assets/PresentationExportPage-B7Hxgi1e.js",
+      "matches": true,
+      "sha256": "26499820174052af9635b2a32e3c6c2c4181545b5b8dd8824ceff6779e3315a3"
+    },
+    {
+      "asset": "assets/DiagnosticsPage-veH_VPHJ.js",
+      "matches": true,
+      "sha256": "7296a05991b6bfe1abaef11c0fbdac3b4d0c13fab2d54038de25323569ef2971"
+    }
+  ]
+}

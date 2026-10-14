@@ -15,4 +15,8 @@ Chrome isolado em desktop e celular, com CSP extraída de public/_headers e apli
 - Regressão completa: 427 testes aprovados em 116 arquivos. Typecheck e lint aprovados (avisos preexistentes).
 
 ## Publicação
-Checks finais e confirmação do cabeçalho público serão registrados após publicação. Esta correção não encerra os critérios de integrações e aceite operacional já pendentes nos diagnósticos.
+Build de produção aprovado. Commit `647b995` enviado para `codex/master-audit-15-1`. Deploy Cloudflare confirmado: versão `907c2c6a-e60b-4125-aee9-fc671fa75f46`.
+
+O domínio público retorna a CSP corrigida na rota do briefing informado e em /settings/diagnostics. Index, BriefingExportPage, PresentationExportPage e DiagnosticsPage coincidem byte a byte com o build verificado. Recibo: docs/qa/pdf-csp-public-verification-2026-10-14.json.
+
+A aba previamente aberta precisa ser recarregada para receber a política HTTP atualizada e reinicializar o módulo WebAssembly que havia abortado. Esta correção não encerra os critérios de integrações e aceite operacional já pendentes nos diagnósticos.
