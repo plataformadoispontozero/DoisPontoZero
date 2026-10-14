@@ -44,3 +44,6 @@ Documentação consultada: https://supabase.com/docs/guides/realtime/presence, h
 
 ## Publicação verificada
 Worker separado doispontozero-office-homologacao; versão cb29b22e-21b3-4c6e-b508-aeb27e3267c8. HTML e dois bundles (principal e diagnósticos) comparados byte a byte com o build. URLs: https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/office e /settings/diagnostics. Nenhum deploy no frontend principal.
+
+## Aceite do responsável
+O usuário confirmou explicitamente “homologar a fase 03”. Homologação aceita e Fase 04 liberada, ainda não iniciada. O aceite substitui a pendência de aprovação humana; não constitui evidência de execução, pelo agente, dos testes entre duas contas reais descritos acima.

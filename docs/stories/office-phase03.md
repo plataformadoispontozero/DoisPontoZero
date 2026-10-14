@@ -17,7 +17,7 @@ Presença global sem mídia, após aceite explícito das Fases 01 e 02. Reutiliz
 - [x] Typecheck, lint e build; aviso novo de Fast Refresh corrigido.
 - [x] Publicação e conferência: HTML, bundle principal e diagnóstico correspondem ao build validado.
 - [ ] Homologação com dois membros reais: presença, navegação, refresh, saída e reconexão.
-- [ ] Aceite do responsável. Fase 04 bloqueada.
+- [x] Aceite explícito do responsável: “homologar a fase 03”. Fase 04 liberada, ainda não iniciada.
 
 ## Arquivos
 - src/app/providers/AppProviders.tsx
