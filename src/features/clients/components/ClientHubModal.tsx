@@ -1,3 +1,4 @@
+import {ClientAssignmentsTab} from './ClientAssignmentsTab';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
@@ -83,9 +84,10 @@ export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}
   </header>
   <div className="flex min-h-0 flex-1 flex-col md:flex-row">
    <nav aria-label="Seções da ficha do cliente" className="flex shrink-0 gap-1 overflow-x-auto border-b border-white/10 p-3 md:w-52 md:flex-col md:border-b-0 md:border-r">
-    {['Visão geral','Dados e links','Arquivos no Drive','Histórico',...(canBriefs?['Briefings']:[]),...(canStrategy?['Calendário']:[]),...(canPresentations?['Apresentações']:[])].map(item=><button key={item} aria-current={section===item?'page':undefined} className={`shrink-0 rounded-lg px-4 py-3 text-left text-sm ${section===item?'bg-orange-500/15 text-orange-300':'text-zinc-300 hover:bg-white/5'}`} onClick={()=>{setSection(item);setEditing(false);}}>{item}</button>)}
+    {['Visão geral','Dados e links','Atribuições','Arquivos no Drive','Histórico',...(canBriefs?['Briefings']:[]),...(canStrategy?['Calendário']:[]),...(canPresentations?['Apresentações']:[])].map(item=><button key={item} aria-current={section===item?'page':undefined} className={`shrink-0 rounded-lg px-4 py-3 text-left text-sm ${section===item?'bg-orange-500/15 text-orange-300':'text-zinc-300 hover:bg-white/5'}`} onClick={()=>{setSection(item);setEditing(false);}}>{item}</button>)}
    </nav>
    <main className="min-w-0 flex-1 overflow-y-auto p-4 md:p-6">
+    {section==='Atribuições'&&<ClientAssignmentsTab clientId={client.id} agencyId={agency} canEdit={canEdit}/>}
     {section==='Histórico'&&<ClientLegacyPanel clientId={client.id}/>}
     {section==='Arquivos no Drive'&&<ClientDrivePanel clientId={client.id}/>}
     {section==='Briefings'&&<ClientBriefingsTab clientId={client.id} agencyId={agency}/>}

@@ -1,12 +1,15 @@
 {
-  "id": "production-grouped-sla-20261014",
-  "title": "Produção agrupada e prazo de 48 horas",
+  "id": "client-assignments-photography-20261014",
+  "title": "Atribuições por cliente e direção fotográfica",
   "verified_at": "2026-10-14",
   "status": "published",
-  "evidence": "docs/qa/production-grouped-sla-2026-10-14.md",
+  "evidence": "docs/qa/client-assignments-photography-2026-10-14.md",
   "checks": [
-    "417 testes de regressão aprovados",
-    "39 cenários de navegador aprovados: desktop e celular",
+    "427 testes de regressão aprovados",
+    "12 cenários desta entrega aprovados: desktop e celular",
+    "Typecheck e lint verificados",
+    "Atribuições por setor: SQL autenticado real com rollback",
+    "Novas demandas herdam membros ativos; atribuições anteriores preservadas",
     "48 horas corridas desde aprovação editorial: marco confirmado no banco",
     "Recebimento do briefing e criação: datas separadas da aprovação",
     "Agrupamento por cliente e etapa, recolhido por padrão",
@@ -212,6 +215,33 @@
       "result": "48 horas corridas contadas da aprovação do calendário. Urgência, curto/médio prazo e atraso nas demandas; datas de criação, briefing, aprovação e revisão no pop-up. História sem data comprovada não recebe horário inventado.",
       "pending": [
         "Aceite operacional do gestor no quadro publicado."
+      ]
+    },
+    {
+      "id": "client-department-assignments",
+      "title": "Atribuições por cliente e setor",
+      "phases": [
+        "phase-03",
+        "phase-04",
+        "phase-05"
+      ],
+      "result": "Aba Atribuições na ficha: vários membros por setor, gravação autorizada e herança nas novas demandas de Design, Vídeo, Social Media e Tráfego. Demandas existentes preservadas.",
+      "technical_status": "verified",
+      "pending": [
+        "Selecionar a equipe real de cada cliente e validar o fluxo diário da agência."
+      ]
+    },
+    {
+      "id": "photographic-direction",
+      "title": "Direção fotográfica e espaço negativo",
+      "phases": [
+        "phase-04",
+        "phase-07"
+      ],
+      "result": "Assunto ligado à copy, plano, ângulo, luz e fundo; regra dos terços e área limpa à esquerda, direita, em cima ou embaixo. Formulários e demandas preservam a orientação.",
+      "technical_status": "verified",
+      "pending": [
+        "Aceite da orientação de captação pelo designer e videomaker/fotógrafo."
       ]
     }
   ]

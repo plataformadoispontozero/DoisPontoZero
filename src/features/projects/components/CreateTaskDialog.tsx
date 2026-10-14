@@ -1,3 +1,5 @@
+import {defaultPhotography} from '@/features/production/photographicDirection'
+import {PhotographyDirectionFields} from '@/features/production/PhotographyDirectionFields'
 import React, { useState } from 'react'
 import {serializeCreativeDemand,type CreativeDemand} from './creativeDemand'
 import { Plus } from 'lucide-react'
@@ -51,7 +53,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     parent_task_id: null,
   })
 
-  const emptyCreative=React.useCallback(():CreativeDemand=>({format:titlePrefix==='[Videomaker]'?'reels':titlePrefix==='[Design]'?'post':'general',title:'',support:'',cta:'',caption:'',hashtags:'',direction:'',angle:'',sequence:''}),[titlePrefix])
+  const emptyCreative=React.useCallback(():CreativeDemand=>({format:titlePrefix==='[Videomaker]'?'reels':titlePrefix==='[Design]'?'post':'general',title:'',support:'',cta:'',caption:'',hashtags:'',direction:'',angle:'',sequence:'',photography:defaultPhotography()}),[titlePrefix])
   const [creative,setCreative]=useState<CreativeDemand>(emptyCreative)
   const structured=creative.format!=='general'
   const [error, setError] = useState('')
@@ -148,7 +150,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           </div>
 
           }
-          {structured&&<section className="space-y-4 rounded-xl border border-white/10 p-4"><h3 className="font-semibold">Copy e direção de produção</h3><p className="text-xs text-zinc-400">Preencha o conteúdo aprovado. A legenda e as hashtags serão salvas juntas na demanda.</p>{([['support','Texto de apoio'],['cta','CTA'],['caption','Legenda'],['hashtags','Hashtags'],['direction','Direção criativa'],['angle','Ângulo e enquadramento']] as const).map(([key,label])=><label key={key} className="block text-sm">{label}<Textarea aria-label={label} value={creative[key]} onChange={e=>setCreative(c=>({...c,[key]:e.target.value}))} rows={key==='caption'||key==='direction'?4:2} placeholder={key==='direction'?'Imagem, composição, iluminação, referências e elementos da marca':key==='angle'?'Ângulo da imagem, plano, enquadramento e movimento de câmera':undefined}/></label>)}{creative.format!=='post'&&<label className="block text-sm">{creative.format==='carousel'?'Lâminas do carrossel':'Cenas do roteiro'}<Textarea aria-label={creative.format==='carousel'?'Lâminas do carrossel':'Cenas do roteiro'} rows={8} value={creative.sequence} onChange={e=>setCreative(c=>({...c,sequence:e.target.value}))} placeholder={creative.format==='carousel'?'Lâmina 1: Título, texto e direção visual\nLâmina 2: …':'Cena 1 (8s): Fala, texto na tela, visual, câmera e áudio\nCena 2 (10s): …'}/></label>}</section>}
+          {structured&&<section className="space-y-4 rounded-xl border border-white/10 p-4"><h3 className="font-semibold">Copy e direção de produção</h3><p className="text-xs text-zinc-400">Preencha o conteúdo aprovado. A legenda e as hashtags serão salvas juntas na demanda.</p>{([['support','Texto de apoio'],['cta','CTA'],['caption','Legenda'],['hashtags','Hashtags'],['direction','Direção criativa'],['angle','Ângulo e enquadramento']] as const).map(([key,label])=><label key={key} className="block text-sm">{label}<Textarea aria-label={label} value={creative[key]} onChange={e=>setCreative(c=>({...c,[key]:e.target.value}))} rows={key==='caption'||key==='direction'?4:2} placeholder={key==='direction'?'Imagem, composição, iluminação, referências e elementos da marca':key==='angle'?'Ângulo da imagem, plano, enquadramento e movimento de câmera':undefined}/></label>)}<PhotographyDirectionFields value={creative.photography||defaultPhotography()} copy={form.title} disabled={createTask.isPending} onChange={photography=>setCreative(c=>({...c,photography}))}/>{creative.format!=='post'&&<label className="block text-sm">{creative.format==='carousel'?'Lâminas do carrossel':'Cenas do roteiro'}<Textarea aria-label={creative.format==='carousel'?'Lâminas do carrossel':'Cenas do roteiro'} rows={8} value={creative.sequence} onChange={e=>setCreative(c=>({...c,sequence:e.target.value}))} placeholder={creative.format==='carousel'?'Lâmina 1: Título, texto e direção visual\nLâmina 2: …':'Cena 1 (8s): Fala, texto na tela, visual, câmera e áudio\nCena 2 (10s): …'}/></label>}</section>}
           {/* Column + Priority */}
           <div className="grid grid-cols-2 gap-3">
             <div>

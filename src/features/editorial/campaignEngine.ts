@@ -1,3 +1,4 @@
+import {defaultPhotography,renderPhotography} from '@/features/production/photographicDirection';
 import type {
   EditorialContext,
   EditorialFormat,
@@ -223,7 +224,8 @@ export function renderEditorialCopy(item:MonthlyItem):string{
 }
 export function renderProductionDirection(item:MonthlyItem):string{
  const trace=item.editorial;if(!trace)return '';
- const base=trace.visual.split('\nRoteiro técnico:')[0];
+ let base=trace.visual.split('\nRoteiro técnico:')[0];
+ if(trace.photography!==undefined){base=base.split('\nDireção fotográfica:\n')[0];const photo=renderPhotography(trace.photography,trace.postConcept?.headline||item.title);if(photo)base+='\nDireção fotográfica:\n'+photo;}
  if(item.format!=='reels'||!trace.scenes)return base;
  return base+'\nRoteiro técnico:\n'+trace.scenes.map((scene,i)=>`Cena ${i+1} (${scene.seconds}s): ${scene.camera||'Plano a confirmar'}; ${scene.audio||'Áudio a confirmar'}. ${scene.visual}`).join('\n');
 }
@@ -479,6 +481,7 @@ export function generateCampaignPlan(
           : []),
       ],
     };
+    trace.photography={...defaultPhotography(),subject:`Representar visualmente o tema ${theme}; confirmar as pessoas, produtos e ambientes disponíveis antes da captação.`};
     trace.hashtags='#'+theme.replace(/[^\p{L}\p{N}_]/gu,'').slice(0,60);
     trace.rules.push('narrativa-progressiva-revisavel');
     const shortTheme=topicReference(theme);
@@ -490,6 +493,7 @@ export function generateCampaignPlan(
       trace.visual+=` ${trace.postConcept.composition} Enquadramento sugerido: plano médio com ângulo a 45 graus e luz lateral suave quando houver fotografia autorizada; reservar espaço para título e CTA.`;
       item.copy=renderEditorialCopy(item);
     } else item=applyNarrativeStructure(item,format==='carousel'?slidesCount:scenesCount,seconds);
+    item.editorial!.visual=renderProductionDirection(item);
     results.push(item);
   }
   validateEditorialItems(results, context);

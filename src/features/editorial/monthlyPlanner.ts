@@ -1,3 +1,4 @@
+import type {PhotographicDirection} from '@/features/production/photographicDirection';
 export type EditorialFormat = "post" | "reels" | "carousel";
 export interface MonthlyItem {
   date: string;
@@ -54,6 +55,7 @@ export interface EditorialTrace {
   visual: string;
   caption?: string;
   hashtags?: string;
+  photography?: PhotographicDirection;
   postConcept?: { headline: string; support: string; composition: string; caption: string };
   slides?: { text: string; visual: string; headline?: string; role?: string }[];
   scenes?: { seconds: number; text: string; visual: string; narration?: string; onScreen?: string; camera?: string; audio?: string; role?: string }[];
