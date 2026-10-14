@@ -22,4 +22,8 @@ A geração serializa o guia em editorial.visual para que o formatador existente
 - Consulta sem clients.edit, falha de carregamento e diagnósticos: 4 cenários desktop/celular aprovados. Total desta entrega: 12 cenários de navegador distintos aprovados.
 
 ## Publicação
-Build e confirmação pública serão registrados após a publicação. O aceite do uso diário da equipe permanece pendente nos diagnósticos.
+Build de produção aprovado. Commit de implementação `5f9d65a` enviado à branch `codex/master-audit-15-1`. Migration aplicada no projeto Supabase `pvkhlobsiszrjtblpruu`. Deploy Cloudflare confirmado: versão `052a994a-11a0-46b4-af6e-eb3366ba4f0f`.
+
+O domínio público https://doispontozero.renatodesigner.com.br/clients referencia o index novo. Os 6 assets de index, Clientes, criação de demandas, calendário editorial, detalhes e diagnósticos coincidem byte a byte com o build verificado. Recibo de hashes: docs/qa/client-assignments-photography-assets-2026-10-14.json.
+
+O aceite do uso diário da equipe permanece pendente nos diagnósticos. Nenhuma equipe real foi escolhida sem indicação do gestor.

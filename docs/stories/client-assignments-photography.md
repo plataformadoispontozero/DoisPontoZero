@@ -16,7 +16,7 @@
 - [x] SQL autenticado real com rollback: demanda recebe o responsável; teste não permanece.
 - [x] Typecheck e lint sem erros (avisos preexistentes).
 - [x] 12 cenários de navegador e build de produção.
-- [ ] Publicação confirmada no domínio.
+- [x] Publicação confirmada no domínio; 6 assets coincidem com o build.
 - [ ] Aceite operacional da equipe real.
 
 ## Arquivos
@@ -37,3 +37,4 @@
 - docs/RELEASE_STATUS.json
 - docs/qa/client-assignments-photography-2026-10-14.md
 - docs/stories/client-assignments-photography.md
+- docs/qa/client-assignments-photography-assets-2026-10-14.json

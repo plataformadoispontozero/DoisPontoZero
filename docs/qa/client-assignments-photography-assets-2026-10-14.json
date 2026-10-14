@@ -1,0 +1,32 @@
+[
+  {
+    "asset": "assets/index-Bmt2VDuy.js",
+    "sha256": "d4a6cde6e9a389ed551bb5f5e5c6e74296afafaeeea0ae13f3e07ec3fd143128",
+    "matches": true
+  },
+  {
+    "asset": "assets/ClientsPage-Bq3wBhfG.js",
+    "sha256": "9d761810b4cef81fa763d01e1599a4183b4169cfd1d10b8dc9b6b4628a163a86",
+    "matches": true
+  },
+  {
+    "asset": "assets/CreateTaskDialog-C_CyBsDi.js",
+    "sha256": "bd3a9d08c6568ed232d61c1639f710477432d8d40e2df26066440ca743a5559e",
+    "matches": true
+  },
+  {
+    "asset": "assets/MonthlyEditorialPage-DQFbu_Ep.js",
+    "sha256": "93b375d3af714d66ad438a15d493bfbcfccaa9c63e056e962850edff1b96e2ff",
+    "matches": true
+  },
+  {
+    "asset": "assets/TaskDetailPanel-Cerca-ZO.js",
+    "sha256": "42f24d22d49a1b6519e91d10087b6bca0d55408a5b655dc62b6e0574d4334f5d",
+    "matches": true
+  },
+  {
+    "asset": "assets/DiagnosticsPage-BDx1nlH9.js",
+    "sha256": "83554f80bbb8ad1004caaa6e66a56af6eaa7e691ddfca4a4b9f920d4918e214e",
+    "matches": true
+  }
+]
