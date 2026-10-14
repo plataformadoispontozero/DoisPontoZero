@@ -19,3 +19,5 @@ Verificação local: 9 testes em 5 arquivos passaram, incluindo 4 testes Postgre
 ## Fechamento web em 14/10/2026
 
 Implementação e testes revisados no pacote atual. Verificações de banco e limites externos: docs/qa/phase-closure-web-2026-10-14.md. Publicação registrada após o deploy; avisos antigos sobre migrations ainda ausentes são históricos.
+
+Deploy confirmado: `0294b685-da52-43a8-8b97-2c40cd675b51`; commit `62e18ee`. Homologações humanas/externas permanecem explícitas no relatório atual.

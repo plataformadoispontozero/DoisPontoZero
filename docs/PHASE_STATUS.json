@@ -550,11 +550,13 @@
   "frontend_publication": {
     "status": "DEPLOYED_SMOKE_PASS",
     "branch": "codex/master-audit-15-1",
-    "source_commit": "ad45bce",
-    "cloudflare_version": "14f4945d-b36e-4e32-af05-f7ce1ff6843f",
+    "source_commit": "62e18ee",
+    "cloudflare_version": "0294b685-da52-43a8-8b97-2c40cd675b51",
     "url": "https://doispontozero.renatodesigner.com.br",
     "backend_verified": true,
-    "backend_verification_scope": "SELECTED_AUTHENTICATED_RPCS_AND_POLICIES_WITH_ROLLBACK_NOT_GLOBAL"
+    "backend_verification_scope": "SELECTED_AUTHENTICATED_RPCS_POLICIES_ROLLBACK_AND_CRON_NOT_GLOBAL",
+    "main_bundle": "index-CmcYykLr.js",
+    "verified_at": "2026-10-14"
   },
   "prompt_17": {
     "started_at": "2026-10-11T06:08:08.221058+00:00",

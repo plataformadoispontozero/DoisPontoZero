@@ -1,6 +1,6 @@
 # Materiais privados do Drive no chat
 
-Status: In Progress
+Status: Publicado — aceite externo pendente
 
 Selecionar cliente, pasta e arquivo existente no Drive central; publicar mensagem com metadados leves. Download exige acesso atual à conversa e ao cliente, sem OAuth pessoal ou arquivos no banco.
 
@@ -21,3 +21,5 @@ Migration e Edge Function devem ser publicados por @devops após gates combinado
 ## Fechamento web em 14/10/2026
 
 Implementação e testes revisados no pacote atual. Verificações de banco e limites externos: docs/qa/phase-closure-web-2026-10-14.md. Publicação registrada após o deploy; avisos antigos sobre migrations ainda ausentes são históricos.
+
+Deploy confirmado: `0294b685-da52-43a8-8b97-2c40cd675b51`; commit `62e18ee`. Homologações humanas/externas permanecem explícitas no relatório atual.

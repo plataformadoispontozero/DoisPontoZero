@@ -19,7 +19,7 @@ Cliente de referência: **Aurora Café — TESTE FICTÍCIO**. Escopo das salas c
 
 ## Verificação e limites
 
-Regressão final: **404 testes em 110 arquivos**; typecheck e lint sem erros (avisos legados mantidos). Build de produção registrado após o gate de publicação. Navegador: **76 cenários únicos** em desktop e celular; **18 páginas de Configurações** abertas e recarregadas em cada viewport. As APIs desses cenários são controladas e não comprovam OAuth, SMTP, Meta nem dois usuários humanos simultâneos.
+Regressão final: **404 testes em 110 arquivos**; typecheck e lint sem erros (avisos legados mantidos). Build de produção aprovado; snapshot isolado do commit de implementação publicado. Navegador: **76 cenários únicos** em desktop e celular; **18 páginas de Configurações** abertas e recarregadas em cada viewport. As APIs desses cenários são controladas e não comprovam OAuth, SMTP, Meta nem dois usuários humanos simultâneos.
 
 Banco remoto, com contexto `authenticated` e transações com rollback:
 
@@ -50,3 +50,17 @@ O advisor aponta **proteção de senhas vazadas desativada no Auth**. Essa confi
 5. Ativar proteção de senhas vazadas do Supabase; verificar backup/restauração e desempenho sob carga real em ambiente isolado.
 
 Não há evidência para declarar `production_ready=true` ou toda a plataforma 100% homologada.
+
+## Publicação confirmada
+
+- Implementação: commit `62e18ee`, branch `codex/master-audit-15-1`, push concluído.
+- Cloudflare: `0294b685-da52-43a8-8b97-2c40cd675b51`.
+- Domínio: https://doispontozero.renatodesigner.com.br.
+- Bundle principal: `index-CmcYykLr.js`; diagnóstico: `DiagnosticsPage-DfXkSmCB.js`.
+- Comparação byte a byte do domínio com o snapshot: principal, Diagnósticos, Agência, Permission Studio, Chat, Reuniões e Segurança — sete correspondências.
+- Invariantes remotos após testes: Aurora com 1 cliente, 1 calendário e 5 demandas; papéis temporários 0 e papel original OWNER restaurado.
+- Checkout mantém apenas a auditoria antiga não incluída e o artefato local da CLI fora do commit. Nenhum desses arquivos foi apagado.
+
+Migrations deste pacote: `20261013151444`, `20261013151719`, `20261014054349`, `20261014054352`, `20261014060449`, `20261014060734`, `20261014060740`, `20261014061123`, `20261014061507`, `20261014061603`, `20261014061827`, `20261014101946`, `20261014101950`, `20261014102539`; arquivos locais alinhados às versões remotas.
+
+Advisors após fechamento: zero avisos de search_path mutável; 13 informações de RLS sem policies (acesso direto negado intencionalmente), 8 endpoints públicos intencionais, 34 funções autenticadas privilegiadas com guardas e 1 aviso de proteção de senhas vazadas desativada. Não converter contagem de avisos em declaração automática de vulnerabilidade ou de segurança integral.

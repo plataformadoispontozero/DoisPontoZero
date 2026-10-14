@@ -10,7 +10,7 @@ Solicitado em 14/10/2026. Referência: Aurora Café — TESTE FICTÍCIO. Escopo 
 - [x] Fase 11: Configurações carregam dados reais, contatos/identidade/preferências com gravação atômica; registros ausentes inicializados.
 - [x] Fase 05: aniversário automático respeitando fuso, duplicação anual e acesso privado; execuções no servidor verificadas.
 - [x] Fase 12: gates de segurança, scopes/ACLs e regressão final incluindo 18 páginas de Configurações nos dois viewports.
-- [ ] Publicação e conferência do domínio/bundles.
+- [x] Publicação e conferência do domínio/bundles.
 
 ## Limites de aceite
 
@@ -101,3 +101,5 @@ Lista detalhada:
 - supabase/migrations/20261014101946_chat_permission_revocation.sql
 - supabase/migrations/20261014101950_authenticated_operational_function_acls.sql
 - supabase/migrations/20261014102539_strategy_catalog_permission_gates.sql
+
+Publicação: implementação `62e18ee`, Cloudflare `0294b685-da52-43a8-8b97-2c40cd675b51`, sete bundles conferidos no domínio. Gates: 404 testes/110 arquivos, 76 cenários únicos de navegador, typecheck/lint/build aprovados.

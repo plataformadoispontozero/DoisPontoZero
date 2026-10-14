@@ -1,5 +1,5 @@
 # Fechamento de RPCs legadas sem autorização
-Status: In Progress
+Status: Publicado — aceite externo pendente
 
 Auditoria remota identificou ranking de squads, escrita de snapshots de performance e progresso de projetos como SECURITY DEFINER sem guardas de sessão/tenant. Os bodies remotos correspondem aos arquivos históricos: hashes MD5 normalizados 04da46fee9cd6a4f2760a2bc5a42468e, 8e23cb73de5625a146c59beb4b8c68f4 e d4bc999fcda194c978a649079650f38d. MD5 aqui é comparação de conteúdo, não mecanismo de segurança.
 
@@ -16,3 +16,5 @@ Nenhum snapshot ou tarefa real foi alterado. Testes locais executam SQL real em 
 ## Fechamento web em 14/10/2026
 
 Implementação e testes revisados no pacote atual. Verificações de banco e limites externos: docs/qa/phase-closure-web-2026-10-14.md. Publicação registrada após o deploy; avisos antigos sobre migrations ainda ausentes são históricos.
+
+Deploy confirmado: `0294b685-da52-43a8-8b97-2c40cd675b51`; commit `62e18ee`. Homologações humanas/externas permanecem explícitas no relatório atual.

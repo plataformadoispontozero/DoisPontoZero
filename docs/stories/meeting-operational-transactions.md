@@ -1,5 +1,5 @@
 # Reuniões: persistência operacional e isolamento
-Status: Local verified — aplicação remota e publicação aguardam gate combinado.
+Status: Publicado — aceite externo pendente.
 
 A auditoria encontrou três RPCs chamadas pelo frontend e ausentes no banco remoto. As policies antigas também usavam correlação incorreta com profiles.
 
@@ -19,3 +19,5 @@ Validação local: 8 testes de reuniões passaram (4 PostgreSQL PGlite com SQL r
 ## Fechamento web em 14/10/2026
 
 Implementação e testes revisados no pacote atual. Verificações de banco e limites externos: docs/qa/phase-closure-web-2026-10-14.md. Publicação registrada após o deploy; avisos antigos sobre migrations ainda ausentes são históricos.
+
+Deploy confirmado: `0294b685-da52-43a8-8b97-2c40cd675b51`; commit `62e18ee`. Homologações humanas/externas permanecem explícitas no relatório atual.

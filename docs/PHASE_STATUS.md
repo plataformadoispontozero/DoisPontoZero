@@ -21,3 +21,5 @@ Evidências atuais: `docs/RELEASE_STATUS.json` e `docs/qa/phase-closure-web-2026
 Propostas: módulo retirado por solicitação do usuário; rotas internas redirecionadas, página pública descontinuada e RPCs antigas desativadas. Dados históricos preservados.
 
 Snapshots `recovery_02` e `prompt_17` são históricos. Não descrevem o estado atual das verificações do banco. Testes controlados de navegador não comprovam OAuth, SMTP ou uso humano simultâneo. O relatório atual registra explicitamente quais operações foram verificadas com papéis SQL e rollback.
+
+Última publicação confirmada: implementação `62e18ee`, Cloudflare `0294b685-da52-43a8-8b97-2c40cd675b51`, bundle `index-CmcYykLr.js`; sete bundles conferidos no domínio. Evidência completa no relatório de fechamento web.
