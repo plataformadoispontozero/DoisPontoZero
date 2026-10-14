@@ -11,7 +11,7 @@ Pedido: concluir os ajustes de grupos por cliente, calendários, Kanban exclusiv
 - [x] PDF de apresentações com materiais visuais e preview/download consistente.
 - [x] Diagnóstico registra entregas, verificação e limites, sem concluir fases sem aceite.
 - [x] 353 testes de regressão, 34 cenários de navegador e renderização PDF aprovados.
-- [ ] Migration, Edge Function, push, deploy e verificação remota.
+- [x] Migration 20261014022802, Meta Edge Function v2, push 2d2ae80, deploy 14f4945d-b36e-4e32-af05-f7ce1ff6843f e verificação remota.
 
 Arquivo de evidências: docs/qa/client-workspace-adjustments-2026-10-14.md.
 File list: src/features/tasks/{ClientTaskGroups.tsx,TasksPage.tsx}; src/features/social-media/SocialMediaPage.tsx; src/features/projects/{ProjectsPage.tsx,management-kanban.database.test.ts}; src/features/auth/{access.ts,ProtectedWorkspace.tsx}; src/components/navigation/{NavLinks.ts,NavigationGroups.tsx}; src/features/editorial/MonthlyEditorialPage.tsx; src/features/briefing/BriefingPage.tsx; src/features/calendar/CalendarPage.tsx; src/features/integrations/{ClientMetaPanel.tsx,metaInsights.test.ts}; supabase/functions/meta-workspace/{index.ts,insights.ts}; src/features/presentations/PresentationExportPage.tsx; src/features/presentations/pdf/{PresentationPdfDocument.tsx,preparePresentationMedia.ts,preparePresentationMedia.test.ts,generatePresentationPdf.ts,types.ts,transformPresentationToPdfModel.ts}; src/features/settings/{DiagnosticsPage.tsx,ReleaseDiagnostics.tsx,releaseEvidence.ts}; docs/RELEASE_STATUS.json; migration management_kanban; testes de rotas e navegador.
