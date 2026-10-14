@@ -1,4 +1,6 @@
-import { groupTasksByClient } from "@/features/tasks/taskGroups";
+import {groupTasksByClient} from "@/features/tasks/taskGroups";
+import {ClientKanbanBoard} from "@/features/projects/components/ClientKanbanBoard";
+import {useMoveTaskGroup} from "@/features/tasks/hooks/useTasks";
 import { ClientMetaPanel } from "@/features/integrations/ClientMetaPanel";
 import { ClientDrivePanel } from "@/features/integrations/ClientDrivePanel";
 import { useClients } from "@/features/clients/hooks/useClients";
@@ -58,7 +60,9 @@ function ProductionWorkspace({ department }: { department: string }) {
   const agencyId = useAgencyId(),
     auth = useAuth();
   const canCreate = usePermission("tasks.create"),
-    canEdit = usePermission("tasks.edit");
+    canEdit = usePermission("tasks.edit"),canMove=usePermission("tasks.move");
+  const groupMove=useMoveTaskGroup();
+  const [moveError,setMoveError]=useState("");
   const clients = useClients(agencyId);
   const [params]=useSearchParams();
   const [materialClient, setMaterialClient] = useState("");
@@ -301,17 +305,7 @@ function ProductionWorkspace({ department }: { department: string }) {
               )}
             </div>
           ) : view === "board" ? (
-            <div className="space-y-6">
-              {groupTasksByClient(filtered).map(group => <section key={group.id} aria-label={`Demandas de ${group.name}`} className="rounded-2xl border border-white/10 p-4">
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">{group.name}</h2><span className="text-sm text-zinc-400">{group.tasks.length} demandas</span></div>
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                  {stages.map(stage => <section key={stage.status} aria-label={`${group.name} · ${stage.label}`} className="min-w-0 rounded-xl bg-[var(--color-surface-elevated)] p-3">
-                    <h3 className="mb-4 flex justify-between text-sm font-semibold">{stage.label}<span>{group.tasks.filter(t=>t.status===stage.status).length}</span></h3>
-                    <div className="space-y-3">{group.tasks.filter(t=>t.status===stage.status).map(card)}</div>
-                  </section>)}
-                </div>
-              </section>)}
-            </div>
+            <><ClientKanbanBoard tasks={groupTasksByClient(tasks).filter(g=>g.tasks.some(t=>filtered.some(f=>f.id===t.id))).flatMap(g=>g.tasks)} regionPrefix="Demandas de" canMove={canMove} busy={groupMove.isPending||query.isFetching} onOpen={setSelected} onMove={async(items,status)=>{setMoveError('');try{await groupMove.mutateAsync({agencyId,taskIds:items.map(t=>t.id),status})}catch{setMoveError('Não foi possível movimentar. Nenhuma demanda foi alterada.')}}}/>{moveError&&<p role="alert">{moveError}</p>}</>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">
               {filtered.map(card)}

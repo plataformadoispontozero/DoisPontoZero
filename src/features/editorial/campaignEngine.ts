@@ -216,10 +216,10 @@ function narrativeBlocks(trace:EditorialTrace,size:number):NarrativeBlock[]{
 }
 export function renderEditorialCopy(item:MonthlyItem):string{
  const trace=item.editorial;if(!trace)return item.copy;
- const caption=trace.caption;
+ const caption=[trace.caption,trace.hashtags].filter(Boolean).join('\n');
  if(item.format==='carousel'&&trace.slides)return trace.slides.map((slide,i)=>`Slide ${i+1}: ${slide.headline&&slide.headline!==slide.text?slide.headline+' — ':''}${slide.text}`).join('\n')+(caption?`\nLegenda: ${caption}`:'');
  if(item.format==='reels'&&trace.scenes)return trace.scenes.map((scene,i)=>`Cena ${i+1} (${scene.seconds}s): ${scene.text}${scene.onScreen?`\nNa tela: ${scene.onScreen}`:''}`).join('\n')+(caption?`\nLegenda: ${caption}`:'');
- return trace.postConcept?`Texto da arte: ${trace.postConcept.headline}\nApoio: ${trace.postConcept.support}\nLegenda: ${trace.postConcept.caption}`:item.copy;
+ return trace.postConcept?`Texto da arte: ${trace.postConcept.headline}\nApoio: ${trace.postConcept.support}\nLegenda: ${trace.postConcept.caption}${trace.hashtags?`\n${trace.hashtags}`:''}`:item.copy;
 }
 export function renderProductionDirection(item:MonthlyItem):string{
  const trace=item.editorial;if(!trace)return '';
@@ -479,6 +479,7 @@ export function generateCampaignPlan(
           : []),
       ],
     };
+    trace.hashtags='#'+theme.replace(/[^\p{L}\p{N}_]/gu,'').slice(0,60);
     trace.rules.push('narrativa-progressiva-revisavel');
     const shortTheme=topicReference(theme);
     trace.caption=`${title}.\n${fact||`Ao pensar em ${shortTheme}, organize sua necessidade, seus critérios e o próximo passo.`}\n${cta}`;
@@ -486,7 +487,7 @@ export function generateCampaignPlan(
     if(format==='post'){
       const support=fact||`${decisionFrame(trace).need} Ao pensar em ${shortTheme}, organize essa resposta antes do próximo passo.`;
       trace.postConcept={headline:title,support,composition:`Poster com título em destaque sobre ${shortTheme}, apoio em um único bloco e CTA discreto. Criar uma ilustração conceitual ou usar material autorizado; evitar imagem que sugira resultados inexistentes.`,caption:trace.caption};
-      trace.visual+=` ${trace.postConcept.composition}`;
+      trace.visual+=` ${trace.postConcept.composition} Enquadramento sugerido: plano médio com ângulo a 45 graus e luz lateral suave quando houver fotografia autorizada; reservar espaço para título e CTA.`;
       item.copy=renderEditorialCopy(item);
     } else item=applyNarrativeStructure(item,format==='carousel'?slidesCount:scenesCount,seconds);
     results.push(item);

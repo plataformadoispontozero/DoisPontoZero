@@ -1,16 +1,18 @@
 {
-  "id": "management-kanban-20261014",
-  "title": "Kanban Geral exclusivo da gestão",
+  "id": "client-kanban-creative-demands-20261014",
+  "title": "Kanban por cliente e copy de produção",
   "verified_at": "2026-10-14",
   "status": "published",
-  "evidence": "docs/qa/management-kanban-2026-10-14.md",
+  "evidence": "docs/qa/client-kanban-creative-demands-2026-10-14.md",
   "checks": [
-    "406 testes de regressão aprovados",
-    "18 cenários do Kanban: desktop e celular",
-    "Gestor sem vínculo no projeto: acesso confirmado no banco",
-    "Membro profissional: agregado negado no banco",
-    "Paginação, movimentação e pop-up validados",
-    "Typecheck, lint e build verificados"
+    "411 testes de regressão aprovados",
+    "33 cenários de navegador em desktop e celular",
+    "Movimentação individual: quatro outras demandas preservadas no banco",
+    "Movimentação do grupo: status e conclusão sincronizados no banco",
+    "Arraste por mouse e seleção de peças verificados",
+    "Copy completa de post, carrossel e vídeo verificada",
+    "Desktop e celular, permissões e rollback verificados",
+    "Typecheck, lint, regressão e build verificados"
   ],
   "deliveries": [
     {
@@ -30,7 +32,7 @@
         "phase-02",
         "phase-04"
       ],
-      "result": "Visão global por cliente para OWNER, ADMIN e MANAGER, inclusive sem vínculo individual ao projeto. Filtros, responsáveis, prazos, paginação e movimentação sincronizada no quadro e no pop-up; bloqueio de profissionais validado.",
+      "result": "Um único card por cliente em quatro colunas. Arraste individual ou do cliente inteiro, seleção de peças e movimentos transacionais. Etapas individuais preservadas, pop-up central e acesso exclusivo da gestão.",
       "pending": [
         "Aceite operacional do gestor após usar o quadro publicado em /projects."
       ],
@@ -173,6 +175,31 @@
       "result": "Agência, vínculo e papel atuais validados; ranking/progresso protegidos, conversão antiga retirada e endpoints antigos de propostas desativados. Funções internas bloqueadas ao acesso anônimo.",
       "pending": [
         "Ativar a proteção de senhas vazadas nas configurações de Auth do Supabase."
+      ]
+    },
+    {
+      "id": "production-client-cards",
+      "title": "Design e Videomaker: cliente, peça e grupo",
+      "phases": [
+        "phase-04"
+      ],
+      "result": "Cards únicos por cliente também em Design e Vídeo. Cada peça pode avançar sozinha, selecionadas podem avançar juntas e o grupo completo pode ser movido sem alterar outros setores.",
+      "technical_status": "verified",
+      "pending": [
+        "Aceite operacional do gestor após conferir esta implementação publicada."
+      ]
+    },
+    {
+      "id": "creative-demand-copy",
+      "title": "Copy completa e direção criativa",
+      "phases": [
+        "phase-04",
+        "phase-07"
+      ],
+      "result": "Criação de post, carrossel e vídeo com título, texto de apoio, CTA, legenda, hashtags, direção criativa, ângulo e lâminas/cenas. Conteúdo editorial e instruções de câmera/áudio preservados na produção.",
+      "technical_status": "verified",
+      "pending": [
+        "Aceite operacional do gestor após conferir esta implementação publicada."
       ]
     }
   ]

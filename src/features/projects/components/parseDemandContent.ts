@@ -1,13 +1,13 @@
 export interface DemandContentBlock {kind:'slide'|'scene'|'visual'|'caption'|'text';label:string;body:string}
 export function parseDemandContent(value:string,title='') {
   // Presentation only: the original description is never rewritten or summarized.
-  let text=value.replace(/\r\n/g,'\n');
+  let text=value.replace(/\r\n/g,'\n').replace(/\\n/g,'\n');
   const marker=/^\s*(post|carousel|carrossel|reels)\s*\n/i.exec(text);
   const format=marker?.[1].toLowerCase();
   if(marker)text=text.slice(marker[0].length);
   // Explicit inline scene headings used by manual scripts become readable blocks.
   text=text.replace(/([.!?]) +(?=Cena \d+(?:\s*\(|\s*,|\s*:))/gi,'$1\n');
-  const headings=/^(L[aâ]mina \d+|Slide \d+|Cena \d+(?:\s*(?:\([^\n)]{1,60}\)|,\s*[^:\n]{1,60}))?|Direção visual(?: geral)?|Legenda(?: completa)?|Texto da arte|Texto de apoio|Apoio|Composição|Roteiro técnico)\s*:\s*/gim;
+  const headings=/^(L[aâ]mina \d+|Slide \d+|Cena \d+(?:\s*(?:\([^\n)]{1,60}\)|,\s*[^:\n]{1,60}))?|Direção (?:visual(?: geral)?|criativa)|Título|CTA|Hashtags|Ângulo e enquadramento|Legenda(?: completa)?|Texto da arte|Texto de apoio|Apoio|Composição|Roteiro técnico)\s*:\s*/gim;
   const matches=[...text.matchAll(headings)];
   const intro=(matches.length?text.slice(0,matches[0].index):text).trim();
   const blocks:DemandContentBlock[]=matches.map((match,index)=>{

@@ -642,3 +642,6 @@ export function useAddLink() {
     },
   })
 }
+
+// Atomic group movement; the database validates every task before committing.
+export function useMoveTaskGroup(){const qc=useQueryClient();return useMutation({mutationFn:async({agencyId,taskIds,status}:{agencyId:string;taskIds:string[];status:TaskStatus})=>{if(!supabase)throw new Error('Servidor indisponível');const result=await supabase.rpc('move_task_group',{p_agency_id:agencyId,p_task_ids:taskIds,p_status:status});if(result.error)throw result.error;return result.data as number},onSuccess:async()=>{await Promise.all([qc.invalidateQueries({queryKey:taskKeys.all}),qc.invalidateQueries({queryKey:['management-kanban']}),qc.invalidateQueries({queryKey:projectKeys.all})])}})}

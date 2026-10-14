@@ -53,6 +53,7 @@ export interface EditorialTrace {
   signature: string;
   visual: string;
   caption?: string;
+  hashtags?: string;
   postConcept?: { headline: string; support: string; composition: string; caption: string };
   slides?: { text: string; visual: string; headline?: string; role?: string }[];
   scenes?: { seconds: number; text: string; visual: string; narration?: string; onScreen?: string; camera?: string; audio?: string; role?: string }[];

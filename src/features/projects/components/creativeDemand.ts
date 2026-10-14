@@ -1,0 +1,3 @@
+export interface CreativeDemand {format:string;title:string;support:string;cta:string;caption:string;hashtags:string;direction:string;angle:string;sequence:string}
+export function normalizeHashtags(value:string){return [...new Set(value.split(/[\s,;]+/).filter(Boolean).map(t=>'#'+t.replace(/^#+/,'').replace(/[^\p{L}\p{N}_]/gu,'' )).filter(t=>t!=='#'))].join(' ')}
+export function serializeCreativeDemand(d:CreativeDemand){return [d.format,`Título: ${d.title.trim()}`,`Texto de apoio: ${d.support.trim()}`,`CTA: ${d.cta.trim()}`,`Legenda: ${d.caption.trim()}`,`Hashtags: ${normalizeHashtags(d.hashtags)}`,`Direção criativa: ${d.direction.trim()}`,`Ângulo e enquadramento: ${d.angle.trim()}`,d.sequence.trim()].filter(Boolean).join('\n\n')}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import {serializeCreativeDemand,type CreativeDemand} from './creativeDemand'
 import { Plus } from 'lucide-react'
 import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogFooter } from '@/components/ui/Dialog'
 import { Input } from '@/components/ui/Input'
@@ -50,6 +51,9 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     parent_task_id: null,
   })
 
+  const emptyCreative=React.useCallback(():CreativeDemand=>({format:titlePrefix==='[Videomaker]'?'reels':titlePrefix==='[Design]'?'post':'general',title:'',support:'',cta:'',caption:'',hashtags:'',direction:'',angle:'',sequence:''}),[titlePrefix])
+  const [creative,setCreative]=useState<CreativeDemand>(emptyCreative)
+  const structured=creative.format!=='general'
   const [error, setError] = useState('')
 
   // Reset form when opened
@@ -65,9 +69,10 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
         assignee_ids: [],
         parent_task_id: null,
       })
+      setCreative(emptyCreative())
       setError('')
     }
-  }, [open, defaultColumnId, columns])
+  }, [open, defaultColumnId, columns, emptyCreative])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -76,10 +81,12 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       return
     }
 
+    if(structured&&[creative.support,creative.cta,creative.caption,creative.hashtags,creative.direction,creative.angle].some(v=>!v.trim())){setError('Preencha texto de apoio, CTA, legenda, hashtags, direção criativa e ângulo.');return}
+    if(structured&&creative.format!=='post'&&!creative.sequence.trim()){setError('Descreva as lâminas do carrossel ou as cenas do vídeo.');return}
     try {
       const category = columns.find(c => c.id === form.column_id)?.category
       await createTask.mutateAsync({
-        form: { ...form, title: titlePrefix ? `${titlePrefix} ${form.title.trim()}` : form.title.trim() },
+        form: { ...form, description:structured?serializeCreativeDemand({...creative,title:form.title}):form.description, title: `${structured?(creative.format==='reels'?'[Videomaker]':'[Design]'):titlePrefix} ${form.title.trim()}`.trim() },
         initialStatus: !category || category === 'backlog' ? 'open' : category,
         projectId,
         boardId,
@@ -99,16 +106,17 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   }))
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} className="max-w-3xl max-h-[90dvh] overflow-y-auto">
       <DialogHeader onClose={() => onOpenChange(false)}>
         <DialogTitle>Nova Tarefa</DialogTitle>
       </DialogHeader>
 
       <form onSubmit={handleSubmit}>
         <DialogContent className="space-y-4">
+          <label className="block text-sm">Formato da demanda<Select aria-label="Formato da demanda" value={creative.format} onChange={e=>setCreative(c=>({...c,format:e.target.value}))} options={[...(['[Design]','[Videomaker]'].includes(titlePrefix)?[]:[{value:'general',label:'Demanda geral'}]),...(titlePrefix==='[Videomaker]'?[]:[{value:'post',label:'Post estático'},{value:'carousel',label:'Carrossel'}]),{value:'reels',label:'Vídeo / roteiro'}]}/></label>
           {/* Title */}
           <div>
-            <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
+            <label htmlFor="task-title" className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
               Título <span className="text-red-400">*</span>
             </label>
             <Input
@@ -126,7 +134,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           </div>
 
           {/* Description */}
-          <div>
+          {!structured&&<div>
             <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
               Descrição
             </label>
@@ -139,6 +147,8 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             />
           </div>
 
+          }
+          {structured&&<section className="space-y-4 rounded-xl border border-white/10 p-4"><h3 className="font-semibold">Copy e direção de produção</h3><p className="text-xs text-zinc-400">Preencha o conteúdo aprovado. A legenda e as hashtags serão salvas juntas na demanda.</p>{([['support','Texto de apoio'],['cta','CTA'],['caption','Legenda'],['hashtags','Hashtags'],['direction','Direção criativa'],['angle','Ângulo e enquadramento']] as const).map(([key,label])=><label key={key} className="block text-sm">{label}<Textarea aria-label={label} value={creative[key]} onChange={e=>setCreative(c=>({...c,[key]:e.target.value}))} rows={key==='caption'||key==='direction'?4:2} placeholder={key==='direction'?'Imagem, composição, iluminação, referências e elementos da marca':key==='angle'?'Ângulo da imagem, plano, enquadramento e movimento de câmera':undefined}/></label>)}{creative.format!=='post'&&<label className="block text-sm">{creative.format==='carousel'?'Lâminas do carrossel':'Cenas do roteiro'}<Textarea aria-label={creative.format==='carousel'?'Lâminas do carrossel':'Cenas do roteiro'} rows={8} value={creative.sequence} onChange={e=>setCreative(c=>({...c,sequence:e.target.value}))} placeholder={creative.format==='carousel'?'Lâmina 1: Título, texto e direção visual\nLâmina 2: …':'Cena 1 (8s): Fala, texto na tela, visual, câmera e áudio\nCena 2 (10s): …'}/></label>}</section>}
           {/* Column + Priority */}
           <div className="grid grid-cols-2 gap-3">
             <div>
