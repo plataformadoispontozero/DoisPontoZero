@@ -12,7 +12,7 @@ Complemento solicitado pelo usuário à Fase 04: cadastrar credenciais na área 
 - [x] Emissor usa configuração da agência; testes do SDK continuam passando.
 - [x] Testes de API/criptografia, UI, SQL e endpoint real.
 - [x] 452 testes de regressão, tipos, lint, build e dois testes de navegador aprovados.
-- [ ] Publicação final conferida.
+- [x] Publicação final conferida: HTML e bundle do formulário iguais ao build.
 - [ ] Usuário cadastra credenciais reais e testa a conexão.
 - [ ] Teste final de emissão real e homologação da Fase 04.
 

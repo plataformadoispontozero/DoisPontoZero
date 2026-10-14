@@ -35,3 +35,5 @@ O usuário solicitou cadastrar as chaves pela área de Configurações. Adiciona
 Testes: integração Deno com criptografia real, sessão/role/tenant, status sem chaves, URL proibida e consulta ListRooms; três testes de UI/SQL; oito testes do emissor continuam passando. Quatro testes HTTP reais do livekit-config passaram (401/403/405). Configuração real pelo usuário ainda pendente.
 
 Verificação do complemento: 452 testes em 124 arquivos, types/lint/build aprovados; dois testes de navegador confirmaram campo password, envio, limpeza, ausência de secrets em localStorage e teste sem reenvio de chaves. Nove testes Deno do emissor/configuração aprovados.
+
+Publicação do formulário: worker 91d84c9a-d0c5-416b-942b-e53f562c786a, rota /settings/integrations/livekit e bundle comparados ao build. Funções livekit-config v1 e office-room-token v2 ACTIVE. RPC de credenciais no banco real: anon=false, authenticated=false, service_role=true.
