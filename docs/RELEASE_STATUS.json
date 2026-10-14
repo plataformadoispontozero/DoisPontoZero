@@ -1,15 +1,15 @@
 {
-  "id": "phase-closure-web-20261014",
-  "title": "Fechamento por fases: configurações e colaboração",
+  "id": "management-kanban-20261014",
+  "title": "Kanban Geral exclusivo da gestão",
   "verified_at": "2026-10-14",
   "status": "published",
-  "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+  "evidence": "docs/qa/management-kanban-2026-10-14.md",
   "checks": [
-    "404 testes de regressão aprovados",
-    "76 cenários de navegador: desktop e celular",
-    "18 páginas de Configurações com abertura e refresh",
-    "Permissões, atas e configurações: SQL real com rollback",
-    "Aniversários: rotina automática executada no servidor",
+    "406 testes de regressão aprovados",
+    "18 cenários do Kanban: desktop e celular",
+    "Gestor sem vínculo no projeto: acesso confirmado no banco",
+    "Membro profissional: agregado negado no banco",
+    "Paginação, movimentação e pop-up validados",
     "Typecheck, lint e build verificados"
   ],
   "deliveries": [
@@ -30,10 +30,11 @@
         "phase-02",
         "phase-04"
       ],
-      "result": "Quadro por cliente e etapa para OWNER, ADMIN e MANAGER; consulta protegida no backend e RLS preservada.",
+      "result": "Visão global por cliente para OWNER, ADMIN e MANAGER, inclusive sem vínculo individual ao projeto. Filtros, responsáveis, prazos, paginação e movimentação sincronizada no quadro e no pop-up; bloqueio de profissionais validado.",
       "pending": [
-        "Aceite do quadro por um gestor com a operação diária da agência."
-      ]
+        "Aceite operacional do gestor após usar o quadro publicado em /projects."
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "editorial-groups",

@@ -40,6 +40,7 @@ import {
   useTaskLinks,
   useTaskActivity,
   useUpdateTask,
+  useMoveTask,
   useArchiveTask,
   useToggleChecklistItem,
   useCreateChecklist,
@@ -91,6 +92,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   const { data: activities = [] } = useTaskActivity(taskId ?? undefined)
 
   const updateTask = useUpdateTask()
+  const moveTask = useMoveTask()
   const archiveTask = useArchiveTask()
   const toggleChecklistItem = useToggleChecklistItem()
   const createChecklist = useCreateChecklist()
@@ -191,11 +193,9 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   }
 
   const handleColumnChange = (newColumnId: string) => {
-    const category = columns.find(c => c.id === newColumnId)?.category
-    updateTask.mutate({
-      taskId,
-      projectId,
-      updates: { column_id: newColumnId, status: !category || category === 'backlog' ? 'open' : category, completed_at: category === 'done' ? new Date().toISOString() : null },
+    if (moveTask.isPending || newColumnId === task.column_id) return
+    moveTask.mutate({taskId,projectId,columnId:newColumnId,position:0}, {
+      onError: () => toast.error('Não foi possível movimentar a demanda. Confira seu acesso e tente novamente.'),
     })
   }
 
@@ -360,6 +360,8 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
               <span className="text-[11px] font-medium text-[#98989F] block mb-1">Coluna</span>
               <Select
                 value={task.column_id}
+                style={{colorScheme:'dark'}}
+                disabled={moveTask.isPending}
                 onChange={(e) => handleColumnChange(e.target.value)}
                 options={columns.map((c) => ({ value: c.id, label: c.name }))}
                 className="h-8 text-xs py-1"

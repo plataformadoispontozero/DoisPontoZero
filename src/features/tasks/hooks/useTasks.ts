@@ -345,6 +345,7 @@ export function useCreateTask() {
     },
     onSuccess: (_, { projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.all })
+      qc.invalidateQueries({queryKey:['management-kanban']})
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
@@ -379,6 +380,7 @@ export function useUpdateTask() {
     onSuccess: (_, { taskId, projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) })
       qc.invalidateQueries({ queryKey: taskKeys.all })
+      qc.invalidateQueries({queryKey:['management-kanban']})
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
@@ -412,10 +414,13 @@ export function useMoveTask() {
 
       if (error) throw error
     },
-    onSuccess: (_, { projectId }) => {
-      qc.invalidateQueries({ queryKey: taskKeys.all })
-      qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
-      qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
+    onSuccess: async (_, { projectId }) => {
+      await Promise.all([
+        qc.invalidateQueries({queryKey:taskKeys.all}),
+        qc.invalidateQueries({queryKey:['management-kanban']}),
+        qc.invalidateQueries({queryKey:projectKeys.board(projectId)}),
+        qc.invalidateQueries({queryKey:projectKeys.progress(projectId)}),
+      ])
     },
   })
 }
@@ -440,6 +445,7 @@ export function useArchiveTask() {
     onSuccess: (_, { taskId, projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) })
       qc.invalidateQueries({ queryKey: taskKeys.all })
+      qc.invalidateQueries({queryKey:['management-kanban']})
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
