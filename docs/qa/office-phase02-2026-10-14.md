@@ -27,3 +27,6 @@ Referências consultadas: changelog Supabase em 14/10/2026; https://supabase.com
 
 ## Resultado final de testes
 434 testes em 118 arquivos aprovados; typecheck, lint e build aprovados (avisos anteriores permanecem). Dois cenários de diagnósticos aprovados em Chrome desktop/celular. A primeira tentativa de navegador apontou ausência do binário Playwright; execução corrigida usando o Chrome instalado.
+
+## Publicação
+Worker separado doispontozero-office-homologacao atualizado; versão 92cc8999-5c5c-4730-a063-5f2fdad8bd5e. HTML público conferido byte a byte com o build. URL: https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/settings/diagnostics. Upload teve retry automático da Cloudflare e concluiu com sucesso. Nenhum deploy no frontend principal.

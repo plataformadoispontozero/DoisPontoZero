@@ -14,7 +14,7 @@ Modelo persistente mínimo, reutilizando Chat, agência, perfil, papel, squad e 
 - [x] Tipos regenerados do schema real, recortados às tabelas e RPCs desta fase.
 - [x] Cinco testes de SQL/RLS com duas agências, squads e preferências.
 - [x] 434 testes de regressão, typecheck, lint, build e diagnóstico desktop/celular (2 cenários).
-- [ ] Publicação do diagnóstico em homologação.
+- [x] Publicação do diagnóstico em homologação; HTML público corresponde ao build.
 - [ ] Aceite do responsável. Fase 03 bloqueada.
 
 ## Arquivos
