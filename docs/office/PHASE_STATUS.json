@@ -1,5 +1,5 @@
 {
-  "current_phase": "04",
+  "current_phase": "05",
   "phase_00": {
     "status": "accepted",
     "evidence": "User explicitly requested Phase 01 after audit."
@@ -41,7 +41,15 @@
     "acceptance": "Usuário solicitou homologação após testes e confirmou sucesso da emissão autenticada; evidência auditada em 2026-10-14T21:14:20.114334Z"
   },
   "phase_05": {
-    "status": "ready",
-    "reason": "Phase 04 tested and accepted. Phase 05 not started; awaiting user request."
+    "implementation": "complete",
+    "technical_validation": "automated_verified",
+    "real_multiuser_validation": "pending",
+    "homologation": "pending",
+    "production_enabled": false,
+    "evidence": "docs/qa/office-phase05-2026-10-14.md"
+  },
+  "phase_06": {
+    "status": "blocked",
+    "reason": "Requires real two-member voice test and explicit acceptance of Phase 05. Not started."
   }
 }

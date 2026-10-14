@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrandingProvider } from '@/app/providers/BrandingProvider'
 import { ToastProvider } from '@/components/ui/Toast'
+import {OfficeVoiceProvider} from '@/features/office/OfficeVoiceProvider'
 import {OfficePresenceProvider} from '@/features/office/OfficePresenceProvider'
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider'
 
@@ -13,7 +14,7 @@ function ScopedProviders({ children }: { children: ReactNode }) {
 function QueryScope({ children }: { children: ReactNode }) {
   const [client] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, refetchOnWindowFocus: true, retry: 1 } } }))
   useEffect(() => () => { void client.cancelQueries(); client.clear() }, [client])
-  return <QueryClientProvider client={client}><OfficePresenceProvider><BrandingProvider><ToastProvider>{children}</ToastProvider></BrandingProvider></OfficePresenceProvider></QueryClientProvider>
+  return <QueryClientProvider client={client}><OfficePresenceProvider><OfficeVoiceProvider><BrandingProvider><ToastProvider>{children}</ToastProvider></BrandingProvider></OfficeVoiceProvider></OfficePresenceProvider></QueryClientProvider>
 }
 export function AppProviders({ children }: { children: ReactNode }) {
   return <AuthProvider><ScopedProviders>{children}</ScopedProviders></AuthProvider>
