@@ -14,7 +14,7 @@ Navegação e estrutura inicial. Reutilizar Chat, WorkRooms, histórico e permis
 - [x] 429 testes de regressão e 10 cenários desktop/mobile (flag ligada/desligada).
 - [x] Screenshots de desktop/celular revisados.
 - [x] Build e ambiente separado de homologação conferidos; HTML publicado corresponde ao build.
-- [ ] Homologação pelo responsável. Fase 02 bloqueada.
+- [x] Homologação pelo responsável: aceite explícito “homologar fase 1”. Fase 02 liberada, ainda não iniciada.
 
 ## Arquivos
 - .env.example

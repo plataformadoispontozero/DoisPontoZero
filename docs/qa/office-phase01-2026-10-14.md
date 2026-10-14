@@ -32,3 +32,6 @@ Parte técnica concluída. Homologação humana pendente. Fase 02 não iniciada.
 - Worker separado: doispontozero-office-homologacao. Versão a7b61d01-19c1-45a3-a872-f8eeb728ad4f.
 - Build aprovado e HTML público comparado byte a byte. Plataforma principal não recebeu deploy nesta fase.
 - Login com conta existente da agência é necessário na origem de revisão.
+
+## Aceite do responsável
+O usuário homologou explicitamente a Fase 01 com a mensagem “homologar fase 1”. Fase 01 encerrada; Fase 02 liberada e ainda não iniciada. O registro de aceite substitui a pendência humana acima.

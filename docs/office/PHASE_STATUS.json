@@ -7,13 +7,14 @@
   "phase_01": {
     "implementation": "complete",
     "technical_validation": "verified",
-    "homologation": "pending",
+    "homologation": "accepted",
     "production_enabled": false,
-    "evidence": "docs/qa/office-phase01-2026-10-14.md"
+    "evidence": "docs/qa/office-phase01-2026-10-14.md",
+    "acceptance": "User explicitly requested: homologar fase 1"
   },
   "phase_02": {
-    "status": "blocked",
-    "reason": "Requires explicit acceptance of Phase 01. Not started."
+    "status": "ready",
+    "reason": "Phase 01 accepted by user. Not started."
   },
   "review_url": "https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/office"
 }
