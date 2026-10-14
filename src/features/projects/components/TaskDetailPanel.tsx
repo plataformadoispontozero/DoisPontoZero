@@ -21,7 +21,8 @@ import {
 } from 'lucide-react'
 import {DemandProductionFiles} from '@/features/integrations/DemandProductionFiles'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
-import { Sheet, SheetHeader, SheetTitle, SheetContent } from '@/components/ui/Sheet'
+import { Dialog } from '@/components/ui/Dialog'
+import { SheetHeader, SheetTitle, SheetContent } from '@/components/ui/Sheet'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
@@ -119,7 +120,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
   if (!open || !taskId) return null
 
-  if (isSupabaseConfigured && !realTask) return <Sheet open={open} onOpenChange={onClose}><SheetHeader onClose={onClose}><SheetTitle>Detalhes da demanda</SheetTitle></SheetHeader><SheetContent><p role={isError ? 'alert' : 'status'}>{isLoading ? 'Carregando demanda…' : 'Não foi possível carregar esta demanda.'}</p></SheetContent></Sheet>
+  if (isSupabaseConfigured && !realTask) return <Dialog open={open} onOpenChange={onClose}><SheetHeader onClose={onClose}><SheetTitle>Detalhes da demanda</SheetTitle></SheetHeader><SheetContent><p role={isError ? 'alert' : 'status'}>{isLoading ? 'Carregando demanda…' : 'Não foi possível carregar esta demanda.'}</p></SheetContent></Dialog>
 
   // Fallback demo data if realTask is null (e.g. Supabase disconnected or mocked)
   const task: Task = realTask ?? {
@@ -314,8 +315,8 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   const checklistPercent = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0
 
   return (
-    <Sheet open={open} onOpenChange={(val) => !val && onClose()}>
-      <div className="fixed inset-y-0 right-0 z-50 flex flex-col w-full sm:max-w-xl md:max-w-2xl bg-[#1C1C24] border-l border-[#30303B] shadow-2xl animate-in slide-in-from-right duration-300">
+    <Dialog open={open} onOpenChange={(val) => !val && onClose()} className="max-w-5xl max-h-[92dvh] overflow-hidden p-0">
+      <div className="flex max-h-[92dvh] min-h-0 w-full flex-col">
         <SheetHeader onClose={onClose} className="border-b border-[#30303B] px-6 py-4">
           <div className="flex items-center justify-between w-full pr-8">
             <div className="flex items-center gap-2">
@@ -808,6 +809,6 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
           </div>
         </SheetContent>
       </div>
-    </Sheet>
+    </Dialog>
   )
 }

@@ -1,3 +1,4 @@
+import { groupTasksByClient } from "@/features/tasks/taskGroups";
 import { ClientMetaPanel } from "@/features/integrations/ClientMetaPanel";
 import { ClientDrivePanel } from "@/features/integrations/ClientDrivePanel";
 import { useClients } from "@/features/clients/hooks/useClients";
@@ -300,26 +301,16 @@ function ProductionWorkspace({ department }: { department: string }) {
               )}
             </div>
           ) : view === "board" ? (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {stages.map((stage) => (
-                <section
-                  key={stage.status}
-                  aria-label={stage.label}
-                  className="rounded-xl bg-[var(--color-surface-elevated)] p-3 min-w-0"
-                >
-                  <h2 className="font-semibold text-sm mb-4 flex justify-between">
-                    {stage.label}
-                    <span>
-                      {filtered.filter((t) => t.status === stage.status).length}
-                    </span>
-                  </h2>
-                  <div className="space-y-3">
-                    {filtered
-                      .filter((t) => t.status === stage.status)
-                      .map(card)}
-                  </div>
-                </section>
-              ))}
+            <div className="space-y-6">
+              {groupTasksByClient(filtered).map(group => <section key={group.id} aria-label={`Demandas de ${group.name}`} className="rounded-2xl border border-white/10 p-4">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">{group.name}</h2><span className="text-sm text-zinc-400">{group.tasks.length} demandas</span></div>
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                  {stages.map(stage => <section key={stage.status} aria-label={`${group.name} · ${stage.label}`} className="min-w-0 rounded-xl bg-[var(--color-surface-elevated)] p-3">
+                    <h3 className="mb-4 flex justify-between text-sm font-semibold">{stage.label}<span>{group.tasks.filter(t=>t.status===stage.status).length}</span></h3>
+                    <div className="space-y-3">{group.tasks.filter(t=>t.status===stage.status).map(card)}</div>
+                  </section>)}
+                </div>
+              </section>)}
             </div>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">

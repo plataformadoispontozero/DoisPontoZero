@@ -135,7 +135,7 @@ export interface Task {
   links_count?: number
   subtasks?: Task[]
   column?: BoardColumn
-  project?: { id: string; name: string }
+  project?: { id: string; name: string; client_id?: string | null; client?: { id: string; name: string } | null }
   client?: { id: string; name: string } | null
 }
 

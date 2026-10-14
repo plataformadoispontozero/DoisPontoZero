@@ -78,7 +78,7 @@ async function fetchTasks(filters: TaskFilters, agencyId: string): Promise<Task[
         profile:profiles(id, full_name, avatar_url)
       ),
       column:board_columns(id, name, color, category),
-      project:projects(id, name),
+      project:projects(id, name, client_id, client:clients(id, name)),
       attachment_counts:task_attachments(count)
     `)
     .is('archived_at', null)
