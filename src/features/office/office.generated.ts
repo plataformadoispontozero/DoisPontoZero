@@ -1,4 +1,4 @@
-// Generated from the live Supabase schema after office phase 02; scoped to reused office data.
+// Generated from the live Supabase schema after office phase 03; scoped to reused office data.
 export type Json = string | number | boolean | null | { [key:string]: Json | undefined } | Json[]
 export type OfficeDatabase = { public: { Tables: {
       chat_channels: {
@@ -142,4 +142,5 @@ export type OfficeDatabase = { public: { Tables: {
         Returns: undefined
       }
       office_directory: { Args: { p_agency: string }; Returns: Json }
+      office_presence_directory: { Args: { p_agency: string }; Returns: Json }
 } } }

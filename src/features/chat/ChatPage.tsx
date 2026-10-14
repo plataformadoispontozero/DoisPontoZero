@@ -56,7 +56,7 @@ export const ChatPage: React.FC<{officeMode?:boolean}> = ({officeMode=false}) =>
 
   // Active Target Selection
   const activeChannelId = channelId || null
-  const roomPresence=useRoomPresence(channelId)
+  const roomPresence=useRoomPresence(safeChannels.some(c=>c.id===channelId)?channelId:null)
   const activeConversationId = conversationId || null
   const isConversationMode = Boolean(activeConversationId)
   const activeTargetId = isConversationMode ? activeConversationId : activeChannelId
@@ -250,7 +250,7 @@ export const ChatPage: React.FC<{officeMode?:boolean}> = ({officeMode=false}) =>
           </div>
         </div>
 
-        {!isConversationMode&&<div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-3 text-xs text-zinc-400" aria-label="Presença na sala">{roomPresence.isError?<span role="status">Presença indisponível. As mensagens continuam disponíveis.</span>:roomPresence.isFetching&&!roomPresence.data?<span>Verificando presença…</span>:<><span title="Atividade na sala nos últimos dois minutos">Presentes nesta sala</span>{roomPresence.data?.map(person=><span key={person.user_id} className="flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">{person.avatar_url?<img src={person.avatar_url} alt="" className="h-5 w-5 rounded-full"/>:<span aria-hidden="true" className="h-2 w-2 rounded-full bg-orange-400"/>}{person.name||'Membro da equipe'}</span>)}</>}</div>}
+        {!isConversationMode&&<div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-3 text-xs text-zinc-400" aria-label="Presença na sala">{roomPresence.isError?<span role="status">Presença indisponível. As mensagens continuam disponíveis.</span>:roomPresence.isFetching&&!roomPresence.data?<span>Verificando presença…</span>:<><span title="Presença da equipe na sala de mensagens">Presentes nesta sala</span>{roomPresence.data?.map(person=><span key={person.user_id} className="flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">{person.avatar_url?<img src={person.avatar_url} alt="" className="h-5 w-5 rounded-full"/>:<span aria-hidden="true" className="h-2 w-2 rounded-full bg-orange-400"/>}{person.name||'Membro da equipe'}</span>)}</>}</div>}
         {/* Message Feed */}
         <div className="min-h-0 flex-1 overflow-y-auto p-5 space-y-5 bg-gradient-to-b from-white/[0.01] to-transparent">
           {isLoadingMessages ? (
