@@ -1,0 +1,1 @@
+DO $fix$ DECLARE definition text := pg_get_functiondef('private.task_production_timing(uuid,uuid[])'::regprocedure); BEGIN definition:=replace(definition,$old$bc.id=(a.metadata->>'to_column_id')::uuid$old$,$new$bc.id::text=a.metadata->>'to_column_id'$new$); EXECUTE definition; END $fix$;

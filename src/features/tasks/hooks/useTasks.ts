@@ -345,7 +345,7 @@ export function useCreateTask() {
     },
     onSuccess: (_, { projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.all })
-      qc.invalidateQueries({queryKey:['management-kanban']})
+      qc.invalidateQueries({queryKey:['management-kanban']});qc.invalidateQueries({queryKey:['production-timing']})
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
@@ -380,7 +380,7 @@ export function useUpdateTask() {
     onSuccess: (_, { taskId, projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) })
       qc.invalidateQueries({ queryKey: taskKeys.all })
-      qc.invalidateQueries({queryKey:['management-kanban']})
+      qc.invalidateQueries({queryKey:['management-kanban']});qc.invalidateQueries({queryKey:['production-timing']})
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
@@ -417,7 +417,7 @@ export function useMoveTask() {
     onSuccess: async (_, { projectId }) => {
       await Promise.all([
         qc.invalidateQueries({queryKey:taskKeys.all}),
-        qc.invalidateQueries({queryKey:['management-kanban']}),
+        qc.invalidateQueries({queryKey:['management-kanban']}),qc.invalidateQueries({queryKey:['production-timing']}),
         qc.invalidateQueries({queryKey:projectKeys.board(projectId)}),
         qc.invalidateQueries({queryKey:projectKeys.progress(projectId)}),
       ])
@@ -445,7 +445,7 @@ export function useArchiveTask() {
     onSuccess: (_, { taskId, projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) })
       qc.invalidateQueries({ queryKey: taskKeys.all })
-      qc.invalidateQueries({queryKey:['management-kanban']})
+      qc.invalidateQueries({queryKey:['management-kanban']});qc.invalidateQueries({queryKey:['production-timing']})
       qc.invalidateQueries({ queryKey: projectKeys.board(projectId) })
       qc.invalidateQueries({ queryKey: projectKeys.progress(projectId) })
     },
@@ -644,4 +644,4 @@ export function useAddLink() {
 }
 
 // Atomic group movement; the database validates every task before committing.
-export function useMoveTaskGroup(){const qc=useQueryClient();return useMutation({mutationFn:async({agencyId,taskIds,status}:{agencyId:string;taskIds:string[];status:TaskStatus})=>{if(!supabase)throw new Error('Servidor indisponível');const result=await supabase.rpc('move_task_group',{p_agency_id:agencyId,p_task_ids:taskIds,p_status:status});if(result.error)throw result.error;return result.data as number},onSuccess:async()=>{await Promise.all([qc.invalidateQueries({queryKey:taskKeys.all}),qc.invalidateQueries({queryKey:['management-kanban']}),qc.invalidateQueries({queryKey:projectKeys.all})])}})}
+export function useMoveTaskGroup(){const qc=useQueryClient();return useMutation({mutationFn:async({agencyId,taskIds,status}:{agencyId:string;taskIds:string[];status:TaskStatus})=>{if(!supabase)throw new Error('Servidor indisponível');const result=await supabase.rpc('move_task_group',{p_agency_id:agencyId,p_task_ids:taskIds,p_status:status});if(result.error)throw result.error;return result.data as number},onSuccess:async()=>{await Promise.all([qc.invalidateQueries({queryKey:taskKeys.all}),qc.invalidateQueries({queryKey:['management-kanban']}),qc.invalidateQueries({queryKey:['production-timing']}),qc.invalidateQueries({queryKey:projectKeys.all})])}})}

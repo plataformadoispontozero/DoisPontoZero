@@ -1,3 +1,4 @@
+import {ProductionTimeline} from '@/features/production/ProductionTimeline'
 import { DemandContent } from './DemandContent'
 import React, { useState, useEffect } from 'react'
 import {
@@ -393,6 +394,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
             </div>
           </div>
 
+          <ProductionTimeline task={task}/>
           {/* Assignees */}
           <div>
             <div className="flex items-center justify-between mb-2">

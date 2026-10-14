@@ -1,18 +1,17 @@
 {
-  "id": "client-kanban-creative-demands-20261014",
-  "title": "Kanban por cliente e copy de produção",
+  "id": "production-grouped-sla-20261014",
+  "title": "Produção agrupada e prazo de 48 horas",
   "verified_at": "2026-10-14",
   "status": "published",
-  "evidence": "docs/qa/client-kanban-creative-demands-2026-10-14.md",
+  "evidence": "docs/qa/production-grouped-sla-2026-10-14.md",
   "checks": [
-    "411 testes de regressão aprovados",
-    "33 cenários de navegador em desktop e celular",
-    "Movimentação individual: quatro outras demandas preservadas no banco",
-    "Movimentação do grupo: status e conclusão sincronizados no banco",
-    "Arraste por mouse e seleção de peças verificados",
-    "Copy completa de post, carrossel e vídeo verificada",
-    "Desktop e celular, permissões e rollback verificados",
-    "Typecheck, lint, regressão e build verificados"
+    "417 testes de regressão aprovados",
+    "39 cenários de navegador aprovados: desktop e celular",
+    "48 horas corridas desde aprovação editorial: marco confirmado no banco",
+    "Recebimento do briefing e criação: datas separadas da aprovação",
+    "Agrupamento por cliente e etapa, recolhido por padrão",
+    "Poster, copy principal e data de envio; seletores removidos",
+    "Arraste individual pelo título, agrupamento no destino e grupo por coluna"
   ],
   "deliveries": [
     {
@@ -32,7 +31,7 @@
         "phase-02",
         "phase-04"
       ],
-      "result": "Um único card por cliente em quatro colunas. Arraste individual ou do cliente inteiro, seleção de peças e movimentos transacionais. Etapas individuais preservadas, pop-up central e acesso exclusivo da gestão.",
+      "result": "Kanban exclusivo da gestão, com clientes recolhidos em cada etapa. Arraste individual pelo título ou do grupo da coluna; união no destino sem mover as outras peças. Datas e SLA de 48 horas após aprovação editorial.",
       "pending": [
         "Aceite operacional do gestor após usar o quadro publicado em /projects."
       ],
@@ -183,7 +182,7 @@
       "phases": [
         "phase-04"
       ],
-      "result": "Cards únicos por cliente também em Design e Vídeo. Cada peça pode avançar sozinha, selecionadas podem avançar juntas e o grupo completo pode ser movido sem alterar outros setores.",
+      "result": "Design, Vídeo e Tráfego agrupados por cliente dentro de cada etapa; cabeçalho só com cliente e quantidade. Peças identificadas por formato, copy principal e data de envio, sem seletores de etapa.",
       "technical_status": "verified",
       "pending": [
         "Aceite operacional do gestor após conferir esta implementação publicada."
@@ -200,6 +199,19 @@
       "technical_status": "verified",
       "pending": [
         "Aceite operacional do gestor após conferir esta implementação publicada."
+      ]
+    },
+    {
+      "id": "production-sla",
+      "title": "Prazo de produção após aprovação editorial",
+      "phases": [
+        "phase-04",
+        "phase-07"
+      ],
+      "technical_status": "verified",
+      "result": "48 horas corridas contadas da aprovação do calendário. Urgência, curto/médio prazo e atraso nas demandas; datas de criação, briefing, aprovação e revisão no pop-up. História sem data comprovada não recebe horário inventado.",
+      "pending": [
+        "Aceite operacional do gestor no quadro publicado."
       ]
     }
   ]
