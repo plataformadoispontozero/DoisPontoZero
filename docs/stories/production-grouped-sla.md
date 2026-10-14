@@ -18,7 +18,7 @@
 - [x] Migration versionada, proteção de escrita da data de aprovação e acesso por demanda.
 - [x] Regressão de 417 testes e validação do banco real.
 - [x] Validação final de navegador.
-- [ ] Publicação confirmada.
+- [x] Publicação confirmada.
 - [ ] Aceite operacional humano no quadro publicado.
 
 ## Arquivos

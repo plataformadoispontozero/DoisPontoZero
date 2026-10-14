@@ -25,9 +25,11 @@ O RPC público usa uma função privada com agência ativa, permissão de leitur
 - Banco real autenticado com rollback: Aurora tem briefing recebido em 14/10/2026 01:08:51 UTC, aprovação em 14/10/2026 01:10:59 UTC e vencimento em 16/10/2026 01:10:59 UTC. Datas distintas e intervalo exato de 48 horas.
 - Typecheck, lint e 40 testes finais de módulos aprovados após os ajustes de arraste e diálogo.
 - 39 cenários de navegador aprovados: gestão, Design, Vídeo e Tráfego, grupos recolhidos, peça individual, segunda peça unida ao destino, grupo da coluna, negação de movimento, filtros, paginação, revogação, criação de copy e datas.
-- Mouse em desktop, teclado em desktop/celular e gesto real de toque emulado por CDP no celular. O teste de toque é excluído do projeto desktop por definição.
+- Mouse em desktop, teclado no projeto mobile e gesto de toque emulado por CDP no celular. O teste de toque é excluído do projeto desktop por definição.
 - Capturas de desktop e celular renderizadas e revisadas.
-- Build isolado de produção aprovado; recibo de publicação será registrado após o deploy.
+- Build isolado de produção aprovado. Push: `c832850`, branch `codex/master-audit-15-1`.
+- Deploy Cloudflare confirmado: `402e1118-34a6-444c-b279-ab24d30278b3`.
+- Conferência pública byte a byte do arquivo principal, ProjectsPage, ClientKanbanBoard, DepartmentPage, TaskDetailPanel e DiagnosticsPage concluída.
 
 ## Limites de validação
 Navegador isolado utiliza respostas controladas e registros fictícios, complementado por leitura autenticada no banco real. Datas são exibidas no fuso da agência. Sem calendário ligado ao projeto ou aprovação comprovada, o SLA não é iniciado a partir de outro horário. Aceite operacional do gestor permanece pendente; esta entrega não declara todas as integrações da plataforma homologadas.
