@@ -22,4 +22,8 @@ Solicitação: melhorar a leitura de post, carrossel e roteiro, substituindo a p
 Descrições sem cabeçalhos explícitos ficam como texto livre. Não há conversão automática de estrutura ou sincronização adicional com o calendário. Reverter o commit restaura a interface anterior; não há dados a remover.
 
 ## Publicação
-Build de produção concluído. A verificação final de largura/leitura passou nos quatro cenários desktop/mobile. Commit e deploy serão registrados após confirmação.
+Build de produção concluído. A verificação final de largura/leitura passou nos quatro cenários desktop/mobile. Publicação concluída:
+- Commit funcional `3e63970`, push na branch `codex/master-audit-15-1`.
+- Cloudflare Worker `474a22df-4fd1-48d6-911f-3bb2c1fc4da2`.
+- Domínio entregou `index-Bq7zi-0g.js` e `TaskDetailPanel-5FA-2qxu.js`; componente conferido byte a byte contra o build.
+- Nenhuma migration ou alteração de dados foi executada nesta entrega.

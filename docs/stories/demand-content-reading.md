@@ -9,7 +9,7 @@ Solicitação: ampliar a leitura de posts, carrosséis e roteiros no pop-up cent
 - [x] 360 testes passaram na versão isolada; 12 testes de navegador desktop/mobile passaram.
 - [x] Typecheck e lint concluídos.
 - [x] Build de produção concluído.
-- [ ] Publicação confirmada.
+- [x] Publicação confirmada no domínio.
 
 Arquivos: parseDemandContent.ts; DemandContent.tsx; DemandContent.test.tsx; TaskDetailPanel.tsx; esta story.
 
