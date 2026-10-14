@@ -51,4 +51,10 @@ Operações de criação e fluxo foram executadas no Supabase com contexto de ad
 Upload real no Google Drive, métricas/veiculação Meta, captação/renderização real de vídeo e aprovação final por um cliente externo NÃO TESTADOS. Não se inventaram pastas, IDs Google, vídeos ou contas de anúncio. As ilustrações fictícias ficam no site; o banco guarda textos e URLs leves. A apresentação é uma revisão interna em rascunho; ilustrações de seção não são materiais Drive com aprovação individual.
 
 ## Publicação
-Migration aplicada no Supabase: `20261014011725_synchronize_task_status_on_move.sql`. A versão foi gerada pelo MCP e espelhada no repositório; CLI local indisponível. Push/deploy e aviso final serão registrados após confirmação.
+Migration aplicada no Supabase: `20261014011725_synchronize_task_status_on_move.sql`. A versão foi gerada pelo MCP e espelhada no repositório; CLI local indisponível. Push/deploy concluídos.
+- Commit funcional: `6013992`, branch `codex/master-audit-15-1`.
+- Cloudflare Worker: `fc662efd-d71c-40b5-a559-95feb4a1d2b4`.
+- Domínio entregou `/assets/index-BMnt2IaB.js`; HTML da galeria e SVG conferidos byte a byte contra o build.
+- Aviso final enviado no canal Dois.Zero: mensagem `a3707896-5788-49c6-b862-8d540f12e6f3`, em 14/10/2026, 03h41 Europe/Paris.
+- Checks finais: 7 respostas, 3 conteúdos, 5 demandas, 5 links, 5 checklists/20 itens, 2 retornos simulados e 3 pautas de reunião; todos os status das tarefas de teste correspondem à coluna.
+- As alterações anteriores de outros módulos foram preservadas e excluídas do build. Nenhuma outra migration pendente foi aplicada nesta publicação.

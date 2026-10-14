@@ -8,8 +8,8 @@
 - [x] Kanban por cliente nos três setores.
 - [x] Artes de demonstração, apresentação, proposta e reunião vinculadas.
 - [x] Testes backend, unitários, tipos e navegador com fixtures.
-- [ ] Push e deploy confirmados.
-- [ ] Aviso final no chat da equipe.
+- [x] Push e deploy confirmados.
+- [x] Aviso final no chat da equipe.
 
 Não inclui upload Drive, anúncios Meta ou vídeo final; isso permanece explicitamente não testado.
 
