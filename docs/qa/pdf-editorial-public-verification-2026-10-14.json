@@ -1,0 +1,50 @@
+[
+  {
+    "asset": "assets/index-O_VxEg7z.js",
+    "matches": true,
+    "mime": "text/javascript",
+    "sha256": "3ef9089b6aacb1e94cf9a663efe25f583bed234844a8541289ca530d2fc7108b"
+  },
+  {
+    "asset": "assets/PdfPreview-CgEmulrx.js",
+    "matches": true,
+    "mime": "text/javascript",
+    "sha256": "6173fbf502fddadd3d0f3cfcc451567844a189fa796473566c8ee22568eae323"
+  },
+  {
+    "asset": "assets/pdf.worker.min-CjEcRF4W.mjs",
+    "matches": true,
+    "mime": "text/javascript",
+    "sha256": "9536359f1b8367850d485731ca1d5e45c159a7b7a0912325e539937aa21ceb18"
+  },
+  {
+    "asset": "assets/BriefingExportPage-C5cxC7xb.js",
+    "matches": true,
+    "mime": "text/javascript",
+    "sha256": "5838523c04ac248a1bc91bfd1caa97b13b181c2aa3f083030d8f7b5e8e23d957"
+  },
+  {
+    "asset": "assets/PresentationExportPage-DfS9UyDb.js",
+    "matches": true,
+    "mime": "text/javascript",
+    "sha256": "ca4d760b21758a827c362cf8882dec0cad40e68c42991908a60bcfcdc52bbb2e"
+  },
+  {
+    "asset": "assets/DiagnosticsPage-D7f0cf4w.js",
+    "matches": true,
+    "mime": "text/javascript",
+    "sha256": "d7e9a7923bb6994f25e71a134b1bc7c6d493d030dd7ebb3ea06f29c102245ac3"
+  },
+  {
+    "asset": "pdf-brand/wordmark.jpg",
+    "matches": true,
+    "mime": "image/jpeg",
+    "sha256": "8e79ec2e935fb54749984e677ba4896e5a56b6fc0347b67228a5a977805a3782"
+  },
+  {
+    "asset": "pdf-brand/symbol.jpg",
+    "matches": true,
+    "mime": "image/jpeg",
+    "sha256": "d962cad1ea7aa87e09a701c7b304dcca18c3f02379e4fc9ee7f06ff1103ea61b"
+  }
+]

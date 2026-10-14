@@ -16,7 +16,7 @@ Briefing agora abre com logotipo/resumo e conteúdo na mesma página; capa separ
 - Dados/API autenticados são fixtures; geração e renderização do PDF são reais. Nenhum registro real do cliente foi alterado pelo teste.
 
 ## Publicação
-Resultados finais e recibo de publicação serão incluídos após verificação. As pendências operacionais anteriores permanecem nos diagnósticos.
+Commit `f346831` enviado para `codex/master-audit-15-1`. Deploy Cloudflare versão `1229c66d-c6e1-44f7-96a2-b40086015f1d`. O domínio público referencia o build novo e 8 assets (index, visualizador, worker, exportadores, diagnósticos e logos) coincidem byte a byte. Worker retorna MIME JavaScript; logos retornam image/jpeg. Recibo: docs/qa/pdf-editorial-public-verification-2026-10-14.json. As pendências operacionais anteriores permanecem nos diagnósticos.
 
 Typecheck e lint aprovados (avisos preexistentes). Revisão das páginas identificou a necessidade de reservar o cabeçalho absolutamente no topo e emparelhar respostas com linhas explícitas; ambas corrigidas.
 

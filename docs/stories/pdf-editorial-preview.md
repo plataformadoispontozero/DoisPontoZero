@@ -12,7 +12,7 @@ Usar a base do PDF legado e mostrar apenas as páginas do PDF na plataforma, sem
 - [x] Respostas longas podem continuar na página seguinte; versão inválida usa V1.
 - [x] PDF.js fixado em 6.4.299; lockfile atualizado.
 - [x] 427 testes de regressão, 8 cenários PDF, revisão visual, typecheck, lint e build.
-- [ ] Push/deploy e domínio verificado.
+- [x] Push/deploy e domínio verificado: 8 assets idênticos ao build, MIME de worker e imagens corretos.
 
 ## Arquivos
 - package.json
@@ -34,3 +34,4 @@ Usar a base do PDF legado e mostrar apenas as páginas do PDF na plataforma, sem
 - docs/RELEASE_STATUS.json
 - docs/qa/pdf-editorial-preview-2026-10-14.md
 - docs/stories/pdf-editorial-preview.md
+- docs/qa/pdf-editorial-public-verification-2026-10-14.json
