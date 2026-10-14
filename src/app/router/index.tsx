@@ -575,6 +575,10 @@ export const router = createBrowserRouter([
             }),
           },
           {
+            path: "integrations/livekit",
+            lazy: async () => ({ Component: (await import("@/features/settings/LivekitSettingsPage")).LivekitSettingsPage }),
+          },
+          {
             path: "integrations/meta",
             lazy: async () => ({ Component: (await import("@/features/settings/MetaWorkspacePage")).default }),
           },

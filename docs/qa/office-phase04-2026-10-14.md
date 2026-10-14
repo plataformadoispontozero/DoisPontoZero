@@ -29,3 +29,9 @@ Referências consultadas: https://docs.livekit.io/frontends/reference/tokens-gra
 
 ## Publicação verificada
 Edge Function office-room-token v1 ACTIVE; testes HTTP executados contra o endpoint publicado. Worker de homologação versão 432aa172-c313-4154-a4aa-f2dbb8e685f6; HTML e bundle de diagnósticos comparados byte a byte ao build. URL: https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/settings/diagnostics. Frontend principal não recebeu deploy nesta fase.
+
+## Complemento autorizado: configuração na plataforma
+O usuário solicitou cadastrar as chaves pela área de Configurações. Adicionada página /settings/integrations/livekit, cartão na revisão, função livekit-config com JWT/OWNER/ADMIN/settings.edit, armazenamento AES-GCM existente por agência e botão de consulta ao LiveKit sem criação de salas. Chaves mascaradas e limpas após envio, sem localStorage/cache. Emissor office-room-token v2 lê configuração criptografada por agência; fallback global mantido. A migration amplia somente CHECK de provider e adiciona RPC privada/service-only, preservando registros Google/Meta.
+Testes: integração Deno com criptografia real, sessão/role/tenant, status sem chaves, URL proibida e consulta ListRooms; três testes de UI/SQL; oito testes do emissor continuam passando. Quatro testes HTTP reais do livekit-config passaram (401/403/405). Configuração real pelo usuário ainda pendente.
+
+Verificação do complemento: 452 testes em 124 arquivos, types/lint/build aprovados; dois testes de navegador confirmaram campo password, envio, limpeza, ausência de secrets em localStorage e teste sem reenvio de chaves. Nove testes Deno do emissor/configuração aprovados.

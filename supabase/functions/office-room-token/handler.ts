@@ -3,7 +3,7 @@ export interface TokenConfiguration{url:string;apiKey:string;apiSecret:string}
 export interface TokenDependencies{
  authenticate:(authorization:string)=>Promise<string|null>
  authorize:(authorization:string,room:string,consume:boolean)=>Promise<{context:VoiceContext|null;error?:'denied'|'rate_limited'|'unavailable'}>
- configuration:()=>TokenConfiguration|null
+ configuration:(context:VoiceContext)=>TokenConfiguration|null|Promise<TokenConfiguration|null>
  issue:(context:VoiceContext,configuration:TokenConfiguration)=>Promise<string>
  log?:(code:string)=>void
 }
@@ -33,7 +33,7 @@ export function createTokenHandler(deps:TokenDependencies){return async(req:Requ
   const first=await deps.authorize(authorization,input.roomId,false)
   if(first.error==='unavailable')return reply('backend_unavailable',503)
   if(!first.context||first.context.user_id!==user)return reply('room_denied',403)
-  const config=deps.configuration();if(!validConfiguration(config))return reply('livekit_not_configured',503)
+  const config=await deps.configuration(first.context);if(!validConfiguration(config))return reply('livekit_not_configured',503)
   // Revalidate immediately before signing and consume the atomic per-user/agency budget.
   const final=await deps.authorize(authorization,input.roomId,true)
   if(final.error==='rate_limited')return new Response(JSON.stringify({error:'rate_limited'}),{status:429,headers:{...headers,'Retry-After':'60'}})

@@ -26,3 +26,7 @@ A expiração de 120 segundos limita a entrada inicial. Ela não encerra automat
 Antes de homologar com configuração real: configurar os três secrets, usar uma sessão autenticada autorizada e sala habilitada para teste, solicitar token, verificar assinatura/claims/expiração usando o SDK oficial no servidor e desabilitar a sala ao encerrar o teste. Não registrar o token completo ou segredos na evidência. A configuração do provedor e o teste autenticado real permanecem pendentes na entrega atual.
 
 Referências: https://docs.livekit.io/frontends/reference/tokens-grants/ e https://supabase.com/docs/guides/functions/auth.
+
+## Configuração pela plataforma
+Disponível no ambiente de revisão em Configurações → Integrações → LiveKit. OWNER/ADMIN com settings.edit cadastra URL e chaves; backend criptografa com a chave existente, separa por agência e nunca retorna as chaves. Salvar não inicia mídia. Testar conexão faz uma consulta autenticada de leitura ao LiveKit, sem criar salas. Após salvar, office-room-token usa a configuração criptografada da agência antes de considerar os secrets globais.
+URL aceita LiveKit Cloud; servidor próprio exige hostname na variável server-only LIVEKIT_ALLOWED_HOSTS. Nenhum host arbitrário/local é aceito por padrão.
