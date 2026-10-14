@@ -1,3 +1,4 @@
+import {testAuthenticatedToken,SafeTokenTestError} from './testToken.ts'
 import {createClient} from '@supabase/supabase-js'
 import {RoomServiceClient} from 'livekit-server-sdk'
 import {configurationAvailable} from '../_shared/providerConfig.ts'
@@ -15,7 +16,7 @@ Deno.serve(async(req:Request)=>{
   const {data:{user},error}=await client.auth.getUser();if(error||!user)return reply({error:'Sessão inválida.'},401)
   const raw=await req.text();if(new TextEncoder().encode(raw).length>8192)return reply({error:'Solicitação inválida.'},400)
   let body;try{body=JSON.parse(raw)}catch{return reply({error:'Solicitação inválida.'},400)}
-  if(!body||typeof body.agencyId!=='string'||!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(body.agencyId)||!['status','save','test'].includes(body.action))return reply({error:'Solicitação inválida.'},400)
+  if(!body||typeof body.agencyId!=='string'||!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(body.agencyId)||!['status','save','test','test-token'].includes(body.action))return reply({error:'Solicitação inválida.'},400)
   const permission=await client.rpc('has_agency_permission',{p_agency_id:body.agencyId,p_permission_key:'settings.edit'})
   const member=await client.from('agency_members').select('roles(name)').eq('agency_id',body.agencyId).eq('user_id',user.id).eq('status','active').maybeSingle()
   const role=Array.isArray(member.data?.roles)?member.data.roles[0]?.name:(member.data?.roles as unknown as {name:string})?.name
@@ -32,6 +33,7 @@ Deno.serve(async(req:Request)=>{
   }
   if(!previous)return reply({error:'Salve a configuração antes de testar.'},409)
   if(!safeLivekitUrl(previous.url))return reply({error:'URL do projeto não autorizada.'},400)
+  if(body.action==='test-token'){try{return reply(await testAuthenticatedToken(client,admin,previous,body.agencyId,user.id,authorization))}catch(e){return reply({error:e instanceof SafeTokenTestError?e.message:'Não foi possível testar a emissão. Confira a configuração e tente novamente.'},502)}}
   try{const service=new RoomServiceClient(previous.url.replace(/^wss:/,'https:'),previous.apiKey,previous.apiSecret);await service.listRooms([`office_${body.agencyId}_configuration-check`]);return reply({verified:true,message:'Conexão e credenciais validadas no LiveKit. Nenhuma sala foi criada.'})}catch{return reply({error:'Não foi possível validar a conexão. Confira a URL e as chaves do projeto.'},502)}
  }catch{return reply({error:'Não foi possível acessar a configuração segura.'},503)}
 })

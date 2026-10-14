@@ -37,3 +37,7 @@ Testes: integração Deno com criptografia real, sessão/role/tenant, status sem
 Verificação do complemento: 452 testes em 124 arquivos, types/lint/build aprovados; dois testes de navegador confirmaram campo password, envio, limpeza, ausência de secrets em localStorage e teste sem reenvio de chaves. Nove testes Deno do emissor/configuração aprovados.
 
 Publicação do formulário: worker 91d84c9a-d0c5-416b-942b-e53f562c786a, rota /settings/integrations/livekit e bundle comparados ao build. Funções livekit-config v1 e office-room-token v2 ACTIVE. RPC de credenciais no banco real: anon=false, authenticated=false, service_role=true.
+
+## Teste final pela sessão autenticada
+Credenciais cadastradas pelo usuário. Criado botão Testar emissão do token em livekit-config v2, protegido por auth.getUser e OWNER/ADMIN/settings.edit. Usa a sessão do próprio usuário para criar sala privada temporária, chamar office-room-token, conferir assinatura/namespace/TTL, consultar /rtc/validate, desabilitar e confirmar 403; remove a sala e registra resultado sem secrets em audit_logs. Não cria usuários nem ativa mídia. Testes Deno e UI aprovados.
+Tentativa anterior de criar um probe administrativo temporário foi rejeitada pela revisão automática e não foi publicada. Helper SQL temporário removido; nenhum usuário de QA foi criado. O fluxo substituto mantém as permissões normais da plataforma. Teste real e homologação permanecem pendentes até a execução pelo administrador.

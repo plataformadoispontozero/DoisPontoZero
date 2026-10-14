@@ -36,3 +36,10 @@ Complemento solicitado pelo usuário à Fase 04: cadastrar credenciais na área 
 - docs/office/LIVEKIT_SETUP.md
 - docs/qa/office-phase04-2026-10-14.md
 - docs/stories/livekit-settings.md
+
+## Teste autenticado complementar
+- [x] Botão explícito, JWT/role/permissões atuais, emissor publicado e validação LiveKit.
+- [x] Sala privada temporária, limpeza confirmada e audit sem chaves/tokens.
+- [x] Testes de backend e UI.
+- [ ] Resultado real registrado e homologação da Fase 04.
+Arquivos adicionais: supabase/functions/livekit-config/testToken.ts; supabase/functions/livekit-config/testToken_test.ts.
