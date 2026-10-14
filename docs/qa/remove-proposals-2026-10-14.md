@@ -19,4 +19,5 @@ Escopo: retirar a área comercial do frontend e reparar caminhos antigos. Não a
 - Suíte final de regressão: 349 testes aprovados em 89 arquivos.
 - Dados persistentes Aurora preservados; nenhuma escrita no Supabase nesta entrega.
 - 42/44 arquivos de trabalho anterior permanecem idênticos. Em Diagnostics e PermissionStudio foram modificadas apenas as linhas de retirada do módulo; seus demais ajustes continuam fora da publicação.
-- Commit e publicação: aguardando conclusão.
+- Commit funcional f7bebb9 enviado para origin/codex/master-audit-15-1. Deploy Cloudflare 1a7772bb-d692-4d91-a23d-f8a5fc3a4375.
+- Conferência remota: bundle /assets/index-Db3xUSbG.js corresponde byte a byte ao build validado. Aviso público verificado no domínio real em 1440px e 390px, sem consultas Supabase e sem overflow. Rota privada antiga preserva autenticação para visitante anônimo.

@@ -9,7 +9,7 @@ Pedido de 14/10/2026: retirar completamente o módulo da aplicação e reparar o
 - [x] Retirar a fase comercial da lista de módulos ativos no diagnóstico, preservando o manifesto histórico.
 - [x] Preservar tabelas, registros e histórico no banco; nenhuma migration destrutiva.
 - [x] Typecheck, lint, 349 testes de regressão e 16 casos de navegador aprovados.
-- [ ] Push, deploy e conferência do bundle publicado.
+- [x] Push f7bebb9, deploy 1a7772bb-d692-4d91-a23d-f8a5fc3a4375 e conferência do bundle publicado.
 
 Arquivos: src/features/proposals/ (removido), src/types/proposals.ts (removido), src/features/clients/components/ClientProposalsTab.tsx (removido), src/features/retired/RetiredProposalPage.tsx; src/app/router/{index.tsx,router.test.tsx}; src/components/navigation/{NavLinks.ts,navigationConfig.ts}; src/features/auth/access.ts; src/app/layouts/AppLayout.tsx; src/features/dashboard/data/useDashboardData.ts; src/features/settings/{ClientExperiencePage.tsx,PermissionStudioPage.tsx,DiagnosticsPage.tsx,hooks/useAgencySettings.ts}; src/features/briefing/templates/BriefingTemplateEditorPage.tsx; src/types/briefing.ts; e2e/{agency-access.spec.ts,audit-routes.spec.ts,critical-flows.spec.ts,platform-readiness.spec.ts}.
 
