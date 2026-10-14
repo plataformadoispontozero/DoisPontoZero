@@ -1,20 +1,15 @@
 {
-  "id": "client-assignments-photography-20261014",
-  "title": "Atribuições por cliente e direção fotográfica",
+  "id": "pdf-csp-fix-20261014",
+  "title": "Correção de prévia e download de PDF",
   "verified_at": "2026-10-14",
   "status": "published",
-  "evidence": "docs/qa/client-assignments-photography-2026-10-14.md",
+  "evidence": "docs/qa/pdf-csp-fix-2026-10-14.md",
   "checks": [
     "427 testes de regressão aprovados",
-    "12 cenários desta entrega aprovados: desktop e celular",
-    "Typecheck e lint verificados",
-    "Atribuições por setor: SQL autenticado real com rollback",
-    "Novas demandas herdam membros ativos; atribuições anteriores preservadas",
-    "48 horas corridas desde aprovação editorial: marco confirmado no banco",
-    "Recebimento do briefing e criação: datas separadas da aprovação",
-    "Agrupamento por cliente e etapa, recolhido por padrão",
-    "Poster, copy principal e data de envio; seletores removidos",
-    "Arraste individual pelo título, agrupamento no destino e grupo por coluna"
+    "6 cenários PDF com CSP aplicada: desktop e celular",
+    "Falha de WebAssembly reproduzida com permissão removida",
+    "Prévia blob e arquivo PDF baixado verificados",
+    "Typecheck e lint aprovados; build de produção verificado"
   ],
   "deliveries": [
     {
@@ -243,6 +238,17 @@
       "pending": [
         "Aceite da orientação de captação pelo designer e videomaker/fotógrafo."
       ]
+    },
+    {
+      "id": "pdf-security-policy",
+      "title": "Prévia e download PDF: política de segurança corrigida",
+      "phases": [
+        "phase-06",
+        "phase-09"
+      ],
+      "result": "WebAssembly do gerador permitido com wasm-unsafe-eval; prévia local permitida em frame-src. Briefings e apresentações verificados em desktop e celular.",
+      "technical_status": "verified",
+      "pending": []
     }
   ]
 }
