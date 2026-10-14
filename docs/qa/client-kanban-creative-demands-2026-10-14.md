@@ -14,7 +14,10 @@ O formulário de criação distingue demanda geral, post, carrossel e vídeo. Co
 - Formatador real preservou CTA, hashtags, câmera, duração, visual e áudio em uma descrição de roteiro.
 - Typecheck e lint aprovados, com avisos de lint registrados.
 - 33 cenários de navegador aprovados: gestão, filtros, paginação, revogação, popup, peça, seleção, grupo e criação de post/carrossel/vídeo. Um teste de arraste por mouse é excluído do projeto mobile; o arraste passa em desktop e seletores passam em ambos.
-- Build isolado de produção aprovado; recibo de publicação será registrado após o deploy.
+- Build isolado de produção aprovado. Push: commit `cc577db`, branch `codex/master-audit-15-1`.
+- Deploy Cloudflare: `ce84ef6d-ce5e-4c0c-88b4-d77b7b1aa0d1`.
+- Domínio público conferido byte a byte: arquivo principal, ProjectsPage, ClientKanbanBoard, DepartmentPage, CreateTaskDialog e DiagnosticsPage.
+- Seleção rápida por formato revalidada em seis cenários, nos três quadros e nos dois tamanhos de tela.
 
 ## Limites
 Navegador usa API controlada em ambiente isolado; não representa uma sessão humana em produção. Arraste por mouse é verificado em desktop; no celular os fluxos são verificados pelos seletores acessíveis. Testes SQL de movimentação foram desfeitos por rollback e preservaram os cinco registros Aurora. Aceite operacional do gestor permanece pendente no diagnóstico. As demais integrações e fases não são declaradas concluídas por esta entrega.

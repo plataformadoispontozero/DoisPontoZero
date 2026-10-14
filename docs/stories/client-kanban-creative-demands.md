@@ -11,7 +11,7 @@ Um único card por cliente; movimentação de uma peça, de peças selecionadas 
 - [x] Conversão editorial preserva copy, direção, câmera e áudio; hashtags sugeridas derivadas do tema.
 - [x] Diagnóstico registra validação técnica e mantém aceite operacional pendente.
 - [x] Regressão, typecheck e lint.
-- [ ] Build e publicação confirmados.
+- [x] Build e publicação confirmados.
 - [ ] Aceite operacional do gestor na versão publicada.
 
 ## Arquivos
