@@ -180,7 +180,8 @@ export function useMeetings(filters?: { search?: string; status?: string; type?:
   const agencyId = auth.activeAgency?.agencyId ?? ''
 
   return useQuery({
-    queryKey: ['meetings', filters],
+    queryKey: ['meetings', agencyId, auth.user?.id, filters],
+    enabled: !isSupabaseConfigured || Boolean(agencyId && auth.user),
     queryFn: async (): Promise<Meeting[]> => {
       if (isSupabaseConfigured && supabase) {
         try {
@@ -190,7 +191,7 @@ export function useMeetings(filters?: { search?: string; status?: string; type?:
           if (filters?.search) query = query.ilike('title', `%${filters.search}%`)
           const { data , error: backendError1 } = await query
           if (backendError1) throw backendError1
-          return (data ?? []).map((m: any) => ({ ...m, participants: m.meeting_participants || [], agenda: m.meeting_agenda_items || [], minutes: m.meeting_minutes?.[0] || null, decisions: m.meeting_decisions || [], actions: m.meeting_action_items || [] })) as Meeting[]
+          return (data ?? []).map((m: any) => ({ ...m, participants: m.meeting_participants || [], agenda: m.meeting_agenda_items || [], minutes: [...(m.meeting_minutes || [])].sort((a,b) => b.version - a.version)[0] || null, decisions: m.meeting_decisions || [], actions: m.meeting_action_items || [] })) as Meeting[]
         } catch (err) {
           throw err
         }
@@ -222,7 +223,7 @@ export function useSingleMeeting(meetingId?: string) {
         try {
           const { data , error: backendError2 } = await supabase.from('meetings').select('*, meeting_participants(*), meeting_agenda_items(*), meeting_minutes(*), meeting_decisions(*), meeting_action_items(*)').eq('agency_id', agencyId).eq('id', meetingId).single()
           if (backendError2) throw backendError2
-          if (data) return { ...data, participants: data.meeting_participants || [], agenda: data.meeting_agenda_items || [], minutes: data.meeting_minutes?.[0] || null, decisions: data.meeting_decisions || [], actions: data.meeting_action_items || [] } as Meeting
+          if (data) return { ...data, participants: data.meeting_participants || [], agenda: data.meeting_agenda_items || [], minutes: [...(data.meeting_minutes || [])].sort((a,b) => b.version - a.version)[0] || null, decisions: data.meeting_decisions || [], actions: data.meeting_action_items || [] } as Meeting
         } catch (err) {
           throw err
         }
@@ -240,7 +241,7 @@ export function useSingleMeeting(meetingId?: string) {
       if (supabase && isSupabaseConfigured) {
         if (!auth.user || !agencyId) throw new Error('Sessão e agência são obrigatórias.')
         const { data: _saved, error } = await supabase.rpc('save_meeting_content', {
-          p_agency_id: agencyId, p_meeting_id: meetingId, p_changes: updates,
+          p_agency_id: agencyId, p_meeting_id: meetingId, p_changes: { ...updates, expected_updated_at: meeting?.updated_at },
         })
         if (error) throw error
         queryClient.invalidateQueries({ queryKey: ['meetings'] }); queryClient.invalidateQueries({ queryKey: ['meeting', agencyId, meetingId] })
@@ -366,6 +367,10 @@ export function useSingleMeeting(meetingId?: string) {
     meeting,
     isLoading: meetingQuery.isLoading,
     isError: meetingQuery.isError,
+    error: meetingQuery.error,
+    refetch: meetingQuery.refetch,
+    saveError: updateMutation.error,
+    isSaving: updateMutation.isPending,
     updateMeeting: updateMutation.mutateAsync,
     addAgendaItem,
     updateAgendaItem,

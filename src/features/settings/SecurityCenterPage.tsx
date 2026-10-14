@@ -15,14 +15,15 @@ export const SecurityCenterPage: React.FC = () => {
     setIsLoggingOut(true)
     try {
       if (isSupabaseConfigured && supabase) {
-        await supabase.auth.signOut()
+        const {error}=await supabase.auth.signOut()
+        if(error)throw error
         toast.success('Sessão encerrada com sucesso!')
-        window.location.href = '/dashboard'
+        window.location.href = '/login'
       } else {
         toast.info('Sessão local redefinida com sucesso.')
       }
     } catch {
-      toast.error('Erro ao efetuar logout.')
+      window.location.href = '/login?logout=unconfirmed'
     } finally {
       setIsLoggingOut(false)
     }
@@ -61,7 +62,7 @@ export const SecurityCenterPage: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="text-[#B8B8C0]">Token de Sessão:</span>
                 <span className="font-mono text-[#F8F9FC] text-[11px]">
-                  {isSupabaseConfigured ? 'JWT Validado (SHA-256)' : 'Local Session Mock'}
+                  {isSupabaseConfigured ? 'Sessão autenticada' : 'Local Session Mock'}
                 </span>
               </div>
             </div>
@@ -94,7 +95,7 @@ export const SecurityCenterPage: React.FC = () => {
               <div>
                 <span className="font-bold text-[#F8F9FC] block">Row Level Security (RLS)</span>
                 <span className="text-[11px] text-[#B8B8C0]">
-                  Políticas ativas em todas as 25+ tabelas PostgreSQL para garantia multi-tenant.
+                  Acesso por agência, vínculo ativo e permissões. Confira as validações e pendências em Diagnósticos.
                 </span>
               </div>
             </div>

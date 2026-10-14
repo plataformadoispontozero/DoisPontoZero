@@ -8,7 +8,7 @@ import { useAgencyDocumentSettings, useAgencyBranding } from './hooks/useAgencyS
 import { FileSpreadsheet, Save, FileText, CheckCircle2, Eye } from 'lucide-react'
 import type { HeaderStyle, PageFormat } from '@/types/whitelabel'
 
-export const DocumentBrandingPage: React.FC = () => {
+const DocumentBrandingPageForm: React.FC = () => {
   const { branding } = useAgencyBranding()
   const { documentSettings, updateDocumentSettings } = useAgencyDocumentSettings()
 
@@ -234,4 +234,12 @@ export const DocumentBrandingPage: React.FC = () => {
       </div>
     </form>
   )
+}
+
+export const DocumentBrandingPage: React.FC = () => {
+  const source0 = useAgencyBranding()
+  const source1 = useAgencyDocumentSettings()
+  if (source0.isError || source1.isError) return <div role="alert">Não foi possível carregar as configurações. <Button onClick={() => { void source0.refetch(); void source1.refetch() }}>Tentar novamente</Button></div>
+  if (source0.isLoading || source1.isLoading) return <p role="status">Carregando configurações da agência…</p>
+  return <DocumentBrandingPageForm key={source0.branding.agency_id + ":" + source1.documentSettings.agency_id} />
 }

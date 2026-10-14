@@ -1,0 +1,5 @@
+-- Internal authenticated operations do not need anonymous EXECUTE.
+REVOKE ALL ON FUNCTION public.can_access_project(uuid),public.can_access_task(uuid),public.create_project_with_board(uuid,uuid,text,text,text,text,date,date,uuid,uuid[]),public.move_task(uuid,uuid,double precision),public.is_agency_member(uuid),public.is_agency_owner(uuid),public.is_agency_admin(uuid),public.has_agency_permission(uuid,text) FROM PUBLIC,anon;
+GRANT EXECUTE ON FUNCTION public.can_access_project(uuid),public.can_access_task(uuid),public.create_project_with_board(uuid,uuid,text,text,text,text,date,date,uuid,uuid[]),public.move_task(uuid,uuid,double precision),public.is_agency_member(uuid),public.is_agency_owner(uuid),public.is_agency_admin(uuid),public.has_agency_permission(uuid,text) TO authenticated;
+-- Trigger/event-trigger functions remain executable by their privileged owner, not the Data API.
+REVOKE ALL ON FUNCTION public.rls_auto_enable(),public.set_current_timestamp_updated_at() FROM PUBLIC,anon,authenticated;

@@ -22,15 +22,17 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { usePermission } from '@/features/auth/AuthProvider'
 import { useMeetings } from './hooks/useMeetings'
 
 export const MeetingsPage: React.FC = () => {
   const navigate = useNavigate()
+  const canCreate = usePermission('meetings.create')
   const [search, setSearch] = useState('')
   const [selectedStatus, setSelectedStatus] = useState<string>('all')
   const [selectedType, setSelectedType] = useState<string>('all')
 
-  const { data: meetings, isLoading } = useMeetings({
+  const { data: meetings, isLoading, isError, refetch } = useMeetings({
     search: search || undefined,
     status: selectedStatus !== 'all' ? selectedStatus : undefined,
     type: selectedType !== 'all' ? selectedType : undefined,
@@ -55,7 +57,7 @@ export const MeetingsPage: React.FC = () => {
             Organize conversas, pautas, atas de decisão e próximos passos em um só lugar.
           </p>
         </div>
-        <Button variant="primary" onClick={() => navigate('/meetings/new')}>
+        <Button variant="primary" disabled={!canCreate} onClick={() => navigate('/meetings/new')}>
           <Plus className="w-4 h-4 mr-1.5" />
           Nova Reunião
         </Button>
@@ -126,7 +128,7 @@ export const MeetingsPage: React.FC = () => {
       </div>
 
       {/* Meetings List */}
-      {isLoading ? (
+      {isError ? (<div role="alert" className="rounded-xl border border-orange-500/30 p-5">Não foi possível carregar as reuniões. <Button onClick={() => void refetch()}>Tentar novamente</Button></div>) : isLoading ? (
         <div className="p-12 text-center text-xs text-content-secondary">
           <div className="animate-spin w-6 h-6 border-2 border-brand-primary border-t-transparent rounded-full mx-auto mb-2" />
           Carregando agendamentos...
@@ -138,7 +140,7 @@ export const MeetingsPage: React.FC = () => {
           <p className="text-xs text-content-secondary max-w-sm mx-auto">
             Agende reuniões de alinhamento com clientes ou squads internas e mantenha pautas e atas organizadas.
           </p>
-          <Button variant="outline" size="sm" onClick={() => navigate('/meetings/new')}>
+          <Button variant="outline" size="sm" disabled={!canCreate} onClick={() => navigate('/meetings/new')}>
             Agendar Primeira Reunião
           </Button>
         </Card>

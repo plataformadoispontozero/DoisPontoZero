@@ -5,26 +5,26 @@ import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
 import { toast } from '@/components/ui/Toast'
-import { useAgencyBranding, useAgencyPreferences } from './hooks/useAgencySettings'
+import { useAgencyBranding, useAgencyPreferences, useSaveAgencyIdentity } from './hooks/useAgencySettings'
 import { Building2, Save, CheckCircle2, Globe, Clock, DollarSign } from 'lucide-react'
 
-export const AgencySettingsPage: React.FC = () => {
-  const { branding, updateBranding } = useAgencyBranding()
-  const { preferences, updatePreferences } = useAgencyPreferences()
+const AgencySettingsPageForm: React.FC = () => {
+  const { branding } = useAgencyBranding()
+  const { preferences } = useAgencyPreferences()
+  const saveIdentity = useSaveAgencyIdentity()
 
   const [formData, setFormData] = useState({
     displayName: branding.display_name,
     legalName: branding.legal_name,
     tagline: branding.tagline,
-    email: 'contato@doiszero.com.br',
-    phone: '+55 (11) 98765-4321',
-    website: 'https://doiszero.com.br',
-    country: 'Brasil',
+    email: branding.contact_email || '',
+    phone: branding.contact_phone || '',
+    website: branding.website_url || '',
     language: preferences.language,
     timezone: preferences.timezone,
     currency: preferences.currency,
     dateFormat: preferences.date_format,
-    businessHours: '09:00 - 18:00 (Seg-Sex)',
+    businessHours: branding.business_hours || '',
   })
 
   const [isSaving, setIsSaving] = useState(false)
@@ -33,17 +33,7 @@ export const AgencySettingsPage: React.FC = () => {
     e.preventDefault()
     setIsSaving(true)
     try {
-      await updateBranding({
-        display_name: formData.displayName,
-        legal_name: formData.legalName,
-        tagline: formData.tagline,
-      })
-      await updatePreferences({
-        language: formData.language,
-        timezone: formData.timezone,
-        currency: formData.currency,
-        date_format: formData.dateFormat,
-      })
+      await saveIdentity.mutateAsync({branding:{display_name:formData.displayName,legal_name:formData.legalName,tagline:formData.tagline,contact_email:formData.email,contact_phone:formData.phone,website_url:formData.website,business_hours:formData.businessHours},preferences:{language:formData.language,timezone:formData.timezone,currency:formData.currency,date_format:formData.dateFormat}})
       toast.success('Configurações da agência atualizadas com sucesso!')
     } catch {
       toast.error('Erro ao salvar as configurações da agência.')
@@ -85,7 +75,7 @@ export const AgencySettingsPage: React.FC = () => {
                 Nome Comercial da Agência <span className="text-red-400">*</span>
               </label>
               <Input
-                value={formData.displayName}
+                aria-label="Nome comercial da agência" value={formData.displayName}
                 onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                 placeholder="Ex: Dois.Zero Creative Agency"
                 required
@@ -97,7 +87,7 @@ export const AgencySettingsPage: React.FC = () => {
                 Razão Social <span className="text-red-400">*</span>
               </label>
               <Input
-                value={formData.legalName}
+                aria-label="Razão social" value={formData.legalName}
                 onChange={(e) => setFormData({ ...formData, legalName: e.target.value })}
                 placeholder="Ex: Dois.Zero Sistemas Criativos Ltda."
                 required
@@ -109,7 +99,7 @@ export const AgencySettingsPage: React.FC = () => {
                 Slogan Institucional
               </label>
               <Input
-                value={formData.tagline}
+                aria-label="Slogan institucional" value={formData.tagline}
                 onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
                 placeholder="Ex: Sua agência. Tudo conectado."
               />
@@ -122,7 +112,7 @@ export const AgencySettingsPage: React.FC = () => {
                 </label>
                 <Input
                   type="email"
-                  value={formData.email}
+                  aria-label="E-mail oficial" value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
@@ -132,7 +122,7 @@ export const AgencySettingsPage: React.FC = () => {
                   Telefone / WhatsApp
                 </label>
                 <Input
-                  value={formData.phone}
+                  aria-label="Telefone da agência" value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 />
               </div>
@@ -144,7 +134,7 @@ export const AgencySettingsPage: React.FC = () => {
               </label>
               <Input
                 type="url"
-                value={formData.website}
+                aria-label="Website da agência" value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
               />
             </div>
@@ -190,6 +180,7 @@ export const AgencySettingsPage: React.FC = () => {
                     { value: 'America/Manaus', label: 'Manaus (GMT-4)' },
                     { value: 'America/New_York', label: 'New York (EST/GMT-5)' },
                     { value: 'Europe/Lisbon', label: 'Lisboa (WET/GMT+0)' },
+                    { value: 'Europe/Paris', label: 'Paris' },
                   ]}
                 />
               </div>
@@ -233,7 +224,7 @@ export const AgencySettingsPage: React.FC = () => {
                 Horário de Funcionamento
               </label>
               <Input
-                value={formData.businessHours}
+                aria-label="Horário de funcionamento" value={formData.businessHours}
                 onChange={(e) => setFormData({ ...formData, businessHours: e.target.value })}
                 placeholder="Ex: 09:00 - 18:00 (Seg-Sex)"
               />
@@ -253,4 +244,12 @@ export const AgencySettingsPage: React.FC = () => {
       </div>
     </form>
   )
+}
+
+export const AgencySettingsPage: React.FC = () => {
+  const source0 = useAgencyBranding()
+  const source1 = useAgencyPreferences()
+  if (source0.isError || source1.isError) return <div role="alert">Não foi possível carregar as configurações. <Button onClick={() => { void source0.refetch(); void source1.refetch() }}>Tentar novamente</Button></div>
+  if (source0.isLoading || source1.isLoading) return <p role="status">Carregando configurações da agência…</p>
+  return <AgencySettingsPageForm key={source0.branding.agency_id + ":" + source1.preferences.agency_id} />
 }

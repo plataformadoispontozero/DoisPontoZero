@@ -272,7 +272,7 @@ export function useSendMessage() {
       if (supabase && isSupabaseConfigured) {
         if (!auth.user || !agencyId) throw new Error('Sessão e agência são obrigatórias.')
         if (!payload.body.trim()) throw new Error('Informe uma mensagem.')
-        if (payload.attachments?.length) throw new Error('Anexos dependem da integração de Storage privado. Envie uma mensagem de texto.')
+        if (payload.attachments?.length) throw new Error('Compartilhe materiais pelo seletor seguro do Drive.')
         const { data, error } = await supabase.from('chat_messages').insert({
           agency_id: agencyId, sender_id: auth.user.id,
           channel_id: payload.isConversation ? null : payload.targetId,

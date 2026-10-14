@@ -7,7 +7,7 @@ import { toast } from '@/components/ui/Toast'
 import { useAgencyPortalSettings } from './hooks/useAgencySettings'
 import { MonitorCheck, Save, Globe, Mail, CheckCircle2, ExternalLink } from 'lucide-react'
 
-export const ClientExperiencePage: React.FC = () => {
+const ClientExperiencePageForm: React.FC = () => {
   const { portalSettings, updatePortalSettings } = useAgencyPortalSettings()
 
   const [formData, setFormData] = useState({
@@ -183,4 +183,11 @@ export const ClientExperiencePage: React.FC = () => {
       </div>
     </form>
   )
+}
+
+export const ClientExperiencePage: React.FC = () => {
+  const source0 = useAgencyPortalSettings()
+  if (source0.isError) return <div role="alert">Não foi possível carregar as configurações. <Button onClick={() => { void source0.refetch() }}>Tentar novamente</Button></div>
+  if (source0.isLoading) return <p role="status">Carregando configurações da agência…</p>
+  return <ClientExperiencePageForm key={source0.portalSettings.agency_id} />
 }

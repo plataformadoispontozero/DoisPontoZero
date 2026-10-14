@@ -7,7 +7,7 @@ import { useAgencyPreferences } from './hooks/useAgencySettings'
 import { Globe2, Save, Calendar, Clock, DollarSign, Layout, CheckCircle2 } from 'lucide-react'
 import type { DefaultProjectView, DefaultTaskView } from '@/types/whitelabel'
 
-export const WorkspacePreferencesPage: React.FC = () => {
+const WorkspacePreferencesPageForm: React.FC = () => {
   const { preferences, updatePreferences } = useAgencyPreferences()
 
   const [formData, setFormData] = useState({
@@ -198,4 +198,11 @@ export const WorkspacePreferencesPage: React.FC = () => {
       </div>
     </form>
   )
+}
+
+export const WorkspacePreferencesPage: React.FC = () => {
+  const source0 = useAgencyPreferences()
+  if (source0.isError) return <div role="alert">Não foi possível carregar as configurações. <Button onClick={() => { void source0.refetch() }}>Tentar novamente</Button></div>
+  if (source0.isLoading) return <p role="status">Carregando configurações da agência…</p>
+  return <WorkspacePreferencesPageForm key={source0.preferences.agency_id} />
 }

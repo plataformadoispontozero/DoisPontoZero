@@ -3,6 +3,10 @@ import {soundKinds,soundNotes,notificationSoundKind} from './notificationSounds'
 describe('distinct notification signals',()=>{
  it('provides five different motifs and maps action categories',()=>{
   expect(new Set(soundKinds.map(k=>soundNotes[k].join(','))).size).toBe(5)
+  expect(notificationSoundKind('calendar_changes_requested')).toBe('approval')
+  expect(notificationSoundKind('calendar_production')).toBe('production')
+  expect(notificationSoundKind('task_production_started')).toBe('production')
+  expect(notificationSoundKind('material_changes_requested')).toBe('approval')
   expect(notificationSoundKind('calendar_approved')).toBe('approval')
   expect(notificationSoundKind('task_production')).toBe('production')
   expect(notificationSoundKind('client_created')).toBe('client')

@@ -11,6 +11,10 @@ export interface AgencyBrandingData {
   display_name: string
   legal_name: string
   tagline: string
+  contact_email?: string
+  contact_phone?: string
+  website_url?: string
+  business_hours?: string
   logo_light_path?: string
   logo_dark_path?: string
   symbol_path?: string

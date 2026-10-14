@@ -72,6 +72,9 @@ export interface ChatConversationMember {
 }
 
 export interface ChatAttachment {
+  client_id?: string | null
+  google_file_id?: string | null
+  drive_folder_id?: string | null
   id: string
   agency_id: string
   message_id: string

@@ -1,4 +1,4 @@
-import { useAgencyId } from '@/features/auth/AuthProvider'
+import { useAgencyId, usePermission } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 10: TEAM CHAT MAIN PAGE
@@ -29,6 +29,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Select } from '@/components/ui/Select'
+import {ChatDrivePicker,ChatDriveAttachment} from './ChatDriveAttachments'
 import {WorkRooms} from './WorkRooms'
 import {useRoomPresence} from './hooks/useRoomPresence'
 import { Dialog } from '@/components/ui/Dialog'
@@ -39,6 +40,8 @@ import type { ChatChannel, ChatMessage, ChannelType, ChannelVisibility } from '@
 
 export const ChatPage: React.FC = () => {
   const agencyId = useAgencyId()
+  const canMeet = usePermission('meetings.view')
+  const canCreateRoom = usePermission('chat.create_channels')
   const { channelId, conversationId } = useParams<{ channelId?: string; conversationId?: string }>()
   const navigate = useNavigate()
 
@@ -84,11 +87,12 @@ export const ChatPage: React.FC = () => {
   const lastMessage=messages?.at(-1)?.id
   useEffect(()=>{if(activeTargetId&&lastMessage)markRead.mutate({target:activeTargetId,direct:isConversationMode,last:lastMessage})},[activeTargetId,lastMessage,isConversationMode])
   // Message Input State
+  const [drivePickerOpen,setDrivePickerOpen]=useState(false)
   const [inputText, setInputText] = useState('')
   const [roomSearch,setRoomSearch]=useState('')
   const showingRooms=!channelId&&!conversationId
   const visibleChannels=safeChannels.filter(room=>!roomSearch.trim()||room.name.toLocaleLowerCase('pt-BR').includes(roomSearch.toLocaleLowerCase('pt-BR')))
-  const openCreate=()=>{setSelectedMembers([]);setNewChannelVisibility('agency');setNewChannelType('general');setActionError('');setIsCreateChannelOpen(true)}
+  const openCreate=()=>{if(!canCreateRoom)return;setSelectedMembers([]);setNewChannelVisibility('agency');setNewChannelType('general');setActionError('');setIsCreateChannelOpen(true)}
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false)
   const [newChannelName, setNewChannelName] = useState('')
   const [newChannelDesc, setNewChannelDesc] = useState('')
@@ -147,7 +151,7 @@ export const ChatPage: React.FC = () => {
             <MessageSquare className="w-4 h-4 mr-1.5 text-brand-primary" />
             Team Chat · Salas
           </h2>
-          <Button variant="ghost" size="sm" aria-label="Criar novo canal" onClick={openCreate}>
+          <Button variant="ghost" size="sm" aria-label="Criar novo canal" disabled={!canCreateRoom} onClick={openCreate}>
             <Plus className="w-4 h-4" />
           </Button>
         </div>
@@ -217,7 +221,7 @@ export const ChatPage: React.FC = () => {
       {/* ÁREA CENTRAL DE MENSAGENS */}
       <div className="min-w-0 min-h-0 flex-1 flex flex-col h-full bg-surface-card overflow-hidden">
         {(actionError||channelsError||conversationsError||messagesError||membersError||markRead.error)&&<div role="alert" className="p-3 text-sm text-red-400">{actionError||'Não foi possível sincronizar o chat. Confira sua conexão e tente novamente.'}</div>}
-        {showingRooms?<div className="flex-1 overflow-y-auto"><WorkRooms rooms={visibleChannels} onEnter={id=>navigate(`/chat/channels/${id}`)} onCreate={openCreate}/></div>:<>
+        {showingRooms?<div className="flex-1 overflow-y-auto"><WorkRooms rooms={visibleChannels} onEnter={id=>navigate(`/chat/channels/${id}`)} onCreate={openCreate} canCreate={canCreateRoom} onMeetings={canMeet?()=>navigate('/meetings'):undefined}/></div>:<>
         {/* Chat Header */}
         <div className="p-3.5 border-b border-surface-border flex items-center justify-between bg-surface-card">
           <div className="flex items-center space-x-2">
@@ -287,10 +291,7 @@ export const ChatPage: React.FC = () => {
                   {msg.attachments && msg.attachments.length > 0 && (
                     <div className="flex flex-wrap gap-2 pt-1">
                       {msg.attachments.map((att) => (
-                        <a key={att.id} href={att.url} target="_blank" rel="noreferrer" className="flex items-center space-x-1.5 p-2 bg-surface-elevated rounded border border-surface-border text-[11px] text-brand-primary hover:underline">
-                          <FileText className="w-3.5 h-3.5" />
-                          <span>{att.file_name}</span>
-                        </a>
+                        <ChatDriveAttachment key={att.id} attachment={att}/>
                       ))}
                     </div>
                   )}
@@ -315,6 +316,7 @@ export const ChatPage: React.FC = () => {
 
         {/* Message Input Footer */}
         <form onSubmit={handleSendMessage} className="p-3 border-t border-surface-border bg-surface-card flex items-center space-x-2">
+          <button type="button" aria-label="Compartilhar material do Drive" title="Compartilhar material do Drive" disabled={!activeTargetId||Boolean(messagesError)} onClick={()=>setDrivePickerOpen(true)} className="p-2 rounded-lg text-orange-300 hover:bg-orange-500/10"><Paperclip className="h-4 w-4"/></button>
           <input
             type="text"
             value={inputText}
@@ -329,6 +331,7 @@ export const ChatPage: React.FC = () => {
         </>}
       </div>
 
+      <Dialog open={drivePickerOpen} onOpenChange={setDrivePickerOpen}>{drivePickerOpen&&activeTargetId&&<ChatDrivePicker key={activeTargetId} targetId={activeTargetId} direct={isConversationMode} onDone={()=>setDrivePickerOpen(false)}/>}</Dialog>
       {/* DIALOG: CREATE CHANNEL */}
       <Dialog open={isCreateChannelOpen} onOpenChange={open => {setIsCreateChannelOpen(open); if (!open) {setSelectedMembers([]); setActionError('')}}}>
         <div className="p-6 space-y-4">

@@ -1,15 +1,16 @@
 {
-  "id": "client-workspace-20261014",
-  "title": "Organização da operação por cliente",
+  "id": "phase-closure-web-20261014",
+  "title": "Fechamento por fases: configurações e colaboração",
   "verified_at": "2026-10-14",
   "status": "published",
-  "evidence": "docs/qa/client-workspace-adjustments-2026-10-14.md",
+  "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
   "checks": [
-    "353 testes de regressão aprovados",
-    "34 cenários de navegador: desktop e celular",
-    "Typecheck, lint e build verificados",
-    "Kanban conferido no Supabase: 5 demandas Aurora",
-    "PDF de 4 páginas renderizado e revisado"
+    "404 testes de regressão aprovados",
+    "76 cenários de navegador: desktop e celular",
+    "18 páginas de Configurações com abertura e refresh",
+    "Permissões, atas e configurações: SQL real com rollback",
+    "Aniversários: rotina automática executada no servidor",
+    "Typecheck, lint e build verificados"
   ],
   "deliveries": [
     {
@@ -94,6 +95,83 @@
       "result": "Registro das entregas publicadas, checagens e pendências por fase, sem declarar a plataforma integralmente homologada.",
       "pending": [
         "Aceite operacional das integrações externas e da plataforma como um todo."
+      ]
+    },
+    {
+      "id": "permission-matrix",
+      "title": "Permission Studio com gravação segura",
+      "phases": [
+        "phase-02",
+        "phase-11"
+      ],
+      "result": "Matriz salva por transação; OWNER protegido, mudanças por célula e cache por sessão. Revogação aplicada também a Chat e Estratégia.",
+      "pending": [
+        "Validar convite e recuperação por e-mail com SMTP real e cadastro/aprovação de dois membros."
+      ]
+    },
+    {
+      "id": "settings-data",
+      "title": "Configurações com dados reais da agência",
+      "phases": [
+        "phase-11"
+      ],
+      "result": "Formulários aguardam o banco; identidade, contato, site, horário e preferências são salvos juntos. Registros ausentes inicializados sem substituir valores existentes.",
+      "pending": []
+    },
+    {
+      "id": "birthdays",
+      "title": "Aniversários com aviso automático",
+      "phases": [
+        "phase-05"
+      ],
+      "result": "Rotina privada por hora, fuso da agência e controle anual de duplicação. Execuções automáticas confirmadas no servidor.",
+      "pending": []
+    },
+    {
+      "id": "meeting-operations",
+      "title": "Reunião, ata, ação e tarefa",
+      "phases": [
+        "phase-10"
+      ],
+      "result": "Persistência transacional de pauta, ata, decisões e ações; conversão em tarefa idempotente, com responsáveis reais e erros tratados. Verificado no banco com rollback.",
+      "pending": [
+        "Aceite da equipe no uso diário com dois membros autenticados."
+      ]
+    },
+    {
+      "id": "chat-materials",
+      "title": "Salas, presença, reuniões e materiais",
+      "phases": [
+        "phase-09",
+        "phase-10"
+      ],
+      "result": "Escopo confirmado: chat, presença e acesso às reuniões. Material do Drive vinculado à conversa com metadados; leitura revalida acesso ao chat, cliente e pasta.",
+      "pending": [
+        "Testar envio e download de um arquivo privado real do Drive entre dois membros."
+      ]
+    },
+    {
+      "id": "operational-events",
+      "title": "Notificações operacionais persistentes",
+      "phases": [
+        "phase-10"
+      ],
+      "result": "Mudanças de calendário, cliente e produção geram notificações no servidor para destinatários autorizados. Sons usam apenas avisos da sessão atual.",
+      "pending": [
+        "Conferir recebimento e permissões do navegador com dois membros reais."
+      ]
+    },
+    {
+      "id": "access-hardening",
+      "title": "Acesso e funções antigas protegidos",
+      "phases": [
+        "phase-02",
+        "phase-07",
+        "phase-12"
+      ],
+      "result": "Agência, vínculo e papel atuais validados; ranking/progresso protegidos, conversão antiga retirada e endpoints antigos de propostas desativados. Funções internas bloqueadas ao acesso anônimo.",
+      "pending": [
+        "Ativar a proteção de senhas vazadas nas configurações de Auth do Supabase."
       ]
     }
   ]

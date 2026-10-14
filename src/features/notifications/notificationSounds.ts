@@ -21,6 +21,7 @@ export const soundNotes: Record<SoundKind, number[]> = {
   meeting: [330, 440, 554],
 };
 export function notificationSoundKind(type: string): SoundKind {
+  if (/changes_requested/.test(type)) return "approval";
   if (/approved|approval/.test(type)) return "approval";
   if (/production|action_assigned|task/.test(type)) return "production";
   if (/client/.test(type)) return "client";

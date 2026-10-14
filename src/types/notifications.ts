@@ -4,6 +4,13 @@
 // ============================================================
 
 export type NotificationType =
+  | 'calendar_approved'
+  | 'calendar_changes_requested'
+  | 'calendar_production'
+  | 'client_created'
+  | 'task_production_started'
+  | 'material_approved'
+  | 'material_changes_requested'
   | 'member_birthday'
   | 'team_registration_pending'
   | 'meeting_invitation'

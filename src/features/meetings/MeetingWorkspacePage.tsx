@@ -24,6 +24,9 @@ import {
   Edit2,
   Sparkles,
 } from 'lucide-react'
+import { useAuth, usePermission } from '@/features/auth/AuthProvider'
+import { useAgencyTeam } from '@/features/settings/hooks/useAgencySettings'
+import { toast } from '@/components/ui/Toast'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -34,10 +37,14 @@ import { useProjects } from '../projects/hooks/useProjects'
 export const MeetingWorkspacePage: React.FC = () => {
   const { meetingId } = useParams<{ meetingId: string }>()
   const navigate = useNavigate()
+  const auth = useAuth()
+  const team = useAgencyTeam(auth.activeAgency?.agencyId || '')
+  const canEdit = usePermission('meetings.edit')
 
   const {
     meeting,
     isLoading,
+    isError, refetch, saveError, isSaving,
     addAgendaItem,
     deleteAgendaItem,
     updateMinutes,
@@ -58,7 +65,7 @@ export const MeetingWorkspacePage: React.FC = () => {
   const [newAgendaMinutes, setNewAgendaMinutes] = useState(15)
 
   // Minutes State
-  const [minutesText, setMinutesText] = useState('')
+  const [minutesText, setMinutesText] = useState<string | null>(null)
   const [isFinalizing, setIsFinalizing] = useState(false)
 
   // Decision State
@@ -69,12 +76,14 @@ export const MeetingWorkspacePage: React.FC = () => {
   // Action Item State
   const [isAddActionOpen, setIsAddActionOpen] = useState(false)
   const [newActionTitle, setNewActionTitle] = useState('')
-  const [newActionAssignee, setNewActionAssignee] = useState('Lucas Mendes')
+  const [newActionAssignee, setNewActionAssignee] = useState('')
 
   // Convert to Task State
   const [convertingActionId, setConvertingActionId] = useState<string | null>(null)
   const [selectedProjectId, setSelectedProjectId] = useState(projects[0]?.id || '')
 
+  if (isError) return <div role="alert">Não foi possível carregar a reunião. <Button onClick={() => void refetch()}>Tentar novamente</Button></div>
+  if (!isLoading && !meeting) return <div>Reunião não encontrada. <Button onClick={() => navigate('/meetings')}>Voltar às reuniões</Button></div>
   if (isLoading || !meeting) {
     return (
       <div className="p-12 text-center text-xs text-content-secondary">
@@ -97,7 +106,7 @@ export const MeetingWorkspacePage: React.FC = () => {
   }
 
   const handleSaveMinutes = async (finalize = false) => {
-    const textToSave = minutesText || meeting.minutes?.content || ''
+    const textToSave = minutesText ?? meeting.minutes?.content ?? ''
     await updateMinutes(textToSave, finalize)
     setIsFinalizing(false)
   }
@@ -117,7 +126,7 @@ export const MeetingWorkspacePage: React.FC = () => {
     if (!newActionTitle.trim()) return
     await addActionItem({
       title: newActionTitle,
-      assignee_name: newActionAssignee,
+      assigned_to: newActionAssignee || null,
     })
     setNewActionTitle('')
     setIsAddActionOpen(false)
@@ -134,6 +143,7 @@ export const MeetingWorkspacePage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
+      {saveError && <p role="alert" className="rounded-lg border border-orange-500/40 p-3">{saveError instanceof Error ? saveError.message : 'Não foi possível salvar a reunião.'} <button className="underline" onClick={() => void refetch()}>Atualizar dados</button></p>}
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
@@ -288,7 +298,7 @@ export const MeetingWorkspacePage: React.FC = () => {
                 {(meeting.participants || []).map((p) => (
                   <div key={p.id} className="flex items-center justify-between p-2 rounded bg-surface-subtle border border-surface-border text-xs">
                     <div>
-                      <span className="font-semibold text-content-primary block">{p.user_name || p.external_name}</span>
+                      <span className="font-semibold text-content-primary block">{team.members.find(m => m.user_id === p.user_id)?.full_name || p.user_name || p.external_name || 'Membro'}</span>
                       <span className="text-[10px] text-content-tertiary">{p.external_email || p.participant_type}</span>
                     </div>
                     <Badge variant={p.response_status === 'accepted' ? 'success' : 'neutral'}>{p.response_status}</Badge>
@@ -305,7 +315,7 @@ export const MeetingWorkspacePage: React.FC = () => {
         <div className="space-y-4 max-w-3xl">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-content-primary">Tópicos da Pauta</h3>
-            <Button variant="primary" size="sm" onClick={() => setIsAddAgendaOpen(true)}>
+            <Button variant="primary" size="sm" disabled={!canEdit || isSaving} onClick={() => setIsAddAgendaOpen(true)}>
               <Plus className="w-3.5 h-3.5 mr-1" />
               Adicionar Tópico
             </Button>
@@ -329,7 +339,7 @@ export const MeetingWorkspacePage: React.FC = () => {
                     </div>
                     {item.description && <p className="text-xs text-content-secondary pl-7">{item.description}</p>}
                   </div>
-                  <button onClick={() => deleteAgendaItem(item.id)} className="text-content-tertiary hover:text-rose-400 transition-colors p-1">
+                  <button disabled={!canEdit || isSaving} onClick={() => void deleteAgendaItem(item.id).catch(() => toast.error("Não foi possível remover a pauta."))} className="text-content-tertiary hover:text-rose-400 transition-colors p-1">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </Card>
@@ -362,8 +372,8 @@ export const MeetingWorkspacePage: React.FC = () => {
 
             <textarea
               rows={10}
-              disabled={meeting.minutes?.status === 'finalized'}
-              defaultValue={meeting.minutes?.content || ''}
+              disabled={!canEdit || isSaving || meeting.minutes?.status === 'finalized'}
+              value={minutesText ?? meeting.minutes?.content ?? ''}
               onChange={(e) => setMinutesText(e.target.value)}
               placeholder="Digite o resumo das discussões, acordos e direcionamentos alinhados durante a call..."
               className="w-full p-4 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary leading-relaxed disabled:opacity-80"
@@ -371,10 +381,10 @@ export const MeetingWorkspacePage: React.FC = () => {
 
             {meeting.minutes?.status !== 'finalized' && (
               <div className="flex justify-end space-x-2 pt-2">
-                <Button variant="ghost" size="sm" onClick={() => handleSaveMinutes(false)}>
+                <Button variant="ghost" size="sm" disabled={!canEdit || isSaving} onClick={() => void handleSaveMinutes(false).catch(() => toast.error("Não foi possível salvar a ata."))}>
                   Salvar Rascunho
                 </Button>
-                <Button variant="primary" size="sm" onClick={() => handleSaveMinutes(true)}>
+                <Button variant="primary" size="sm" disabled={!canEdit || isSaving} onClick={() => void handleSaveMinutes(true).catch(() => toast.error("Não foi possível salvar a ata."))}>
                   <Lock className="w-3.5 h-3.5 mr-1" />
                   Finalizar Ata
                 </Button>
@@ -389,7 +399,7 @@ export const MeetingWorkspacePage: React.FC = () => {
         <div className="space-y-4 max-w-3xl">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-content-primary">Decisões Aprovadas</h3>
-            <Button variant="primary" size="sm" onClick={() => setIsAddDecisionOpen(true)}>
+            <Button variant="primary" size="sm" disabled={!canEdit || isSaving} onClick={() => setIsAddDecisionOpen(true)}>
               <Plus className="w-3.5 h-3.5 mr-1" />
               Registrar Decisão
             </Button>
@@ -420,7 +430,7 @@ export const MeetingWorkspacePage: React.FC = () => {
         <div className="space-y-4 max-w-3xl">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-content-primary">Action Items (Pendências)</h3>
-            <Button variant="primary" size="sm" onClick={() => setIsAddActionOpen(true)}>
+            <Button variant="primary" size="sm" disabled={!canEdit || isSaving} onClick={() => setIsAddActionOpen(true)}>
               <Plus className="w-3.5 h-3.5 mr-1" />
               Adicionar Action Item
             </Button>
@@ -437,8 +447,8 @@ export const MeetingWorkspacePage: React.FC = () => {
                   <div className="space-y-1">
                     <span className="font-bold text-content-primary text-sm block">{act.title}</span>
                     <div className="flex items-center space-x-3 text-xs text-content-tertiary">
-                      <span>Responsável: {act.assignee_name}</span>
-                      <span>Prazo: {new Date(act.due_at || '').toLocaleDateString('pt-BR')}</span>
+                      <span>Responsável: {team.members.find(m => m.user_id === act.assigned_to)?.full_name || act.assignee_name || 'Sem responsável'}</span>
+                      <span>Prazo: {act.due_at ? new Date(act.due_at).toLocaleDateString('pt-BR') : 'Não definido'}</span>
                     </div>
                   </div>
 
@@ -452,7 +462,9 @@ export const MeetingWorkspacePage: React.FC = () => {
                       <Button
                         variant="secondary"
                         size="sm"
+                        disabled={!canEdit || isSaving || act.status !== 'pending'}
                         onClick={() => {
+                          setSelectedProjectId(meeting.project_id || '')
                           setConvertingActionId(act.id)
                         }}
                       >
@@ -496,7 +508,7 @@ export const MeetingWorkspacePage: React.FC = () => {
             <Button variant="ghost" onClick={() => setIsAddAgendaOpen(false)}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleAddAgendaSubmit} disabled={!newAgendaTitle.trim()}>
+            <Button variant="primary" onClick={() => void handleAddAgendaSubmit().catch(() => toast.error("Não foi possível concluir. Confira os dados e o acesso."))} disabled={!canEdit || isSaving || !newAgendaTitle.trim()}>
               Adicionar
             </Button>
           </div>
@@ -532,7 +544,7 @@ export const MeetingWorkspacePage: React.FC = () => {
             <Button variant="ghost" onClick={() => setIsAddDecisionOpen(false)}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleAddDecisionSubmit} disabled={!newDecisionTitle.trim()}>
+            <Button variant="primary" onClick={() => void handleAddDecisionSubmit().catch(() => toast.error("Não foi possível concluir. Confira os dados e o acesso."))} disabled={!canEdit || isSaving || !newDecisionTitle.trim()}>
               Registrar
             </Button>
           </div>
@@ -554,11 +566,12 @@ export const MeetingWorkspacePage: React.FC = () => {
             />
           </div>
 
+          <label className="block text-xs">Responsável<select aria-label="Responsável pela ação" value={newActionAssignee} onChange={e => setNewActionAssignee(e.target.value)} disabled={team.isLoading || team.isError} className="mt-1 w-full rounded border border-white/20 bg-zinc-900 p-2"><option value="">Sem responsável</option>{team.members.filter(m => m.status === 'active').map(m => <option key={m.user_id} value={m.user_id}>{m.full_name}</option>)}</select></label>
           <div className="flex justify-end space-x-2 pt-2">
             <Button variant="ghost" onClick={() => setIsAddActionOpen(false)}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleAddActionSubmit} disabled={!newActionTitle.trim()}>
+            <Button variant="primary" onClick={() => void handleAddActionSubmit().catch(() => toast.error("Não foi possível concluir. Confira os dados e o acesso."))} disabled={!canEdit || isSaving || !newActionTitle.trim()}>
               Adicionar
             </Button>
           </div>
@@ -578,7 +591,8 @@ export const MeetingWorkspacePage: React.FC = () => {
               onChange={(e) => setSelectedProjectId(e.target.value)}
               className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-xs focus:outline-none focus:border-brand-primary"
             >
-              {projects.map((p: { id: string; name: string }) => (
+              <option value="">Escolha um projeto</option>
+              {projects.filter(p => !meeting.client_id || p.client_id === meeting.client_id).map((p: { id: string; name: string }) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
                 </option>
@@ -590,7 +604,7 @@ export const MeetingWorkspacePage: React.FC = () => {
             <Button variant="ghost" onClick={() => setConvertingActionId(null)}>
               Cancelar
             </Button>
-            <Button variant="primary" onClick={handleConvertActionToTaskSubmit} disabled={!selectedProjectId}>
+            <Button variant="primary" onClick={() => void handleConvertActionToTaskSubmit().catch(() => toast.error("Não foi possível concluir. Confira os dados e o acesso."))} disabled={!canEdit || isSaving || !selectedProjectId}>
               Criar Tarefa Agora
             </Button>
           </div>

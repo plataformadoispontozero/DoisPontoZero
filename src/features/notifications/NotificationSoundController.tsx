@@ -1,7 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useAuth, usePermission } from "@/features/auth/AuthProvider";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase/client";
+import { useAuth } from "@/features/auth/AuthProvider";
 import { useNotifications } from "./hooks/useNotifications";
 import { useSoundPreference } from "./useSoundPreference";
 import {
@@ -15,57 +13,12 @@ export function NotificationSoundController() {
   const auth = useAuth(),
     agency = auth.activeAgency?.agencyId || "",
     scope = agency + ":" + auth.user?.id;
-  const clientsAllowed = usePermission("clients.view"),
-    strategyAllowed = usePermission("strategy.view");
   const { preference } = useSoundPreference(),
     notifications = useNotifications();
   const baseline = useRef<{
     scope: string;
     events: Map<string, { kind: SoundKind; title: string }>;
   } | null>(null);
-  const source = useQuery({
-    queryKey: ["sound-operational-events", agency, auth.user?.id],
-    enabled:
-      preference.enabled &&
-      !!agency &&
-      !!auth.user &&
-      !auth.isDemo &&
-      isSupabaseConfigured,
-    refetchInterval: 15000,
-    refetchIntervalInBackground: false,
-    queryFn: async () => {
-      const events = new Map<string, { kind: SoundKind; title: string }>();
-      if (clientsAllowed) {
-        const r = await supabase!
-          .from("clients")
-          .select("id,name")
-          .eq("agency_id", agency);
-        if (r.error) throw r.error;
-        for (const c of r.data || [])
-          events.set("client:" + c.id, {
-            kind: "client",
-            title: "Cliente novo: " + c.name,
-          });
-      }
-      if (strategyAllowed) {
-        const r = await supabase!
-          .from("monthly_editorial_campaigns")
-          .select("id,status")
-          .eq("agency_id", agency);
-        if (r.error) throw r.error;
-        for (const c of r.data || [])
-          if (c.status === "approved" || c.status === "production")
-            events.set("editorial:" + c.id + ":" + c.status, {
-              kind: c.status === "approved" ? "approval" : "production",
-              title:
-                c.status === "approved"
-                  ? "Cliente aprovou o calendário editorial."
-                  : "Calendário entrou em produção.",
-            });
-      }
-      return events;
-    },
-  });
   useEffect(() => {
     if (!preference.enabled) {
       baseline.current = null;
@@ -82,10 +35,10 @@ export function NotificationSoundController() {
     };
   }, [preference.enabled, scope]);
   useEffect(() => {
-    if (!preference.enabled || !source.data || !notifications.data) return;
-    const events = new Map(source.data);
+    if (!preference.enabled || !notifications.data) return;
+    const events = new Map<string, { kind: SoundKind; title: string }>();
     for (const n of notifications.data)
-      if (!n.read_at)
+      if (!n.read_at && n.agency_id === agency && n.recipient_id === auth.user?.id)
         events.set("notification:" + n.id, {
           kind: notificationSoundKind(n.type),
           title: n.title,
@@ -102,9 +55,10 @@ export function NotificationSoundController() {
     }
     baseline.current = { scope, events };
   }, [
-    source.data,
     notifications.data,
     scope,
+    agency,
+    auth.user?.id,
     preference.enabled,
     preference.volume,
   ]);

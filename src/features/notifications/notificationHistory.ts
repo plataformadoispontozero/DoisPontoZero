@@ -7,6 +7,8 @@ export function notificationDestination(notification: AppNotification): string |
   if (notification.type === 'member_birthday') return '/team'
   if (notification.resource_type === 'team_registration_request') return '/settings/team'
   if (!notification.resource_id) return null
+  if (notification.resource_type === 'editorial_campaign') return `/editorial?campaignId=${notification.resource_id}`
+  if (notification.resource_type === 'task') return `/tasks/${notification.resource_id}`
   if (notification.resource_type === 'client') return `/clients/${notification.resource_id}`
   if (notification.resource_type === 'meeting') return `/meetings/${notification.resource_id}`
   if (notification.resource_type === 'chat_conversation') return `/chat/direct/${notification.resource_id}`
@@ -16,6 +18,7 @@ export function notificationDestination(notification: AppNotification): string |
 
 export function notificationTypeLabel(type: string): string {
   const labels: Record<string, string> = {
+    calendar_approved: 'Calendários aprovados', calendar_changes_requested: 'Ajustes de calendário', calendar_production: 'Calendários em produção', client_created: 'Novos clientes', task_production_started: 'Demandas em produção',
     member_birthday:'Aniversários da equipe',
     material_approved: 'Materiais aprovados', material_changes_requested: 'Ajustes de materiais',
     meeting_invitation: 'Convites de reunião', meeting_updated: 'Reuniões atualizadas',

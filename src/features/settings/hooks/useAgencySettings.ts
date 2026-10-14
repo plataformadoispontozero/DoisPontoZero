@@ -240,7 +240,8 @@ export function useAgencyBranding(agencyId?: string) {
   const queryClient = useQueryClient()
 
   const query = useQuery({
-    queryKey: ['agencyBranding', agencyId],
+    queryKey: ['agencyBranding', agencyId, auth.user?.id],
+    enabled: auth.isDemo || (!!agencyId && !!auth.user),
     queryFn: async () => {
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -254,13 +255,15 @@ export function useAgencyBranding(agencyId?: string) {
           return data as AgencyBrandingData
         }
       }
+      if (!auth.isDemo) throw new Error('Configurações indisponíveis. Atualize a página e confira a sessão.')
       return initialAgencyBranding
     },
-    initialData: initialAgencyBranding,
+    initialData: auth.isDemo ? initialAgencyBranding : undefined,
   })
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<AgencyBrandingData>) => {
+      if (!auth.isDemo && (!auth.user || !agencyId || !query.data || query.isError)) throw new Error('Carregue as configurações da agência antes de salvar.')
       const { id: _id, agency_id: _tenant, created_at: _created, updated_at: _updated, ...fields } = updates
       if (Object.values(fields).some(value => typeof value === 'string' && value.startsWith('blob:'))) throw new Error('Envie os assets ao Storage privado antes de salvar; URLs temporárias não persistem.')
 
@@ -281,13 +284,15 @@ export function useAgencyBranding(agencyId?: string) {
       return { ...query.data, ...updates, updated_at: new Date().toISOString() }
     },
     onSuccess: (updated) => {
-      queryClient.setQueryData(['agencyBranding', agencyId], updated)
+      queryClient.setQueryData(['agencyBranding', agencyId, auth.user?.id], updated)
     },
   })
 
   return {
-    branding: query.data,
-    isLoading: query.isLoading,
+    branding: query.data ?? initialAgencyBranding,
+    isError: query.isError,
+    refetch: query.refetch,
+    isLoading: query.isLoading || (!auth.isDemo && !query.data && !query.isError),
     updateBranding: updateMutation.mutateAsync,
     isUpdating: updateMutation.isPending,
   }
@@ -300,7 +305,8 @@ export function useAgencyPreferences(agencyId?: string) {
   const queryClient = useQueryClient()
 
   const query = useQuery({
-    queryKey: ['agencyPreferences', agencyId],
+    queryKey: ['agencyPreferences', agencyId, auth.user?.id],
+    enabled: auth.isDemo || (!!agencyId && !!auth.user),
     queryFn: async () => {
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -314,13 +320,15 @@ export function useAgencyPreferences(agencyId?: string) {
           return data as AgencyPreferencesData
         }
       }
+      if (!auth.isDemo) throw new Error('Configurações indisponíveis. Atualize a página e confira a sessão.')
       return initialAgencyPreferences
     },
-    initialData: initialAgencyPreferences,
+    initialData: auth.isDemo ? initialAgencyPreferences : undefined,
   })
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<AgencyPreferencesData>) => {
+      if (!auth.isDemo && (!auth.user || !agencyId || !query.data || query.isError)) throw new Error('Carregue as configurações da agência antes de salvar.')
       const { id: _id, agency_id: _tenant, created_at: _created, updated_at: _updated, ...fields } = updates
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -339,13 +347,15 @@ export function useAgencyPreferences(agencyId?: string) {
       return { ...query.data, ...updates, updated_at: new Date().toISOString() }
     },
     onSuccess: (updated) => {
-      queryClient.setQueryData(['agencyPreferences', agencyId], updated)
+      queryClient.setQueryData(['agencyPreferences', agencyId, auth.user?.id], updated)
     },
   })
 
   return {
-    preferences: query.data,
-    isLoading: query.isLoading,
+    preferences: query.data ?? initialAgencyPreferences,
+    isError: query.isError,
+    refetch: query.refetch,
+    isLoading: query.isLoading || (!auth.isDemo && !query.data && !query.isError),
     updatePreferences: updateMutation.mutateAsync,
     isUpdating: updateMutation.isPending,
   }
@@ -358,7 +368,8 @@ export function useAgencyDocumentSettings(agencyId?: string) {
   const queryClient = useQueryClient()
 
   const query = useQuery({
-    queryKey: ['agencyDocumentSettings', agencyId],
+    queryKey: ['agencyDocumentSettings', agencyId, auth.user?.id],
+    enabled: auth.isDemo || (!!agencyId && !!auth.user),
     queryFn: async () => {
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -372,13 +383,15 @@ export function useAgencyDocumentSettings(agencyId?: string) {
           return data as AgencyDocumentSettingsData
         }
       }
+      if (!auth.isDemo) throw new Error('Configurações indisponíveis. Atualize a página e confira a sessão.')
       return initialAgencyDocumentSettings
     },
-    initialData: initialAgencyDocumentSettings,
+    initialData: auth.isDemo ? initialAgencyDocumentSettings : undefined,
   })
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<AgencyDocumentSettingsData>) => {
+      if (!auth.isDemo && (!auth.user || !agencyId || !query.data || query.isError)) throw new Error('Carregue as configurações da agência antes de salvar.')
       const { id: _id, agency_id: _tenant, created_at: _created, updated_at: _updated, ...fields } = updates
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -397,13 +410,15 @@ export function useAgencyDocumentSettings(agencyId?: string) {
       return { ...query.data, ...updates, updated_at: new Date().toISOString() }
     },
     onSuccess: (updated) => {
-      queryClient.setQueryData(['agencyDocumentSettings', agencyId], updated)
+      queryClient.setQueryData(['agencyDocumentSettings', agencyId, auth.user?.id], updated)
     },
   })
 
   return {
-    documentSettings: query.data,
-    isLoading: query.isLoading,
+    documentSettings: query.data ?? initialAgencyDocumentSettings,
+    isError: query.isError,
+    refetch: query.refetch,
+    isLoading: query.isLoading || (!auth.isDemo && !query.data && !query.isError),
     updateDocumentSettings: updateMutation.mutateAsync,
     isUpdating: updateMutation.isPending,
   }
@@ -416,7 +431,8 @@ export function useAgencyPortalSettings(agencyId?: string) {
   const queryClient = useQueryClient()
 
   const query = useQuery({
-    queryKey: ['agencyPortalSettings', agencyId],
+    queryKey: ['agencyPortalSettings', agencyId, auth.user?.id],
+    enabled: auth.isDemo || (!!agencyId && !!auth.user),
     queryFn: async () => {
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -430,13 +446,15 @@ export function useAgencyPortalSettings(agencyId?: string) {
           return data as AgencyPortalSettingsData
         }
       }
+      if (!auth.isDemo) throw new Error('Configurações indisponíveis. Atualize a página e confira a sessão.')
       return initialAgencyPortalSettings
     },
-    initialData: initialAgencyPortalSettings,
+    initialData: auth.isDemo ? initialAgencyPortalSettings : undefined,
   })
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<AgencyPortalSettingsData>) => {
+      if (!auth.isDemo && (!auth.user || !agencyId || !query.data || query.isError)) throw new Error('Carregue as configurações da agência antes de salvar.')
       const { id: _id, agency_id: _tenant, created_at: _created, updated_at: _updated, ...fields } = updates
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -455,13 +473,15 @@ export function useAgencyPortalSettings(agencyId?: string) {
       return { ...query.data, ...updates, updated_at: new Date().toISOString() }
     },
     onSuccess: (updated) => {
-      queryClient.setQueryData(['agencyPortalSettings', agencyId], updated)
+      queryClient.setQueryData(['agencyPortalSettings', agencyId, auth.user?.id], updated)
     },
   })
 
   return {
-    portalSettings: query.data,
-    isLoading: query.isLoading,
+    portalSettings: query.data ?? initialAgencyPortalSettings,
+    isError: query.isError,
+    refetch: query.refetch,
+    isLoading: query.isLoading || (!auth.isDemo && !query.data && !query.isError),
     updatePortalSettings: updateMutation.mutateAsync,
     isUpdating: updateMutation.isPending,
   }
@@ -476,18 +496,19 @@ export function useAgencyTeam(agencyId?: string) {
   const queryClient = useQueryClient()
 
   const rolesQuery = useQuery({
-    queryKey: ['agencyRoles', agencyId],
+    queryKey: ['agencyRoles', agencyId, auth.user?.id],
+    enabled: auth.isDemo || (!!agencyId && !!auth.user),
     queryFn: async () => {
       if (!supabase || !isSupabaseConfigured) return initialRoles
       const { data, error } = await supabase.from('roles').select('*').eq('agency_id', agencyId).order('name')
       if (error) throw error
       return (data ?? []) as RoleDefinition[]
     },
-    enabled: !!agencyId,
     initialData: isSupabaseConfigured ? undefined : initialRoles,
   })
   const membersQuery = useQuery({
-    queryKey: ['agencyMembers', agencyId],
+    queryKey: ['agencyMembers', agencyId, auth.user?.id],
+    enabled: auth.isDemo || (!!agencyId && !!auth.user),
     queryFn: async () => {
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -518,7 +539,8 @@ export function useAgencyTeam(agencyId?: string) {
   })
 
   const invitationsQuery = useQuery({
-    queryKey: ['agencyInvitations', agencyId],
+    queryKey: ['agencyInvitations', agencyId, auth.user?.id],
+    enabled: auth.isDemo || (!!agencyId && !!auth.user),
     queryFn: async () => {
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -573,7 +595,7 @@ export function useAgencyTeam(agencyId?: string) {
       return invitationId
     },
     onSuccess: (revokedId) => {
-      queryClient.setQueryData<AgencyInvitation[]>(['agencyInvitations', agencyId], (old = []) =>
+      queryClient.setQueryData<AgencyInvitation[]>(['agencyInvitations', agencyId, auth.user?.id], (old = []) =>
         old.filter((inv) => inv.id !== revokedId)
       )
     },
@@ -610,7 +632,8 @@ export function useActivityFeed(agencyId?: string) {
   const currentAgencyId = useAgencyId()
   agencyId = currentAgencyId || agencyId || ''
   return useQuery({
-    queryKey: ['activityFeed', agencyId],
+    queryKey: ['activityFeed', agencyId, auth.user?.id],
+    enabled: auth.isDemo || (!!agencyId && !!auth.user),
     queryFn: async () => {
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
@@ -641,4 +664,17 @@ export function useActivityFeed(agencyId?: string) {
     },
     initialData: isSupabaseConfigured ? [] : initialActivityEvents,
   })
+}
+
+// Institutional identity and operational preferences commit together in the database.
+export function useSaveAgencyIdentity() {
+ const auth=useAuth(),agency=useAgencyId(),cache=useQueryClient()
+ return useMutation({mutationFn:async({branding,preferences}:{branding:Pick<AgencyBrandingData,'display_name'|'legal_name'|'tagline'|'contact_email'|'contact_phone'|'website_url'|'business_hours'>;preferences:Pick<AgencyPreferencesData,'language'|'timezone'|'currency'|'date_format'>})=>{
+  if(auth.isDemo)return {branding:{...initialAgencyBranding,...branding},preferences:{...initialAgencyPreferences,...preferences}}
+  if(!auth.user||!agency||!supabase||!isSupabaseConfigured)throw new Error('Sessão necessária para salvar configurações.')
+  const {data,error}=await supabase.rpc('save_agency_identity',{p_agency:agency,p_branding:branding,p_preferences:preferences})
+  if(error)throw error
+  if(!data?.branding||!data?.preferences)throw new Error('O servidor não confirmou as configurações.')
+  return data as {branding:AgencyBrandingData;preferences:AgencyPreferencesData}
+ },onSuccess:data=>{cache.setQueryData(['agencyBranding',agency,auth.user?.id],data.branding);cache.setQueryData(['agencyPreferences',agency,auth.user?.id],data.preferences);void cache.invalidateQueries({queryKey:['agencyBranding']});void cache.invalidateQueries({queryKey:['agencyPreferences']})}})
 }

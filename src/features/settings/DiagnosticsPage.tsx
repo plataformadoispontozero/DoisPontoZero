@@ -57,6 +57,10 @@ export const DiagnosticsPage: React.FC = () => {
     switch (stage) {
       case 'LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED':
         return 'Auditoria Local Concluída • Aceite Remoto Pendente'
+      case 'PUBLISHED_PARTIAL_REMOTE_VERIFICATION':
+        return 'Publicado • Verificação remota parcial'
+      case 'LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING':
+        return 'Evidência local • Aceite operacional pendente'
       case 'COMPLETED':
         return 'Homologado & Completo'
       default:
@@ -99,7 +103,7 @@ export const DiagnosticsPage: React.FC = () => {
           Painel Técnico & Diagnóstico do Sistema
         </h3>
         <p className="text-xs text-[#B8B8C0]">
-          Verificação auditada da infraestrutura, estado dos módulos e conformidade das Fases 01 a 11.
+          Verificação auditada da infraestrutura, estado dos módulos e conformidade das Fases 01 a 12.
         </p>
       </div>
 
@@ -112,7 +116,7 @@ export const DiagnosticsPage: React.FC = () => {
                 Ambiente Frontend
               </span>
               <span className="text-sm font-bold text-[#F8F9FC]">Vite + React 19</span>
-              <span className="text-[10px] text-[#34D399] block mt-0.5">TypeScript 100% íntegro</span>
+              <span className="text-[10px] text-[#34D399] block mt-0.5">Build verificado no relatório de QA</span>
             </div>
             <Terminal className="w-5 h-5 text-[#FF8759]" />
           </CardContent>
@@ -125,10 +129,10 @@ export const DiagnosticsPage: React.FC = () => {
                 Supabase Engine
               </span>
               <span className="text-sm font-bold text-[#F8F9FC]">
-                {isSupabaseActive ? 'Conexão Remota Ativa' : 'Modo Local / Demo'}
+                {isSupabaseActive ? 'Supabase configurado' : 'Modo Local / Demo'}
               </span>
               <span className="text-[10px] text-[#98989F] block mt-0.5">
-                {isSupabaseActive ? 'API REST + Realtime' : 'Storage local em memória'}
+                {isSupabaseActive ? 'Configuração não comprova disponibilidade' : 'Storage local em memória'}
               </span>
             </div>
             <Database className="w-5 h-5 text-[#C74410]" />
@@ -141,8 +145,8 @@ export const DiagnosticsPage: React.FC = () => {
               <span className="text-[10px] text-[#B8B8C0] uppercase font-bold block">
                 Segurança & RLS
               </span>
-              <span className="text-sm font-bold text-[#34D399]">Isolamento por Agência</span>
-              <span className="text-[10px] text-[#B8B8C0] block mt-0.5">11+ Migrations protegidas</span>
+              <span className="text-sm font-bold text-[#34D399]">Controles por agência</span>
+              <span className="text-[10px] text-[#B8B8C0] block mt-0.5">Verificações por módulo; auditoria global pendente</span>
             </div>
             <ShieldCheck className="w-5 h-5 text-[#34D399]" />
           </CardContent>
@@ -159,7 +163,7 @@ export const DiagnosticsPage: React.FC = () => {
                 {inProgressPhases} em Homologação
               </span>
               <span className="text-[10px] text-[#FF8759] block mt-0.5">
-                {totalDeliverables} entregáveis implementados
+                {totalDeliverables} itens do inventário histórico
               </span>
             </div>
             <Layers className="w-5 h-5 text-[#FF8759]" />
@@ -167,17 +171,17 @@ export const DiagnosticsPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* Tabela Auditada das Fases 01 a 11 */}
+      {/* Tabela Auditada das Fases 01 a 12 */}
       <Card>
         <CardHeader className="pb-3 border-b border-[#30303B]/60">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <CardTitle className="text-sm flex items-center gap-2">
                 <FileCheck2 className="w-4 h-4 text-[#C74410]" />
-                Manifesto Técnico Auditado de Desenvolvimento (Fases 01 a 11)
+                Manifesto Técnico Auditado de Desenvolvimento (Fases 01 a 12)
               </CardTitle>
               <CardDescription className="text-xs">
-                Fonte autorizada sincronizada com <code className="text-[#FF8759]">docs/PHASE_STATUS.json</code> ({totalDeliverables} entregáveis locais implementados, {totalPendingCriteria} critérios de homologação em staging).
+                Evidências reconciliadas em 13/10/2026 em <code className="text-[#FF8759]">docs/PHASE_STATUS.json</code> ({totalDeliverables} itens históricos, {totalPendingCriteria} critérios de aceite pendentes). Testes controlados e publicação não equivalem a homologação integral.
               </CardDescription>
             </div>
 
@@ -300,7 +304,7 @@ export const DiagnosticsPage: React.FC = () => {
                           <div className="space-y-1.5 p-3 rounded-lg bg-[#101014]/60 border border-[#30303B]/60">
                             <span className="text-[10px] font-bold text-[#34D399] uppercase tracking-wider flex items-center gap-1.5">
                               <CheckCircle2 className="w-3.5 h-3.5 text-[#34D399]" />
-                              Entregáveis & Funcionalidades Locais Verificadas ({claims.length})
+                              Inventário histórico • não comprova aceite ({claims.length})
                             </span>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-[11px] text-[#B8B8C0]">
                               {claims.map((claim: string, idx: number) => (
@@ -310,6 +314,14 @@ export const DiagnosticsPage: React.FC = () => {
                                 </li>
                               ))}
                             </ul>
+                          </div>
+                        )}
+
+                        {phase.verification && (
+                          <div className="space-y-2 rounded-lg border border-[#30303B] p-3">
+                            <p className="text-xs font-semibold text-[#F8F9FC]">Evidência atual e escopo da validação</p>
+                            <p className="text-[11px] text-[#B8B8C0]">Local: {phase.verification.local.join('; ')}</p>
+                            <p className="text-[11px] text-[#B8B8C0]">Remoto: {phase.verification.remote.length ? phase.verification.remote.join('; ') : 'Sem homologação remota específica neste relatório.'}</p>
                           </div>
                         )}
 

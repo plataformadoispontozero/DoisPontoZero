@@ -1,21 +1,21 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "project": "Dois.Zero Creative Agency OS",
-  "generated_at": "2026-10-11T04:27:41.438201+00:00",
+  "generated_at": "2026-10-13T15:11:22+00:00",
   "phases": [
     {
       "id": "phase-01",
       "name": "Fase 01 - Design System, Shell e Dashboard",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Shell e rotas responsivas exercitados em 15 rotas nos três viewports com APIs controladas",
+        "Um grupo recolhível por cliente; clientes com demandas em andamento na área de Tarefas."
       ],
       "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Aceite do dashboard com sessão real e dados operacionais da agência"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Design System com 17+ componentes e variantes semânticas",
         "AppShell responsivo com Sidebar retrátil e persistência de estado",
@@ -24,69 +24,109 @@
         "Suíte de testes unitários com Vitest",
         "Zero erros no build de produção (tsc e vite)"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "verification": {
+        "local": [
+          "Shell e rotas responsivas exercitados em 15 rotas nos três viewports com APIs controladas",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [
+          "Domínio publicado e bundle conferido; não comprova todo o dashboard"
+        ],
+        "external_or_operational_pending": [
+          "Aceite do dashboard com sessão real e dados operacionais da agência"
+        ]
+      }
     },
     {
       "id": "phase-02",
       "name": "Fase 02 - Supabase, Auth e Permission Studio",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Login, recuperação e reset implementados em AuthPage; cadastro e aprovação da equipe presentes",
+        "Supabase remoto usado nas migrations publicadas e testes SQL isolados",
+        "Quadro por cliente e etapa para OWNER, ADMIN e MANAGER; consulta protegida no backend e RLS preservada.",
+        "Matriz salva por transação; OWNER protegido, mudanças por célula e cache por sessão. Revogação aplicada também a Chat e Estratégia.",
+        "Agência, vínculo e papel atuais validados; ranking/progresso protegidos, conversão antiga retirada e endpoints antigos de propostas desativados. Funções internas bloqueadas ao acesso anônimo."
       ],
       "pending_requirements": [
-        "Rotas frontend de autenticação (/login, /forgot-password, /reset-password)",
-        "Interface administrativa do Permission Studio (/settings/permissions)",
-        "Página de gestão de membros e convites (/settings/team)",
-        "Conexão com projeto Supabase remoto ativo com credenciais de produção",
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Recebimento real de convite/recuperação depende de SMTP",
+        "Aceite cadastro→aprovação→login com dois membros reais"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL com tabelas de autenticação, agências, membros, roles e permissões",
         "Políticas de Row Level Security (RLS) e funções seguras de verificação",
         "Cliente Supabase configurado com verificação de ambiente isSupabaseConfigured",
         "Definição de tipagens Database completas em src/lib/supabase/types.ts"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "verification": {
+        "local": [
+          "Login, recuperação e reset implementados em AuthPage; cadastro e aprovação da equipe presentes",
+          "Supabase remoto usado nas migrations publicadas e testes SQL isolados",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [
+          "Migrations recentes verificadas por papéis em rollback; cobertura parcial de RLS",
+          "Verificações delimitadas no Supabase e rotina de aniversários registradas no relatório de fechamento web; não equivalem a aceite global"
+        ],
+        "external_or_operational_pending": [
+          "Permission Studio: persistência de alterações ainda requer implementação/verificação",
+          "Recebimento real de convite/recuperação depende de SMTP",
+          "Aceite cadastro→aprovação→login com dois membros reais"
+        ]
+      }
     },
     {
       "id": "phase-03",
       "name": "Fase 03 - CRM e Client Hub",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "ClientsPage e ClientWorkspacePage implementados; perfil/contexto e links integrados",
+        "Mapeamento documentado de 29 clientes e 23 briefings nativos"
       ],
       "pending_requirements": [
-        "Interface completa de listagem e edição de clientes em src/features/clients/ClientsPage.tsx",
-        "Client Hub completo com brand guidelines e repositório de arquivos",
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Conferir com a equipe a completude dos campos legados ausentes e vínculos de arquivo",
+        "Exercitar edição e refresh do cliente em sessão real"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/BRIEFING_MIGRATION_MAP.md; src/features/clients/ClientWorkspacePage.tsx",
       "historical_claims": [
         "Modelagem da tabela clients com campos de branding, status e datas em PostgreSQL",
         "Políticas RLS para isolamento de clientes por agência",
         "Tipagem de Client integrada no sistema de projetos",
         "Componente de integração ClientBriefingsTab para visualização e exportação direta de briefings"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING",
+      "verification": {
+        "local": [
+          "ClientsPage e ClientWorkspacePage implementados; perfil/contexto e links integrados",
+          "Mapeamento documentado de 29 clientes e 23 briefings nativos"
+        ],
+        "remote": [],
+        "external_or_operational_pending": [
+          "Conferir com a equipe a completude dos campos legados ausentes e vínculos de arquivo",
+          "Exercitar edição e refresh do cliente em sessão real"
+        ]
+      }
     },
     {
       "id": "phase-04",
       "name": "Fase 04 - Projetos, Kanban e Gestão de Tarefas",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Projetos/tarefas e áreas de produção implementados; navegação responsiva verificada",
+        "Um grupo recolhível por cliente; clientes com demandas em andamento na área de Tarefas.",
+        "Quadro por cliente e etapa para OWNER, ADMIN e MANAGER; consulta protegida no backend e RLS preservada."
       ],
       "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Aceite da esteira real calendário aprovado→demanda→responsável→entrega",
+        "Exercitar Kanban/SLA e dependências com dois papéis reais"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL com 14 tabelas (projects, boards, columns, tasks, checklists, comments, attachments, links, activity)",
         "RPCs transacionais (create_project_with_board, move_task, get_project_progress)",
@@ -100,21 +140,33 @@
         "Painel unificado de tarefas (/tasks) com suporte a URL direta (/tasks/:taskId)",
         "Testes unitários automatizados em src/features/projects/projects.test.tsx"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING",
+      "verification": {
+        "local": [
+          "Projetos/tarefas e áreas de produção implementados; navegação responsiva verificada",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [],
+        "external_or_operational_pending": [
+          "Aceite da esteira real calendário aprovado→demanda→responsável→entrega",
+          "Exercitar Kanban/SLA e dependências com dois papéis reais"
+        ]
+      }
     },
     {
       "id": "phase-05",
       "name": "Fase 05 - Squads e Gestão de Equipe",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Perfil do membro e gestão de membros de squad implementados; 12 E2E controlados",
+        "RPC privada de data de nascimento e isolamento de squad testados",
+        "Rotina privada por hora, fuso da agência e controle anual de duplicação. Execuções automáticas confirmadas no servidor."
       ],
       "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Upload real de avatar e gestão de squad com membros reais"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000003_phase05_squads.sql) com 5 tabelas (squads, squad_members, squad_goals, squad_performance_snapshots, squad_projects)",
         "RPCs transacionais (compute_squad_ranking, upsert_performance_snapshot)",
@@ -124,21 +176,37 @@
         "TanStack Query hooks em src/features/squads/hooks/useSquads.ts",
         "SquadsPage operacional com 4 abas (Squads, Ranking com pódio, Metas, Performance com anéis de progresso) e 3 diálogos modais"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "verification": {
+        "local": [
+          "Perfil do membro e gestão de membros de squad implementados; 12 E2E controlados",
+          "RPC privada de data de nascimento e isolamento de squad testados",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [
+          "Migration de perfil aplicada e ACL/bucket conferidos; nenhum upload real testado",
+          "Verificações delimitadas no Supabase e rotina de aniversários registradas no relatório de fechamento web; não equivalem a aceite global"
+        ],
+        "external_or_operational_pending": [
+          "Upload real de avatar e gestão de squad com membros reais",
+          "Aniversários dependem de sincronização na plataforma; aviso offline não implementado"
+        ]
+      }
     },
     {
       "id": "phase-06",
       "name": "Fase 06 - Briefing Studio e Professional PDF",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Briefings nativos e histórico mapeados; builder e vínculos presentes",
+        "Grupos por cliente, filtros de busca e status, respostas e PDF; dados e histórico preservados."
       ],
       "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Homologar envio público, edição, PDF e uso do briefing por cliente real",
+        "Conferir autores legados cuja identidade não foi validada"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000004_phase06_briefings.sql) com 10 tabelas e 9 permissões",
         "Funções seguras RPC (get_public_briefing com token hash sanitizado, submit_public_briefing com snapshot imutável)",
@@ -152,21 +220,36 @@
         "Componente de integração para CRM Client Hub (ClientBriefingsTab)",
         "Suíte de testes com Vitest (43/43 passando) e build de produção 100% validado"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING",
+      "verification": {
+        "local": [
+          "Briefings nativos e histórico mapeados; builder e vínculos presentes",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [],
+        "external_or_operational_pending": [
+          "Homologar envio público, edição, PDF e uso do briefing por cliente real",
+          "Conferir autores legados cuja identidade não foi validada"
+        ]
+      }
     },
     {
       "id": "phase-07",
       "name": "Fase 07 - Strategy Studio e Editorial Generator",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Criação editorial guiada em quatro etapas, contexto do cliente e briefing automático",
+        "Exclusão de estratégia com confirmação e proteção de vínculos implementada",
+        "Social Media integra calendários nativos e produção; 6 E2E controlados",
+        "Campanhas agrupadas por cliente e mês, com acesso à revisão de copy, direção visual e aprovação.",
+        "Agência, vínculo e papel atuais validados; ranking/progresso protegidos, conversão antiga retirada e endpoints antigos de propostas desativados. Funções internas bloqueadas ao acesso anônimo."
       ],
       "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Aceite editorial completo com fatos do cliente e demanda real",
+        "Revisar qualidade de copy/slides/roteiro com social media; motor determinístico não equivale a geração IA"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000005_phase07_strategy.sql) com 6 tabelas (content_strategies, editorial_pillars, content_ideas, editorial_items, strategy_versions, strategy_activity)",
         "Funções e RPCs transacionais: get_strategy_overview e generate_editorial_suggestions",
@@ -186,21 +269,34 @@
         "Rotas integradas no React Router (/strategy, /strategy/new, /strategy/:strategyId)",
         "Suíte de testes unitários Vitest (52/52 passando) e build de produção 100% verificado"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "verification": {
+        "local": [
+          "Criação editorial guiada em quatro etapas, contexto do cliente e briefing automático",
+          "Exclusão de estratégia com confirmação e proteção de vínculos implementada",
+          "Social Media integra calendários nativos e produção; 6 E2E controlados",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [
+          "Exclusão/isolamento de estratégia verificados em rollback e migration aplicada",
+          "Verificações delimitadas no Supabase e rotina de aniversários registradas no relatório de fechamento web; não equivalem a aceite global"
+        ],
+        "external_or_operational_pending": [
+          "Aceite editorial completo com fatos do cliente e demanda real",
+          "Revisar qualidade de copy/slides/roteiro com social media; motor determinístico não equivale a geração IA"
+        ]
+      }
     },
     {
       "id": "phase-08",
       "name": "Fase 08 - Proposal Studio e Commercial Proposals",
-      "status": "in_progress",
+      "status": "retired",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Módulo removido; rotas redirecionadas e RPCs antigas desativadas. Histórico preservado."
       ],
-      "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
-      ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "pending_requirements": [],
+      "last_verified_at": "2026-10-14",
+      "evidence": "src/features/proposals; docs/FEATURE_INVENTORY.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000006_phase08_proposals.sql) com 11 tabelas e 6 permissões seguras RLS",
         "RPCs transacionais (get_public_proposal com hash SHA-256 e submit_public_proposal_feedback)",
@@ -217,21 +313,35 @@
         "Componente de integração ClientProposalsTab no CRM Client Hub",
         "Suíte de testes automatizados Vitest (60/60 passando) e build de produção 100% verificado"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "RETIRED_BY_USER_REQUEST",
+      "verification": {
+        "local": [
+          "Proposal Studio, editor, precificação e páginas públicas presentes no código"
+        ],
+        "remote": [],
+        "external_or_operational_pending": [
+          "Homologar criação→publicação→aceite/ajuste com cliente real",
+          "Verificar PDF e precificação do catálogo efetivo da agência"
+        ]
+      }
     },
     {
       "id": "phase-09",
       "name": "Fase 09 - Google Drive e Presentation Studio",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Apresentações responsivas e avaliações aprovar/ajustar/reprovar implementadas",
+        "Três E2E controlados verificam imagem, decisões e restauração após refresh",
+        "Períodos de 7, 30 e 90 dias, resumo da conta, métricas de campanhas e ações reportadas pelo Meta.",
+        "PDF com capa, textos, materiais visuais, proporções preservadas e paginação; preview e download consistentes.",
+        "Escopo confirmado: chat, presença e acesso às reuniões. Material do Drive vinculado à conversa com metadados; leitura revalida acesso ao chat, cliente e pasta."
       ],
       "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Leitura e upload de arquivo real no Drive e pasta autorizada",
+        "Avaliação real por cliente e preview de fontes Google; qualidade depende da imagem original"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000007_phase09_drive_presentations.sql) com 11 tabelas, RLS e RPC de visualização pública",
         "Tipagem de domínio completa em src/types/drive.ts e src/types/presentations.ts",
@@ -247,21 +357,40 @@
         "Componente de integração ClientPresentationsTab no Client Hub",
         "Suíte de testes automatizados Vitest (64/64 passando) e build de produção 100% verificado"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "verification": {
+        "local": [
+          "Apresentações responsivas e avaliações aprovar/ajustar/reprovar implementadas",
+          "Três E2E controlados verificam imagem, decisões e restauração após refresh",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [
+          "Migration de avaliações aplicada; token inválido/expirado, escopo de material e ACL testados em rollback"
+        ],
+        "external_or_operational_pending": [
+          "Leitura e upload de arquivo real no Drive e pasta autorizada",
+          "Avaliação real por cliente e preview de fontes Google; qualidade depende da imagem original"
+        ]
+      }
     },
     {
       "id": "phase-10",
       "name": "Fase 10 - Meeting Hub + Team Chat",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Salas de trabalho, mensagens diretas e presença com identidade servidor implementadas",
+        "Fluxos de reuniões e notificações presentes no código",
+        "Mês, semana, dia e lista com reuniões pessoais, prazos atribuídos e indicação do fuso horário.",
+        "Persistência transacional de pauta, ata, decisões e ações; conversão em tarefa idempotente, com responsáveis reais e erros tratados. Verificado no banco com rollback.",
+        "Escopo confirmado: chat, presença e acesso às reuniões. Material do Drive vinculado à conversa com metadados; leitura revalida acesso ao chat, cliente e pasta.",
+        "Mudanças de calendário, cliente e produção geram notificações no servidor para destinatários autorizados. Sons usam apenas avisos da sessão atual."
       ],
       "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Chat simultâneo de dois membros reais e notificações em navegador/dispositivo",
+        "Aceite da equipe na rotina reunião→ata→ação→tarefa; persistência e idempotência já verificadas no banco"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000008_phase10_meetings_chat.sql) com 18 tabelas, RLS e RPC convert_action_item_to_task",
         "Tipagem de domínio em src/types/meetings.ts, src/types/chat.ts, src/types/notifications.ts",
@@ -279,21 +408,39 @@
         "Abas de integração ClientMeetingsTab no Client Hub e ProjectChatTab no Project Workspace",
         "Suíte de testes automatizados Vitest (69/69 passando) e build de produção 100% verificado"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "verification": {
+        "local": [
+          "Salas de trabalho, mensagens diretas e presença com identidade servidor implementadas",
+          "Fluxos de reuniões e notificações presentes no código",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [
+          "Presença autorizada e isolamento de sala privada testados em rollback; migration aplicada",
+          "Verificações delimitadas no Supabase e rotina de aniversários registradas no relatório de fechamento web; não equivalem a aceite global"
+        ],
+        "external_or_operational_pending": [
+          "Chat simultâneo de dois membros reais e notificações em navegador/dispositivo",
+          "Homologar reunião→ata→ação→tarefa",
+          "Áudio/vídeo de salas não implementados"
+        ]
+      }
     },
     {
       "id": "phase-11",
       "name": "Fase 11 - White Label Studio & Advanced Settings",
       "status": "in_progress",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Configurações, identidade da agência, perfil e integrações presentes",
+        "Diagnostics consulta manifesto versionado; configuração não prova conexão saudável",
+        "Matriz salva por transação; OWNER protegido, mudanças por célula e cache por sessão. Revogação aplicada também a Chat e Estratégia.",
+        "Formulários aguardam o banco; identidade, contato, site, horário e preferências são salvos juntos. Registros ausentes inicializados sem substituir valores existentes."
       ],
       "pending_requirements": [
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "OAuth e uploads reais Google/Meta devem ser homologados"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000009_phase11_whitelabel.sql) com 5 tabelas (agency_branding, agency_preferences, agency_document_settings, agency_portal_settings, agency_settings_history)",
         "Row Level Security (RLS) estrita em todas as 5 tabelas com isolamento por agency_id",
@@ -313,26 +460,41 @@
         "Componente BrandPreview para visualização em tempo real de branding",
         "Suíte de testes automatizados Vitest (75/75 passando) e build de produção 100% verificado"
       ],
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED"
+      "stage": "LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING",
+      "verification": {
+        "local": [
+          "Configurações, identidade da agência, perfil e integrações presentes",
+          "Diagnostics consulta manifesto versionado; configuração não prova conexão saudável",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [
+          "Verificações delimitadas no Supabase e rotina de aniversários registradas no relatório de fechamento web; não equivalem a aceite global"
+        ],
+        "external_or_operational_pending": [
+          "OAuth e uploads reais Google/Meta devem ser homologados",
+          "Instaladores nativos assinados/distribuição e push offline dependem de contas e configuração",
+          "Permission Studio requer conclusão e verificação antes de aceite"
+        ]
+      }
     },
     {
       "id": "phase-12",
       "name": "Fase 12 - Production Readiness, Final Audit, Security & Deployment Preparation",
       "status": "in_progress",
-      "stage": "LOCAL_AUDIT_COMPLETE_OPERATIONAL_ACCEPTANCE_BLOCKED",
+      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
       "completed_requirements": [
-        "Código e documentação inventariados; build e testes locais registrados em CODEX_TEST_REPORT.md"
+        "Push e deploy Cloudflare executados com autorização; domínio e bundle conferidos",
+        "Última publicação documenta lint/typecheck/build, 345 testes e 9 E2E controlados",
+        "Registro das entregas publicadas, checagens e pendências por fase, sem declarar a plataforma integralmente homologada.",
+        "Agência, vínculo e papel atuais validados; ranking/progresso protegidos, conversão antiga retirada e endpoints antigos de propostas desativados. Funções internas bloqueadas ao acesso anônimo."
       ],
       "pending_requirements": [
-        "Autorização explícita do usuário para publicação em produção no Release Gate",
-        "Deploy do frontend para ambiente público de produção (Vercel/Netlify)",
-        "Execução de smoke tests em URL de produção ativa pós-deploy",
-        "Validação final de produção publicada",
-        "Aceite operacional autenticado com persistência e autorização em staging",
-        "Comparação do schema/RLS/RPC e histórico remoto com as migrations locais"
+        "Proteção de senhas vazadas do Auth desativada; funções privilegiadas e tabelas privadas com acesso intencional documentados",
+        "Teste operacional com membros/clientes reais e serviços externos",
+        "Validar backup/restauração, observabilidade e desempenho em condições reais"
       ],
-      "last_verified_at": "2026-10-11T04:27:41.438201+00:00",
-      "evidence": "docs/CODEX_MASTER_AUDIT.md; docs/CODEX_TEST_REPORT.md",
+      "last_verified_at": "2026-10-14",
+      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
       "historical_claims": [
         "Auditoria de arquitetura de software completa em docs/ARCHITECTURE_AUDIT.md",
         "Inventário detalhado de funcionalidades dos 12 módulos em docs/FEATURE_INVENTORY.md",
@@ -354,10 +516,26 @@
         "useDashboardData corrigido: eliminação de atividades falsas e exibição de histórico operacional real / honest empty state",
         "Compilação TypeScript (tsc -b) e build de produção (vite build) 100% aprovados com zero erros",
         "Suíte de testes automatizados Vitest 100% aprovada (75/75 testes passando em 16 arquivos)"
-      ]
+      ],
+      "verification": {
+        "local": [
+          "Push e deploy Cloudflare executados com autorização; domínio e bundle conferidos",
+          "Última publicação documenta lint/typecheck/build, 345 testes e 9 E2E controlados",
+          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+        ],
+        "remote": [
+          "Cloudflare b9c1704f-bfed-437c-ae11-1f7daa7aa8bb; bundle index-CEEgLE6o.js confirmado",
+          "Verificações delimitadas no Supabase e rotina de aniversários registradas no relatório de fechamento web; não equivalem a aceite global"
+        ],
+        "external_or_operational_pending": [
+          "Auditoria de segurança global e avisos antigos de advisors ainda precisam resolução",
+          "Teste operacional com membros/clientes reais e serviços externos",
+          "Validar backup/restauração, observabilidade e desempenho em condições reais"
+        ]
+      }
     }
   ],
-  "audit_basis": "CODEX_MASTER_AUDIT_15_1_LOCAL_ONLY",
+  "audit_basis": "WEB_PHASE_CLOSURE_2026_10_14",
   "production_ready": false,
   "recovery_02": {
     "frontend_auth_status": "FRONTEND_AUTH_READY_LOCAL_CONTROLLED_TESTS",
@@ -365,15 +543,18 @@
     "tenant_isolation_status": "FRONTEND_PASS_REAL_RLS_BLOCKED",
     "permission_studio_status": "READ_IMPLEMENTED_SAVE_BLOCKED",
     "remote_schema_status": "BLOCKED",
-    "report": "docs/RECOVERY_02_REPORT.md"
+    "report": "docs/RECOVERY_02_REPORT.md",
+    "historical_snapshot": true,
+    "superseded_by": "docs/PHASE_STATUS.md"
   },
   "frontend_publication": {
     "status": "DEPLOYED_SMOKE_PASS",
     "branch": "codex/master-audit-15-1",
-    "source_commit": "c121ee03af270d8583ac4b038b936a9b4497d5f9",
-    "cloudflare_version": "80701662-0a98-40a6-810f-e1030803029a",
-    "url": "https://doispontozero.marketingrenatodesigner.workers.dev",
-    "backend_verified": false
+    "source_commit": "ad45bce",
+    "cloudflare_version": "14f4945d-b36e-4e32-af05-f7ce1ff6843f",
+    "url": "https://doispontozero.renatodesigner.com.br",
+    "backend_verified": true,
+    "backend_verification_scope": "SELECTED_AUTHENTICATED_RPCS_AND_POLICIES_WITH_ROLLBACK_NOT_GLOBAL"
   },
   "prompt_17": {
     "started_at": "2026-10-11T06:08:08.221058+00:00",
@@ -401,6 +582,14 @@
       "lint": "PASS_WITH_WARNINGS",
       "remote_rls": "NOT_RUN",
       "meta_integration": "NOT_RUN"
-    }
-  }
+    },
+    "historical_snapshot": true,
+    "superseded_by": "docs/PHASE_STATUS.md"
+  },
+  "web_scope": "Plataforma web; salas com chat, presença e acesso às reuniões",
+  "out_of_scope": [
+    "Apps nativos assinados",
+    "Áudio e vídeo dentro das salas"
+  ],
+  "current_release": "docs/RELEASE_STATUS.json"
 }

@@ -16,5 +16,8 @@ describe('notification history', () => {
     expect(notificationDestination({ ...notifications[0], resource_type: 'team_registration_request', resource_id: null })).toBe('/settings/team')
     expect(notificationDestination(notifications[0])).toBe('/meetings/meeting-1')
     expect(notificationDestination(notifications[1])).toBeNull()
+    expect(notificationDestination({...notifications[0],resource_type:'editorial_campaign',resource_id:'campaign-id'})).toBe('/editorial?campaignId=campaign-id')
+    expect(notificationDestination({...notifications[0],resource_type:'task',resource_id:'task-id'})).toBe('/tasks/task-id')
+    expect(notificationDestination({...notifications[0],resource_type:'client',resource_id:'client-id'})).toBe('/clients/client-id')
   })
 })

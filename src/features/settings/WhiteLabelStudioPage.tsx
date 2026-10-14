@@ -22,7 +22,7 @@ import {
 } from 'lucide-react'
 import type { AgencyBrandingData } from '@/types/whitelabel'
 
-export const WhiteLabelStudioPage: React.FC = () => {
+const WhiteLabelStudioPageForm: React.FC = () => {
   const { branding, updateBranding, isLoading } = useAgencyBranding()
 
   // State local para rascunho de edições
@@ -485,4 +485,11 @@ export const WhiteLabelStudioPage: React.FC = () => {
       </div>
     </form>
   )
+}
+
+export const WhiteLabelStudioPage: React.FC = () => {
+  const source0 = useAgencyBranding()
+  if (source0.isError) return <div role="alert">Não foi possível carregar as configurações. <Button onClick={() => { void source0.refetch() }}>Tentar novamente</Button></div>
+  if (source0.isLoading) return <p role="status">Carregando configurações da agência…</p>
+  return <WhiteLabelStudioPageForm key={source0.branding.agency_id} />
 }

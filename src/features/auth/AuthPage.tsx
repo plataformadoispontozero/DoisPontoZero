@@ -61,6 +61,7 @@ export function AuthPage({ mode = 'login' }: { mode?: 'login' | 'forgot' | 'rese
         <p className="dz-auth-eyebrow">ACESSO RESTRITO À EQUIPE</p>
         <h1 id="auth-title">{title}</h1>
         <p className="dz-auth-description">{mode === 'login' ? 'Entre com o e-mail e a senha da sua conta de equipe. Ainda não tem acesso? Envie seu cadastro para aprovação.' : mode === 'forgot' ? 'Informe o e-mail da sua conta para receber as instruções de recuperação.' : 'Escolha uma nova senha para voltar ao seu workspace.'}</p>
+        {mode==='login' && params.get('logout')==='unconfirmed' && <p role="alert" className="text-[#FB7185]">Você saiu deste dispositivo, mas o servidor não confirmou a revogação da sessão. Entre novamente e tente encerrar a sessão para confirmar.</p>}
         {!isSupabaseConfigured && <p role="alert">Supabase não configurado. O acesso administrativo permanece protegido.</p>}
         <form onSubmit={submit} className="space-y-5">
           {mode !== 'reset' && <div><label htmlFor="auth-email">E-mail</label><Input id="auth-email" type="email" autoComplete="email" placeholder="voce@agencia.com" required value={email} onChange={e => setEmail(e.target.value)} /></div>}

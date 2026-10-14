@@ -76,6 +76,6 @@ describe('Fase 11 — White Label Studio & Advanced Settings Suite', () => {
     renderWithProviders(<DiagnosticsPage />)
 
     expect(screen.getByText('Painel Técnico & Diagnóstico do Sistema')).toBeInTheDocument()
-    expect(screen.getByText('Manifesto Técnico Auditado de Desenvolvimento (Fases 01 a 11)')).toBeInTheDocument()
+    expect(screen.getByText('Manifesto Técnico Auditado de Desenvolvimento (Fases 01 a 12)')).toBeInTheDocument()
   })
 })

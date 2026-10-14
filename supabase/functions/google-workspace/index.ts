@@ -3,6 +3,7 @@ import { providerConfiguration, type ProviderConfiguration } from '../_shared/pr
 import { folderIdFromUrl, validateDriveUpload, isGoogleUploadUrl, isFolderDescendant } from './drive.ts'
 import {discoverClientDriveDocuments,readClientDriveDocument,DriveDocumentUnavailableError} from './documents.ts'
 import {verifiedPresentationFiles} from './presentationDrive.ts'
+import {chatDriveFile,chatDriveDownload} from './chatDrive.ts'
 import {handleTaskDrive} from './taskDrive.ts'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2.117.3/cors'
 const env=(key:string)=>Deno.env.get(key)||''
@@ -55,18 +56,22 @@ Deno.serve(async(req:Request)=>{
   if(!authorization.startsWith('Bearer '))return reply({error:'Sessão necessária.'},401)
   const caller=createClient(env('SUPABASE_URL'),env('SUPABASE_ANON_KEY'),{global:{headers:{Authorization:authorization}},auth:{persistSession:false,autoRefreshToken:false}})
   const {data:{user},error}=await caller.auth.getUser();if(error||!user)return reply({error:'Sessão inválida.'},401)
-  const raw=await req.text();if(raw.length>4096)return reply({error:'Solicitação inválida.'},400)
+  const raw=await req.text();if(raw.length>65536)return reply({error:'Solicitação inválida.'},400)
   const body=JSON.parse(raw),agency=body.agencyId
+  if(raw.length>4096&&body.action!=='chat-drive-send')return reply({error:'Solicitação inválida.'},400)
   if(typeof agency!=='string'||!/^[0-9a-f-]{36}$/i.test(agency))return reply({error:'Agência inválida.'},400)
+  const chatAction=['chat-drive-send','chat-drive-read'].includes(body.action)
+  let chatContext:Record<string,unknown>|null=null
+  if(chatAction){const result=await caller.rpc('chat_drive_context',{p_agency:agency,p_channel:body.action==='chat-drive-send'?(body.channelId||null):null,p_conversation:body.action==='chat-drive-send'?(body.conversationId||null):null,p_attachment:body.action==='chat-drive-read'?body.attachmentId:null});if(result.error||!result.data)return reply({error:'Acesso ao chat e material necessário.'},403);chatContext=result.data;if(body.action==='chat-drive-read'){body.clientId=chatContext!.client_id;body.folderId=chatContext!.drive_folder_id}}
   const taskAction=typeof body.action==='string'&&body.action.startsWith('task-drive-')
   let taskContext:Record<string,unknown>|null=null
   if(taskAction){const result=await caller.rpc('task_drive_context',{p_agency:agency,p_task:body.taskId,p_write:!['task-drive-list','task-drive-preview'].includes(body.action)});if(result.error||!result.data)return reply({error:'Acesso à demanda atribuída e ao cliente necessário.'},403);taskContext=result.data}
   const documentAction=['client-drive-documents','client-drive-document-read'].includes(body.action)
-  const productionAction=taskAction||['client-drive-documents','client-drive-document-read','client-drive-list','presentation-drive-link','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
+  const productionAction=chatAction||taskAction||['client-drive-documents','client-drive-document-read','client-drive-list','presentation-drive-link','client-drive-upload-start','client-drive-create-folder','client-picker-session'].includes(body.action)
   const can=async(permission:string)=>{const r=await caller.rpc('has_agency_permission',{p_agency_id:agency,p_permission_key:permission});return !r.error&&r.data===true}
   const adminAccess=await caller.rpc('google_workspace_permission',{p_agency:agency});const centralAdmin=!adminAccess.error&&adminAccess.data===true
   if(body.action==='client-picker-session'&&!centralAdmin)return reply({error:'Somente administrador pode autorizar a pasta no Google central da agência.'},403)
-  if(productionAction&&!taskAction){
+  if(chatAction){if(!await can('clients.view'))return reply({error:'Permissão de visualizar clientes necessária.'},403)}else if(productionAction&&!taskAction){
    if(!await can('clients.view')||(documentAction?!await can('briefings.view'):(body.action==='presentation-drive-link'?!await can('presentations.edit'):(body.action!=='client-drive-list'&&!await can('tasks.edit')))))return reply({error:'Permissão para acessar este cliente e produzir materiais necessária.'},403)
   }else if(taskAction){ /* Business permissions were checked by task_drive_context. */ }else if(body.action==='status'){
    if(!centralAdmin&&!await can('clients.view'))return reply({error:'Permissão necessária.'},403)
@@ -147,6 +152,20 @@ Deno.serve(async(req:Request)=>{
    if(!check.ok)return reply({error:'Esta pasta não está autorizada para o aplicativo Google ou para sua conta. O link da pasta sozinho não concede acesso. Use Autorizar pasta existente para selecionar a pasta cadastrada, ou vincule uma pasta criada pelo aplicativo.'},403)
    const metadata=await check.json()
    if(metadata.mimeType!=='application/vnd.google-apps.folder'||metadata.trashed)return reply({error:'A pasta do cliente não está disponível.'},409)
+   if(chatAction){
+    const fileId=body.action==='chat-drive-read'?chatContext!.google_file_id:body.fileId
+    let file;try{file=await chatDriveFile(folder!,fileId,token.access_token)}catch(error){return reply({error:error instanceof Error?error.message:'Material indisponível.'},403)}
+    if(body.action==='chat-drive-send'){
+     if(typeof body.message!=='string'||!body.message.trim()||body.message.length>10000)return reply({error:'Informe uma mensagem de até 10000 caracteres.'},400)
+     const result=await admin.rpc('chat_drive_send',{p_agency:agency,p_actor:user.id,p_client:body.clientId,p_channel:body.channelId||null,p_conversation:body.conversationId||null,p_body:body.message,p_file:file})
+     if(result.error)return reply({error:'Não foi possível vincular o material. O acesso pode ter mudado.'},403)
+     return reply({messageId:result.data})
+    }
+    let download;try{download=chatDriveDownload(file)}catch(error){return reply({error:error instanceof Error?error.message:'Formato indisponível.'},400)}
+    const media=await fetch(download.url,{headers:googleHeaders,redirect:'error'})
+    if(!media.ok)return reply({error:'Não foi possível baixar o material do Drive.'},502)
+    return new Response(media.body,{headers:{...headers,'Content-Type':download.mime,'Content-Disposition':`attachment; filename*=UTF-8''${encodeURIComponent(file.name+(download.mime==='application/pdf'&&!file.name.endsWith('.pdf')?'.pdf':''))}`,'X-Content-Type-Options':'nosniff','Cache-Control':'no-store'}})
+   }
    if(body.action==='presentation-drive-link'){
     const presentation=await caller.from('presentations').select('id').eq('id',body.presentationId).eq('agency_id',agency).eq('client_id',body.clientId).maybeSingle()
     const section=await caller.from('presentation_sections').select('id').eq('id',body.sectionId).eq('presentation_id',body.presentationId).eq('agency_id',agency).maybeSingle()
