@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { useBranding } from "@/hooks/useBranding";
 import { useAuth } from "@/features/auth/AuthProvider";
-import { routePermission } from "@/features/auth/access";
+import { routePermission, isManagementRole } from "@/features/auth/access";
 import { navItems } from "./NavLinks";
 import { navigationGroups, navigationContext } from "./navigationConfig";
 import { Tooltip } from "@/components/ui/Tooltip";
@@ -61,7 +61,7 @@ function GroupSections({
         .map((group) => {
           const items = group.items.flatMap((id) => {
             const item = navItems.find((i) => i.id === id);
-            if (!item) return [];
+            if (!item || (id === "projects" && !auth.isDemo && !isManagementRole(auth.activeAgency?.roleName))) return [];
             const permission = routePermission(item.path);
             return auth.isDemo ||
               auth.activeAgency?.roleName === "OWNER" ||

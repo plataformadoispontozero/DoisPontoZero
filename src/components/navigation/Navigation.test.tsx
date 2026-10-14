@@ -20,7 +20,7 @@ describe('Navigation Components - Phase 01', () => {
     expect(screen.getByText('Visão Geral')).toBeInTheDocument()
     expect(screen.getByText('Minha Agenda')).toBeInTheDocument()
     expect(screen.getByText('Clientes')).toBeInTheDocument()
-    expect(screen.getByText('Projetos')).toBeInTheDocument()
+    expect(screen.getByText('Kanban Geral')).toBeInTheDocument()
     expect(screen.getByText('Tarefas')).toBeInTheDocument()
     expect(screen.getByText('Squads')).toBeInTheDocument()
 

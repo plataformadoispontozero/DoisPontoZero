@@ -1,0 +1,100 @@
+{
+  "id": "client-workspace-20261014",
+  "title": "Organização da operação por cliente",
+  "verified_at": "2026-10-14",
+  "status": "published",
+  "evidence": "docs/qa/client-workspace-adjustments-2026-10-14.md",
+  "checks": [
+    "353 testes de regressão aprovados",
+    "34 cenários de navegador: desktop e celular",
+    "Typecheck, lint e build verificados",
+    "Kanban conferido no Supabase: 5 demandas Aurora",
+    "PDF de 4 páginas renderizado e revisado"
+  ],
+  "deliveries": [
+    {
+      "id": "client-groups",
+      "title": "Social Media e Tarefas por cliente",
+      "phases": [
+        "phase-01",
+        "phase-04"
+      ],
+      "result": "Um grupo recolhível por cliente; clientes com demandas em andamento na área de Tarefas.",
+      "pending": []
+    },
+    {
+      "id": "manager-kanban",
+      "title": "Kanban geral exclusivo da gestão",
+      "phases": [
+        "phase-02",
+        "phase-04"
+      ],
+      "result": "Quadro por cliente e etapa para OWNER, ADMIN e MANAGER; consulta protegida no backend e RLS preservada.",
+      "pending": [
+        "Aceite do quadro por um gestor com a operação diária da agência."
+      ]
+    },
+    {
+      "id": "editorial-groups",
+      "title": "Calendários organizados por cliente",
+      "phases": [
+        "phase-07"
+      ],
+      "result": "Campanhas agrupadas por cliente e mês, com acesso à revisão de copy, direção visual e aprovação.",
+      "pending": [
+        "Homologação do conteúdo editorial gerado para uma campanha real."
+      ]
+    },
+    {
+      "id": "briefing-groups",
+      "title": "Briefings dos clientes",
+      "phases": [
+        "phase-06"
+      ],
+      "result": "Grupos por cliente, filtros de busca e status, respostas e PDF; dados e histórico preservados.",
+      "pending": []
+    },
+    {
+      "id": "personal-agenda",
+      "title": "Minha Agenda em calendário",
+      "phases": [
+        "phase-10"
+      ],
+      "result": "Mês, semana, dia e lista com reuniões pessoais, prazos atribuídos e indicação do fuso horário.",
+      "pending": []
+    },
+    {
+      "id": "meta-campaigns",
+      "title": "Tráfego: métricas Meta por campanha",
+      "phases": [
+        "phase-09"
+      ],
+      "result": "Períodos de 7, 30 e 90 dias, resumo da conta, métricas de campanhas e ações reportadas pelo Meta.",
+      "pending": [
+        "Validar a leitura com autorização ads_read ativa e uma conta de anúncios real vinculada ao cliente."
+      ]
+    },
+    {
+      "id": "presentation-pdf",
+      "title": "PDF e preview de apresentações",
+      "phases": [
+        "phase-09"
+      ],
+      "result": "PDF com capa, textos, materiais visuais, proporções preservadas e paginação; preview e download consistentes.",
+      "pending": [
+        "Validar thumbnails de materiais privados do Drive com a conexão real da agência."
+      ]
+    },
+    {
+      "id": "diagnostics",
+      "title": "Diagnóstico Técnico atualizado",
+      "phases": [
+        "phase-12"
+      ],
+      "result": "Registro das entregas publicadas, checagens e pendências por fase, sem declarar a plataforma integralmente homologada.",
+      "pending": [
+        "Aceite operacional das integrações externas e da plataforma como um todo."
+      ]
+    }
+  ]
+}

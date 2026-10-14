@@ -1,4 +1,5 @@
-import { useAgencyId } from '@/features/auth/AuthProvider'
+import { isManagementRole } from '@/features/auth/access'
+import { useAgencyId, useAuth } from '@/features/auth/AuthProvider'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FolderKanban, Calendar, User, Users, Flag, Building2, ArrowLeft } from 'lucide-react'
@@ -43,6 +44,7 @@ export const NewProjectPage: React.FC = () => {
   const MOCK_AGENCY_ID = useAgencyId()
 
   const navigate = useNavigate()
+  const managementPath=isManagementRole(useAuth().activeAgency?.roleName)?'/projects':'/tasks'
   const createProject = useCreateProject()
 
   const [form, setForm] = useState<CreateProjectForm>({
@@ -95,11 +97,11 @@ export const NewProjectPage: React.FC = () => {
         subtitle="Configure um novo fluxo de trabalho criativo para sua agência."
         breadcrumbs={[
           { label: 'Visão Geral', href: '/dashboard' },
-          { label: 'Projetos', href: '/projects' },
+          { label: 'Projetos', href: managementPath },
           { label: 'Novo Projeto' },
         ]}
         actions={
-          <Button variant="ghost" size="sm" onClick={() => navigate('/projects')}>
+          <Button variant="ghost" size="sm" onClick={() => navigate(managementPath)}>
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Voltar</span>
           </Button>
@@ -252,7 +254,7 @@ export const NewProjectPage: React.FC = () => {
           <Button
             type="button"
             variant="ghost"
-            onClick={() => navigate('/projects')}
+            onClick={() => navigate(managementPath)}
           >
             Cancelar
           </Button>

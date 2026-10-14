@@ -72,3 +72,5 @@ export function routePermission(path: string): string | null {
   }
   return null;
 }
+
+export function isManagementRole(role: string | undefined) { return ['OWNER','ADMIN','MANAGER'].includes(role||'') }

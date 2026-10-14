@@ -13,6 +13,7 @@ export interface PresentationPdfBranding {
 }
 
 export interface PresentationPdfModel {
+  mediaWarnings?: number
   presentationId: string
   title: string
   clientName: string

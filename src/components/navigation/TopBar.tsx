@@ -1,3 +1,4 @@
+import { isManagementRole } from '@/features/auth/access'
 import { toast } from '@/components/ui/Toast'
 import { useAuth } from '@/features/auth/AuthProvider'
 import React, { useState } from 'react'
@@ -181,9 +182,9 @@ export const TopBar: React.FC = () => {
                 <Settings className="w-3.5 h-3.5 text-[#C74410]" />
                 <span>Configurações do Workspace</span>
               </DropdownItem>
-              <DropdownItem onClick={() => navigate('/projects')}>
+              <DropdownItem onClick={() => navigate(isManagementRole(auth.activeAgency?.roleName)?'/projects':'/tasks')}>
                 <FolderKanban className="w-3.5 h-3.5 text-[#FF8759]" />
-                <span>Meus Projetos</span>
+                <span>Minha produção</span>
               </DropdownItem>
               <DropdownSeparator />
               <DropdownItem

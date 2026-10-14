@@ -1,7 +1,8 @@
+import { ClientTaskGroups } from './ClientTaskGroups'
 import { useTask } from '@/features/tasks/hooks/useTasks'
 import { useProjectBoard } from '@/features/projects/hooks/useProjects'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
-import { useAgencyId } from '@/features/auth/AuthProvider'
+import { useAgencyId, usePermission } from '@/features/auth/AuthProvider'
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
@@ -211,6 +212,7 @@ const DEMO_TASKS: Task[] = [
 
 export const TasksPage: React.FC = () => {
   const MOCK_AGENCY_ID = useAgencyId()
+  const canCreateProject=usePermission('projects.create')
 
   const { taskId } = useParams<{ taskId?: string }>()
   const navigate = useNavigate()
@@ -240,22 +242,21 @@ export const TasksPage: React.FC = () => {
 
   // Supabase query
   const { data: serverTasks = [] } = useTasks({
-    search: search || undefined,
-    status: statusFilter || undefined,
+    status: undefined,
     priority: priorityFilter || undefined,
   })
 
   const { data: selectedTaskData } = useTask(selectedTaskId ?? undefined)
   const activeTask = selectedTaskData ?? serverTasks.find(task => task.id === selectedTaskId)
   const { data: activeBoard } = useProjectBoard(activeTask?.project_id)
-  const openCreateTask = () => isSupabaseConfigured ? navigate('/projects') : setCreateTaskOpen(true)
+  const openCreateTask = () => {if(canCreateProject){if(isSupabaseConfigured)navigate('/projects/new');else setCreateTaskOpen(true)}}
 
-  // Fallback to DEMO_TASKS when server query returns empty
+  // Demo fixtures are limited to the unconfigured local environment.
   const tasksToDisplay = isSupabaseConfigured ? serverTasks : DEMO_TASKS
 
   const filteredTasks = tasksToDisplay.filter((t) => {
-    if (search && !t.title.toLowerCase().includes(search.toLowerCase())) return false
-    if (statusFilter && t.status !== statusFilter) return false
+    if (search && !`${t.title} ${t.project?.client?.name||''}`.toLowerCase().includes(search.toLowerCase())) return false
+    if (statusFilter && statusFilter !== 'done' && t.status !== statusFilter) return false
     if (priorityFilter && t.priority !== priorityFilter) return false
     return true
   })
@@ -274,6 +275,7 @@ export const TasksPage: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
+              disabled={!canCreateProject}
               onClick={openCreateTask}
               className="h-9 px-4 text-xs font-semibold"
             >
@@ -324,7 +326,7 @@ export const TasksPage: React.FC = () => {
           <TabsList className="bg-[#1C1C24] p-1">
             <TabsTrigger value="list" className="text-xs gap-1.5">
               <List className="w-3.5 h-3.5" />
-              <span>Lista ({filteredTasks.length})</span>
+              <span>Clientes em produção</span>
             </TabsTrigger>
             <TabsTrigger value="calendar" className="text-xs gap-1.5">
               <CalendarIcon className="w-3.5 h-3.5" />
@@ -335,12 +337,8 @@ export const TasksPage: React.FC = () => {
 
         {/* List View */}
         <TabsContent value="list" className="pt-2">
-          <TaskListView
-            tasks={filteredTasks}
-            columns={isSupabaseConfigured ? activeBoard?.columns ?? [] : DEMO_COLUMNS}
-            onSelectTask={(id) => handleSelectTask(id)}
-            onNewTask={openCreateTask}
-          />
+          <div className="mb-5 flex flex-wrap gap-3"><Input aria-label="Buscar cliente ou demanda" placeholder="Buscar cliente ou demanda…" value={search} onChange={e=>setSearch(e.target.value)}/><label className="text-sm"><input type="checkbox" checked={statusFilter==='done'} onChange={e=>setStatusFilter(e.target.checked?'done':'')}/> Incluir clientes com entregas concluídas</label></div>
+          <ClientTaskGroups tasks={filteredTasks} activeOnly={statusFilter!=='done'} onSelect={task=>handleSelectTask(task.id)}/>
         </TabsContent>
 
         {/* Calendar View */}

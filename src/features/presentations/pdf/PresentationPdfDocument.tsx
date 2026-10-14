@@ -1,82 +1,9 @@
-// ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
-// FASE 09: PRESENTATION PDF DOCUMENT
-// Complete @react-pdf/renderer Document template for presentations
-// ============================================================
-
-import React from 'react'
-import { Document, Page, View, Text, StyleSheet } from '@react-pdf/renderer'
-import type { PresentationPdfModel } from './types'
-import { PresentationPdfHeader } from './PresentationPdfHeader'
-import { PresentationPdfFooter } from './PresentationPdfFooter'
-import { PresentationPdfWatermark } from './PresentationPdfWatermark'
-import { PresentationPdfCover } from './PresentationPdfCover'
-
-const styles = StyleSheet.create({
-  page: {
-    paddingTop: 36,
-    paddingBottom: 50,
-    paddingHorizontal: 36,
-    backgroundColor: '#FFFFFF',
-    fontSize: 10,
-    color: '#334155',
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#0F172A',
-    marginBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
-    paddingBottom: 4,
-    marginTop: 14,
-  },
-  paragraph: {
-    fontSize: 10,
-    color: '#475569',
-    lineHeight: 1.5,
-    marginBottom: 10,
-  },
-})
-
-interface Props {
-  model: PresentationPdfModel
-}
-
-export const PresentationPdfDocument: React.FC<Props> = ({ model }) => {
-  return (
-    <Document title={`${model.title} - ${model.clientName}`}>
-      {/* Cover Page */}
-      <PresentationPdfCover model={model} />
-
-      {/* Presentation Content Pages */}
-      <Page size="A4" style={styles.page}>
-        <PresentationPdfWatermark logoUrl={model.branding.logoUrl} />
-        <PresentationPdfHeader branding={model.branding} periodFormatted={model.periodFormatted} />
-
-        {/* Dynamic Presentation Sections */}
-        {model.sections.map((sec) => (
-          <View key={sec.id || sec.title} wrap={false}>
-            <Text style={styles.sectionTitle}>{sec.title}</Text>
-
-            {sec.content?.text && (
-              <Text style={styles.paragraph}>{sec.content.text}</Text>
-            )}
-
-            {Array.isArray(sec.content?.list) && (
-              <View style={{ marginBottom: 10 }}>
-                {sec.content.list.map((item: string, idx: number) => (
-                  <Text key={idx} style={styles.paragraph}>
-                    • {item}
-                  </Text>
-                ))}
-              </View>
-            )}
-          </View>
-        ))}
-
-        <PresentationPdfFooter branding={model.branding} />
-      </Page>
-    </Document>
-  )
+import {Document,Page,View,Text,Image,StyleSheet} from '@react-pdf/renderer'
+import type {PresentationPdfModel} from './types'
+import {PresentationPdfHeader} from './PresentationPdfHeader'
+import {PresentationPdfFooter} from './PresentationPdfFooter'
+import {PresentationPdfCover} from './PresentationPdfCover'
+const styles=StyleSheet.create({page:{paddingTop:110,paddingBottom:65,paddingHorizontal:36,fontFamily:'Helvetica',fontSize:11,color:'#334155',backgroundColor:'white'},title:{fontSize:20,fontWeight:'bold',color:'#101014',marginBottom:18,lineHeight:1.2},text:{fontSize:11,lineHeight:1.6,marginBottom:12},image:{width:523,height:570,objectFit:'contain'},caption:{fontSize:11,fontWeight:'bold',marginBottom:12},missing:{padding:40,backgroundColor:'#F8FAFC',fontSize:12,color:'#64748B'}})
+export function PresentationPdfDocument({model}:{model:PresentationPdfModel}){
+ return <Document title={`${model.title} - ${model.clientName}`} author={model.branding.agencyName}><PresentationPdfCover model={model}/>{model.sections.map(section=><Page key={section.id} size="A4" style={styles.page}><PresentationPdfHeader branding={model.branding} periodFormatted={model.periodFormatted}/><Text style={styles.title} minPresenceAhead={40}>{section.title}</Text>{(section.description||section.content?.text)&&<Text style={styles.text}>{section.content?.text||section.description}</Text>}{Array.isArray(section.content?.list)&&section.content.list.map((item:string,index:number)=><Text key={index} style={styles.text}>• {item}</Text>)}<PresentationPdfFooter branding={model.branding}/></Page>)}{model.sections.flatMap(section=>(section.content?.printImages||[]).map((image:{src:string;title:string},index:number)=><Page key={`${section.id}:image:${index}`} size="A4" style={styles.page}><PresentationPdfHeader branding={model.branding} periodFormatted={model.periodFormatted}/><Text style={styles.caption}>{section.title} / {image.title}</Text>{image.src?<Image src={image.src} style={styles.image}/>:<View style={styles.missing}><Text>Prévia deste material indisponível no PDF. Consulte a apresentação na plataforma para visualizar o arquivo.</Text></View>}<PresentationPdfFooter branding={model.branding}/></Page>))}</Document>
 }

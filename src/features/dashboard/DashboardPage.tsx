@@ -1,3 +1,4 @@
+import { isManagementRole } from '@/features/auth/access'
 import { useAuth } from '@/features/auth/AuthProvider'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -84,7 +85,7 @@ export const DashboardPage: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => navigate('/projects')}
+              onClick={() => navigate(isManagementRole(auth.activeAgency?.roleName)?'/projects':'/tasks')}
               className="text-xs"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -242,7 +243,7 @@ export const DashboardPage: React.FC = () => {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => navigate('/projects')}
+                onClick={() => navigate(isManagementRole(auth.activeAgency?.roleName)?'/projects':'/tasks')}
                 className="gap-2 text-xs"
               >
                 <span>Explorar projetos</span>
@@ -264,7 +265,7 @@ export const DashboardPage: React.FC = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate('/projects')}
+                onClick={() => navigate(isManagementRole(auth.activeAgency?.roleName)?'/projects':'/tasks')}
                 className="text-xs text-[#B8B8C0] hover:text-[#F8F9FC]"
               >
                 <span>Ver projetos</span>
@@ -320,7 +321,7 @@ export const DashboardPage: React.FC = () => {
                 <Button
                   variant="primary"
                   size="sm"
-                  onClick={() => navigate('/projects')}
+                  onClick={() => navigate(isManagementRole(auth.activeAgency?.roleName)?'/projects':'/tasks')}
                   className="gap-2 text-xs"
                 >
                   <Plus className="w-3.5 h-3.5" />

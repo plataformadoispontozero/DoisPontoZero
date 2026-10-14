@@ -1,3 +1,5 @@
+import { ReleaseDiagnostics } from './ReleaseDiagnostics'
+import { reconcileReleasePhases } from './releaseEvidence'
 import React, { useState, useMemo } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -21,7 +23,7 @@ import {
 
 export const DiagnosticsPage: React.FC = () => {
   const isSupabaseActive = isSupabaseConfigured
-  const phases = (phaseStatusData.phases || []).filter(phase => phase.id !== 'phase-08') as any[]
+  const phases = reconcileReleasePhases((phaseStatusData.phases || []).filter(phase => phase.id !== 'phase-08')) as any[]
 
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'in_progress' | 'not_started'>('all')
@@ -90,6 +92,7 @@ export const DiagnosticsPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
+      <ReleaseDiagnostics />
       <div>
         <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">
           <Cpu className="w-5 h-5 text-[#C74410]" />

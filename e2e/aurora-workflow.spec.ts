@@ -3,7 +3,7 @@ import {test,expect,type Page} from '@playwright/test';
 const agency='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',userId='11111111-1111-4111-8111-111111111111';
 const client={id:'aurora',name:'Aurora Café — TESTE FICTÍCIO',profile:{monthly_objective:'Apresentar a marca fictícia'}};
 const task={id:'task-aurora',agency_id:agency,title:'[Design] Arte Aurora — TESTE',description:'Copy revisada e direção visual de teste',status:'review',priority:'normal',position:0,project_id:'project',board_id:'board',column_id:'column',created_by:userId,archived_at:null,due_date:'2026-11-01',assignees:[],checklists:[],project:{id:'project',name:'Campanha Aurora — TESTE',client_id:client.id,client:{id:client.id,name:client.name}},column:{id:'column',name:'Revisão',category:'review'}};
-async function setup(page:Page,prefix='[Design]',description=task.description){
+async function setup(page:Page,prefix='[Design]',description=task.description,role='OWNER'){
  let demand={...task,title:`${prefix} Arte Aurora — TESTE`,description};
  const user={id:userId,aud:'authenticated',role:'authenticated',email:'aurora-test@example.invalid',app_metadata:{provider:'email'},user_metadata:{},created_at:'2026-10-14T00:00:00Z'};
  const token=`${Buffer.from(JSON.stringify({alg:'HS256',typ:'JWT'})).toString('base64url')}.${Buffer.from(JSON.stringify({sub:userId,exp:Math.floor(Date.now()/1000)+3600,role:'authenticated',aud:'authenticated'})).toString('base64url')}.test-only`;
@@ -11,13 +11,14 @@ async function setup(page:Page,prefix='[Design]',description=task.description){
   const url=new URL(route.request().url()),table=url.pathname.split('/').pop();const send=(data:unknown)=>route.fulfill({json:data,headers:{'access-control-allow-origin':'*'}});
   if(table==='token')return send({access_token:token,refresh_token:'test-only',expires_in:3600,token_type:'bearer',user});
   if(table==='user')return send(user);
-  if(table==='agency_members')return send([{agency_id:agency,role_id:'22222222-2222-4222-8222-222222222222',status:'active',agencies:{id:agency,name:'Agência de teste',status:'active'},roles:{name:'OWNER'}}]);
+  if(table==='agency_members')return send([{agency_id:agency,role_id:'22222222-2222-4222-8222-222222222222',status:'active',agencies:{id:agency,name:'Agência de teste',status:'active'},roles:{name:role}}]);
   if(table==='profiles')return send([{id:userId,full_name:'Usuário de teste'}]);
-  if(table==='role_permissions')return send([]);
+  if(table==='role_permissions')return send(['tasks.view','strategy.view','projects.view','meetings.view','briefings.view'].map(permission_key=>({allowed:true,permissions:{permission_key}})));
   if(table==='clients')return send([client]);
   if(table==='monthly_editorial_campaigns')return send([{id:'campaign',client_id:client.id,month:'2026-11-01',status:'production',project_id:'project',items:[{format:'post',title:'Arte',copy:'Copy'}]}]);
   if(table==='tasks'){if(route.request().method()==='PATCH')demand={...demand,...route.request().postDataJSON()};return send(url.searchParams.has('id')?demand:[demand]);}
   if(table==='projects')return send([]);
+  if(table==='get_management_kanban')return send({tasks:[demand],has_more:false});
   if(table==='project_boards')return send({id:'board',project_id:'project',columns:[task.column],tasks:[task]});
   return send([]);
  });
@@ -25,7 +26,7 @@ async function setup(page:Page,prefix='[Design]',description=task.description){
 }
 test('Social Media shows November data without selecting a client and opens the demand centrally',async({page})=>{
  await setup(page);await page.goto('/social-media');await expect(page.getByRole('heading',{name:'Demandas por cliente'})).toBeVisible();await expect(page.getByRole('link',{name:'Abrir calendário'})).toBeVisible();await expect(page.getByLabel('Mês da operação')).toHaveValue('');
- await page.getByRole('button',{name:/Arte Aurora/}).click();const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();await expect(dialog.getByRole('textbox').first()).toHaveValue(task.title);
+ await page.locator('details[aria-label="Demandas de Aurora Café — TESTE FICTÍCIO"] > summary').click();await page.getByRole('button',{name:/Arte Aurora/}).click();const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();await expect(dialog.getByRole('textbox').first()).toHaveValue(task.title);
  const box=await dialog.boundingBox();const viewport=page.viewportSize()!;expect(Math.abs(box!.x+box!.width/2-viewport.width/2)).toBeLessThan(3);expect(box!.height).toBeLessThan(viewport.height);await page.keyboard.press('Escape');await expect(dialog).not.toBeVisible();
 });
 test('Design groups the demand by client and opens the shared central dialog',async({page})=>{
@@ -63,4 +64,39 @@ test('retired internal proposal URLs return to the dashboard without querying pr
 test('old public proposal links show retirement without any backend lookup',async({page})=>{
  const reads:string[]=[];page.on('request',request=>{if(request.url().includes('supabase.co'))reads.push(request.url());});
  await page.goto('/p/old-public-token');await expect(page.getByRole('heading',{name:'Área de propostas descontinuada'})).toBeVisible();await expect(page.getByRole('link',{name:'Ir para o site da agência'})).toHaveAttribute('href','/');expect(reads).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+
+test('Tasks starts with a client group and opens demands only after expansion',async({page})=>{
+ await setup(page);await page.goto('/tasks');await expect(page.getByRole('heading',{name:'Tarefas & Produção'})).toBeVisible();const group=page.locator('details[aria-label="Demandas de Aurora Café — TESTE FICTÍCIO"]');await expect(group).toBeVisible();await expect(page.getByRole('button',{name:/Arte Aurora/})).toBeHidden();await group.locator('summary').click();await page.getByRole('button',{name:/Arte Aurora/}).click();await expect(page.getByRole('dialog')).toBeVisible();
+});
+test('management Kanban shows client columns and preserves the central demand dialog',async({page})=>{
+ await setup(page);await page.goto('/projects');await expect(page.getByRole('heading',{name:'Kanban Geral',exact:true})).toBeVisible();await expect(page.getByRole('region',{name:'Kanban de Aurora Café — TESTE FICTÍCIO'})).toBeVisible();await page.getByRole('button',{name:/Arte Aurora/}).click();await expect(page.getByRole('dialog')).toBeVisible();
+});
+test('member cannot open the management aggregate but keeps production access',async({page})=>{
+ const requests:string[]=[];page.on('request',r=>{if(r.url().includes('get_management_kanban'))requests.push(r.url())});await setup(page,'[Design]',task.description,'MEMBER');await page.goto('/projects');await expect(page.getByRole('heading',{name:'Acesso negado',exact:true})).toBeVisible();expect(requests).toEqual([]);await page.goto('/production/design');await expect(page.getByRole('region',{name:'Demandas de Aurora Café — TESTE FICTÍCIO'})).toBeVisible();
+});
+test('diagnostics lists this delivery and its remaining external checks',async({page})=>{
+ await setup(page);await page.goto('/settings/diagnostics');await expect(page.getByRole('heading',{name:'Última entrega: Organização da operação por cliente'})).toBeVisible();await expect(page.getByRole('heading',{name:'Tráfego: métricas Meta por campanha'})).toBeVisible();await expect(page.getByText(/Validar a leitura com autorização ads_read ativa/)).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+test('personal agenda uses calendar, week, day and list without creating events',async({page})=>{
+ await setup(page);await page.goto('/calendar');await expect(page.getByRole('region',{name:'Calendário pessoal'})).toBeVisible();await page.getByLabel('Período',{exact:true}).selectOption('week');await page.getByLabel('Período',{exact:true}).selectOption('day');await page.getByRole('button',{name:'Lista',exact:true}).click();await expect(page.getByRole('region',{name:'Calendário pessoal'})).toBeHidden();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+test('Meta returns campaign metrics and clears the old period when changing the filter',async({page})=>{
+ await setup(page,'[Tráfego Pago]');await page.route('**/functions/v1/meta-workspace',async route=>{const body=route.request().postDataJSON();expect(['last_7d','last_30d','last_90d']).toContain(body.period);await route.fulfill({json:{connected:true,insights:[{spend:'100',reach:'500',clicks:'50',impressions:'1000',account_currency:'BRL',date_start:'2026-10-01',date_stop:'2026-10-07'}],campaigns:[{campaign_id:'demo',campaign_name:'Campanha simulada — TESTE',spend:'60',account_currency:'BRL'}]}})});await page.goto('/production/traffic');await page.getByLabel('Cliente dos resultados Meta').selectOption('aurora');await page.getByRole('button',{name:'Consultar resultados',exact:true}).click();await expect(page.getByRole('heading',{name:'Campanha simulada — TESTE'})).toBeVisible();await page.getByLabel('Período das métricas Meta').selectOption('last_7d');await expect(page.getByRole('heading',{name:'Campanha simulada — TESTE'})).toBeHidden();await page.getByRole('button',{name:'Consultar resultados',exact:true}).click();await expect(page.getByRole('heading',{name:'Campanha simulada — TESTE'})).toBeVisible();
+});
+
+test('presentation PDF embeds artwork and downloads the previewed file',async({page})=>{
+ await setup(page);const svg='<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000"><rect width="1000" height="1000" fill="#2d4038"/><circle cx="500" cy="440" r="170" fill="#d5b88b"/><text x="500" y="760" fill="white" font-size="60" text-anchor="middle">Aurora Café</text><text x="500" y="850" fill="white" font-size="32" text-anchor="middle">TESTE FICTÍCIO</text></svg>';
+ await page.route('https://audit-media.invalid/art.svg',route=>route.fulfill({body:svg,contentType:'image/svg+xml',headers:{'access-control-allow-origin':'*'}}));
+ await page.route('**/rest/v1/presentations*',route=>route.fulfill({json:{id:'pdf-test',agency_id:agency,client_id:'aurora',title:'Aurora Café — apresentação de teste',period_month:11,period_year:2026,created_at:'2026-10-14T00:00:00Z',updated_at:'2026-10-14T00:00:00Z',status:'draft',clients:{name:client.name},presentation_sections:[{id:'s',title:'Entregas e direção visual',position:0,content:{text:'Copy de teste e direção visual preservadas. '+('Conteúdo de revisão para validar paginação e leitura. '.repeat(80)),images:[{src:'https://audit-media.invalid/art.svg',alt:'Arte fictícia Aurora Café'}]}}],presentation_assets:[]}}));
+ await page.goto('/presentations/pdf-test/export');await page.getByRole('button',{name:'Visualizar Prévia',exact:true}).click();await expect(page.getByTitle('Prévia da Apresentação PDF')).toBeVisible({timeout:30000});await expect(page.getByText(/materiais não tiveram a prévia carregada/)).toHaveCount(0);
+ const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'Baixar PDF Agora',exact:true}).click();const download=await downloaded;expect(download.suggestedFilename()).toMatch(/\.pdf$/);if(test.info().project.name==='desktop')await download.saveAs('/private/tmp/aurora-presentation-adjustments.pdf');
+});
+
+test('briefings are collapsed by client and preserve response and PDF routes',async({page})=>{
+ await setup(page);await page.route('**/rest/v1/briefings*',route=>route.fulfill({json:[{id:'brief-test',client_id:'aurora',title:'Briefing fictício Aurora',status:'submitted',created_at:'2026-10-14T00:00:00Z',updated_at:'2026-10-14T00:00:00Z',client:{name:client.name},template:{name:'Modelo de teste'}}]}));await page.goto('/briefings');await expect(page.getByRole('heading',{name:'Briefing Studio'})).toBeVisible();await expect(page.getByRole('link',{name:'Ver respostas',exact:true})).toBeHidden();await page.locator('details > summary').filter({hasText:client.name}).click();await expect(page.getByRole('link',{name:'Ver respostas',exact:true})).toHaveAttribute('href','/briefings/brief-test/responses');await expect(page.getByRole('link',{name:'Visualizar PDF',exact:true})).toHaveAttribute('href','/briefings/brief-test/export');
+});
+test('editorial groups campaigns by client and opens the chosen month',async({page})=>{
+ await setup(page);const campaign={id:'campaign',client_id:'aurora',month:'2026-11-01',status:'production',project_id:'project',context:{},items:[{date:'2026-11-01',format:'post',title:'Arte de teste',copy:'Copy aprovada de teste',visualDirection:'Direção de teste'}]};await page.route('**/rest/v1/monthly_editorial_campaigns*',route=>route.fulfill({json:new URL(route.request().url()).searchParams.has('id')?campaign:[campaign]}));await page.goto('/editorial');await expect(page.getByRole('heading',{name:'Calendários por cliente'})).toBeVisible();await page.locator('details > summary').filter({hasText:client.name}).click();await page.getByRole('button',{name:/11\/2026/}).click();await expect(page.getByRole('button',{name:'Abrir demanda 1'})).toBeVisible();await page.getByRole('button',{name:'Abrir demanda 1'}).click();await expect(page.getByRole('heading',{name:'Revisar demanda',exact:true})).toBeVisible();
 });

@@ -7,18 +7,20 @@
 import React from 'react'
 import { pdf } from '@react-pdf/renderer'
 import type { PresentationPdfModel } from './types'
+import { preparePresentationMedia } from './preparePresentationMedia'
 import { PresentationPdfDocument } from './PresentationPdfDocument'
 import { transformPresentationToPdfModel } from './transformPresentationToPdfModel'
-import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 
 export interface GeneratePresentationPdfResult {
+  mediaWarnings: number
   blob: Blob
   blobUrl: string
   fileName: string
 }
 
 export async function generatePresentationPdfBlob(model: PresentationPdfModel): Promise<GeneratePresentationPdfResult> {
-  const docElement = React.createElement(PresentationPdfDocument, { model })
+  const prepared = await preparePresentationMedia(model)
+  const docElement = React.createElement(PresentationPdfDocument, { model: prepared })
   const asPdf = pdf(docElement as any)
   const blob = await asPdf.toBlob()
   const blobUrl = URL.createObjectURL(blob)
@@ -27,7 +29,7 @@ export async function generatePresentationPdfBlob(model: PresentationPdfModel): 
   const sanitizedTitle = model.title.replace(/[^a-zA-Z0-9_-]/g, '_')
   const fileName = `Apresentacao_${sanitizedClient}_${sanitizedTitle}.pdf`
 
-  return { blob, blobUrl, fileName }
+  return { blob, blobUrl, fileName, mediaWarnings: prepared.mediaWarnings||0 }
 }
 
 export async function downloadPresentationPdf(model: PresentationPdfModel): Promise<void> {
@@ -39,26 +41,6 @@ export async function downloadPresentationPdf(model: PresentationPdfModel): Prom
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
-
-  if (isSupabaseConfigured && supabase) {
-    try {
-      await supabase.from('presentation_exports').insert({
-        agency_id: 'demo-agency',
-        presentation_id: model.presentationId,
-        storage_path: `exports/${fileName}`,
-        branding_snapshot: model.branding,
-      })
-
-      await supabase.from('presentation_activity').insert({
-        agency_id: 'demo-agency',
-        presentation_id: model.presentationId,
-        action: 'pdf_exported',
-        metadata: { fileName, generatedAt: new Date().toISOString() },
-      })
-    } catch (err) {
-      console.warn('Could not record presentation PDF export in Supabase:', err)
-    }
-  }
 
   setTimeout(() => {
     URL.revokeObjectURL(blobUrl)

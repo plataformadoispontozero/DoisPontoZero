@@ -33,7 +33,7 @@ function resolveBranding(customBranding?: Record<string, any>) {
 
   const website =
     customBranding?.website ||
-    'https://doiszero.com'
+    'https://doispontozero.renatodesigner.com.br'
 
   return { agencyName, logoUrl, primaryColor, website }
 }

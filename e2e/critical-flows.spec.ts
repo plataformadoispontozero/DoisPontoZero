@@ -12,7 +12,7 @@ test.describe('Dois.Zero — Suíte E2E de Fluxos Críticos Operacionais', () =>
 
   test('Fluxo 02: Módulo de Projetos & Tarefas', async ({ page }) => {
     await page.goto('/projects')
-    await expect(page.getByRole('heading', { name: 'Projetos & Demandas' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Kanban Geral' })).toBeVisible()
     await page.goto('/tasks')
     await expect(page.getByRole('heading', { name: 'Tarefas & Produção' })).toBeVisible()
   })

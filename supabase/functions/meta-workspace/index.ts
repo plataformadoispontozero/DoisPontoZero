@@ -1,3 +1,4 @@
+import {insightPeriod,insightParameters} from './insights.ts';
 import {createClient} from 'npm:@supabase/supabase-js@2.117.3';
 import {corsHeaders} from 'npm:@supabase/supabase-js@2.117.3/cors';
 import {providerConfiguration,providerSecret,encryptCredential,decryptCredential,configurationAvailable} from '../_shared/providerConfig.ts';
@@ -45,8 +46,12 @@ Deno.serve(async(req:Request)=>{
    if(typeof body.clientId!=='string')return reply({error:'Cliente inválido.'},400);
    const client=await caller.from('clients').select('profile').eq('agency_id',agency).eq('id',body.clientId).maybeSingle();
    const account=client.data?.profile?.meta_ad_account_id;if(client.error||!/^act_\d+$/.test(account||''))return reply({error:'Vincule uma conta de anúncios no perfil do cliente.'},409);
-   const accounts=await graph('me/adaccounts',{fields:'id',limit:'100'});if(!accounts.data?.some((a:{id:string})=>a.id===account))return reply({error:'A conta autorizada não tem acesso à conta de anúncios deste cliente.'},403);
-   const data=await graph(`${account}/insights`,{date_preset:'last_30d',fields:'spend,impressions,reach,clicks,cpc,ctr,actions',level:'account'});return reply({insights:data.data||[],period:'last_30d'});
+   let period;try{period=insightPeriod(body.period);}catch{return reply({error:'Período inválido.'},400);}
+   const accounts=await graph('me/adaccounts',{fields:'id,currency',limit:'100'});if(!accounts.data?.some((a:{id:string})=>a.id===account))return reply({error:'A conta autorizada não tem acesso à conta de anúncios deste cliente.'},403);
+   const [summary,first]=await Promise.all([graph(`${account}/insights`,insightParameters(period,'account')),graph(`${account}/insights`,insightParameters(period,'campaign'))]);
+   const campaigns=[...(first.data||[])];let cursor=first.paging?.cursors?.after,more=!!first.paging?.next,pages=1;
+   while(more&&cursor&&pages<5){const next=await graph(`${account}/insights`,{...insightParameters(period,'campaign'),after:cursor});campaigns.push(...(next.data||[]));cursor=next.paging?.cursors?.after;more=!!next.paging?.next;pages++;}
+   return reply({configured:true,connected:true,insights:summary.data||[],campaigns,period,hasMore:more});
   }
   return reply({error:'Operação inválida.'},400);
  }catch{return req.method==='GET'?back('failed'):reply({error:'Integração Meta indisponível. Confira a configuração e a autorização.'},400);}

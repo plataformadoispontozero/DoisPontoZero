@@ -1,5 +1,6 @@
+import { isManagementRole } from '@/features/auth/access'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
-import { useAgencyId } from '@/features/auth/AuthProvider'
+import { useAgencyId, useAuth } from '@/features/auth/AuthProvider'
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
@@ -46,6 +47,7 @@ export const ProjectWorkspacePage: React.FC = () => {
 
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
+  const managementPath=isManagementRole(useAuth().activeAgency?.roleName)?'/projects':'/tasks'
 
   // Queries
   const { data: projectData, isLoading: isProjectLoading } = useProject(projectId)
@@ -343,7 +345,7 @@ export const ProjectWorkspacePage: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-xs text-[#98989F]">
               <button
-                onClick={() => navigate('/projects')}
+                onClick={() => navigate(managementPath)}
                 className="hover:text-[#F8F9FC] transition-colors flex items-center gap-1"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />

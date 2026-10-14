@@ -721,7 +721,7 @@ export function MonthlyEditorialPage() {
         </section>
         <div className="flex justify-between gap-3 md:col-span-full"><Button disabled={wizardStep===0||busy} onClick={()=>goToStep(Math.max(0,wizardStep-1))}>Anterior</Button>{wizardStep<3&&<Button variant="primary" disabled={!client||busy||details.isFetching} onClick={()=>goToStep(Math.min(3,wizardStep+1))}>Continuar</Button>}</div>
       </div>}
-      {!creating&&<section className="space-y-3"><h2 className="text-xl font-semibold">Campanhas do cliente</h2>{campaigns.isError?<p role="alert">Não foi possível carregar as campanhas.</p>:campaigns.isPending?<p>Carregando campanhas…</p>:!campaigns.data?.length?<p>Nenhum calendário salvo. Crie uma campanha para organizar as demandas.</p>:<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{campaigns.data.map(c=><button key={c.id} aria-pressed={c.id===id} className={`rounded-xl border p-4 text-left ${c.id===id?'border-orange-500 bg-orange-500/10':'border-white/10'}`} onClick={()=>{load(c);setSelectedPiece(null);navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`);}}><p className="font-semibold">{clients.data?.find(x=>x.id===c.client_id)?.name||'Cliente'} · {c.month.slice(0,7)}</p><p className="text-sm text-orange-200">{statusNames[c.status]||c.status} · {c.items.length} conteúdos</p></button>)}</div>}</section>}
+      {!creating&&<section className="space-y-3"><h2 className="text-xl font-semibold">Calendários por cliente</h2><p className="text-sm text-zinc-400">Abra um cliente e selecione a campanha para revisar o conteúdo e acompanhar sua aprovação.</p>{campaigns.isError?<p role="alert">Não foi possível carregar as campanhas.</p>:campaigns.isPending?<p>Carregando campanhas…</p>:!campaigns.data?.length?<p>Nenhum calendário salvo. Crie uma campanha para organizar as demandas.</p>:<div className="space-y-3">{[...new Set(campaigns.data.map(c=>c.client_id))].map(clientId=>{const list=campaigns.data.filter(c=>c.client_id===clientId);return <details key={clientId} open={list.some(c=>c.id===id)} className="rounded-2xl border border-white/10 bg-[#19191f]"><summary className="cursor-pointer p-5"><span className="font-semibold">{clients.data?.find(c=>c.id===clientId)?.name||'Cliente'}</span><span className="ml-3 text-sm text-zinc-400">{list.length} campanhas · {list.reduce((n,c)=>n+c.items.length,0)} conteúdos</span></summary><div className="grid gap-3 border-t border-white/10 p-4 md:grid-cols-2 xl:grid-cols-3">{list.map(c=><button key={c.id} aria-pressed={c.id===id} className={`rounded-xl border p-4 text-left ${c.id===id?'border-orange-500 bg-orange-500/10':'border-white/10'}`} onClick={()=>{load(c);setSelectedPiece(null);navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`);}}><p className="font-semibold">{c.month.slice(0,7).split('-').reverse().join('/')}</p><p className="mt-2 text-sm text-orange-200">{statusNames[c.status]||c.status} · {c.items.length} conteúdos</p></button>)}</div></details>})}</div>}</section>}
       {!creating&&items.length > 0 && (
         <section className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
@@ -818,10 +818,10 @@ export function MonthlyEditorialPage() {
           {items.some((i) => i.editorial) && (
             <section className="rounded-xl border border-orange-400/30 p-4">
               <h2 className="font-semibold">
-                Prévia estratégica · {ENGINE_VERSION}
+                Resumo do calendário
               </h2>
               <p className="text-sm">
-                {items.length} propostas;{" "}
+                {items.length} conteúdos;{" "}
                 {items.filter((i) => i.format === "post").length} posts,{" "}
                 {items.filter((i) => i.format === "carousel").length} carrosséis
                 e {items.filter((i) => i.format === "reels").length} reels.

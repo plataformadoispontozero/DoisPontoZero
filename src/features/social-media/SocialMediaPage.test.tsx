@@ -21,10 +21,11 @@ it('shows all months and groups all client demands before selection, opening a m
  state.demands=[{id:'task-a',title:'Demanda A',status:'open',project_id:'project-a',due_date:null,project:{client_id:'a',name:'Projeto A',client:{id:'a',name:'Cliente A'}}},{id:'task-b',title:'Demanda B',status:'review',project_id:'project-b',due_date:null,project:{client_id:'b',name:'Projeto B',client:{id:'b',name:'Cliente B'}}}];
  render(<MemoryRouter initialEntries={['/social-media']}><SocialMediaPage/></MemoryRouter>);
  expect(screen.getByLabelText('Mês da operação')).toHaveValue('');
- expect(screen.getByRole('region',{name:'Demandas de Cliente A'})).toHaveTextContent('Demanda A');
- expect(screen.getByRole('region',{name:'Demandas de Cliente B'})).toHaveTextContent('Demanda B');
+ expect(screen.getByLabelText('Demandas de Cliente A')).toHaveTextContent('Demanda A');
+ expect(screen.getByLabelText('Demandas de Cliente B')).toHaveTextContent('Demanda B');
+ screen.getByLabelText('Demandas de Cliente A').setAttribute('open','');
  fireEvent.click(screen.getByRole('button',{name:/Demanda A/}));expect(screen.getByRole('dialog')).toHaveTextContent('task-a');
  fireEvent.click(screen.getByRole('button',{name:'Fechar teste'}));expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
  fireEvent.change(screen.getByLabelText('Cliente da operação'),{target:{value:'b'}});
- expect(screen.queryByRole('button',{name:/Demanda A/})).not.toBeInTheDocument();expect(screen.getByRole('button',{name:/Demanda B/})).toBeInTheDocument();
+ expect(screen.queryByRole('button',{name:/Demanda A/})).not.toBeInTheDocument();expect(screen.getByText('Demanda B')).toBeInTheDocument();
 });

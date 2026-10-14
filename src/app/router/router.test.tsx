@@ -67,7 +67,7 @@ describe('All 12 Phase 01 Functional Routes Render Test', () => {
   })
 
   it('renders route: /projects (Projetos)', () => {
-    testRoute('/projects', /Projetos & Demandas/i)
+    testRoute('/projects', /Kanban Geral/i)
   })
 
   it('renders route: /tasks (Tarefas)', () => {

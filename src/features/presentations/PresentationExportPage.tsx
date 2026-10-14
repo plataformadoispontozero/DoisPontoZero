@@ -1,23 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Download, FileText, Eye, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { useSinglePresentation } from './hooks/usePresentations';
-import { defaultBranding } from '../../config/branding';
+import { useBranding } from '@/hooks/useBranding';
 import { toast } from '../../components/ui/Toast';
 
 
 export const PresentationExportPage: React.FC = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
   const navigate = useNavigate();
+  const {branding}=useBranding();
 
   const { presentation, sections, assets, isLoading, isError } = useSinglePresentation(presentationId);
   const [isExporting, setIsExporting] = useState(false);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [previewFileName,setPreviewFileName]=useState('apresentacao.pdf');
+  const [mediaWarnings,setMediaWarnings]=useState(0);
+  useEffect(()=>()=>{if(previewBlobUrl)URL.revokeObjectURL(previewBlobUrl)},[previewBlobUrl]);
 
   if (isLoading) {
     return (
@@ -39,7 +43,7 @@ export const PresentationExportPage: React.FC = () => {
     const { transformPresentationToPdfModel } = await import('./pdf/transformPresentationToPdfModel')
     return transformPresentationToPdfModel(
       { ...presentation, sections: sections ?? [], assets: assets ?? [] } as any,
-      defaultBranding as any
+      branding as any
     )
   }
 
@@ -47,6 +51,7 @@ export const PresentationExportPage: React.FC = () => {
     setIsExporting(true)
     setDownloadSuccess(false)
     try {
+      if(previewBlobUrl){const link=document.createElement('a');link.href=previewBlobUrl;link.download=previewFileName;link.click();setDownloadSuccess(true);return;}
       const { downloadPresentationPdf } = await import('./pdf/generatePresentationPdf')
       const model = await buildPdfModel()
       await downloadPresentationPdf(model)
@@ -94,6 +99,7 @@ export const PresentationExportPage: React.FC = () => {
         </div>
       </div>
 
+      {mediaWarnings>0&&<p role="alert" className="rounded-xl border border-orange-400/30 p-4 text-sm">{mediaWarnings} materiais não tiveram a prévia carregada. O PDF identifica esses materiais para conferência na plataforma.</p>}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Left: Details + Actions */}
         <div className="lg:col-span-2 space-y-4">
@@ -101,9 +107,9 @@ export const PresentationExportPage: React.FC = () => {
             <div className="flex items-start justify-between">
               <div>
                 <Badge variant="accent">PDF EDITORIAL WHITE LABEL</Badge>
-                <h2 className="text-base font-bold text-content-primary mt-2">Documento de Apresentação Comercial</h2>
+                <h2 className="text-base font-bold text-content-primary mt-2">Apresentação de entregas criativas</h2>
                 <p className="text-xs text-content-secondary mt-1">
-                  Layout profissional com marca-d'água, capa e paginação automática.
+                  Capa, conteúdo e materiais visuais em páginas legíveis, com paginação automática.
                 </p>
               </div>
               <FileText className="w-10 h-10 text-brand-primary/40 shrink-0" />
@@ -135,9 +141,9 @@ export const PresentationExportPage: React.FC = () => {
               </h4>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Capa com identificação da Agência e Cliente.</li>
-                <li>Marca-d&apos;água centralizada com baixa opacidade.</li>
+                <li>Imagens em páginas individuais, com proporção preservada.</li>
                 <li>Rodapé e paginação automatizados.</li>
-                <li>Links para vídeos e arquivos no Drive.</li>
+                <li>Prévia e download do mesmo documento.</li>
               </ul>
             </div>
 
@@ -176,6 +182,7 @@ export const PresentationExportPage: React.FC = () => {
         <Card className="lg:col-span-3 min-h-[560px] flex flex-col overflow-hidden">
           <div className="p-3 bg-surface-subtle border-b border-surface-border flex items-center justify-between">
             <span className="text-xs font-bold text-content-primary">Visualização do Documento PDF</span>
+            {previewBlobUrl && <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-orange-300">Abrir PDF em nova aba</a>}
             {previewBlobUrl && (
               <Button variant="primary" size="sm" onClick={handleDownloadPdf} disabled={isExporting}>
                 <Download className="w-3.5 h-3.5 mr-1" />
@@ -186,8 +193,8 @@ export const PresentationExportPage: React.FC = () => {
           <div className="flex-1 flex items-center justify-center bg-[#111116]">
             {previewBlobUrl ? (
               <iframe
-                src={previewBlobUrl}
-                className="w-full h-[560px] border-none"
+                src={`${previewBlobUrl}#view=FitH`}
+                className="w-full h-[70dvh] min-h-[480px] border-none"
                 title="Prévia da Apresentação PDF"
               />
             ) : (

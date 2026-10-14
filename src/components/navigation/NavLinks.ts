@@ -97,7 +97,7 @@ export const navItems: NavItem[] = [
   },
   {
     id: "projects",
-    label: "Projetos",
+    label: "Kanban Geral",
     path: "/projects",
     icon: FolderKanban,
     section: "main",
