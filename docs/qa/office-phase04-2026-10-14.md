@@ -41,3 +41,18 @@ Publicação do formulário: worker 91d84c9a-d0c5-416b-942b-e53f562c786a, rota /
 ## Teste final pela sessão autenticada
 Credenciais cadastradas pelo usuário. Criado botão Testar emissão do token em livekit-config v2, protegido por auth.getUser e OWNER/ADMIN/settings.edit. Usa a sessão do próprio usuário para criar sala privada temporária, chamar office-room-token, conferir assinatura/namespace/TTL, consultar /rtc/validate, desabilitar e confirmar 403; remove a sala e registra resultado sem secrets em audit_logs. Não cria usuários nem ativa mídia. Testes Deno e UI aprovados.
 Tentativa anterior de criar um probe administrativo temporário foi rejeitada pela revisão automática e não foi publicada. Helper SQL temporário removido; nenhum usuário de QA foi criado. O fluxo substituto mantém as permissões normais da plataforma. Teste real e homologação permanecem pendentes até a execução pelo administrador.
+
+
+## Fechamento e homologação com infraestrutura real
+As pendências de configuração e emissão real descritas anteriormente estão resolvidas. O responsável executou Testar emissão do token com sua sessão autenticada e confirmou o resultado; o evento office.livekit.token_verified foi conferido no banco em 2026-10-14T21:14:20.114334Z, posterior à atualização da configuração (20:55:54.567704Z).
+
+- Emissão autenticada: HTTP 200; assinatura, identidade e namespace verificados.
+- Token de 120 segundos aceito pelo LiveKit: HTTP 200.
+- Sala desabilitada recusada pelo emissor: HTTP 403.
+- temporary_records_cleaned=true; consulta independente confirmou zero salas temporárias do teste.
+- no_media_started=true; nenhuma chave ou token registrado na evidência.
+- Regressão final: 452 testes em 124 arquivos aprovados. Lint aprovado com avisos anteriores; testes Deno do emissor, configuração e verificação autenticada aprovados.
+
+Fase 04 homologada conforme autorização explícita do usuário após os testes. Fase 05 disponível para iniciar mediante solicitação, sem implementação nesta entrega. A validação multiusuário real da Fase 03 permanece com o status anterior; este teste valida emissão e aceitação de token, sem chamada de áudio/vídeo.
+
+Publicação final: worker de homologação 8b79ea03-bd10-49c3-9dc0-705c9511af8f. HTML e bundle de diagnósticos conferidos byte a byte. Typecheck e build aprovados; dois cenários de diagnóstico desktop/celular aprovados.

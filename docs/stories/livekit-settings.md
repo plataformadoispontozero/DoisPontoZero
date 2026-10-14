@@ -13,8 +13,8 @@ Complemento solicitado pelo usuário à Fase 04: cadastrar credenciais na área 
 - [x] Testes de API/criptografia, UI, SQL e endpoint real.
 - [x] 452 testes de regressão, tipos, lint, build e dois testes de navegador aprovados.
 - [x] Publicação final conferida: HTML e bundle do formulário iguais ao build.
-- [ ] Usuário cadastra credenciais reais e testa a conexão.
-- [ ] Teste final de emissão real e homologação da Fase 04.
+- [x] Usuário cadastra credenciais reais e testa a conexão.
+- [x] Teste final de emissão real e homologação da Fase 04.
 
 ## Arquivos
 - src/app/router/index.tsx
@@ -41,5 +41,5 @@ Complemento solicitado pelo usuário à Fase 04: cadastrar credenciais na área 
 - [x] Botão explícito, JWT/role/permissões atuais, emissor publicado e validação LiveKit.
 - [x] Sala privada temporária, limpeza confirmada e audit sem chaves/tokens.
 - [x] Testes de backend e UI.
-- [ ] Resultado real registrado e homologação da Fase 04.
+- [x] Resultado real registrado e homologação da Fase 04.
 Arquivos adicionais: supabase/functions/livekit-config/testToken.ts; supabase/functions/livekit-config/testToken_test.ts.

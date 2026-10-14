@@ -32,15 +32,16 @@
   },
   "phase_04": {
     "implementation": "complete",
-    "technical_validation": "automated_and_live_endpoint_verified",
-    "livekit_configuration": "pending",
-    "real_configured_token_validation": "pending",
-    "homologation": "not_requested_until_remaining_test",
+    "technical_validation": "automated_and_real_authenticated_token_verified",
+    "livekit_configuration": "verified",
+    "real_configured_token_validation": "verified",
+    "homologation": "accepted",
     "production_enabled": false,
-    "evidence": "docs/qa/office-phase04-2026-10-14.md"
+    "evidence": "docs/qa/office-phase04-2026-10-14.md",
+    "acceptance": "Usuário solicitou homologação após testes e confirmou sucesso da emissão autenticada; evidência auditada em 2026-10-14T21:14:20.114334Z"
   },
   "phase_05": {
-    "status": "blocked",
-    "reason": "Requires completed tests and explicit acceptance of Phase 04. Not started."
+    "status": "ready",
+    "reason": "Phase 04 tested and accepted. Phase 05 not started; awaiting user request."
   }
 }

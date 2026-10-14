@@ -15,8 +15,8 @@ Backend seguro de tokens após homologação da Fase 03. Reutiliza Supabase Edge
 - [x] Cinco testes HTTP no endpoint publicado; SQL remoto verificado com rollback.
 - [x] 449 testes de regressão, typecheck, lint, build e dois diagnósticos desktop/celular aprovados.
 - [x] Diagnóstico publicado e comparado ao build; Edge Function v1 publicada e testada.
-- [ ] Configuração real LiveKit e emissão autenticada no ambiente real.
-- [ ] Homologação pelo responsável; Fase 05 bloqueada.
+- [x] Configuração real LiveKit e emissão autenticada no ambiente real.
+- [x] Homologação pelo responsável confirmada após teste real; Fase 05 disponível, sem iniciar.
 
 ## Arquivos
 - .env.example
