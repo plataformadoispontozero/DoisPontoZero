@@ -1,3 +1,4 @@
+import { DemandContent } from './DemandContent'
 import React, { useState, useEffect } from 'react'
 import {
   Calendar,
@@ -176,7 +177,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
       updateTask.mutate({
         taskId,
         projectId,
-        updates: { description: description.trim() || undefined },
+        updates: { description },
       })
     }
   }
@@ -315,7 +316,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   const checklistPercent = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0
 
   return (
-    <Dialog open={open} onOpenChange={(val) => !val && onClose()} className="max-w-5xl max-h-[92dvh] overflow-hidden p-0">
+    <Dialog open={open} onOpenChange={(val) => !val && onClose()} className="max-w-[1100px] max-h-[92dvh] overflow-hidden p-0">
       <div className="flex max-h-[92dvh] min-h-0 w-full flex-col">
         <SheetHeader onClose={onClose} className="border-b border-[#30303B] px-6 py-4">
           <div className="flex items-center justify-between w-full pr-8">
@@ -421,18 +422,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
             </div>
           </div>
 
-          {/* Description */}
-          <div>
-            <span className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">Descrição</span>
-            <Textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              onBlur={handleDescriptionBlur}
-              placeholder="Adicione detalhes, requisitos criativos ou observações..."
-              rows={4}
-              className="text-xs bg-[#14141A] border-[#30303B] focus:border-[#C74410] resize-y"
-            />
-          </div>
+          <DemandContent key={task.id} title={task.title} value={description} onChange={setDescription} onSave={handleDescriptionBlur}/>
 
           {/* Checklists */}
           <div className="space-y-3">
