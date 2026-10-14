@@ -1,3 +1,4 @@
+import { editorialSteps, editorialStepIssues } from "./editorialWizard";
 import { EditorialPieceEditor } from "./EditorialPieceEditor";
 import { briefingEditorialContext, missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
 import { readClientProfile } from "@/features/clients/clientProfile";
@@ -207,7 +208,8 @@ export function MonthlyEditorialPage() {
     setShare("");
     setDirty(false);
     setNotice("");
-    setContext(emptyContext);
+    setBriefing("");
+    setContext(clientContext(client));
   }
   function load(c: Campaign) {
     setSelectedPiece(null);
@@ -273,6 +275,15 @@ export function MonthlyEditorialPage() {
       setBusy(false);
     }
   }
+  function goToStep(target: number) {
+    if (busy) return;
+    if (target > wizardStep) {
+      const issues = editorialStepIssues(target - 1, client, month, context, counts, inputs.pillars.data || []);
+      if (issues.length) { setNotice(`Antes de continuar, complete: ${issues.join('; ')}.`); return; }
+    }
+    setNotice('');
+    setWizardStep(target);
+  }
   const name = clients.data?.find((c) => c.id === client)?.name || "";
   return (
     <div className="space-y-6">
@@ -302,7 +313,8 @@ export function MonthlyEditorialPage() {
           <span role="status">Atualizando campanhas…</span>
         )}
       </div>
-      {creating&&<nav aria-label="Etapas do calendário" className="grid grid-cols-2 gap-2 md:grid-cols-4">{['Cliente e briefing','Direção editorial','Formatos e volume','Revisar e gerar'].map((label,index)=><button key={label} type="button" aria-current={wizardStep===index?'step':undefined} disabled={!client&&index>0} onClick={()=>setWizardStep(index)} className={`rounded-xl border p-3 text-left text-sm disabled:opacity-40 ${wizardStep===index?'border-orange-500 bg-orange-500/15 text-orange-200':'border-white/10 text-zinc-300'}`}><span className="block text-xs mb-1">ETAPA {index+1}</span>{label}</button>)}</nav>}
+      {creating&&<nav aria-label="Etapas do calendário" className="grid grid-cols-2 gap-2 md:grid-cols-4">{editorialSteps.map((label,index)=><button key={label} type="button" aria-current={wizardStep===index?'step':undefined} disabled={busy||(!client&&index>0)} onClick={()=>goToStep(index)} className={`rounded-xl border p-3 text-left text-sm disabled:opacity-40 ${wizardStep===index?'border-orange-500 bg-orange-500/15 text-orange-200':'border-white/10 text-zinc-300'}`}><span className="block text-xs mb-1">ETAPA {index+1}</span>{label}</button>)}</nav>}
+      {creating&&<p className="text-sm text-zinc-400" role="status">Etapa {wizardStep+1} de {editorialSteps.length} · {editorialSteps[wizardStep]}. Você pode voltar para ajustar os dados antes de gerar.</p>}
       {creating&&<div className={`grid gap-6 ${wizardStep===1?"md:grid-cols-2":""}`}>
         <section hidden={wizardStep!==0&&wizardStep!==1} className="space-y-4 rounded-2xl border border-white/10 p-5">
           <div hidden={wizardStep!==0}>
@@ -611,6 +623,9 @@ export function MonthlyEditorialPage() {
           ))}
           </div><div hidden={wizardStep!==3}>
           <h2 className="text-xl font-semibold mb-4">Confira sua campanha</h2>
+          <dl className="grid gap-3 sm:grid-cols-2 mb-4 text-sm"><div><dt className="text-zinc-400">Briefing de referência</dt><dd>{briefs.data?.find(b=>b.id===briefing)?.title||'Direção preenchida pela equipe'}</dd></div><div><dt className="text-zinc-400">Público-alvo</dt><dd>{context.audience||'Não informado'}</dd></div><div><dt className="text-zinc-400">Tom de voz</dt><dd>{context.tone||'Não informado'}</dd></div><div><dt className="text-zinc-400">Posicionamento</dt><dd>{context.positioning||'Não informado'}</dd></div></dl>
+          <p className="text-sm mb-4">Temas: {(context.topics||[]).join(' · ')||'Temas dos pilares selecionados'}</p>
+          <p className="text-sm text-orange-200 mb-4">A geração salva um rascunho para revisão da equipe. O cliente não recebe um link e nenhuma demanda entra em produção nesta etapa.</p>
           <div className="rounded-xl border border-orange-500/25 bg-orange-500/5 p-4 mb-4"><p className="font-semibold">{name} · {month}</p><p className="text-sm text-zinc-300 mt-2">{counts.post} posts · {counts.reels} reels · {counts.carousel} carrosséis</p><p className="text-sm text-zinc-300">{context.carouselSlides??7} slides por carrossel · {context.reelsScenes??3} cenas por reel · {context.reelsSeconds??30} segundos</p><p className="text-sm mt-3">Objetivo: {context.objective||'Complete na direção editorial'}</p></div>
           {missingEditorialInputs(context,inputs.pillars.data||[]).length>0&&<p role="status" className="text-orange-200 mb-4">Complete na etapa Direção editorial: {missingEditorialInputs(context,inputs.pillars.data||[]).join('; ')}.</p>}
           {(inputs.history.isError ||
@@ -650,6 +665,8 @@ export function MonthlyEditorialPage() {
             }
             variant="primary"
             onClick={() => void action(async() => {
+                const wizardIssues=editorialStepIssues(2,client,month,context,counts,inputs.pillars.data||[]);
+                if(wizardIssues.length)throw Error(`Antes de gerar, complete: ${wizardIssues.join('; ')}.`);
                 const effectiveContext={...context,topics:context.topics?.length?context.topics:topicSuggestions.map(t=>t.text)};
                 const missing=missingEditorialInputs(effectiveContext,inputs.pillars.data||[]);
                 if(missing.length)throw Error(`Antes de gerar, complete: ${missing.join("; ")}. Volte à etapa Direção editorial para completar os dados.`);
@@ -702,7 +719,7 @@ export function MonthlyEditorialPage() {
           )}
           </div>
         </section>
-        <div className="flex justify-between gap-3 md:col-span-full"><Button disabled={wizardStep===0||busy} onClick={()=>setWizardStep(step=>Math.max(0,step-1))}>Anterior</Button>{wizardStep<3&&<Button variant="primary" disabled={!client||busy||details.isFetching} onClick={()=>setWizardStep(step=>Math.min(3,step+1))}>Continuar</Button>}</div>
+        <div className="flex justify-between gap-3 md:col-span-full"><Button disabled={wizardStep===0||busy} onClick={()=>goToStep(Math.max(0,wizardStep-1))}>Anterior</Button>{wizardStep<3&&<Button variant="primary" disabled={!client||busy||details.isFetching} onClick={()=>goToStep(Math.min(3,wizardStep+1))}>Continuar</Button>}</div>
       </div>}
       {!creating&&<section className="space-y-3"><h2 className="text-xl font-semibold">Campanhas do cliente</h2>{campaigns.isError?<p role="alert">Não foi possível carregar as campanhas.</p>:campaigns.isPending?<p>Carregando campanhas…</p>:!campaigns.data?.length?<p>Nenhum calendário salvo. Crie uma campanha para organizar as demandas.</p>:<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{campaigns.data.map(c=><button key={c.id} aria-pressed={c.id===id} className={`rounded-xl border p-4 text-left ${c.id===id?'border-orange-500 bg-orange-500/10':'border-white/10'}`} onClick={()=>{load(c);setSelectedPiece(null);navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`);}}><p className="font-semibold">{clients.data?.find(x=>x.id===c.client_id)?.name||'Cliente'} · {c.month.slice(0,7)}</p><p className="text-sm text-orange-200">{statusNames[c.status]||c.status} · {c.items.length} conteúdos</p></button>)}</div>}</section>}
       {!creating&&items.length > 0 && (

@@ -17,3 +17,12 @@ describe('guided campaign creation',()=>{
 });
 
 it('does not replace a human edit when a briefing response arrives later',async()=>{let resolve!:(value:unknown)=>void;mocks.rpc.mockImplementation(()=>new Promise(done=>{resolve=done;}));show();await screen.findByRole('option',{name:'Cliente A'});fireEvent.change(screen.getByRole('combobox',{name:'Cliente'}),{target:{value:'a'}});await waitFor(()=>expect(mocks.rpc).toHaveBeenCalled());fireEvent.click(screen.getByRole('button',{name:/ETAPA 2/}));fireEvent.change(screen.getByRole('textbox',{name:'Objetivo'}),{target:{value:'Objetivo humano preservado'}});resolve({data:{answers:[{questionKey:'objetivo_principal',value:'Objetivo tardio'},{questionKey:'persona_descricao',value:'Audiência atualizada'}],revision:'r1',updatedAt:'2026-10-13'},error:null});await waitFor(()=>expect(screen.getByRole('textbox',{name:'Público-alvo'})).toHaveValue('Audiência atualizada'));expect(screen.getByRole('textbox',{name:'Objetivo'})).toHaveValue('Objetivo humano preservado');});
+
+it('blocks jumping over incomplete direction without saving or sending content',async()=>{
+ show();await selectClient();fireEvent.click(screen.getByRole('button',{name:'Continuar'}));
+ fireEvent.change(screen.getByRole('textbox',{name:'Objetivo'}),{target:{value:''}});
+ fireEvent.click(screen.getByRole('button',{name:/ETAPA 4/}));
+ expect(screen.getByRole('textbox',{name:'Objetivo'})).toBeInTheDocument();
+ expect(screen.getByText(/Antes de continuar, complete: objetivo do mês/)).toBeInTheDocument();
+ expect(mocks.rpc.mock.calls.every(call=>call[0]==='get_editorial_briefing')).toBe(true);
+});

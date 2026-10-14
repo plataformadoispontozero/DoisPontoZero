@@ -1,0 +1,19 @@
+import type { EditorialContext } from './monthlyPlanner';
+import type { PillarInput } from './campaignEngine';
+import { missingEditorialInputs } from './editorialContext';
+
+export const editorialSteps = ['Cliente e briefing', 'Direção editorial', 'Formatos e volume', 'Revisar e gerar'] as const;
+export function editorialStepIssues(step: number, client: string, month: string, context: EditorialContext, counts: { post: number; reels: number; carousel: number }, pillars: PillarInput[]): string[] {
+  if (!client || !/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return ['selecione o cliente e um mês válido'];
+  if (step >= 1) {
+    const missing = missingEditorialInputs(context, pillars);
+    if (missing.length) return missing;
+  }
+  if (step >= 2) {
+    if (Object.values(counts).some(value => !Number.isInteger(value) || value < 0 || value > 30)) return ['use quantidades inteiras entre 0 e 30'];
+    if (!Object.values(counts).some(value => value > 0)) return ['adicione pelo menos um conteúdo'];
+    if (counts.carousel > 0 && (!Number.isInteger(context.carouselSlides ?? 7) || (context.carouselSlides ?? 7) < 3 || (context.carouselSlides ?? 7) > 10)) return ['defina entre 3 e 10 slides por carrossel'];
+    if (counts.reels > 0 && (!Number.isInteger(context.reelsScenes ?? 3) || (context.reelsScenes ?? 3) < 3 || (context.reelsScenes ?? 3) > 10 || !Number.isInteger(context.reelsSeconds ?? 30) || (context.reelsSeconds ?? 30) < 10 || (context.reelsSeconds ?? 30) > 90)) return ['defina de 3 a 10 cenas e de 10 a 90 segundos por reel'];
+  }
+  return [];
+}
