@@ -1,15 +1,16 @@
 {
-  "id": "pdf-csp-fix-20261014",
-  "title": "Correção de prévia e download de PDF",
+  "id": "pdf-editorial-preview-20261014",
+  "title": "PDF editorial e prévia interna",
   "verified_at": "2026-10-14",
   "status": "published",
-  "evidence": "docs/qa/pdf-csp-fix-2026-10-14.md",
+  "evidence": "docs/qa/pdf-editorial-preview-2026-10-14.md",
   "checks": [
     "427 testes de regressão aprovados",
-    "6 cenários PDF com CSP aplicada: desktop e celular",
-    "Falha de WebAssembly reproduzida com permissão removida",
-    "Prévia blob e arquivo PDF baixado verificados",
-    "Typecheck e lint aprovados; build de produção verificado"
+    "8 cenários PDF aprovados: desktop e celular",
+    "Prévia interna em canvas: sem iframe ou barra nativa",
+    "Briefing extenso: última resposta preservada e paginação conferida",
+    "Diagramação revisada a partir do PDF e código do legado",
+    "PDF.js 6.4.299 fixado; worker servido pela própria plataforma"
   ],
   "deliveries": [
     {
@@ -247,6 +248,17 @@
         "phase-09"
       ],
       "result": "WebAssembly do gerador permitido com wasm-unsafe-eval; prévia local permitida em frame-src. Briefings e apresentações verificados em desktop e celular.",
+      "technical_status": "verified",
+      "pending": []
+    },
+    {
+      "id": "pdf-internal-editorial",
+      "title": "PDF editorial e visualizador próprio",
+      "phases": [
+        "phase-06",
+        "phase-09"
+      ],
+      "result": "Páginas renderizadas na plataforma, sem controles nativos. Briefing compacto com logotipo, resumo, seções numeradas, marca-d’água de símbolo, rodapé e paginação; respostas extensas continuam nas próximas páginas.",
       "technical_status": "verified",
       "pending": []
     }

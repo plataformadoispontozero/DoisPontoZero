@@ -166,6 +166,7 @@ describe('Briefing Studio — Domain & PDF Model', () => {
     expect(model.documentId).toBe('BRF-BRF-1234-V2')
     expect(model.categoryLabel).toBe('Branding & Identidade')
     expect(model.version).toBe(2)
+    expect(transformBriefingToPdfModel({...mockBriefing,template_version:0}).version).toBe(1)
     expect(model.metadata.totalQuestions).toBe(2)
     expect(model.metadata.answeredQuestions).toBe(2)
     expect(model.metadata.completionRate).toBe(100)

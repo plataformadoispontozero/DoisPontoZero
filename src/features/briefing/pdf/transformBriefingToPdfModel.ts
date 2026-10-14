@@ -112,7 +112,8 @@ export function transformBriefingToPdfModel(
     year: 'numeric',
   }).format(parsedDate)
 
-  const documentId = `BRF-${briefing.id.slice(0, 8).toUpperCase()}-V${briefing.template_version}`
+  const version=Number.isInteger(briefing.template_version)&&briefing.template_version>0?briefing.template_version:1
+  const documentId = `BRF-${briefing.id.slice(0, 8).toUpperCase()}-V${version}`
 
   const model: BriefingPdfModel = {
     briefingId: briefing.id,
@@ -123,7 +124,7 @@ export function transformBriefingToPdfModel(
     clientLogoUrl: briefing.client?.logo_url || undefined,
     category,
     categoryLabel,
-    version: briefing.template_version,
+    version,
     statusLabel: statusConfig.label,
     formattedDate,
     branding,

@@ -10,8 +10,8 @@ import type { BriefingPdfQuestionItem, PdfBrandingConfig } from './types'
 
 const styles = StyleSheet.create({
   questionContainer: {
-    marginBottom: 16,
-    paddingBottom: 12,
+    marginBottom: 10,
+    paddingBottom: 7,
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
     // Avoid orphan questions across pages
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   questionLabel: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: 'bold',
     color: '#111827',
     lineHeight: 1.3,
@@ -38,13 +38,12 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingLeft: 10,
     paddingRight: 10,
-    backgroundColor: '#F9FAFB',
     borderRadius: 4,
     borderLeftWidth: 2,
     borderLeftColor: '#C74410',
   },
   answerText: {
-    fontSize: 9.5,
+    fontSize: 10.5,
     color: '#1F2937',
     lineHeight: 1.45,
   },
@@ -61,7 +60,7 @@ export const BriefingPdfQuestion: React.FC<{
   index: number
 }> = ({ question, branding }) => {
   return (
-    <View style={styles.questionContainer} wrap={false}>
+    <View style={[styles.questionContainer,{width:question.answerText.length<90&&!question.answerText.includes('\n')?'47%':'100%',marginRight:question.answerText.length<90&&!question.answerText.includes('\n')?'3%':0}]} wrap={question.answerText.length>1200}>
       <View style={styles.questionHeader}>
         <Text style={styles.questionLabel}>{question.label}</Text>
         {question.description ? (

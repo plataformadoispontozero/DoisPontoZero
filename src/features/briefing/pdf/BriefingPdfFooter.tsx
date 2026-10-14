@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
   footerContainer: {
     position: 'absolute',
     bottom: 24,
-    left: 56, // matches page paddingLeft
-    right: 56, // matches page paddingRight
+    left: 44, // matches page paddingLeft
+    right: 44, // matches page paddingRight
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
     paddingTop: 8,
@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   agencyAndDoc: {
-    fontSize: 8,
+    fontSize: 7,
     color: '#9CA3AF',
     letterSpacing: 0.5,
   },
   pageNumberText: {
-    fontSize: 8,
+    fontSize: 7,
     color: '#9CA3AF',
     fontWeight: 'bold',
   },
@@ -38,8 +38,9 @@ export const BriefingPdfFooter: React.FC<{ model: BriefingPdfModel }> = ({ model
   return (
     <View style={styles.footerContainer} fixed>
       <Text style={styles.agencyAndDoc}>
-        {model.branding.agencyName} • {model.documentId}
+        {model.branding.agencyName}
       </Text>
+      <Text style={{fontSize:7,color:'#9CA3AF',maxWidth:190,textAlign:'center'}}>{model.branding.footerText||'Documento confidencial'}</Text>
       <Text
         style={styles.pageNumberText}
         render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`}

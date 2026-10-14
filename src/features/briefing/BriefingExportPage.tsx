@@ -1,3 +1,4 @@
+import {PdfPreview} from '@/components/pdf/PdfPreview'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
@@ -168,12 +169,14 @@ export const BriefingExportPage: React.FC = () => {
   const [agencyName, setAgencyName] = useState(appBranding.company.legalName || 'Dois.Zero Creative Agency')
   const [primaryColor, setPrimaryColor] = useState(appBranding.colors.primary || '#C74410')
   const [footerText, setFooterText] = useState('Documento confidencial gerado por Creative Agency OS.')
+  const [previewBlob,setPreviewBlob]=useState<Blob|null>(null)
   const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null)
+  useEffect(()=>()=>{if(previewBlobUrl)URL.revokeObjectURL(previewBlobUrl)},[previewBlobUrl])
   const [isGenerating, setIsGenerating] = useState(false)
 
   // Build PDF model lazily inside handlers to avoid render-time throw
   const buildModel = (): BriefingPdfModel =>
-    transformBriefingToPdfModel(briefing as any, { agencyName, primaryColor, footerText })
+    transformBriefingToPdfModel(briefing as any, { agencyName, primaryColor, footerText, ...(/^dois[.\s_-]*zero\b/i.test(agencyName)?{logoUrl:'/pdf-brand/wordmark.jpg',symbolUrl:'/pdf-brand/symbol.jpg'}:{}) })
 
   // Handle direct download
   const handleDownload = async () => {
@@ -189,15 +192,14 @@ export const BriefingExportPage: React.FC = () => {
     }
   }
 
-  // Generate preview in iframe
+  // Generate PDF bytes for the internal page renderer
   const handlePreviewInBrowser = async () => {
     setIsGenerating(true)
     // Revoke previous blob URL
-    if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl)
     try {
       const m = buildModel()
       const res = await generateBriefingPdfBlob(m)
-      setPreviewBlobUrl(res.blobUrl)
+      setPreviewBlob(res.blob);setPreviewBlobUrl(res.blobUrl)
       toast.success('Prévia do PDF renderizada no navegador!')
     } catch (err) {
       toast.error(`Erro ao renderizar prévia: ${String(err)}`)
@@ -303,7 +305,7 @@ export const BriefingExportPage: React.FC = () => {
                 </div>
                 <div className="flex justify-between py-1">
                   <span className="text-[#98989F]">Margens A4:</span>
-                  <span className="text-[#B8B8C0]">Sup. 25mm • Inf. 20mm • Lat. 20mm</span>
+                  <span className="text-[#B8B8C0]">Corpo 32mm • Inf. 20mm • Lat. 15,5mm</span>
                 </div>
               </div>
             </CardContent>
@@ -406,11 +408,7 @@ export const BriefingExportPage: React.FC = () => {
 
             <CardContent className="p-0 flex-1 flex flex-col items-center justify-center bg-[#111116]">
               {previewBlobUrl ? (
-                <iframe
-                  src={previewBlobUrl}
-                  className="w-full h-[620px] border-none"
-                  title="Prévia do PDF"
-                />
+                <PdfPreview blob={previewBlob!} title="Prévia do PDF"/>
               ) : (
                 <div className="p-12 text-center max-w-sm space-y-4">
                   <div className="w-16 h-16 rounded-2xl bg-[#1C1C24] border border-[#30303B] flex items-center justify-center text-[#C74410] mx-auto shadow-xl">

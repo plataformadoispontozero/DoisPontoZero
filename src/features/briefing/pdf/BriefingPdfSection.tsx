@@ -51,12 +51,14 @@ export const BriefingPdfSection: React.FC<{
   section: BriefingPdfSectionItem
   branding: PdfBrandingConfig
   index: number
-}> = ({ section, branding }) => {
+}> = ({ section, branding, index }) => {
+  const rows:Array<typeof section.questions>=[];
+  for(const question of section.questions){const short=question.answerText.length<90&&!question.answerText.includes('\n');const last=rows[rows.length-1];if(short&&last?.length===1&&last[0].answerText.length<90&&!last[0].answerText.includes('\n'))last.push(question);else rows.push([question]);}
   return (
     <View style={styles.sectionContainer}>
       <View style={styles.sectionHeader} wrap={false}>
         <View style={[styles.sectionAccentBar, { backgroundColor: branding.primaryColor }]} />
-        <Text style={styles.sectionTitle}>{section.title}</Text>
+        <Text style={styles.sectionTitle}>{String(index+1).padStart(2,'0')} - {section.title}</Text>
       </View>
 
       {section.description ? (
@@ -64,14 +66,7 @@ export const BriefingPdfSection: React.FC<{
       ) : null}
 
       <View style={styles.questionsList}>
-        {section.questions.map((question, qIdx) => (
-          <BriefingPdfQuestion
-            key={question.id}
-            question={question}
-            branding={branding}
-            index={qIdx}
-          />
-        ))}
+        {rows.map((row,rIdx)=><View key={rIdx} style={{flexDirection:'row'}} wrap={row.length===1&&row[0].answerText.length>1200}>{row.map((question,qIdx)=><BriefingPdfQuestion key={question.id} question={question} branding={branding} index={qIdx}/>)}</View>)}
       </View>
     </View>
   )

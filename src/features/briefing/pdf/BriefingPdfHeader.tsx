@@ -10,18 +10,23 @@ import type { PdfBrandingConfig } from './types'
 
 const styles = StyleSheet.create({
   headerContainer: {
+    position: 'absolute',
+    top: 28,
+    left: 44,
+    right: 44,
+    height: 40,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: 16,
-    marginBottom: 20,
+
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
   },
   logoImage: {
-    maxHeight: 28,
-    maxWidth: 120,
+    height: 24,
+    width: 160,
     objectFit: 'contain',
   },
   agencyText: {

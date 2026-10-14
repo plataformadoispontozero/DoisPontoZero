@@ -1,3 +1,4 @@
+import {PdfPreview} from '@/components/pdf/PdfPreview'
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Download, FileText, Eye, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
@@ -17,6 +18,7 @@ export const PresentationExportPage: React.FC = () => {
   const { presentation, sections, assets, isLoading, isError } = useSinglePresentation(presentationId);
   const [isExporting, setIsExporting] = useState(false);
   const [isPreviewing, setIsPreviewing] = useState(false);
+  const [previewBlob,setPreviewBlob]=useState<Blob|null>(null)
   const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [previewFileName,setPreviewFileName]=useState('apresentacao.pdf');
@@ -67,12 +69,11 @@ export const PresentationExportPage: React.FC = () => {
 
   const handlePreview = async () => {
     setIsPreviewing(true)
-    if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl)
     try {
       const { generatePresentationPdfBlob } = await import('./pdf/generatePresentationPdf')
       const model = await buildPdfModel()
       const res = await generatePresentationPdfBlob(model)
-      setPreviewBlobUrl(res.blobUrl)
+      setPreviewBlob(res.blob);setPreviewBlobUrl(res.blobUrl)
       toast.success('Prévia da apresentação carregada!')
     } catch (err) {
       console.error('Erro ao gerar prévia:', err)
@@ -182,7 +183,7 @@ export const PresentationExportPage: React.FC = () => {
         <Card className="lg:col-span-3 min-h-[560px] flex flex-col overflow-hidden">
           <div className="p-3 bg-surface-subtle border-b border-surface-border flex items-center justify-between">
             <span className="text-xs font-bold text-content-primary">Visualização do Documento PDF</span>
-            {previewBlobUrl && <a href={previewBlobUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-orange-300">Abrir PDF em nova aba</a>}
+
             {previewBlobUrl && (
               <Button variant="primary" size="sm" onClick={handleDownloadPdf} disabled={isExporting}>
                 <Download className="w-3.5 h-3.5 mr-1" />
@@ -192,11 +193,7 @@ export const PresentationExportPage: React.FC = () => {
           </div>
           <div className="flex-1 flex items-center justify-center bg-[#111116]">
             {previewBlobUrl ? (
-              <iframe
-                src={`${previewBlobUrl}#view=FitH`}
-                className="w-full h-[70dvh] min-h-[480px] border-none"
-                title="Prévia da Apresentação PDF"
-              />
+              <PdfPreview blob={previewBlob!} title="Prévia da Apresentação PDF"/>
             ) : (
               <div className="p-12 text-center max-w-sm space-y-4">
                 <div className="w-14 h-14 rounded-2xl bg-[#1C1C24] border border-[#30303B] flex items-center justify-center text-brand-primary mx-auto shadow-xl">
