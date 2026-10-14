@@ -26,3 +26,6 @@ Referências consultadas: https://docs.livekit.io/frontends/reference/tokens-gra
 
 ## Verificação final
 449 testes em 122 arquivos aprovados; mais oito testes Deno do backend. Typecheck, lint e build aprovados, com avisos anteriores do projeto. Dois cenários de diagnósticos desktop/celular aprovados. Effect do hook de presença teve suas dependências explicitadas para remover aviso de lint, sem mudar o comportamento.
+
+## Publicação verificada
+Edge Function office-room-token v1 ACTIVE; testes HTTP executados contra o endpoint publicado. Worker de homologação versão 432aa172-c313-4154-a4aa-f2dbb8e685f6; HTML e bundle de diagnósticos comparados byte a byte ao build. URL: https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/settings/diagnostics. Frontend principal não recebeu deploy nesta fase.
