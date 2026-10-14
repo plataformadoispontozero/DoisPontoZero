@@ -1,3 +1,4 @@
+import {OfficeOverview} from '@/features/office/OfficeOverview'
 import { useAgencyId, usePermission } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -38,7 +39,7 @@ import { useSquads } from '../squads/hooks/useSquads'
 import { useProjects } from '../projects/hooks/useProjects'
 import type { ChatChannel, ChatMessage, ChannelType, ChannelVisibility } from '@/types/chat'
 
-export const ChatPage: React.FC = () => {
+export const ChatPage: React.FC<{officeMode?:boolean}> = ({officeMode=false}) => {
   const agencyId = useAgencyId()
   const canMeet = usePermission('meetings.view')
   const canCreateRoom = usePermission('chat.create_channels')
@@ -149,7 +150,7 @@ export const ChatPage: React.FC = () => {
         <div className="p-3 border-b border-surface-border flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-content-secondary flex items-center">
             <MessageSquare className="w-4 h-4 mr-1.5 text-brand-primary" />
-            Team Chat · Salas
+            {officeMode?'Escritório Digital':'Team Chat · Salas'}
           </h2>
           <Button variant="ghost" size="sm" aria-label="Criar novo canal" disabled={!canCreateRoom} onClick={openCreate}>
             <Plus className="w-4 h-4" />
@@ -221,7 +222,7 @@ export const ChatPage: React.FC = () => {
       {/* ÁREA CENTRAL DE MENSAGENS */}
       <div className="min-w-0 min-h-0 flex-1 flex flex-col h-full bg-surface-card overflow-hidden">
         {(actionError||channelsError||conversationsError||messagesError||membersError||markRead.error)&&<div role="alert" className="p-3 text-sm text-red-400">{actionError||'Não foi possível sincronizar o chat. Confira sua conexão e tente novamente.'}</div>}
-        {showingRooms?<div className="flex-1 overflow-y-auto"><WorkRooms rooms={visibleChannels} onEnter={id=>navigate(`/chat/channels/${id}`)} onCreate={openCreate} canCreate={canCreateRoom} onMeetings={canMeet?()=>navigate('/meetings'):undefined}/></div>:<>
+        {showingRooms?<div className="flex-1 overflow-y-auto"><>{officeMode&&<OfficeOverview rooms={safeChannels.length} loading={isLoadingChannels} failed={!!channelsError}/>}<WorkRooms compact={officeMode} rooms={visibleChannels} onEnter={id=>navigate(`/chat/channels/${id}`)} onCreate={openCreate} canCreate={canCreateRoom} onMeetings={canMeet?()=>navigate('/meetings'):undefined}/></></div>:<>
         {/* Chat Header */}
         <div className="p-3.5 border-b border-surface-border flex items-center justify-between bg-surface-card">
           <div className="flex items-center space-x-2">

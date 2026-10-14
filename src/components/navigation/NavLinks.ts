@@ -1,4 +1,6 @@
+import {officeEnabled} from '@/features/office/officeFeature';
 import {
+  Building2,
   Palette,
   Video,
   Megaphone,
@@ -147,9 +149,9 @@ export const navItems: NavItem[] = [
   },
   {
     id: "chat",
-    label: "Chat",
-    path: "/chat",
-    icon: MessageSquare,
+    label: officeEnabled?"Escritório Digital":"Chat",
+    path: officeEnabled?"/office":"/chat",
+    icon: officeEnabled?Building2:MessageSquare,
     section: "tools",
     description: "Comunicação interna em canais e squads.",
   },

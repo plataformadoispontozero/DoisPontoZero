@@ -374,6 +374,14 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: "office",
+        lazy: async () => ({Component: (await import("@/features/office/OfficePage")).OfficePage}),
+      },
+      {
+        path: "office/lobby",
+        lazy: async () => ({Component: (await import("@/features/office/OfficePage")).OfficePage}),
+      },
+      {
         path: "chat",
         lazy: async () => ({
           Component: (await import("@/features/chat/ChatPage")).ChatPage,

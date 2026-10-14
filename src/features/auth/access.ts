@@ -42,7 +42,7 @@ export function routePermission(path: string): string | null {
     segments[2] === "meta"
   )
     return "meta.connections.view";
-  if (module === "chat") return "chat.access";
+  if (module === "chat" || module === "office") return "chat.access";
   if (module === "calendar" || module === "agenda") return "meetings.view";
   if (module === "notifications") return null;
   if (module === "settings") {
