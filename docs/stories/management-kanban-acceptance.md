@@ -8,7 +8,7 @@ Escopo: fechar esta pendência primeiro; os demais módulos permanecem em suas p
 - [x] Grupos por cliente, filtros, responsáveis, prazos e ações de etapa.
 - [x] Atualizar o agregado depois de alterar/arquivar demanda no pop-up.
 - [x] Testar backend positivo/negativo com rollback e navegador desktop/celular.
-- [ ] Atualizar diagnóstico, push, deploy e conferir produção.
+- [x] Atualizar diagnóstico, push, deploy e conferir produção.
 
 Aceite operacional: gestor deve usar o quadro na rotina real; a implementação técnica não substitui esse aceite.
 
@@ -25,3 +25,5 @@ Aceite operacional: gestor deve usar o quadro na rotina real; a implementação 
 - docs/RELEASE_STATUS.json
 - docs/qa/management-kanban-2026-10-14.md
 - docs/stories/management-kanban-acceptance.md
+
+Publicação conferida: `94f652e`, Cloudflare `cce37ccc-5d74-4116-bb3b-610ec9a500c7`; quatro bundles no domínio correspondem ao build. Validação: 406 testes/111 arquivos, 18 cenários do Kanban e 2 de diagnóstico nos dois viewports. Aceite humano permanece pendente.

@@ -39,3 +39,11 @@ Migration: `20261014120657_management_kanban_workflow.sql`. Função anterior ma
 ## Aceite operacional
 
 O gestor deve usar o quadro em /projects e confirmar que os grupos, filtros e movimentação atendem à rotina. Nenhuma confirmação foi inferida do pedido de implementação ou dos testes controlados. Após esse aceite, o item individual pode ser concluído no diagnóstico; as demais pendências seguem separadas.
+
+## Publicação confirmada
+
+- Implementação: `94f652e`; branch `codex/master-audit-15-1`, push concluído.
+- Cloudflare: `cce37ccc-5d74-4116-bb3b-610ec9a500c7`.
+- Bundles no domínio comparados byte a byte com o build: `index-DHlnHGDT.js`, `ProjectsPage-Cr6GxRRv.js`, `TaskDetailPanel-G9wXi-Hy.js`, `DiagnosticsPage-SoRs5htM.js`.
+- Dados Aurora mantidos: 5 demandas. Movimento real de revisão para produção revertido por rollback; coluna/status/timestamp anteriores confirmados em consulta independente.
+- Diagnóstico: validação técnica concluída; aceite operacional do gestor ainda não informado.
