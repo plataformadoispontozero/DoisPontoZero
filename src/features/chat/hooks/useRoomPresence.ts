@@ -7,7 +7,8 @@ import {supabase,isSupabaseConfigured} from '@/lib/supabase/client'
 export interface RoomParticipant{user_id:string;name:string|null;avatar_url:string|null}
 export function useRoomPresence(channelId?:string|null){
  const office=useOfficePresence()
- useEffect(()=>{if(officeEnabled&&office.enabled&&channelId)office.setRoom(channelId)},[office.enabled,office.setRoom,channelId])
+ const {enabled,setRoom}=office
+ useEffect(()=>{if(officeEnabled&&enabled&&channelId)setRoom(channelId)},[enabled,setRoom,channelId])
  const auth=useAuth(),agency=auth.activeAgency?.agencyId,userId=auth.user?.id
  const [visible,setVisible]=useState(()=>typeof document==='undefined'||document.visibilityState!=='hidden')
  useEffect(()=>{const onVisibility=()=>setVisible(document.visibilityState!=='hidden');document.addEventListener('visibilitychange',onVisibility);return()=>document.removeEventListener('visibilitychange',onVisibility)},[])
