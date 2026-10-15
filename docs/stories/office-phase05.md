@@ -10,7 +10,8 @@ Reutiliza sessão autenticada, permissões por agência/sala, office_directory, 
 - [x] Habilitação de sala existente pelo RPC autorizado da Fase 02; nenhum schema novo.
 - [x] Regressão (461 testes), typecheck, lint e build; oito cenários de navegador.
 - [x] Publicação do ambiente separado de homologação e conferência de headers.
-- [ ] Teste real com dois membros em navegadores/computadores diferentes.
+- [x] Teste de voz com dois membros relatado pelo usuário no Safari e Google Chrome; captura confirma dois participantes.
+- [ ] Conferência real da presença global após correção da reconexão.
 - [ ] Aceite explícito do responsável; Fase 06 bloqueada até homologação.
 
 ## Arquivos

@@ -43,13 +43,18 @@
   "phase_05": {
     "implementation": "complete",
     "technical_validation": "automated_verified",
-    "real_multiuser_validation": "pending",
+    "real_multiuser_validation": "reported_completed_safari_chrome",
     "homologation": "pending",
     "production_enabled": false,
-    "evidence": "docs/qa/office-phase05-2026-10-14.md"
+    "evidence": "docs/qa/office-phase05-2026-10-14.md",
+    "presence_regression": {
+      "technical_validation": "verified_two_controlled_SDK_sessions",
+      "real_validation": "pending",
+      "evidence": "docs/qa/office-presence-reconnect-2026-10-15.md"
+    }
   },
   "phase_06": {
     "status": "blocked",
-    "reason": "Requires real two-member voice test and explicit acceptance of Phase 05. Not started."
+    "reason": "Requires real presence reconnection validation and explicit acceptance of Phase 05. Not started."
   }
 }

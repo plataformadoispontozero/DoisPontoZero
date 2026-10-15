@@ -8,7 +8,7 @@ export interface PresenceChannel{
  on(event:string,filter:{event:string},callback:()=>void):PresenceChannel
  subscribe(callback:(status:string)=>void):PresenceChannel
  track(payload:PresencePayload):Promise<string>
- untrack():Promise<unknown>
+ untrack(options?:{timeout:number}):Promise<unknown>
  teardown?:()=>void
  presenceState():Record<string,unknown[]>
 }
@@ -52,5 +52,17 @@ export class OfficePresenceSession{
  disconnected(status:ConnectionStatus='reconnecting'){this.ownTracked=false;this.connection=status;this.states.clear();this.publish()}
  heartbeat(status:string){if(['timeout','error','disconnected'].includes(status))this.disconnected();else if(status==='ok'&&this.alive){for(const [id,c] of this.channels){if(this.ready.has(id))this.states.set(id,c.presenceState())};if(this.ready.has(this.user)&&!this.ownTracked)void this.send()}}
  private publish(){if(!this.alive)return;this.emit({connection:this.connection,people:this.members.map(m=>aggregatePerson(m,this.connection==='connected'&&this.ready.has(m.user_id)?this.states.get(m.user_id)||{}:{}))})}
- async stop(){if(!this.alive)return;this.alive=false;const own=this.channels.get(this.user);await Promise.allSettled([...(own?[own.untrack()]:[]),...[...this.channels.values()].map(async c=>{try{await this.client.removeChannel(c)}finally{c.teardown?.()}})]);this.channels.clear();this.ready.clear();this.states.clear()}
+ async stop(){
+  if(!this.alive)return
+  this.alive=false
+  const own=this.channels.get(this.user)
+  // A channel teardown can cancel the pending untrack acknowledgement forever.
+  // Finish (or bound) untrack before removing the channel, and never queue it on an unjoined channel.
+  if(own&&this.ready.has(this.user)){
+   let timer:ReturnType<typeof setTimeout>|undefined
+   try{await Promise.race([own.untrack({timeout:1500}),new Promise(resolve=>{timer=setTimeout(resolve,1600)})])}catch{/* Closing the channel also removes this connection's presence. */}finally{if(timer)clearTimeout(timer)}
+  }
+  await Promise.allSettled([...this.channels.values()].map(async c=>{try{await this.client.removeChannel(c)}finally{c.teardown?.()}}))
+  this.channels.clear();this.ready.clear();this.states.clear()
+ }
 }
