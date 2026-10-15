@@ -23,7 +23,7 @@ export class OfficeVoiceSession {
    if(this.room){const old=this.room;this.room=null;old.removeAllListeners();await old.disconnect(true)}
    if(generation!==this.generation)return
    let room:Room|null=null
-   let stage:'token'|'connection'='token'
+   let stage:'token'|'connection'|'media'='token'
    try{
     this.request=new AbortController()
     const credentials=await this.token(id,this.request.signal)
@@ -32,6 +32,7 @@ export class OfficeVoiceSession {
     const refresh=()=>{if(this.room===room&&generation===this.generation)this.members(room!)}
     room.on(RoomEvent.ConnectionStateChanged,state=>{if(this.room===room&&generation===this.generation)this.emit({state:state===ConnectionState.Connected?'connected':state===ConnectionState.Reconnecting||state===ConnectionState.SignalReconnecting?'reconnecting':'connecting'})})
     for(const event of [RoomEvent.ParticipantConnected,RoomEvent.ParticipantDisconnected,RoomEvent.ActiveSpeakersChanged,RoomEvent.TrackMuted,RoomEvent.TrackUnmuted,RoomEvent.LocalTrackPublished,RoomEvent.LocalTrackUnpublished,RoomEvent.ConnectionQualityChanged,RoomEvent.AudioPlaybackStatusChanged])room.on(event,refresh)
+    room.on(RoomEvent.SignalConnected,()=>{if(this.room===room&&generation===this.generation)stage='media'})
     room.on(RoomEvent.Disconnected,()=>{if(this.room===room&&generation===this.generation){this.room=null;this.emit({...initialVoice,state:'error',error:'A conexão com a sala terminou. Entre novamente para reconectar.'})}})
     // Room.connect subscribes only; no capture/publish calls on entry.
     await room.connect(credentials.serverUrl,credentials.token,{autoSubscribe:true})

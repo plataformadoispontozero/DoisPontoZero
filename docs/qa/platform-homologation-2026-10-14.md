@@ -67,3 +67,5 @@ Consulta agregada posterior ao incidente: private.office_token_limits registra j
 
 ## Publicação confirmada
 Commit cd1e753 enviado à branch feat/escritorio-digital. Produção: 981309d8-cf35-4fe7-a870-7300db8be926. Homologação: 9885d3ab-2f95-4813-8678-a5bb6505eb8a. HTML e bundles de entrada/diagnósticos/voz comparados byte a byte por HTTPS usando Chrome, CSP e permissões conferidas. Recibo: docs/qa/platform-publication-2026-10-15.json. Testes controlados gerais concluídos; investigação autenticada de voz aguarda código seguro da próxima tentativa do usuário.
+
+Usuário retornou VOICE_CONNECTION: emissão concluída, falha posterior ao token. Instrumentação refinada com motivos seguros do SDK (recusa, timeout, WebSocket, inacessível) e evento SignalConnected para distinguir transporte de áudio. Dez testes afetados, typecheck e lint sem erros aprovados. Não é prova de conexão real corrigida; homologação da Fase 05 continua bloqueada.
