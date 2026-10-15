@@ -12,7 +12,7 @@ Reutiliza sessão autenticada, permissões por agência/sala, office_directory, 
 - [x] Publicação do ambiente separado de homologação e conferência de headers.
 - [x] Teste de voz com dois membros relatado pelo usuário no Safari e Google Chrome; captura confirma dois participantes.
 - [x] Conferência real da presença global após correção da reconexão, confirmada pelo responsável em 15/10/2026.
-- [ ] Aceite explícito do responsável; Fase 06 bloqueada até homologação.
+- [x] Aceite explícito: FASE 5 ACEITA , VAMOS PARA A FASE 6 (15/10/2026).
 
 ## Arquivos
 - package.json e package-lock.json

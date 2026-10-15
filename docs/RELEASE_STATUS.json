@@ -12,7 +12,8 @@
     "Banco remoto: sete verificações com rollback",
     "Endpoints publicados: sessão ausente recusada",
     "Serviços reais e aceite operacional permanecem identificados",
-    "478 testes de regressão; 3 cenários de presença, navegação e imagens; seis arquivos reais Ambience recuperados"
+    "478 testes de regressão; 3 cenários de presença, navegação e imagens; seis arquivos reais Ambience recuperados",
+    "Escritório Fase 06: 484 testes aprovados; barra global validada em desktop e celular"
   ],
   "deliveries": [
     {
@@ -287,8 +288,18 @@
       ],
       "result": "Área Chat direcionada ao Escritório Digital; mensagens existentes preservadas. Imagens do Drive carregadas com autorização renovada, sem depender de miniaturas expiradas. Seis arquivos reais da Ambience responderam com sucesso.",
       "technical_status": "verified",
+      "pending": []
+    },
+    {
+      "id": "office-phase06-controls",
+      "title": "Escritório Digital · Fase 06 em homologação",
+      "phases": [
+        "phase-10"
+      ],
+      "result": "Fase 05 aceita pelo responsável. Controles globais reutilizam a sala existente durante a navegação. Fase 06 habilitada somente no ambiente de homologação.",
+      "technical_status": "verified",
       "pending": [
-        "Aceite formal da Fase 05 do Escritório Digital; Fase 06 permanece sem iniciar."
+        "Validar áudio contínuo durante navegação com dois membros e aceitar a Fase 06. Fase 07 não iniciada."
       ]
     }
   ]

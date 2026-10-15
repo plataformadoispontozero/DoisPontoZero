@@ -35,3 +35,7 @@ Worker separado de homologação: 150e3b7c-8de2-43fd-9692-ce73c5202bf8. HTML e b
 
 ## Confirmação real — 15/10/2026
 Após o deploy, o responsável confirmou: “Sim, presença e reconexão funcionaram”, em resposta ao teste com dois membros no Safari e Chrome, contagem online e saída/reconexão. A validação real da correção está concluída por relato do responsável. A Fase 05 permanece em homologação, aguardando aceite final explícito; Fase 06 não iniciada.
+
+## Aceite final — 15/10/2026
+
+O responsável declarou: “FASE 5 ACEITA , VAMOS PARA A FASE 6”. Fase 05 homologada; Fase 06 autorizada. Registros anteriores descrevem o estado histórico antes desse aceite.

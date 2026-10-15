@@ -1,5 +1,5 @@
 {
-  "current_phase": "05",
+  "current_phase": "06",
   "phase_00": {
     "status": "accepted",
     "evidence": "User explicitly requested Phase 01 after audit."
@@ -24,7 +24,7 @@
   "phase_03": {
     "implementation": "complete",
     "technical_validation": "automated_verified",
-    "real_multiuser_validation": "pending",
+    "real_multiuser_validation": "confirmed_safari_chrome_presence_reconnection",
     "homologation": "accepted",
     "production_enabled": true,
     "evidence": "docs/qa/office-phase03-2026-10-14.md",
@@ -44,7 +44,7 @@
     "implementation": "complete",
     "technical_validation": "automated_verified",
     "real_multiuser_validation": "reported_completed_safari_chrome",
-    "homologation": "pending",
+    "homologation": "accepted",
     "production_enabled": true,
     "evidence": "docs/qa/office-phase05-2026-10-14.md",
     "presence_regression": {
@@ -53,17 +53,27 @@
       "evidence": "docs/qa/office-presence-reconnect-2026-10-15.md",
       "confirmed_at": "2026-10-15",
       "confirmation": "Sim, presença e reconexão funcionaram"
-    }
+    },
+    "acceptance": "FASE 5 ACEITA , VAMOS PARA A FASE 6 — aceite explícito em 2026-10-15"
   },
   "phase_06": {
-    "status": "blocked",
-    "reason": "Requires explicit acceptance of Phase 05. Real presence and reconnection confirmed by the responsible user. Not started."
+    "implementation": "complete",
+    "scope": "Global in-app room controls (COMMAND 06)",
+    "homologation": "pending",
+    "production_enabled": false,
+    "evidence": "docs/qa/office-phase06-2026-10-15.md",
+    "technical_validation": "automated_verified",
+    "real_multiuser_validation": "pending"
   },
   "production_rollout": {
     "date": "2026-10-15",
     "authorization": "Usuário solicitou atualizar a área que era Chat para Escritório Digital.",
     "evidence": "docs/qa/office-rollout-presentation-media-2026-10-15.md",
-    "phase_05_acceptance": "pending",
-    "phase_06": "not_started"
+    "phase_05_acceptance": "accepted",
+    "phase_06": "review_only"
+  },
+  "phase_07": {
+    "status": "blocked",
+    "reason": "Requires explicit acceptance of Phase 06. Not started."
   }
 }
