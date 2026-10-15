@@ -11,7 +11,8 @@
     "Restore PGlite controlado: dados, grants e isolamento",
     "Banco remoto: sete verificações com rollback",
     "Endpoints publicados: sessão ausente recusada",
-    "Serviços reais e aceite operacional permanecem identificados"
+    "Serviços reais e aceite operacional permanecem identificados",
+    "478 testes de regressão; 3 cenários de presença, navegação e imagens; seis arquivos reais Ambience recuperados"
   ],
   "deliveries": [
     {
@@ -276,6 +277,19 @@
       "result": "Páginas renderizadas na plataforma, sem controles nativos. Briefing compacto com logotipo, resumo, seções numeradas, marca-d’água de símbolo, rodapé e paginação; respostas extensas continuam nas próximas páginas.",
       "technical_status": "verified",
       "pending": []
+    },
+    {
+      "id": "office-production-media-recovery",
+      "title": "Escritório Digital e imagens de apresentações",
+      "phases": [
+        "phase-09",
+        "phase-10"
+      ],
+      "result": "Área Chat direcionada ao Escritório Digital; mensagens existentes preservadas. Imagens do Drive carregadas com autorização renovada, sem depender de miniaturas expiradas. Seis arquivos reais da Ambience responderam com sucesso.",
+      "technical_status": "verified",
+      "pending": [
+        "Aceite formal da Fase 05 do Escritório Digital; Fase 06 permanece sem iniciar."
+      ]
     }
   ]
 }

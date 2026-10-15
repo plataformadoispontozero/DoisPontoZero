@@ -1,0 +1,216 @@
+{
+  "verified_at": "2026-10-15",
+  "production_version": "7e140b3f-7ffb-4053-ab38-75270e70cd78",
+  "review_version": "370e47d3-95f0-4d4d-905c-f7c91536f2fa",
+  "google_workspace_version": 13,
+  "publication": [
+    {
+      "environment": "platform-production-release",
+      "url": "https://doispontozero.renatodesigner.com.br",
+      "html_verified": true,
+      "headers_verified": true,
+      "assets": [
+        {
+          "file": "DiagnosticsPage-D3n_sIT6.js",
+          "sha256": "33bb882b2ebbb4c09f5210be4a6579b2fe442bc90e005c8571c8199058d9d86a"
+        },
+        {
+          "file": "OfficeVoiceProvider-l3V0Vkcg.js",
+          "sha256": "7d2d9db6619db121bb3d71ea203e870f08a6f991c77930da0897bac51e328795"
+        },
+        {
+          "file": "index-BMwPu2fb.js",
+          "sha256": "ac1e37998f4336f9cac9916be5979744690eef41ff9deeaa9ebff34ee63eda47"
+        }
+      ]
+    },
+    {
+      "environment": "office-phase01-release",
+      "url": "https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev",
+      "html_verified": true,
+      "headers_verified": true,
+      "assets": [
+        {
+          "file": "DiagnosticsPage-BROkU9O7.js",
+          "sha256": "1c8899ebd94651f395a137cc4f454786bd5ee38aa70ef421b3f0ff0c8117b4ab"
+        },
+        {
+          "file": "OfficeVoiceProvider-OOYjgKmJ.js",
+          "sha256": "96d09d03f4c2786fbf6e595d02090ea840af69210c6863cc5720a5d48727d539"
+        },
+        {
+          "file": "index-qCI8mloy.js",
+          "sha256": "db84589dca5b27b5be8ae22ad8e21b977819655d59b020a947aabc6a49189d8e"
+        }
+      ]
+    }
+  ],
+  "real_media": {
+    "title": "Relatório Mensal - Ambience Consultoria e Engenharia - Outubro / 2026",
+    "assets": [
+      {
+        "id": "8f662f0a-299e-4635-856c-85729a8ba376",
+        "title": "OUT - AMBIENCE - 1.png",
+        "status": 200,
+        "mime": "image/png",
+        "bytes": 10562030
+      },
+      {
+        "id": "4f67cdbf-d9c5-484c-8700-555e1016329d",
+        "title": "OUT - AMBIENCE - 3.png",
+        "status": 200,
+        "mime": "image/png",
+        "bytes": 6492292
+      },
+      {
+        "id": "1722b0ca-e9f2-4f45-a528-661c652001b5",
+        "title": "OUT - AMBIENCE - 2.png",
+        "status": 200,
+        "mime": "image/png",
+        "bytes": 9349523
+      },
+      {
+        "id": "ae02e51d-3c66-42e2-83a8-f1848f59f259",
+        "title": "OUT - AMBIENCE - 4.png",
+        "status": 200,
+        "mime": "image/png",
+        "bytes": 10645250
+      },
+      {
+        "id": "ab6f1c3d-b5fd-4022-9b9c-120500edd7ae",
+        "title": "OUT - AMBIENCE - 6.png",
+        "status": 200,
+        "mime": "image/png",
+        "bytes": 8898168
+      },
+      {
+        "id": "72262dfb-bd7c-4445-bf12-f07434a8c4ab",
+        "title": "OUT - AMBIENCE - 5.png",
+        "status": 200,
+        "mime": "image/png",
+        "bytes": 9953907
+      }
+    ]
+  },
+  "browser": {
+    "passes": [
+      [
+        {
+          "alt": "OUT - AMBIENCE - 1.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 3.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 2.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 4.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 6.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 5.png",
+          "width": 2880,
+          "height": 3840
+        }
+      ],
+      [
+        {
+          "alt": "OUT - AMBIENCE - 1.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 3.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 2.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 4.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 6.png",
+          "width": 2880,
+          "height": 3840
+        },
+        {
+          "alt": "OUT - AMBIENCE - 5.png",
+          "width": 2880,
+          "height": 3840
+        }
+      ]
+    ],
+    "media": [
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      },
+      {
+        "status": 200,
+        "mime": "image/png"
+      }
+    ],
+    "errors": []
+  },
+  "office_phase05": "homologation_pending",
+  "office_phase06": "not_started"
+}

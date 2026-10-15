@@ -1,3 +1,4 @@
+import {officeEnabled} from '@/features/office/officeFeature'
 import {OfficeOverview} from '@/features/office/OfficeOverview'
 import { useAgencyId, usePermission } from '@/features/auth/AuthProvider'
 // ============================================================
@@ -150,7 +151,7 @@ export const ChatPage: React.FC<{officeMode?:boolean}> = ({officeMode=false}) =>
         <div className="p-3 border-b border-surface-border flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-content-secondary flex items-center">
             <MessageSquare className="w-4 h-4 mr-1.5 text-brand-primary" />
-            {officeMode?'Escritório Digital':'Team Chat · Salas'}
+            {officeMode?'Escritório Digital':officeEnabled?'Mensagens · Escritório Digital':'Team Chat · Salas'}
           </h2>
           <Button variant="ghost" size="sm" aria-label="Criar novo canal" disabled={!canCreateRoom} onClick={openCreate}>
             <Plus className="w-4 h-4" />

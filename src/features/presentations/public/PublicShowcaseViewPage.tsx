@@ -98,5 +98,5 @@ export const PublicShowcaseViewPage: React.FC = () => {
     );
   }
 
-  return <div className="min-h-screen bg-[#101012] p-0 sm:p-4">{reviewLoadError&&<p role="alert" className="p-4 text-sm text-orange-300">Não foi possível carregar as avaliações anteriores. Atualize a página para tentar novamente.</p>}<PresentationPreview presentation={{...data.presentation, client_name:data.client?.name || data.presentation.client_name, client_logo_url:data.client?.logo_url || data.presentation.client_logo_url}} sections={data.sections} assets={data.assets} reviews={reviews} onReview={onReview} /></div>;
+  return <div className="min-h-screen bg-[#101012] p-0 sm:p-4">{reviewLoadError&&<p role="alert" className="p-4 text-sm text-orange-300">Não foi possível carregar as avaliações anteriores. Atualize a página para tentar novamente.</p>}<PresentationPreview publicToken={publicToken} presentation={{...data.presentation, client_name:data.client?.name || data.presentation.client_name, client_logo_url:data.client?.logo_url || data.presentation.client_logo_url}} sections={data.sections} assets={data.assets} reviews={reviews} onReview={onReview} /></div>;
 };

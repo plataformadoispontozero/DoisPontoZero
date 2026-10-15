@@ -1,7 +1,9 @@
+import {authorizePresentationMedia} from './presentationMediaContext.ts'
 import { createClient } from 'npm:@supabase/supabase-js@2.117.3'
 import { providerConfiguration, type ProviderConfiguration } from '../_shared/providerConfig.ts'
 import { folderIdFromUrl, validateDriveUpload, isGoogleUploadUrl, isFolderDescendant } from './drive.ts'
 import {discoverClientDriveDocuments,readClientDriveDocument,DriveDocumentUnavailableError} from './documents.ts'
+import {presentationMedia} from './presentationMedia.ts'
 import {verifiedPresentationFiles} from './presentationDrive.ts'
 import {chatDriveFile,chatDriveDownload} from './chatDrive.ts'
 import {handleTaskDrive} from './taskDrive.ts'
@@ -19,7 +21,7 @@ async function seal(value:unknown){const iv=crypto.getRandomValues(new Uint8Arra
 async function open(value:string){const [iv,data]=JSON.parse(value).map((s:string)=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)));return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv},await key(),data)))}
 Deno.serve(async(req:Request)=>{
  const requestOrigin=req.headers.get('origin')||''
- const allowedOrigins=new Set([origin,'tauri://localhost','https://tauri.localhost','http://tauri.localhost'])
+ const allowedOrigins=new Set([origin,'https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev','tauri://localhost','https://tauri.localhost','http://tauri.localhost'])
  const headers={'Content-Type':'application/json','Cache-Control':'no-store','Access-Control-Allow-Origin':allowedOrigins.has(requestOrigin)?requestOrigin:origin,'Access-Control-Allow-Headers':corsHeaders['Access-Control-Allow-Headers'],'Access-Control-Allow-Methods':'POST, OPTIONS','Vary':'Origin'}
  const reply=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers})
  const back=(status:string)=>new Response(null,{status:303,headers:{Location:`${origin}/settings/integrations/google?google=${status}`,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}})
@@ -50,6 +52,23 @@ Deno.serve(async(req:Request)=>{
    const connected=await admin.rpc('google_workspace_connect',{p_agency:stored.agency,p_user:stored.user,p_ciphertext:await seal({...token,expires_at:Date.now()+token.expires_in*1000,account:{id:account.sub,email:account.email}})})
    if(connected.error){await fetch('https://oauth2.googleapis.com/revoke',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({token:token.access_token})});return back('access_denied')}
    return back('connected')
+  }
+  if(req.method==='POST'){
+   if(Number(req.headers.get('content-length')||0)>65536)return reply({error:'Solicitação inválida.'},400)
+   const reader=req.clone().body?.getReader();let previewRaw='',previewSize=0;const decoder=new TextDecoder()
+   if(reader)while(true){const part=await reader.read();if(part.done)break;previewSize+=part.value.byteLength;if(previewSize>65536){void reader.cancel().catch(()=>{});return reply({error:'Solicitação inválida.'},400)}previewRaw+=decoder.decode(part.value,{stream:true})}
+   previewRaw+=decoder.decode();let previewBody:any=null;try{previewBody=JSON.parse(previewRaw)}catch{/* Existing authenticated request validation handles invalid JSON. */}
+   if(previewBody?.action==='presentation-media')return presentationMedia(req,previewBody,headers,{
+    authorize:(request,input)=>authorizePresentationMedia(request,input,{admin,member:authorization=>createClient(env('SUPABASE_URL'),env('SUPABASE_ANON_KEY'),{global:{headers:{Authorization:authorization}},auth:{persistSession:false,autoRefreshToken:false}})}),
+    accessToken:async agency=>{
+     requestConfig=await providerConfiguration(admin,agency,'google');if(!configured()||!requestConfig)throw Error('unavailable')
+     const central=await connection('read',agency);if(!central.user)throw Error('unavailable')
+     const stored=await secret('read',agency,central.user);if(!stored.ciphertext)throw Error('unavailable')
+     let token=await open(stored.ciphertext)
+     if(token.expires_at<Date.now()+60000){const fresh=await tokens({grant_type:'refresh_token',refresh_token:token.refresh_token});token={...token,...fresh,refresh_token:token.refresh_token,expires_at:Date.now()+fresh.expires_in*1000};await secret('save',agency,central.user,undefined,await seal(token))}
+     return token.access_token
+    }
+   })
   }
   if(req.method!=='POST')return reply({error:'Método inválido.'},405)
   const authorization=req.headers.get('authorization')||''
