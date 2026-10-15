@@ -64,3 +64,6 @@ Em 15/10 o usuário enviou capturas de conexão seguida de falha. Não homologar
 Adicionado diagnóstico seguro no cliente para distinguir sessão, acesso, configuração, limite, servidor/rede/timeout de emissão e conexão após token. Mensagens brutas, JWT e secrets não são exibidos. Dez testes dos módulos de voz afetados e typecheck aprovados. O teste real autenticado continua necessário; essa mudança permite localizar a etapa da falha, não comprova que a chamada de voz foi corrigida.
 
 Consulta agregada posterior ao incidente: private.office_token_limits registra janela de emissão às 11:38:39 UTC. Portanto, autenticação/autorização alcançaram o consumo do contador; a ausência de POST no recorte do log não prova bloqueio CORS. A etapa de entrega do token versus conexão LiveKit permanece a distinguir pela mensagem segura no navegador. Nenhuma credencial foi lida ou descriptografada.
+
+## Publicação confirmada
+Commit cd1e753 enviado à branch feat/escritorio-digital. Produção: 981309d8-cf35-4fe7-a870-7300db8be926. Homologação: 9885d3ab-2f95-4813-8678-a5bb6505eb8a. HTML e bundles de entrada/diagnósticos/voz comparados byte a byte por HTTPS usando Chrome, CSP e permissões conferidas. Recibo: docs/qa/platform-publication-2026-10-15.json. Testes controlados gerais concluídos; investigação autenticada de voz aguarda código seguro da próxima tentativa do usuário.

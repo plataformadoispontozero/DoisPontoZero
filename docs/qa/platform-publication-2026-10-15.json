@@ -1,0 +1,51 @@
+{
+  "verified_date": "2026-10-15",
+  "source_commit": "cd1e753",
+  "branch": "feat/escritorio-digital",
+  "production_version": "981309d8-cf35-4fe7-a870-7300db8be926",
+  "review_version": "9885d3ab-2f95-4813-8678-a5bb6505eb8a",
+  "verification": [
+    {
+      "environment": "platform-production-release",
+      "url": "https://doispontozero.renatodesigner.com.br",
+      "html_verified": true,
+      "headers_verified": true,
+      "assets": [
+        {
+          "file": "DiagnosticsPage-D6ww3L2C.js",
+          "sha256": "9380cc3db6055a523a3ed1408568762fffced7942ddcac7ddaddf4c7ac3a5664"
+        },
+        {
+          "file": "OfficeVoiceProvider-BFy0ZYXn.js",
+          "sha256": "d873d2ee5812a02bc884048c03d742df885beb477f31f2f757919e163a0ea48c"
+        },
+        {
+          "file": "index-CbM8td52.js",
+          "sha256": "a3db987297def870fea426de4ca857c1e64a9cf9ac68da95ec63c60ea2d1f2dc"
+        }
+      ]
+    },
+    {
+      "environment": "office-phase01-release",
+      "url": "https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev",
+      "html_verified": true,
+      "headers_verified": true,
+      "assets": [
+        {
+          "file": "DiagnosticsPage-ClntWL9C.js",
+          "sha256": "721452823e92977fd749f6e1d9836aa858508aa1a40c5390fadf5ff44386d821"
+        },
+        {
+          "file": "OfficeVoiceProvider-C6E_HV7S.js",
+          "sha256": "6ad9d2f4cca494c925b078bbd46db0a30f4ba6da291add2848efb1085f8a78b8"
+        },
+        {
+          "file": "index-BDDg6gSs.js",
+          "sha256": "ddfdeaca1763614254e75a044e0720c8ee85363e980f0b60807e683bd178cdcf"
+        }
+      ]
+    }
+  ],
+  "office_phase05": "real_voice_test_failed_reported_pending_investigation",
+  "office_phase06": "blocked"
+}

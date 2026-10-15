@@ -6,7 +6,7 @@
 - [x] Verificar restore controlado, segurança e checks de banco remoto delimitados.
 - [x] Regressão, lint, typecheck e build.
 - [x] Diagnósticos com homologação técnica separada de critérios externos/reais.
-- [ ] Push e deploy de produção/revisão com flags adequadas e conferência pública.
+- [x] Push e deploy de produção/revisão com flags adequadas e conferência pública.
 
 ## Arquivos
 - playwright.homologation.config.ts
@@ -17,3 +17,5 @@
 - src/features/settings/DiagnosticsPage.tsx e releaseEvidence.ts/test.ts
 
 Arquivos adicionais: vite.config.ts; src/app/providers/AppProviders.tsx; src/features/office/voiceState.ts, voiceErrors.ts/test.ts, voiceSession.ts, OfficeVoiceProvider.tsx, OfficeVoiceContext.ts; BriefingPage.tsx; ClientBriefingsTab.tsx; MonthlyEditorialPage.tsx/test.tsx e monthlyPlanner.ts; supabase/functions/google-workspace/index.ts/index_test.ts; e2e/agency-access, aurora-workflow, editorial-profile, native-briefing-pilot, platform-readiness, presentation-preview e public-site; scripts/qa/phase-test-matrix.py.
+
+Recibo: docs/qa/platform-publication-2026-10-15.json. Fase 05 de voz permanece em investigação após falha real reportada; não foi homologada.
