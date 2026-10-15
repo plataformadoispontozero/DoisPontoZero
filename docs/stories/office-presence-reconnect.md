@@ -7,7 +7,7 @@
 - [x] Navegador, typecheck, lint e regressão afetada finais.
 - [x] Registrar teste real de voz informado pelo usuário; manter Fase 05 em homologação e Fase 06 bloqueada.
 - [x] Push, deploy e conferência dos artefatos publicados.
-- [ ] Aceite real da presença pelo responsável.
+- [x] Presença e reconexão reais confirmadas pelo responsável em 15/10/2026; aceite final da Fase 05 segue pendente.
 
 ## Arquivos
 - src/features/office/presenceSession.ts e presenceSession.test.ts

@@ -23,3 +23,6 @@ Aguardar untrack antes de remover os canais; limitar a confirmação a 1,6 segun
 
 ## Publicação confirmada
 Commit 7d268fc enviado para feat/escritorio-digital. Deploy de homologação: 2d256e13-e9f2-4c72-b679-9f2757090fb4. HTML e bundles de entrada, diagnósticos e voz conferidos byte a byte por HTTPS usando Chrome; CSP e Permissions-Policy conferidas. Recibo: docs/qa/office-presence-publication-2026-10-15.json. Conferência real da presença e aceite ainda pendentes.
+
+## Confirmação real — 15/10/2026
+Após o deploy, o responsável confirmou: “Sim, presença e reconexão funcionaram”, em resposta ao teste com dois membros no Safari e Chrome, contagem online e saída/reconexão. A validação real da correção está concluída por relato do responsável. A Fase 05 permanece em homologação, aguardando aceite final explícito; Fase 06 não iniciada.

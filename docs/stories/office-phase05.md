@@ -11,7 +11,7 @@ Reutiliza sessão autenticada, permissões por agência/sala, office_directory, 
 - [x] Regressão (461 testes), typecheck, lint e build; oito cenários de navegador.
 - [x] Publicação do ambiente separado de homologação e conferência de headers.
 - [x] Teste de voz com dois membros relatado pelo usuário no Safari e Google Chrome; captura confirma dois participantes.
-- [ ] Conferência real da presença global após correção da reconexão.
+- [x] Conferência real da presença global após correção da reconexão, confirmada pelo responsável em 15/10/2026.
 - [ ] Aceite explícito do responsável; Fase 06 bloqueada até homologação.
 
 ## Arquivos

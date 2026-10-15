@@ -49,12 +49,14 @@
     "evidence": "docs/qa/office-phase05-2026-10-14.md",
     "presence_regression": {
       "technical_validation": "verified_two_controlled_SDK_sessions",
-      "real_validation": "pending",
-      "evidence": "docs/qa/office-presence-reconnect-2026-10-15.md"
+      "real_validation": "confirmed_by_responsible_safari_chrome",
+      "evidence": "docs/qa/office-presence-reconnect-2026-10-15.md",
+      "confirmed_at": "2026-10-15",
+      "confirmation": "Sim, presença e reconexão funcionaram"
     }
   },
   "phase_06": {
     "status": "blocked",
-    "reason": "Requires real presence reconnection validation and explicit acceptance of Phase 05. Not started."
+    "reason": "Requires explicit acceptance of Phase 05. Real presence and reconnection confirmed by the responsible user. Not started."
   }
 }
