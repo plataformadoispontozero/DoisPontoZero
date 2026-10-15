@@ -33,6 +33,7 @@ async function api(page: Page, options: { member?: boolean; owner?: boolean; fai
       {id:'66666666-6666-4666-8666-666666666666',title:'Reunião de outro usuário',starts_at:new Date().toISOString(),organizer_id:'other-user',meeting_participants:[]},
     ])
     if (options.agenda && table === 'tasks') return respond([{id:'77777777-7777-4777-8777-777777777777',title:'Prazo da minha tarefa',due_date:new Date().toISOString().slice(0,10),task_assignees:[{user_id:userId}]}])
+    if (table === 'get_management_kanban') return respond({tasks:[],has_more:false,next_offset:0})
     if (table === 'notifications') {
       reads.push('notification:' + url.searchParams.get('recipient_id'))
       if (url.searchParams.has('user_id')) return respond({code:'42703',message:'column user_id does not exist'},400)

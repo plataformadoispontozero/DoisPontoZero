@@ -34,6 +34,7 @@ export const DiagnosticsPage: React.FC = () => {
 
   // Cálculos dinâmicos auditados a partir do PHASE_STATUS.json
   const totalPhases = phases.length
+  const technicalPhases=phases.filter(p=>p.technical_homologation?.status==='verified').length
   const completedPhases = useMemo(() => phases.filter((p) => p.status === 'completed').length, [phases])
   const inProgressPhases = useMemo(() => phases.filter((p) => p.status === 'in_progress').length, [phases])
   const notStartedPhases = useMemo(() => phases.filter((p) => p.status === 'not_started').length, [phases])
@@ -160,7 +161,7 @@ export const DiagnosticsPage: React.FC = () => {
               </span>
               <span className="text-sm font-bold text-[#F8F9FC]">
                 {completedPhases > 0 ? `${completedPhases} Concluídas • ` : ''}
-                {inProgressPhases} em Homologação
+                {technicalPhases > 0 ? `${technicalPhases}/${totalPhases} técnicas homologadas` : `${inProgressPhases} em Homologação`}
               </span>
               <span className="text-[10px] text-[#FF8759] block mt-0.5">
                 {totalDeliverables} itens do inventário histórico
@@ -181,7 +182,7 @@ export const DiagnosticsPage: React.FC = () => {
                 Manifesto Técnico Auditado de Desenvolvimento (Fases 01 a 12)
               </CardTitle>
               <CardDescription className="text-xs">
-                Evidências reconciliadas em 13/10/2026 em <code className="text-[#FF8759]">docs/PHASE_STATUS.json</code> ({totalDeliverables} itens históricos, {totalPendingCriteria} critérios de aceite pendentes). Testes controlados e publicação não equivalem a homologação integral.
+                Evidências reconciliadas em {phaseStatusData.generated_at.slice(0,10).split('-').reverse().join('/')} em <code className="text-[#FF8759]">docs/PHASE_STATUS.json</code> ({totalDeliverables} itens históricos, {totalPendingCriteria} critérios de aceite pendentes). Homologação técnica controlada por fase; os critérios de uso real e integrações permanecem discriminados. Propostas foi removida por solicitação do responsável.
               </CardDescription>
             </div>
 
@@ -263,15 +264,18 @@ export const DiagnosticsPage: React.FC = () => {
                         </button>
 
                         <Badge
+                          className={phase.technical_homologation?'border-emerald-500/30 bg-emerald-500/10 text-emerald-300':undefined}
                           variant={
-                            phase.status === 'completed'
+                            phase.technical_homologation || phase.status === 'completed'
                               ? 'default'
                               : phase.status === 'in_progress'
                               ? 'accent'
                               : 'neutral'
                           }
                         >
-                          {phase.status === 'completed'
+                          {phase.technical_homologation
+                            ? 'Técnica homologada ✓'
+                            : phase.status === 'completed'
                             ? 'Concluído ✅'
                             : phase.status === 'in_progress'
                             ? 'Em Homologação ⚡'
@@ -325,12 +329,13 @@ export const DiagnosticsPage: React.FC = () => {
                           </div>
                         )}
 
+                        {phase.technical_homologation && <p className="text-xs text-emerald-300" role="status">Testes controlados aprovados: {phase.technical_homologation.unit_tests} verificações de regressão e {phase.technical_homologation.browser_tests} cenários de navegador. Evidência: {phase.technical_homologation.evidence}</p>}
                         {/* Requisitos Pendentes de Homologação em Staging */}
                         {pending.length > 0 && (
                           <div className="space-y-1.5 p-3 rounded-lg bg-[#C74410]/5 border border-[#C74410]/20">
                             <span className="text-[10px] font-bold text-[#FBBF24] uppercase tracking-wider flex items-center gap-1.5">
                               <AlertTriangle className="w-3.5 h-3.5 text-[#FBBF24]" />
-                              Critérios para Homologação em Staging / Produção ({pending.length})
+                              Critérios de validação real e integrações ({pending.length})
                             </span>
                             <ul className="space-y-1 text-[11px] text-[#B8B8C0]">
                               {pending.map((req: string, idx: number) => (

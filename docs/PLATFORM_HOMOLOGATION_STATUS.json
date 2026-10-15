@@ -1,0 +1,5183 @@
+{
+  "scope": "controlled_technical_homologation",
+  "status": "verified",
+  "requested_at": "2026-10-14",
+  "evidence": "docs/qa/platform-homologation-2026-10-14.md",
+  "automation_id": "retomar-homologa-o-dois-zero-s-03-40",
+  "office_phase_05": "real_two_member_voice_test_and_acceptance_pending",
+  "phases": [
+    {
+      "id": "phase-01",
+      "name": "Fase 01 - Design System, Shell e Dashboard",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Aceite do dashboard com sessão real e dados operacionais da agência"
+      ],
+      "unit_tests": 43,
+      "browser_tests": 54,
+      "unit_files": [
+        "src/config/branding.test.ts",
+        "src/app/router/router.test.tsx",
+        "src/components/navigation/Navigation.test.tsx",
+        "src/components/ui/DesignSystem.test.tsx",
+        "src/components/ui/PasswordInput.test.tsx",
+        "src/features/dashboard/DashboardPage.test.tsx",
+        "src/features/projects/components/DemandContent.test.tsx",
+        "src/features/projects/components/creativeDemand.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /dashboard",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /clients",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /social-media",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /projects",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /tasks",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /strategy/new",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /chat",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /dashboard",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /clients",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /social-media",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /projects",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /tasks",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /strategy/new",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /chat",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /dashboard",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /clients",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /social-media",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /projects",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /tasks",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /strategy/new",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /chat",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "mobile menu and FAQ are accessible and do not lose the contact route",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "mobile menu and FAQ are accessible and do not lose the contact route",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "mobile menu and FAQ are accessible and do not lose the contact route",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-02",
+      "name": "Fase 02 - Supabase, Auth e Permission Studio",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Recebimento real de convite/recuperação depende de SMTP",
+        "Aceite cadastro→aprovação→login com dois membros reais"
+      ],
+      "unit_tests": 47,
+      "browser_tests": 48,
+      "unit_files": [
+        "src/features/auth/access.test.ts",
+        "src/features/auth/active-access.database.test.ts",
+        "src/features/auth/googleOAuth.test.ts",
+        "src/features/settings/google-oauth-database.test.ts",
+        "src/features/settings/permission-studio.database.test.ts",
+        "src/features/team/AcceptInvitationPage.test.tsx",
+        "src/features/team/MyProfilePage.test.tsx",
+        "src/features/team/RegistrationRequestsPanel.test.tsx",
+        "src/features/team/TeamRegistrationPage.test.tsx",
+        "src/features/team/member-profile.database.test.ts",
+        "src/features/team/memberRoleOptions.test.ts",
+        "src/features/team/team-registration.database.test.ts",
+        "src/features/team/team-security.test.tsx"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "unauthenticated deep route and reload require login",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "viewer cannot open the permission administration URL",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid or expired session never grants private access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend unavailable never grants private access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "inactive membership excluded by server never grants private access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invite acceptance verifies token and sets the invited professional password",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "unauthenticated deep route and reload require login",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "viewer cannot open the permission administration URL",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid or expired session never grants private access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend unavailable never grants private access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "inactive membership excluded by server never grants private access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invite acceptance verifies token and sets the invited professional password",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "unauthenticated deep route and reload require login",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "viewer cannot open the permission administration URL",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid or expired session never grants private access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend unavailable never grants private access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "inactive membership excluded by server never grants private access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invite acceptance verifies token and sets the invited professional password",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-03",
+      "name": "Fase 03 - CRM e Client Hub",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Conferir com a equipe a completude dos campos legados ausentes e vínculos de arquivo",
+        "Exercitar edição e refresh do cliente em sessão real"
+      ],
+      "unit_tests": 31,
+      "browser_tests": 24,
+      "unit_files": [
+        "src/features/clients/briefingMigration.test.ts",
+        "src/features/clients/clientAssignments.database.test.ts",
+        "src/features/clients/clientLegacy.database.test.ts",
+        "src/features/clients/clientProfile.database.test.ts",
+        "src/features/clients/clientProfile.test.ts",
+        "src/features/clients/clients.test.tsx",
+        "src/features/settings/import-clients/csv.test.ts",
+        "src/features/settings/import-clients/import-database.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Portuguese client export generates slug and translates status before confirmation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Portuguese client export generates slug and translates status before confirmation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Portuguese client export generates slug and translates status before confirmation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments saves members by sector and persists after reopening the client",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments is read-only without edit permission and reports loading errors",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments saves members by sector and persists after reopening the client",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments is read-only without edit permission and reports loading errors",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments saves members by sector and persists after reopening the client",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments is read-only without edit permission and reports loading errors",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-04",
+      "name": "Fase 04 - Projetos, Kanban e Gestão de Tarefas",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Aceite da esteira real calendário aprovado→demanda→responsável→entrega",
+        "Exercitar Kanban/SLA e dependências com dois papéis reais"
+      ],
+      "unit_tests": 32,
+      "browser_tests": 73,
+      "unit_files": [
+        "src/features/production/photographicDirection.test.ts",
+        "src/features/production/productionTiming.database.test.ts",
+        "src/features/production/productionTiming.test.ts",
+        "src/features/production/productionWorkspace.test.ts",
+        "src/features/projects/management-kanban.database.test.ts",
+        "src/features/projects/management-workflow.database.test.ts",
+        "src/features/projects/projects.test.tsx",
+        "src/features/tasks/move-status.database.test.ts",
+        "src/features/tasks/taskGroups.test.ts",
+        "src/features/projects/components/DemandContent.test.tsx",
+        "src/features/projects/components/creativeDemand.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace groups and filters real demands and creates in its project",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace respects consultation permissions and displays backend failure",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace groups and filters real demands and creates in its project",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace respects consultation permissions and displays backend failure",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace groups and filters real demands and creates in its project",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace respects consultation permissions and displays backend failure",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads a complete carousel and edits its full text without truncation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads script scenes in individual blocks",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Tasks starts with a client group and opens demands only after expansion",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management Kanban shows client columns and preserves the central demand dialog",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management filters client, stage, completion and responsible without mixing groups",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management loads a later page without dropping or duplicating the first hundred demands",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management refreshes the card after editing its title inside the central popup",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /projects",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/design",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/video",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/traffic",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "dragging the collapsed client moves only that column group and denial leaves it unchanged",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads a complete carousel and edits its full text without truncation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads script scenes in individual blocks",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Tasks starts with a client group and opens demands only after expansion",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management Kanban shows client columns and preserves the central demand dialog",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management filters client, stage, completion and responsible without mixing groups",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management loads a later page without dropping or duplicating the first hundred demands",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management refreshes the card after editing its title inside the central popup",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /projects",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/design",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/video",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/traffic",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "dragging the collapsed client moves only that column group and denial leaves it unchanged",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads a complete carousel and edits its full text without truncation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads script scenes in individual blocks",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Tasks starts with a client group and opens demands only after expansion",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management Kanban shows client columns and preserves the central demand dialog",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management filters client, stage, completion and responsible without mixing groups",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management loads a later page without dropping or duplicating the first hundred demands",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management refreshes the card after editing its title inside the central popup",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /projects",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/design",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/video",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/traffic",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "dragging the collapsed client moves only that column group and denial leaves it unchanged",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "touch drag moves one Poster into the existing production group",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-05",
+      "name": "Fase 05 - Squads e Gestão de Equipe",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Upload real de avatar e gestão de squad com membros reais"
+      ],
+      "unit_tests": 36,
+      "browser_tests": 9,
+      "unit_files": [
+        "src/features/squads/guarded-operational-rpc.database.test.ts",
+        "src/features/settings/birthday-job.database.test.ts",
+        "src/features/team/AcceptInvitationPage.test.tsx",
+        "src/features/team/MyProfilePage.test.tsx",
+        "src/features/team/RegistrationRequestsPanel.test.tsx",
+        "src/features/team/TeamRegistrationPage.test.tsx",
+        "src/features/team/member-profile.database.test.ts",
+        "src/features/team/memberRoleOptions.test.ts",
+        "src/features/team/team-registration.database.test.ts",
+        "src/features/team/team-security.test.tsx"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "profile-squads.spec.ts",
+          "title": "profile without photo saves identity and squad membership stays agency scoped",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "profile-squads.spec.ts",
+          "title": "profile without photo saves identity and squad membership stays agency scoped",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "profile-squads.spec.ts",
+          "title": "profile without photo saves identity and squad membership stays agency scoped",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-06",
+      "name": "Fase 06 - Briefing Studio e Professional PDF",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Homologar envio público, edição, PDF e uso do briefing por cliente real",
+        "Conferir autores legados cuja identidade não foi validada"
+      ],
+      "unit_tests": 33,
+      "browser_tests": 30,
+      "unit_files": [
+        "src/features/briefing/DriveBriefingsPanel.test.tsx",
+        "src/features/briefing/MigratedBriefingHistory.test.tsx",
+        "src/features/briefing/NewBriefingPage.test.tsx",
+        "src/features/briefing/briefing.test.tsx",
+        "src/features/briefing/driveDocuments.database.test.ts",
+        "src/features/briefing/legacy-briefing-full.database.test.ts",
+        "src/features/briefing/legacy-briefing-pilot.database.test.ts",
+        "src/features/briefing/templates/BriefingTemplateStarter.test.tsx",
+        "src/features/briefing/templates/templateSave.database.test.ts",
+        "src/features/presentations/pdf/preparePresentationMedia.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "native-briefing-pilot.spec.ts",
+          "title": "native migrated briefing displays preserved responses and history without current approval",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "native-briefing-pilot.spec.ts",
+          "title": "native migrated briefing displays preserved responses and history without current approval",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "native-briefing-pilot.spec.ts",
+          "title": "native migrated briefing displays preserved responses and history without current approval",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-07",
+      "name": "Fase 07 - Strategy Studio e Editorial Generator",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Aceite editorial completo com fatos do cliente e demanda real",
+        "Revisar qualidade de copy/slides/roteiro com social media; motor determinístico não equivale a geração IA"
+      ],
+      "unit_tests": 77,
+      "browser_tests": 48,
+      "unit_files": [
+        "src/features/editorial/MonthlyEditorialPage.test.tsx",
+        "src/features/editorial/campaignEngine.test.ts",
+        "src/features/editorial/editorialContext.test.ts",
+        "src/features/editorial/editorialWizard.test.ts",
+        "src/features/editorial/monthlyPlanner.test.ts",
+        "src/features/social-media/SocialMediaPage.test.tsx",
+        "src/features/strategy/NewStrategyPage.test.tsx",
+        "src/features/strategy/StrategyPage.test.tsx",
+        "src/features/strategy/strategy-access.database.test.ts",
+        "src/features/strategy/strategy-delete.database.test.ts",
+        "src/features/strategy/strategy-policies.database.test.ts",
+        "src/features/strategy/strategy.test.tsx",
+        "src/features/strategy/services/editorialEngine.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator consumes client strategy pillars and preserves exact campaign quotas",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator consumes client strategy pillars and preserves exact campaign quotas",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator consumes client strategy pillars and preserves exact campaign quotas",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Social Media shows November data without selecting a client and opens the demand centrally",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "editorial groups campaigns by client and opens the chosen month",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design post",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design carousel",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy video reels",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Social Media shows November data without selecting a client and opens the demand centrally",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "editorial groups campaigns by client and opens the chosen month",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design post",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design carousel",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy video reels",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Social Media shows November data without selecting a client and opens the demand centrally",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "editorial groups campaigns by client and opens the chosen month",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design post",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design carousel",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy video reels",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "profile-only calendar requires reviewed suggestions and saves generated real payload",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "profile-only calendar requires reviewed suggestions and saves generated real payload",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "profile-only calendar requires reviewed suggestions and saves generated real payload",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social media connects selected client to the editorial workflow",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social workflow loads selected client and links its actual campaign stage",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social media connects selected client to the editorial workflow",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social workflow loads selected client and links its actual campaign stage",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social media connects selected client to the editorial workflow",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social workflow loads selected client and links its actual campaign stage",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-08",
+      "name": "Fase 08 - Proposal Studio e Commercial Proposals",
+      "status": "removed_verified",
+      "external_or_operational_pending": [],
+      "unit_tests": 1,
+      "browser_tests": 9,
+      "unit_files": [
+        "src/features/meetings/legacy-conversion.database.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "retired internal proposal URLs return to the dashboard without querying proposals",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "old public proposal links show retirement without any backend lookup",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "retired internal proposal URLs return to the dashboard without querying proposals",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "old public proposal links show retirement without any backend lookup",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "retired internal proposal URLs return to the dashboard without querying proposals",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "old public proposal links show retirement without any backend lookup",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-09",
+      "name": "Fase 09 - Google Drive e Presentation Studio",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Leitura e upload de arquivo real no Drive e pasta autorizada",
+        "Avaliação real por cliente e preview de fontes Google; qualidade depende da imagem original"
+      ],
+      "unit_tests": 81,
+      "browser_tests": 33,
+      "unit_files": [
+        "src/features/drive/drive.test.tsx",
+        "src/features/drive/taskDrive.database.test.ts",
+        "src/features/drive/taskDriveHandler.test.ts",
+        "src/features/drive/taskDriveSecurity.test.ts",
+        "src/features/integrations/DemandProductionFiles.test.tsx",
+        "src/features/integrations/driveProduction.test.ts",
+        "src/features/integrations/googleAgencyConnection.database.test.ts",
+        "src/features/integrations/googleCentralAuthorization.test.ts",
+        "src/features/integrations/googleDrive.test.ts",
+        "src/features/integrations/googleDriveDocuments.test.ts",
+        "src/features/integrations/googlePicker.test.ts",
+        "src/features/integrations/materialApproval.database.test.ts",
+        "src/features/integrations/metaInsights.test.ts",
+        "src/features/presentations/ClientPresentationDrivePicker.test.tsx",
+        "src/features/presentations/PresentationPreview.test.tsx",
+        "src/features/presentations/PresentationSectionEditor.test.tsx",
+        "src/features/presentations/PresentationWorkspacePage.test.tsx",
+        "src/features/presentations/clientPresentationDrive.test.ts",
+        "src/features/presentations/driveReferences.test.tsx",
+        "src/features/presentations/materialReviews.database.test.ts",
+        "src/features/presentations/presentations.test.tsx",
+        "src/features/presentations/showcase.database.test.ts",
+        "src/features/presentations/public/PublicShowcaseViewPage.test.tsx",
+        "src/features/presentations/pdf/preparePresentationMedia.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Meta returns campaign metrics and clears the old period when changing the filter",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Meta returns campaign metrics and clears the old period when changing the filter",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Meta returns campaign metrics and clears the old period when changing the filter",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "demand-drive-files.spec.ts",
+          "title": "demand Drive files list real folders and require explicit creation before direct multiupload",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "demand-drive-files.spec.ts",
+          "title": "demand Drive files list real folders and require explicit creation before direct multiupload",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "demand-drive-files.spec.ts",
+          "title": "demand Drive files list real folders and require explicit creation before direct multiupload",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "presentation fits its container and persists per-material decisions",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "presentation fits its container and persists per-material decisions",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "presentation fits its container and persists per-material decisions",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "presentation-preview.spec.ts",
+          "title": "public presentation displays project sections and original Drive material access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "presentation-preview.spec.ts",
+          "title": "public presentation displays project sections and original Drive material access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "presentation-preview.spec.ts",
+          "title": "public presentation displays project sections and original Drive material access",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-10",
+      "name": "Fase 10 - Meeting Hub + Team Chat",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Chat simultâneo de dois membros reais e notificações em navegador/dispositivo",
+        "Aceite da equipe na rotina reunião→ata→ação→tarefa; persistência e idempotência já verificadas no banco"
+      ],
+      "unit_tests": 44,
+      "browser_tests": 24,
+      "unit_files": [
+        "src/features/chat/ChatDriveAttachments.test.tsx",
+        "src/features/chat/WorkRooms.test.tsx",
+        "src/features/chat/chat-drive.database.test.ts",
+        "src/features/chat/chat-permissions.database.test.ts",
+        "src/features/chat/chat.database.test.ts",
+        "src/features/chat/chat.selectors.test.tsx",
+        "src/features/chat/chat.test.tsx",
+        "src/features/chat/chatDrive.test.ts",
+        "src/features/chat/room-presence.database.test.ts",
+        "src/features/calendar/calendar.test.ts",
+        "src/features/meetings/legacy-conversion.database.test.ts",
+        "src/features/meetings/meeting-transactions.database.test.ts",
+        "src/features/meetings/meetings.test.tsx",
+        "src/features/notifications/NotificationSoundController.test.tsx",
+        "src/features/notifications/notificationHistory.test.ts",
+        "src/features/notifications/notificationSounds.test.ts",
+        "src/features/notifications/notifications.test.tsx",
+        "src/features/notifications/operational-events.database.test.ts",
+        "src/features/meetings/hooks/meetingTransactions.test.tsx"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "personal agenda lists real API meetings and deadlines and links to creation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "personal agenda lists real API meetings and deadlines and links to creation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "personal agenda lists real API meetings and deadlines and links to creation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "personal agenda uses calendar, week, day and list without creating events",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "work rooms link to meetings and show the current presence scope",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "personal agenda uses calendar, week, day and list without creating events",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "work rooms link to meetings and show the current presence scope",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "personal agenda uses calendar, week, day and list without creating events",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "work rooms link to meetings and show the current presence scope",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "work room overview filters real rooms and enters their conversation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "work room overview filters real rooms and enters their conversation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "work room overview filters real rooms and enters their conversation",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-11",
+      "name": "Fase 11 - White Label Studio & Advanced Settings",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "OAuth e uploads reais Google/Meta devem ser homologados"
+      ],
+      "unit_tests": 69,
+      "browser_tests": 87,
+      "unit_files": [
+        "src/config/branding.test.ts",
+        "src/features/app-install/BrandedNotificationController.test.tsx",
+        "src/features/app-install/appRuntime.test.ts",
+        "src/features/app-install/serviceWorker.test.ts",
+        "src/features/public-site/sceneTimeline.test.ts",
+        "src/features/public-site/siteContent.test.ts",
+        "src/features/settings/IntegrationsCenterPage.test.tsx",
+        "src/features/settings/LivekitSettingsPage.test.tsx",
+        "src/features/settings/PermissionStudioPage.test.tsx",
+        "src/features/settings/agency-identity.database.test.ts",
+        "src/features/settings/birthday-job.database.test.ts",
+        "src/features/settings/google-oauth-database.test.ts",
+        "src/features/settings/permission-studio.database.test.ts",
+        "src/features/settings/releaseEvidence.test.ts",
+        "src/features/settings/settings.test.tsx",
+        "src/features/settings/import-clients/csv.test.ts",
+        "src/features/settings/import-clients/import-database.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google missing configuration does not simulate a connection",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google network error can be retried and configuration instructions identify OAuth client",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google missing configuration does not simulate a connection",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google network error can be retried and configuration instructions identify OAuth client",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google missing configuration does not simulate a connection",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google network error can be retried and configuration instructions identify OAuth client",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/agency",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/branding",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/appearance",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/team",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/permissions",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/workspace",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/documents",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/client-experience",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/google",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/import-clients",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/apps",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/security",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/activity",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/public-site",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "agency identity waits for real settings and atomically saves the actual contact fields",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/agency",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/branding",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/appearance",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/team",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/permissions",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/workspace",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/documents",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/client-experience",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/google",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/import-clients",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/apps",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/security",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/activity",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/public-site",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "agency identity waits for real settings and atomically saves the actual contact fields",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/agency",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/branding",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/appearance",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/team",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/permissions",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/workspace",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/documents",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/client-experience",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/google",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/import-clients",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/apps",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/security",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/activity",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/public-site",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "agency identity waits for real settings and atomically saves the actual contact fields",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "owner can edit a local draft; preview is scoped to agency and remote publish is gated",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "owner can edit a local draft; preview is scoped to agency and remote publish is gated",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "owner can edit a local draft; preview is scoped to agency and remote publish is gated",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    },
+    {
+      "id": "phase-12",
+      "name": "Fase 12 - Production Readiness, Final Audit, Security & Deployment Preparation",
+      "status": "verified",
+      "external_or_operational_pending": [
+        "Proteção de senhas vazadas do Auth desativada; funções privilegiadas e tabelas privadas com acesso intencional documentados",
+        "Teste operacional com membros/clientes reais e serviços externos",
+        "Validar backup/restauração, observabilidade e desempenho em condições reais"
+      ],
+      "unit_tests": 34,
+      "browser_tests": 364,
+      "unit_files": [
+        "src/app/router/router.test.tsx",
+        "src/features/auth/access.test.ts",
+        "src/features/auth/active-access.database.test.ts",
+        "src/features/auth/googleOAuth.test.ts",
+        "src/features/app-install/appRuntime.test.ts",
+        "src/features/app-install/serviceWorker.test.ts",
+        "src/features/platform/controlled-restore.database.test.ts",
+        "src/features/settings/releaseEvidence.test.ts"
+      ],
+      "browser_cases": [
+        {
+          "file": "agency-access.spec.ts",
+          "title": "unauthenticated deep route and reload require login",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "user with no active agency cannot enter the workspace",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "viewer cannot open the permission administration URL",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend client error is visible and never replaced with demo clients",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "logout ends the SDK session and protects a subsequent deep route",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid credentials never grants private access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid or expired session never grants private access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend unavailable never grants private access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "inactive membership excluded by server never grants private access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "personal agenda lists real API meetings and deadlines and links to creation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invite acceptance verifies token and sets the invited professional password",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace groups and filters real demands and creates in its project",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace respects consultation permissions and displays backend failure",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator consumes client strategy pillars and preserves exact campaign quotas",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google missing configuration does not simulate a connection",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Portuguese client export generates slug and translates status before confirmation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google network error can be retried and configuration instructions identify OAuth client",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "unauthenticated deep route and reload require login",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "user with no active agency cannot enter the workspace",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "viewer cannot open the permission administration URL",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend client error is visible and never replaced with demo clients",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "logout ends the SDK session and protects a subsequent deep route",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid credentials never grants private access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid or expired session never grants private access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend unavailable never grants private access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "inactive membership excluded by server never grants private access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "personal agenda lists real API meetings and deadlines and links to creation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invite acceptance verifies token and sets the invited professional password",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace groups and filters real demands and creates in its project",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace respects consultation permissions and displays backend failure",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator consumes client strategy pillars and preserves exact campaign quotas",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google missing configuration does not simulate a connection",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Portuguese client export generates slug and translates status before confirmation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google network error can be retried and configuration instructions identify OAuth client",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "unauthenticated deep route and reload require login",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "login preserves deep link and tenant switch clears client cache",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "user with no active agency cannot enter the workspace",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "viewer cannot open the permission administration URL",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend client error is visible and never replaced with demo clients",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "logout ends the SDK session and protects a subsequent deep route",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client form uses active tenant and survives reload through the API contract",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid credentials never grants private access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invalid or expired session never grants private access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "backend unavailable never grants private access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "inactive membership excluded by server never grants private access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "retired public proposal never loads private content or requires login",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "personal agenda lists real API meetings and deadlines and links to creation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team routes require permissions and cannot bypass access through a direct URL",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team invitation creates a manual link with the selected role and no false email confirmation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "team-only login hides Google and keeps workspace protected",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator imports briefing and respects format quantities",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "public editorial review accepts copy suggestions and closes after approval without login",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "grouped navigation preserves active section, settings footer and compact icon alignment",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "invite acceptance verifies token and sets the invited professional password",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "five notification sounds can be previewed and muted",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "new operational events play approval, production and client motifs without replaying history",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace groups and filters real demands and creates in its project",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "production workspace respects consultation permissions and displays backend failure",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "monthly generator consumes client strategy pillars and preserves exact campaign quotas",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "password visibility and staged CSV import preserve confirmation and tenant",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google missing configuration does not simulate a connection",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "client journey queries stay scoped and editorial keeps selected client",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "changing agency discards CSV review and confirmation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Portuguese client export generates slug and translates status before confirmation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "agency-access.spec.ts",
+          "title": "Google network error can be retried and configuration instructions identify OAuth client",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Social Media shows November data without selecting a client and opens the demand centrally",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Design groups the demand by client and opens the shared central dialog",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "video groups assigned test demands without inventing connected accounts",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "traffic groups assigned test demands without inventing connected accounts",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads a complete carousel and edits its full text without truncation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads script scenes in individual blocks",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "retired internal proposal URLs return to the dashboard without querying proposals",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "old public proposal links show retirement without any backend lookup",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Tasks starts with a client group and opens demands only after expansion",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management Kanban shows client columns and preserves the central demand dialog",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "diagnostics lists this delivery and its remaining external checks",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "personal agenda uses calendar, week, day and list without creating events",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Meta returns campaign metrics and clears the old period when changing the filter",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "editorial groups campaigns by client and opens the chosen month",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/agency",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/branding",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/appearance",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/team",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/permissions",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/workspace",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/documents",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/client-experience",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/google",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/import-clients",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/apps",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/security",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/activity",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/public-site",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "agency identity waits for real settings and atomically saves the actual contact fields",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "work rooms link to meetings and show the current presence scope",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "security reports unconfirmed server revocation and supports a subsequent successful logout",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management filters client, stage, completion and responsible without mixing groups",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management loads a later page without dropping or duplicating the first hundred demands",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management refreshes the card after editing its title inside the central popup",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design post",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design carousel",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy video reels",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /projects",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/design",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/video",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/traffic",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "dragging the collapsed client moves only that column group and denial leaves it unchanged",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments saves members by sector and persists after reopening the client",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments is read-only without edit permission and reports loading errors",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "office phase 01 disabled redirects to the unchanged chat",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Social Media shows November data without selecting a client and opens the demand centrally",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Design groups the demand by client and opens the shared central dialog",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "video groups assigned test demands without inventing connected accounts",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "traffic groups assigned test demands without inventing connected accounts",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads a complete carousel and edits its full text without truncation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads script scenes in individual blocks",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "retired internal proposal URLs return to the dashboard without querying proposals",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "old public proposal links show retirement without any backend lookup",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Tasks starts with a client group and opens demands only after expansion",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management Kanban shows client columns and preserves the central demand dialog",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "diagnostics lists this delivery and its remaining external checks",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "personal agenda uses calendar, week, day and list without creating events",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Meta returns campaign metrics and clears the old period when changing the filter",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "editorial groups campaigns by client and opens the chosen month",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/agency",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/branding",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/appearance",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/team",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/permissions",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/workspace",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/documents",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/client-experience",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/google",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/import-clients",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/apps",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/security",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/activity",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/public-site",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "agency identity waits for real settings and atomically saves the actual contact fields",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "work rooms link to meetings and show the current presence scope",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "security reports unconfirmed server revocation and supports a subsequent successful logout",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management filters client, stage, completion and responsible without mixing groups",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management loads a later page without dropping or duplicating the first hundred demands",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management refreshes the card after editing its title inside the central popup",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design post",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design carousel",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy video reels",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /projects",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/design",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/video",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/traffic",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "dragging the collapsed client moves only that column group and denial leaves it unchanged",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments saves members by sector and persists after reopening the client",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments is read-only without edit permission and reports loading errors",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "office phase 01 disabled redirects to the unchanged chat",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Social Media shows November data without selecting a client and opens the demand centrally",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Design groups the demand by client and opens the shared central dialog",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "video groups assigned test demands without inventing connected accounts",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "traffic groups assigned test demands without inventing connected accounts",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads a complete carousel and edits its full text without truncation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reads script scenes in individual blocks",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "retired internal proposal URLs return to the dashboard without querying proposals",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "old public proposal links show retirement without any backend lookup",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Tasks starts with a client group and opens demands only after expansion",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management Kanban shows client columns and preserves the central demand dialog",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "member cannot open the management aggregate but keeps production access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "diagnostics lists this delivery and its remaining external checks",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "personal agenda uses calendar, week, day and list without creating events",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "Meta returns campaign metrics and clears the old period when changing the filter",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "presentation PDF embeds artwork and downloads the previewed file",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefings are collapsed by client and preserve response and PDF routes",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "editorial groups campaigns by client and opens the chosen month",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/agency",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/branding",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/appearance",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/notifications",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/team",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/permissions",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/workspace",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/documents",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/client-experience",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/google",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/meta",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/integrations/import-clients",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/apps",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/security",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/activity",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "settings loads and refreshes /settings/public-site",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "agency identity waits for real settings and atomically saves the actual contact fields",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "work rooms link to meetings and show the current presence scope",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "security reports unconfirmed server revocation and supports a subsequent successful logout",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management filters client, stage, completion and responsible without mixing groups",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management loads a later page without dropping or duplicating the first hundred demands",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management refreshes the card after editing its title inside the central popup",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "management removes cached cards when the server revokes aggregate access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design post",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy design carousel",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "creates complete creative copy video reels",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /projects",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/design",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/video",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production group is collapsed and piece drag merges into the destination client /production/traffic",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "dragging the collapsed client moves only that column group and denial leaves it unchanged",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "production timeline uses editorial approval rather than briefing receipt",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "touch drag moves one Poster into the existing production group",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments saves members by sector and persists after reopening the client",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "client assignments is read-only without edit permission and reports loading errors",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "briefing PDF previews and downloads under the production security policy",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "reproduces the PDF WebAssembly failure when its policy permission is removed",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "internal PDF preview paginates long answers without native viewer controls",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "aurora-workflow.spec.ts",
+          "title": "office phase 01 disabled redirects to the unchanged chat",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "demand-drive-files.spec.ts",
+          "title": "demand Drive files list real folders and require explicit creation before direct multiupload",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "demand-drive-files.spec.ts",
+          "title": "demand Drive files list real folders and require explicit creation before direct multiupload",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "demand-drive-files.spec.ts",
+          "title": "demand Drive files list real folders and require explicit creation before direct multiupload",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "profile-only calendar requires reviewed suggestions and saves generated real payload",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "profile-only calendar requires reviewed suggestions and saves generated real payload",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "profile-only calendar requires reviewed suggestions and saves generated real payload",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "Drive briefing mirror shares reviewed context between briefing, client and calendar",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "editorial-profile.spec.ts",
+          "title": "generation save failure preserves reviewed inputs and never opens production",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "native-briefing-pilot.spec.ts",
+          "title": "native migrated briefing displays preserved responses and history without current approval",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "native-briefing-pilot.spec.ts",
+          "title": "native migrated briefing displays preserved responses and history without current approval",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "native-briefing-pilot.spec.ts",
+          "title": "native migrated briefing displays preserved responses and history without current approval",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /dashboard",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /clients",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /social-media",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /projects",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /tasks",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /strategy/new",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /chat",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "work room overview filters real rooms and enters their conversation",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social media connects selected client to the editorial workflow",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social workflow loads selected client and links its actual campaign stage",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "presentation fits its container and persists per-material decisions",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /dashboard",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /clients",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /social-media",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /projects",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /tasks",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /strategy/new",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /chat",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "work room overview filters real rooms and enters their conversation",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social media connects selected client to the editorial workflow",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social workflow loads selected client and links its actual campaign stage",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "presentation fits its container and persists per-material decisions",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /dashboard",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /clients",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /briefings",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /social-media",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /projects",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /tasks",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/design",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/video",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /production/traffic",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /meetings/new",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /settings",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /strategy/new",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /editorial/new",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "authenticated route refresh /chat",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "work room overview filters real rooms and enters their conversation",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social media connects selected client to the editorial workflow",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "social workflow loads selected client and links its actual campaign stage",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "platform-readiness.spec.ts",
+          "title": "presentation fits its container and persists per-material decisions",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "presentation-preview.spec.ts",
+          "title": "public presentation displays project sections and original Drive material access",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "presentation-preview.spec.ts",
+          "title": "public presentation displays project sections and original Drive material access",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "presentation-preview.spec.ts",
+          "title": "public presentation displays project sections and original Drive material access",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "profile-squads.spec.ts",
+          "title": "profile without photo saves identity and squad membership stays agency scoped",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "profile-squads.spec.ts",
+          "title": "profile without photo saves identity and squad membership stays agency scoped",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "profile-squads.spec.ts",
+          "title": "profile without photo saves identity and squad membership stays agency scoped",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "mobile menu and FAQ are accessible and do not lose the contact route",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "scroll changes camera on desktop; mobile and reduced motion show every project",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "brief validates contact, keeps values between steps, and never fakes reception",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "owner can edit a local draft; preview is scoped to agency and remote publish is gated",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "portfolio details, hero loop and footer branding preserve the public contact flow",
+          "project": "desktop",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "mobile menu and FAQ are accessible and do not lose the contact route",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "scroll changes camera on desktop; mobile and reduced motion show every project",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "brief validates contact, keeps values between steps, and never fakes reception",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "owner can edit a local draft; preview is scoped to agency and remote publish is gated",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "portfolio details, hero loop and footer branding preserve the public contact flow",
+          "project": "tablet",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "public home renders independently of login, serves assets and links to a quick brief",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "mobile menu and FAQ are accessible and do not lose the contact route",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "scroll changes camera on desktop; mobile and reduced motion show every project",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "brief validates contact, keeps values between steps, and never fakes reception",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "owner can edit a local draft; preview is scoped to agency and remote publish is gated",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "viewer cannot enter public site management",
+          "project": "mobile",
+          "status": "passed"
+        },
+        {
+          "file": "public-site.spec.ts",
+          "title": "portfolio details, hero loop and footer branding preserve the public contact flow",
+          "project": "mobile",
+          "status": "passed"
+        }
+      ],
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md"
+    }
+  ],
+  "verified_at": "2026-10-15T13:37:34.027387+02:00",
+  "checks": {
+    "unit": {
+      "passed": 466,
+      "files": 127
+    },
+    "browser": {
+      "passed": 364,
+      "skipped": 20,
+      "projects": [
+        "desktop",
+        "mobile",
+        "tablet"
+      ]
+    },
+    "scope": "controlled_API_and_PGlite_not_live_external_services"
+  },
+  "source_reports": [
+    "/private/tmp/doiszero-platform-unit-final.json",
+    "/private/tmp/doiszero-platform-browser-baseline.json",
+    "/private/tmp/doiszero-platform-browser-retest.json",
+    "/private/tmp/doiszero-platform-browser-retest2.json",
+    "/private/tmp/doiszero-platform-browser-retest3.json",
+    "/private/tmp/doiszero-platform-browser-pdf-final.json",
+    "/private/tmp/doiszero-platform-browser-diagnostics-verified.json"
+  ]
+}

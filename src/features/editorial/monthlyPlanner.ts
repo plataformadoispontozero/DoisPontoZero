@@ -24,6 +24,8 @@ export interface EditorialContext {
   changeNote?: string;
   strategyId?: string;
   briefingRevision?: string;
+  driveBriefDocumentId?: string;
+  driveBriefVersion?: string;
   repertoireVersion?: number;
   engineVersion?: string;
 }

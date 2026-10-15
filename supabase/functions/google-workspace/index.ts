@@ -131,8 +131,8 @@ Deno.serve(async(req:Request)=>{
     return reply({folderId:folderData.id,driveUrl})
    }
    const clientFolder=folderIdFromUrl(client.data.profile?.drive_url)
+   if(!clientFolder)return reply({error:'Cadastre o link da pasta do Drive no perfil deste cliente.'},409)
    let folder=clientFolder
-   if(!folder)return reply({error:'Cadastre o link da pasta do Drive no perfil deste cliente.'},409)
    const root=folderIdFromUrl(requestConfig.rootFolderUrl)
    if(!root)return reply({error:'O administrador precisa configurar a pasta raiz da agência antes de acessar os materiais dos clientes.'},409)
    const withinRoot=await isFolderDescendant(folder,root,async(id)=>{const r=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=parents,trashed&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${token.access_token}`}});if(!r.ok)throw Error('Pasta não disponível.');const m=await r.json();return m.trashed?[]:(m.parents||[])})

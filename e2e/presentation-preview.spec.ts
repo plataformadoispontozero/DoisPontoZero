@@ -9,6 +9,6 @@ test('public presentation displays project sections and original Drive material 
   await expect(page.getByRole('heading',{name:'Campanha visual de outubro'})).toBeVisible()
   await expect(page.getByRole('heading',{name:'Identidade em movimento'})).toBeVisible()
   await expect(page.getByRole('img',{name:'Peça principal'})).toBeVisible()
-  await expect(page.getByRole('link',{name:'Abrir material no Drive'})).toHaveAttribute('href','https://drive.google.com/file/d/test-material/view')
+  await expect(page.getByRole('link',{name:/Drive/})).toHaveCount(0);await page.getByRole('button',{name:'Ampliar Peça principal',exact:true}).click();await expect(page.getByRole('dialog').getByRole('img',{name:'Visualização ampliada de Peça principal'})).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 })

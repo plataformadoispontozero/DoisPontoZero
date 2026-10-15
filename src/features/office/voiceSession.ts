@@ -1,7 +1,8 @@
 import {Room,RoomEvent,ConnectionState,type Participant} from 'livekit-client'
-export interface VoiceSnapshot {roomId:string|null;roomName:string;state:'idle'|'connecting'|'connected'|'reconnecting'|'error';microphone:boolean;microphoneBusy:boolean;audioBlocked:boolean;error:string|null;participants:{id:string;name:string;speaking:boolean;microphone:boolean;quality:string}[]}
-export const initialVoice:VoiceSnapshot={roomId:null,roomName:'',state:'idle',microphone:false,microphoneBusy:false,audioBlocked:false,error:null,participants:[]}
-export type VoiceToken={token:string;serverUrl:string;expiresIn:number}
+import {voiceEntryMessage} from './voiceErrors'
+import {initialVoice,type VoiceSnapshot,type VoiceToken} from './voiceState'
+export {initialVoice} from './voiceState'
+export type {VoiceSnapshot,VoiceToken} from './voiceState'
 export class OfficeVoiceSession {
  room:Room|null=null
  private generation=0
@@ -22,11 +23,12 @@ export class OfficeVoiceSession {
    if(this.room){const old=this.room;this.room=null;old.removeAllListeners();await old.disconnect(true)}
    if(generation!==this.generation)return
    let room:Room|null=null
+   let stage:'token'|'connection'='token'
    try{
     this.request=new AbortController()
     const credentials=await this.token(id,this.request.signal)
     if(generation!==this.generation)return
-    room=this.create();this.room=room
+    stage='connection';room=this.create();this.room=room
     const refresh=()=>{if(this.room===room&&generation===this.generation)this.members(room!)}
     room.on(RoomEvent.ConnectionStateChanged,state=>{if(this.room===room&&generation===this.generation)this.emit({state:state===ConnectionState.Connected?'connected':state===ConnectionState.Reconnecting||state===ConnectionState.SignalReconnecting?'reconnecting':'connecting'})})
     for(const event of [RoomEvent.ParticipantConnected,RoomEvent.ParticipantDisconnected,RoomEvent.ActiveSpeakersChanged,RoomEvent.TrackMuted,RoomEvent.TrackUnmuted,RoomEvent.LocalTrackPublished,RoomEvent.LocalTrackUnpublished,RoomEvent.ConnectionQualityChanged,RoomEvent.AudioPlaybackStatusChanged])room.on(event,refresh)
@@ -35,7 +37,7 @@ export class OfficeVoiceSession {
     await room.connect(credentials.serverUrl,credentials.token,{autoSubscribe:true})
     if(generation!==this.generation){room.removeAllListeners();await room.disconnect(true);if(this.room===room)this.room=null;return}
     this.emit({state:'connected'});this.members(room)
-   }catch{if(room){room.removeAllListeners();await room.disconnect(true);if(this.room===room)this.room=null}if(generation===this.generation)this.emit({...initialVoice,state:'error',error:'Não foi possível entrar na sala. Confira sua sessão, as permissões e a configuração do LiveKit; tente novamente.'})}
+   }catch(error){if(room){room.removeAllListeners();await room.disconnect(true);if(this.room===room)this.room=null}if(generation===this.generation)this.emit({...initialVoice,state:'error',error:voiceEntryMessage(error,stage)})}
   });return this.queue
  }
  leave(){this.request?.abort();++this.generation;const room=this.room;this.room=null;room?.removeAllListeners();this.emit({...initialVoice});this.queue=this.queue.catch(()=>{}).then(async()=>{await room?.disconnect(true)});return this.queue}

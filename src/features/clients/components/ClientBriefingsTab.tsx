@@ -1,3 +1,4 @@
+import {DriveBriefingsPanel} from '@/features/briefing/DriveBriefingsPanel'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 06: CLIENT HUB — BRIEFINGS TAB COMPONENT
@@ -131,6 +132,7 @@ export const ClientBriefingsTab: React.FC<ClientBriefingsTabProps> = ({
           })}
         </div>
       )}
+      <DriveBriefingsPanel clientId={clientId}/>
     </div>
   )
 }

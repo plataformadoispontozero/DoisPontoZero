@@ -1,16 +1,17 @@
 {
-  "id": "pdf-editorial-preview-20261014",
-  "title": "PDF editorial e prévia interna",
-  "verified_at": "2026-10-14",
+  "id": "platform-controlled-homologation-20261015",
+  "title": "Homologação técnica controlada por fase",
+  "verified_at": "2026-10-15",
   "status": "published",
-  "evidence": "docs/qa/pdf-editorial-preview-2026-10-14.md",
+  "evidence": "docs/qa/platform-homologation-2026-10-14.md",
   "checks": [
-    "427 testes de regressão aprovados",
-    "8 cenários PDF aprovados: desktop e celular",
-    "Prévia interna em canvas: sem iframe ou barra nativa",
-    "Briefing extenso: última resposta preservada e paginação conferida",
-    "Diagramação revisada a partir do PDF e código do legado",
-    "PDF.js 6.4.299 fixado; worker servido pela própria plataforma"
+    "466 testes de regressão aprovados em 127 arquivos",
+    "364 cenários de navegador aprovados: desktop, tablet e celular",
+    "11 fases com cobertura controlada; Propostas removido verificado",
+    "Restore PGlite controlado: dados, grants e isolamento",
+    "Banco remoto: sete verificações com rollback",
+    "Endpoints publicados: sessão ausente recusada",
+    "Serviços reais e aceite operacional permanecem identificados"
   ],
   "deliveries": [
     {
@@ -21,7 +22,8 @@
         "phase-04"
       ],
       "result": "Um grupo recolhível por cliente; clientes com demandas em andamento na área de Tarefas.",
-      "pending": []
+      "pending": [],
+      "technical_status": "verified"
     },
     {
       "id": "manager-kanban",
@@ -45,7 +47,8 @@
       "result": "Campanhas agrupadas por cliente e mês, com acesso à revisão de copy, direção visual e aprovação.",
       "pending": [
         "Homologação do conteúdo editorial gerado para uma campanha real."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "briefing-groups",
@@ -54,7 +57,8 @@
         "phase-06"
       ],
       "result": "Grupos por cliente, filtros de busca e status, respostas e PDF; dados e histórico preservados.",
-      "pending": []
+      "pending": [],
+      "technical_status": "verified"
     },
     {
       "id": "personal-agenda",
@@ -63,7 +67,8 @@
         "phase-10"
       ],
       "result": "Mês, semana, dia e lista com reuniões pessoais, prazos atribuídos e indicação do fuso horário.",
-      "pending": []
+      "pending": [],
+      "technical_status": "verified"
     },
     {
       "id": "meta-campaigns",
@@ -74,7 +79,8 @@
       "result": "Períodos de 7, 30 e 90 dias, resumo da conta, métricas de campanhas e ações reportadas pelo Meta.",
       "pending": [
         "Validar a leitura com autorização ads_read ativa e uma conta de anúncios real vinculada ao cliente."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "presentation-pdf",
@@ -85,7 +91,8 @@
       "result": "PDF com capa, textos, materiais visuais, proporções preservadas e paginação; preview e download consistentes.",
       "pending": [
         "Validar thumbnails de materiais privados do Drive com a conexão real da agência."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "diagnostics",
@@ -96,7 +103,8 @@
       "result": "Registro das entregas publicadas, checagens e pendências por fase, sem declarar a plataforma integralmente homologada.",
       "pending": [
         "Aceite operacional das integrações externas e da plataforma como um todo."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "permission-matrix",
@@ -108,7 +116,8 @@
       "result": "Matriz salva por transação; OWNER protegido, mudanças por célula e cache por sessão. Revogação aplicada também a Chat e Estratégia.",
       "pending": [
         "Validar convite e recuperação por e-mail com SMTP real e cadastro/aprovação de dois membros."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "settings-data",
@@ -117,7 +126,8 @@
         "phase-11"
       ],
       "result": "Formulários aguardam o banco; identidade, contato, site, horário e preferências são salvos juntos. Registros ausentes inicializados sem substituir valores existentes.",
-      "pending": []
+      "pending": [],
+      "technical_status": "verified"
     },
     {
       "id": "birthdays",
@@ -126,7 +136,8 @@
         "phase-05"
       ],
       "result": "Rotina privada por hora, fuso da agência e controle anual de duplicação. Execuções automáticas confirmadas no servidor.",
-      "pending": []
+      "pending": [],
+      "technical_status": "verified"
     },
     {
       "id": "meeting-operations",
@@ -137,7 +148,8 @@
       "result": "Persistência transacional de pauta, ata, decisões e ações; conversão em tarefa idempotente, com responsáveis reais e erros tratados. Verificado no banco com rollback.",
       "pending": [
         "Aceite da equipe no uso diário com dois membros autenticados."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "chat-materials",
@@ -149,7 +161,8 @@
       "result": "Escopo confirmado: chat, presença e acesso às reuniões. Material do Drive vinculado à conversa com metadados; leitura revalida acesso ao chat, cliente e pasta.",
       "pending": [
         "Testar envio e download de um arquivo privado real do Drive entre dois membros."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "operational-events",
@@ -160,7 +173,8 @@
       "result": "Mudanças de calendário, cliente e produção geram notificações no servidor para destinatários autorizados. Sons usam apenas avisos da sessão atual.",
       "pending": [
         "Conferir recebimento e permissões do navegador com dois membros reais."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "access-hardening",
@@ -173,7 +187,8 @@
       "result": "Agência, vínculo e papel atuais validados; ranking/progresso protegidos, conversão antiga retirada e endpoints antigos de propostas desativados. Funções internas bloqueadas ao acesso anônimo.",
       "pending": [
         "Ativar a proteção de senhas vazadas nas configurações de Auth do Supabase."
-      ]
+      ],
+      "technical_status": "verified"
     },
     {
       "id": "production-client-cards",
