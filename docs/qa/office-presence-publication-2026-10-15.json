@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-15",
+  "source_commit": "7d268fc",
+  "review_version": "2d256e13-e9f2-4c72-b679-9f2757090fb4",
+  "checks": {
+    "office_unit_tests": 36,
+    "unit_files": 10,
+    "two_session_SDK_browser_scenarios": 1,
+    "typecheck": "passed",
+    "lint": "passed_with_existing_warnings"
+  },
+  "publication": [
+    {
+      "environment": "office-phase01-release",
+      "url": "https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev",
+      "html_verified": true,
+      "headers_verified": true,
+      "assets": [
+        {
+          "file": "DiagnosticsPage-biHXYkIE.js",
+          "sha256": "0d92242c79e89479cead63f7b87d5e9b2ba837dfb4c3cc272c5b5d072c15bc21"
+        },
+        {
+          "file": "OfficeVoiceProvider-Bv_Z6TLC.js",
+          "sha256": "831cbdf219cd34f424905bb5f8522b16ac88fc14c7c679bf39b3ee927c2a78e5"
+        },
+        {
+          "file": "index-CnjcG3Jx.js",
+          "sha256": "8e88837cf0d9e1b9d6de708dbb538bb88f0a8c4802b91e93b96c4c52752c66ef"
+        }
+      ]
+    }
+  ],
+  "phase05": "in_homologation",
+  "real_presence_validation": "pending",
+  "phase06": "not_started_blocked"
+}

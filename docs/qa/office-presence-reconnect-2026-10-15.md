@@ -20,3 +20,6 @@ Aguardar untrack antes de remover os canais; limitar a confirmação a 1,6 segun
 - Build compilado com Escritório Digital habilitado e API controlada aprovado.
 - Teste com duas sessões do SDK passou: dois usuários online, atualização de disponibilidade para o colega, navegação SPA sem perder a presença e saída/reconexão explícita. WebSocket simulado segue o protocolo Phoenix; não usa credenciais ou contas reais.
 - A Fase 05 continua em homologação; teste real de presença e aceite permanecem pendentes. Fase 06 bloqueada.
+
+## Publicação confirmada
+Commit 7d268fc enviado para feat/escritorio-digital. Deploy de homologação: 2d256e13-e9f2-4c72-b679-9f2757090fb4. HTML e bundles de entrada, diagnósticos e voz conferidos byte a byte por HTTPS usando Chrome; CSP e Permissions-Policy conferidas. Recibo: docs/qa/office-presence-publication-2026-10-15.json. Conferência real da presença e aceite ainda pendentes.

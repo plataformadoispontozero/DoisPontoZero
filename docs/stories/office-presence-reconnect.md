@@ -6,7 +6,7 @@
 - [x] Testes unitários do ciclo e da ausência de confirmação.
 - [x] Navegador, typecheck, lint e regressão afetada finais.
 - [x] Registrar teste real de voz informado pelo usuário; manter Fase 05 em homologação e Fase 06 bloqueada.
-- [ ] Push, deploy e conferência dos artefatos publicados.
+- [x] Push, deploy e conferência dos artefatos publicados.
 - [ ] Aceite real da presença pelo responsável.
 
 ## Arquivos
@@ -17,3 +17,5 @@
 - docs/office/PHASE_STATUS.json
 - docs/stories/office-phase05.md
 - docs/qa/office-presence-reconnect-2026-10-15.md
+
+- docs/qa/office-presence-publication-2026-10-15.json
