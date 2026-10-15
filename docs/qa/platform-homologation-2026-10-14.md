@@ -71,3 +71,8 @@ Commit cd1e753 enviado à branch feat/escritorio-digital. Produção: 981309d8-c
 Usuário retornou VOICE_CONNECTION: emissão concluída, falha posterior ao token. Instrumentação refinada com motivos seguros do SDK (recusa, timeout, WebSocket, inacessível) e evento SignalConnected para distinguir transporte de áudio. Dez testes afetados, typecheck e lint sem erros aprovados. Não é prova de conexão real corrigida; homologação da Fase 05 continua bloqueada.
 
 Atualização de voz 4cfa93b publicada e conferida byte a byte: produção 62f93e7e-85e4-4685-9470-d22bbc018693; homologação d6ab689c-0ce4-4186-8e8b-c9504fbe8c08. Aguardando retorno do código específico do navegador; não houve aceite de voz. Retomada automática pausada porque a homologação técnica geral foi encerrada e a investigação atual depende da tentativa autenticada do usuário.
+
+## Investigação de VOICE_SIGNAL_UNREACHABLE — 15/10/2026
+URL pública informada pelo usuário: wss://dois-zero-e70l3qs9.livekit.cloud. HTTPS HEAD retornou 200. Chrome sob a CSP publicada alcançou raiz, /settings/regions e /rtc/validate; com credencial deliberadamente inválida retornaram 401 invalid authorization token. WebSocket alcançou o serviço e recebeu recusa de autenticação esperada.
+
+SDK instalado livekit-client 2.22.4, build UMD oficial carregado somente por interceptação local do teste, tentou /rtc/v1 e retornou ConnectionError reason=0/status=401 com credencial de teste inválida. Portanto, esse ambiente alcança e classifica corretamente a recusa. Isso não comprova funcionamento no navegador do usuário ou com o token real. Solicitação pendente: abrir a raiz HTTPS no navegador onde falhou e informar se é navegador interno ou Chrome/Safari externo. Nenhuma chave/token real foi solicitado, lido ou usado no teste.
