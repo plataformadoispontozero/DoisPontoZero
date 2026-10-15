@@ -23,5 +23,5 @@ export async function authorizePresentationMedia(request:Request,input:{assetId:
      const reference=await admin.from('drive_file_references').select('google_file_id,parent_folder_id,availability_status').eq('id',asset.file_reference_id).eq('agency_id',agency).maybeSingle()
      if(reference.error||!reference.data||reference.data.availability_status!=='available')return null
      return {agencyId:agency,fileId:reference.data.google_file_id,folderId:reference.data.parent_folder_id}
-    
+
 }

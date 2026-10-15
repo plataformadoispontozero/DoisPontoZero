@@ -28,3 +28,5 @@ Publicação frontend e verificação visual final registradas no recibo complem
 Produção: versão Cloudflare `7e140b3f-7ffb-4053-ab38-75270e70cd78`. Homologação: `370e47d3-95f0-4d4d-905c-f7c91536f2fa`. HTML, chunks de navegação/diagnósticos/voz e políticas dos dois ambientes conferidos byte a byte contra builds isolados com configuração pública real.
 
 No link público da Ambience, as seis imagens carregaram no Chrome em resolução 2880 × 3840, inclusive após recarregar a página. Foram doze respostas HTTP 200 para mídia em duas passagens, sem erros JavaScript. Nenhuma decisão de aprovação ou dado da apresentação foi alterado durante a conferência.
+
+Inspeção visual: seis capturas individuais após decode() e rolagem confirmaram a pintura das imagens. Recibo versionado em docs/qa/office-media-publication-2026-10-15.json. Commit funcional publicado: c3cf581. Ajuste posterior apenas de whitespace e lista de arquivos da story.

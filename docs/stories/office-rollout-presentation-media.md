@@ -28,3 +28,5 @@
 - docs/office/PHASE_STATUS.json
 - docs/RELEASE_STATUS.json
 - docs/qa/office-rollout-presentation-media-2026-10-15.md
+- docs/qa/office-media-publication-2026-10-15.json
+- docs/stories/office-rollout-presentation-media.md
