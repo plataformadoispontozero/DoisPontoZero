@@ -1,7 +1,7 @@
 {
   "date": "2026-10-15",
-  "source_commit": "7d268fc",
-  "review_version": "2d256e13-e9f2-4c72-b679-9f2757090fb4",
+  "source_commit": "6f5fcfe",
+  "review_version": "193edbed-5d53-4113-8188-b91f285a45d9",
   "checks": {
     "office_unit_tests": 36,
     "unit_files": 10,
@@ -17,21 +17,22 @@
       "headers_verified": true,
       "assets": [
         {
-          "file": "DiagnosticsPage-biHXYkIE.js",
-          "sha256": "0d92242c79e89479cead63f7b87d5e9b2ba837dfb4c3cc272c5b5d072c15bc21"
+          "file": "DiagnosticsPage-BUVvc2lv.js",
+          "sha256": "106b090078d5aab44ae1464b5e8838871840a0feba19fe47b0b0d0706d64615e"
         },
         {
-          "file": "OfficeVoiceProvider-Bv_Z6TLC.js",
-          "sha256": "831cbdf219cd34f424905bb5f8522b16ac88fc14c7c679bf39b3ee927c2a78e5"
+          "file": "OfficeVoiceProvider-DBQwoDjc.js",
+          "sha256": "b3fe3b62cfa4e18a692d764035a379eeae22c7ac1363fcac93b95b14ea18b60e"
         },
         {
-          "file": "index-CnjcG3Jx.js",
-          "sha256": "8e88837cf0d9e1b9d6de708dbb538bb88f0a8c4802b91e93b96c4c52752c66ef"
+          "file": "index-D2Q2XFqA.js",
+          "sha256": "adac5a4d9789bd3e9ed6657f228bdec04ee1aec1a1e4a7bcc716d196b9747081"
         }
       ]
     }
   ],
   "phase05": "in_homologation",
-  "real_presence_validation": "pending",
-  "phase06": "not_started_blocked"
+  "real_presence_validation": "confirmed_by_responsible_safari_chrome",
+  "phase06": "not_started_blocked",
+  "confirmation": "Sim, presença e reconexão funcionaram"
 }
