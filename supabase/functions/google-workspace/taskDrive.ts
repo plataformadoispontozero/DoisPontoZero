@@ -42,6 +42,20 @@ export async function handleTaskDrive(input:Input):Promise<Response>{
    const files=(data.files||[]).filter((m:{parents?:string[];mimeType?:string})=>m.parents?.includes(target.id)&&m.mimeType!=='application/vnd.google-apps.shortcut');
    return reply({client:{id:c.clientId,name:c.clientName},root:{id:root.id,name:root.name},folder:folderView(target),folders:files.filter((m:{mimeType:string})=>m.mimeType===FOLDER).map(folderView),files:files.filter((m:{mimeType:string})=>m.mimeType!==FOLDER),attachments:gallery.data||[],savedFolderId:c.savedFolderId,period:{dueDate:c.dueDate,editorialMonth:c.editorialMonth||null},canManage:c.canManage,canAuthorize:centralAdmin,destinationWarning,nextPageToken:data.nextPageToken||null});
   }
+  if(body.action==='task-drive-import-file'){
+   if(!c.canManage)throw new DriveError('Sem permissão para vincular arquivos a esta demanda.',403);
+   if(!id(body.fileId))throw new DriveError('Arquivo do Drive inválido.');
+   const m=await meta(body.fileId);
+   if(m.trashed||m.mimeType===FOLDER||!m.parents?.includes(target.id))throw new DriveError('Selecione um arquivo que esteja diretamente na pasta escolhida.',403);
+   if(!/^image\/(png|jpeg|webp|gif|avif)$/.test(String(m.mimeType))||!Number.isSafeInteger(Number(m.size))||Number(m.size)<1||Number(m.size)>524288000)throw new DriveError('Selecione uma imagem PNG, JPG, WebP, GIF ou AVIF de até 500 MB.');
+   if(!m.version)throw new DriveError('O Google Drive não retornou a versão desta imagem. Atualize a pasta e tente novamente.');
+   const driveUrl=`https://drive.google.com/file/d/${m.id}/view`;
+   const inserted=await admin.from('task_attachments').insert({agency_id:c.agencyId,task_id:c.taskId,client_id:c.clientId,file_name:m.name,storage_path:`drive:${m.id}`,mime_type:m.mimeType,file_size:Number(m.size),uploaded_by:userId,storage_provider:'google_drive',google_file_id:m.id,google_folder_id:target.id,google_file_version:String(m.version),google_drive_url:driveUrl}).select('*').maybeSingle();
+   if(inserted.error&&inserted.error.code!=='23505')throw new DriveError('Não foi possível vincular esta imagem à demanda.',503);
+   let attachment=inserted.data;
+   if(!attachment){const existing=await admin.from('task_attachments').select('*').eq('task_id',c.taskId).eq('google_file_id',m.id).eq('storage_provider','google_drive').maybeSingle();if(existing.error||!existing.data)throw new DriveError('A imagem já está vinculada, mas não foi possível atualizar a referência.',503);attachment=existing.data;}
+   return reply({attachment});
+  }
   if(!c.canManage&&body.action!=='task-drive-preview')throw new DriveError('Sem permissão para gerenciar arquivos desta demanda.',403);
   if(body.action==='task-drive-set-folder'){
    const saved=await admin.from('tasks').update({google_drive_folder_id:target.id}).eq('id',c.taskId).eq('agency_id',c.agencyId);if(saved.error)throw new DriveError('Não foi possível salvar o destino.',503);return reply({folder:folderView(target),savedFolderId:target.id});
