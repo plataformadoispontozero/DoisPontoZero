@@ -19,7 +19,7 @@ Convites de voz privados entre membros autorizados do mesmo tenant, usando as sa
 - Migração `20261018230000_office_phase07_voice_invitations.sql` aplicada no projeto Supabase `doispontozero` (branch `main`, compartilhado pelos workers) e verificada: tabela existe, `authenticated` tem leitura condicionada por RLS, `anon` não tem SELECT. O ciclo de convite/cancelamento no worker confirmou RPCs.
 - Versão inicial do worker: `a33c0e0a-b12e-4b18-84c6-1db0ef4fb7ec`; versão com painel atualizado: `c07dc8fb-bda4-4ba7-92e6-bc0b2140741d`.
 - URL de revisão: https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev/office
-- Produção não recebeu deploy e a flag `VITE_ENABLE_OFFICE_CALLS` permanece desligada no build de produção.
+- O recurso de convites privados permanece desligado em produção (`VITE_ENABLE_OFFICE_CALLS=false`). A página pública exibe as Fases 06 e 07 como “Em homologação”; Worker atualizado para o rótulo combinado em 19/10/2026, versão `551c94e2-140d-4bc8-831e-0a43590ca925`.
 
 ## Homologação
 
