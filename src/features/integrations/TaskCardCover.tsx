@@ -7,10 +7,11 @@ export interface TaskCoverImage {attachment_id:string;file_name:string}
 export interface TaskCover {task_id:string;attachment_id:string;file_name:string;selected:boolean;gallery?:TaskCoverImage[]}
 export function useTaskCardCovers(taskIds:string[]){
  const agency=useAgencyId(),ids=[...new Set(taskIds)].sort(),key=ids.join(',')
- return useQuery<TaskCover[]>({queryKey:['task-card-covers',agency,key],enabled:!!supabase&&!!agency&&ids.length>0,staleTime:60000,queryFn:async()=>{const covers:TaskCover[]=[];for(let i=0;i<ids.length;i+=500){const r=await supabase!.rpc('get_task_card_covers',{p_tasks:ids.slice(i,i+500)});if(r.error)throw r.error;covers.push(...(r.data||[]))}return covers}})
+ return useQuery<TaskCover[]>({queryKey:['task-card-covers',agency,key],enabled:!!supabase&&!!agency&&ids.length>0,staleTime:0,refetchOnMount:'always',queryFn:async()=>{const covers:TaskCover[]=[];for(let i=0;i<ids.length;i+=500){const r=await supabase!.rpc('get_task_card_covers',{p_tasks:ids.slice(i,i+500)});if(r.error)throw r.error;covers.push(...(r.data||[]))}return covers}})
 }
 export function TaskCardCover({cover,onOpen,carousel=false}:{cover:TaskCover;onOpen?:()=>void;carousel?:boolean}){
  const agencyId=useAgencyId(),images=cover.gallery?.length?cover.gallery:[{attachment_id:cover.attachment_id,file_name:cover.file_name}], [index,setIndex]=useState(0),[url,setUrl]=useState(''),[error,setError]=useState(false),gesture=useRef<{x:number;y:number;id:number}|null>(null)
+ useEffect(()=>{setIndex(0)},[cover.task_id,cover.attachment_id,cover.gallery?.map(i=>i.attachment_id).join(':')])
  const current=images[Math.min(index,images.length-1)]||images[0]
  useEffect(()=>{let active=true,objectUrl='';setUrl('');setError(false);void googleDriveRequest('task-drive-preview',{agencyId,taskId:cover.task_id},{attachmentId:current.attachment_id}).then(blob=>{if(!active||!(blob instanceof Blob))return;objectUrl=URL.createObjectURL(blob);setUrl(objectUrl)}).catch(()=>{if(active)setError(true)});return()=>{active=false;if(objectUrl)URL.revokeObjectURL(objectUrl)}},[agencyId,cover.task_id,current.attachment_id])
  const move=(delta:number)=>setIndex(i=>(Math.min(i,images.length-1)+delta+images.length)%images.length)

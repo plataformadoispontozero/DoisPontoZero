@@ -14,6 +14,8 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/Badge'
 import type { Task } from '@/types/projects'
 import { PRIORITY_CONFIG, formatDate, isOverdue } from '@/features/projects/utils/projectUtils'
+import {TaskCardCover,useTaskCardCovers} from '@/features/integrations/TaskCardCover'
+import {parseDemandContent} from '@/features/projects/components/parseDemandContent'
 
 interface TaskCardProps {
   task: Task
@@ -22,6 +24,8 @@ interface TaskCardProps {
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging }) => {
+  const coverQuery=useTaskCardCovers([task.id])
+  const cover=coverQuery.data?.find(item=>item.task_id===task.id)
   const {
     attributes,
     listeners,
@@ -57,6 +61,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, isDragging })
       )}
       onClick={() => !isSortableDragging && onClick(task)}
     >
+      {cover&&<TaskCardCover cover={cover} onOpen={()=>onClick(task)} carousel={parseDemandContent(task.description||'',task.title).kind==='Carrossel'}/>}
       {/* Drag handle */}
       <div
         {...attributes}
