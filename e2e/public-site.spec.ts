@@ -68,10 +68,10 @@ test("public home renders independently of login, serves assets and links to a q
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Sua marca merece",
   );
-  await expect(page.locator(".dz-hero-logo")).toBeVisible();
+  await expect(page.locator(".dz-hero-logo").first()).toBeVisible();
   expect(
     await page
-      .locator(".dz-hero-logo")
+      .locator(".dz-hero-logo").first()
       .evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0),
   ).toBe(true);
   await expect(page.locator(".dz-client-logo").first()).toBeAttached();

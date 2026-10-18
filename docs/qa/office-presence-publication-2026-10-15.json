@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-15",
+  "source_commit": "6f5fcfe",
+  "review_version": "193edbed-5d53-4113-8188-b91f285a45d9",
+  "checks": {
+    "office_unit_tests": 36,
+    "unit_files": 10,
+    "two_session_SDK_browser_scenarios": 1,
+    "typecheck": "passed",
+    "lint": "passed_with_existing_warnings"
+  },
+  "publication": [
+    {
+      "environment": "office-phase01-release",
+      "url": "https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev",
+      "html_verified": true,
+      "headers_verified": true,
+      "assets": [
+        {
+          "file": "DiagnosticsPage-BUVvc2lv.js",
+          "sha256": "106b090078d5aab44ae1464b5e8838871840a0feba19fe47b0b0d0706d64615e"
+        },
+        {
+          "file": "OfficeVoiceProvider-DBQwoDjc.js",
+          "sha256": "b3fe3b62cfa4e18a692d764035a379eeae22c7ac1363fcac93b95b14ea18b60e"
+        },
+        {
+          "file": "index-D2Q2XFqA.js",
+          "sha256": "adac5a4d9789bd3e9ed6657f228bdec04ee1aec1a1e4a7bcc716d196b9747081"
+        }
+      ]
+    }
+  ],
+  "phase05": "in_homologation",
+  "real_presence_validation": "confirmed_by_responsible_safari_chrome",
+  "phase06": "not_started_blocked",
+  "confirmation": "Sim, presença e reconexão funcionaram"
+}

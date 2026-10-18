@@ -1,8 +1,8 @@
 import {FunctionsHttpError} from '@supabase/supabase-js';
 import {supabase} from '@/lib/supabase/client';
 import {isGoogleUploadUrl} from '../../../supabase/functions/google-workspace/drive';
-export interface DriveFolder {id:string;name:string;canUpload?:boolean;isAppAuthorized?:boolean}
-export function driveError(status:number,message?:string){return ({401:'A conexão com o Google precisa ser renovada.',403:'Você não tem permissão para esta demanda ou a pasta ainda não está autorizada para envio.',404:'A pasta ou arquivo não foi encontrado no Google Drive.',429:'O Google Drive está limitando temporariamente os envios. Tente novamente.'} as Record<number,string>)[status]||message||'Não foi possível acessar o Google Drive.';}
+export interface DriveFolder {id:string;name:string;canUpload?:boolean;isAppAuthorized?:boolean;canAddChildren?:boolean}
+export function driveError(status:number,message?:string){return ({401:'A conexão com o Google precisa ser renovada.',403:message||'Você não tem permissão para esta demanda ou a pasta ainda não está autorizada para envio.',404:'A pasta ou arquivo não foi encontrado no Google Drive.',429:'O Google Drive está limitando temporariamente os envios. Tente novamente.'} as Record<number,string>)[status]||message||'Não foi possível acessar o Google Drive.';}
 export async function googleDriveRequest(action:string,context:Record<string,unknown>,extra:Record<string,unknown>={}){
  if(!supabase)throw Error('Conexão indisponível.');
  const {data,error,response}=await supabase.functions.invoke('google-workspace',{body:{...extra,...context,action}});
@@ -23,14 +23,14 @@ export function recommendDriveFolder(folders:DriveFolder[],period?:string|null){
 export function uploadMime(file:File){if(file.type)return file.type;return ({png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',mp4:'video/mp4',mov:'video/quicktime',pdf:'application/pdf',psd:'image/vnd.adobe.photoshop',ai:'application/postscript',zip:'application/zip'} as Record<string,string>)[file.name.split('.').pop()?.toLowerCase()||'']||'application/octet-stream';}
 export async function uploadDriveChunks(url:string,file:Blob,mime:string,onProgress:(percent:number)=>void,signal:AbortSignal):Promise<{id:string}> {
  if(!isGoogleUploadUrl(url))throw Error('Endereço de envio inválido.');
- const chunkSize=8*1024*1024;let offset=0,recoveries=0;
+ const chunkSize=2*1024*1024;let offset=0,recoveries=0;
  const send=(body:Blob|null,start:number,end:number,probe=false)=>new Promise<{status:number;range:string|null;data:any}>((resolve,reject)=>{
   const xhr=new XMLHttpRequest();const abort=()=>xhr.abort();signal.addEventListener('abort',abort,{once:true});
   const clean=()=>signal.removeEventListener('abort',abort);
   xhr.open('PUT',url);xhr.timeout=120000;xhr.setRequestHeader('Content-Type',mime);xhr.setRequestHeader('Content-Range',probe?`bytes */${file.size}`:`bytes ${start}-${end}/${file.size}`);
   xhr.upload.onprogress=e=>{if(!probe&&e.lengthComputable)onProgress(Math.min(99,Math.round((start+e.loaded)/file.size*100)));};
   xhr.onload=()=>{clean();let data;try{data=JSON.parse(xhr.responseText||'null');}catch{data=null;}resolve({status:xhr.status,range:xhr.getResponseHeader('Range'),data});};
-  xhr.onerror=xhr.ontimeout=()=>{clean();reject(Error('A conexão foi interrompida durante o envio.'));};xhr.onabort=()=>{clean();reject(new DOMException('Envio cancelado.','AbortError'));};
+  xhr.onerror=()=>{clean();reject(Error('A conexão com o Google Drive foi interrompida.'));};xhr.ontimeout=()=>{clean();reject(Error('O envio levou mais tempo que o esperado. Tente novamente.'));};xhr.onabort=()=>{clean();reject(new DOMException('Envio cancelado.','AbortError'));};
   if(signal.aborted){clean();reject(new DOMException('Envio cancelado.','AbortError'));return;}xhr.send(body);
  });
  while(offset<file.size){const end=Math.min(offset+chunkSize,file.size)-1;let response;

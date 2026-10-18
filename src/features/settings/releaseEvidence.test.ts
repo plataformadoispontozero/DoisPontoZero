@@ -6,3 +6,11 @@ it('shows delivered evidence without completing phases that still require operat
 })
 
 it('preserves other phase acceptance criteria when a new delivery is added',()=>{const [phase]=reconcileReleasePhases([{id:'phase-05',pending_requirements:['Upload de avatar com membro real'],completed_requirements:['Perfil individual']}]);expect(phase.pending_requirements).toContain('Upload de avatar com membro real');expect(phase.completed_requirements).toContain('Perfil individual')})
+
+it('records scoped technical homologation without clearing real acceptance or integrations',()=>{
+ const [phase]=reconcileReleasePhases([{id:'phase-04',pending_requirements:['Dois membros reais'],status:'in_progress'}],{scope:'controlled_technical_homologation',status:'verified',phases:[{id:'phase-04',status:'verified',unit_tests:4,browser_tests:3,evidence:'docs/qa/test.md'}]})
+ expect(phase.technical_homologation?.status).toBe('verified');expect(phase.status).toBe('in_progress');expect(phase.pending_requirements).toContain('Dois membros reais');expect(phase.stage).toContain('controlada')
+})
+it.each(['unfinished','missing_tests','missing_evidence'])('never marks technical homologation from %s report',kind=>{
+ const [phase]=reconcileReleasePhases([{id:'phase-04'}],{scope:'controlled_technical_homologation',status:kind==='unfinished'?'in_progress':'verified',phases:[{id:'phase-04',status:'verified',unit_tests:kind==='missing_tests'?0:4,browser_tests:3,evidence:kind==='missing_evidence'?undefined:'docs/qa/test.md'}]});expect(phase.technical_homologation).toBeUndefined()
+})

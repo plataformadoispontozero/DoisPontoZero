@@ -1,5 +1,7 @@
+import {TaskCardCover,useTaskCardCovers} from '@/features/integrations/TaskCardCover'
 import {ProductionTimeline} from '@/features/production/ProductionTimeline'
 import { DemandContent } from './DemandContent'
+import {parseDemandContent} from './parseDemandContent'
 import React, { useState, useEffect } from 'react'
 import {
   Calendar,
@@ -88,6 +90,8 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   const { data: realTask, isLoading, isError } = useTask(taskId ?? undefined)
   const { data: subtasks = [] } = useSubtasks(taskId ?? undefined)
   const { data: comments = [] } = useTaskComments(taskId ?? undefined)
+  const coverQuery=useTaskCardCovers(taskId?[taskId]:[])
+  const taskCover=coverQuery.data?.find(c=>c.task_id===taskId)
   const { data: attachments = [] } = useTaskAttachments(taskId ?? undefined)
   const { data: links = [] } = useTaskLinks(taskId ?? undefined)
   const { data: activities = [] } = useTaskActivity(taskId ?? undefined)
@@ -426,6 +430,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
             </div>
           </div>
 
+          {taskCover&&<section aria-label="Preview da demanda"><TaskCardCover cover={taskCover} carousel={parseDemandContent(task?.description||'',task?.title||'').kind==='Carrossel'}/></section>}
           <DemandContent key={task.id} title={task.title} value={description} onChange={setDescription} onSave={handleDescriptionBlur}/>
 
           {/* Checklists */}
@@ -750,7 +755,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
               {/* Attachments Tab */}
               <TabsContent value="attachments" className="space-y-3 pt-3">
-                {isSupabaseConfigured && <DemandProductionFiles key={`${agencyId}:${taskId}`} taskId={taskId}/>}
+                {isSupabaseConfigured && <DemandProductionFiles key={`${agencyId}:${taskId}`} taskId={taskId} taskTitle={task?.title||''} taskDescription={task?.description||''}/>}
 
                 <div className="space-y-2">
                   {attachments.filter(file => !file.storage_path?.startsWith('drive:')).map((file) => (

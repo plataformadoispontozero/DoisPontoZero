@@ -428,3 +428,9 @@ verify_jwt = false # Public OAuth callback validates one-use state; POST validat
 
 [functions.drive-material-approval]
 verify_jwt = false # Publish requires session; public reads require hashed expiring review token.
+
+[functions.office-room-token]
+verify_jwt = false # Every POST validates its JWT server-side with auth.getUser before database access.
+
+[functions.livekit-config]
+verify_jwt = false # Every action verifies auth.getUser, settings.edit and OWNER/ADMIN server-side.

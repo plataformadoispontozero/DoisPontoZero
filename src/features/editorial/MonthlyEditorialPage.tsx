@@ -1,3 +1,4 @@
+import {useDriveBriefDocuments,currentDriveReview,type DriveBriefDocument} from '@/features/briefing/driveDocuments'
 import { editorialSteps, editorialStepIssues } from "./editorialWizard";
 import { EditorialPieceEditor } from "./EditorialPieceEditor";
 import { briefingEditorialContext, missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
@@ -138,6 +139,15 @@ export function MonthlyEditorialPage() {
     },
   });
   useEffect(()=>{if(client&&!id&&briefs.data&&!briefs.isFetching&&selectedBriefClient.current!==client){selectedBriefClient.current=client;if(!briefing&&briefs.data.length)setBriefing(briefs.data[0].id);}},[client,id,briefing,briefs.data,briefs.isFetching]);
+  const driveDocuments=useDriveBriefDocuments(client||undefined);
+  const reviewedDriveDocuments=(driveDocuments.data||[]).filter(document=>document.agency_id===agency&&document.client_id===client&&currentDriveReview(document));
+  function applyDriveContext(document:DriveBriefDocument){
+    if(document.agency_id!==agency||document.client_id!==client||!currentDriveReview(document))return;
+    const next:Partial<EditorialContext>={};
+    for(const field of ['objective','audience','tone','positioning','restrictions'] as const){const value=document.reviewed_context[field];if(typeof value==='string'){next[field]=value.slice(0,3000);editedFields.current.add(field);}}
+    if(Array.isArray(document.reviewed_context.topics)){next.topics=document.reviewed_context.topics.filter((topic):topic is string=>typeof topic==='string').slice(0,40).map(topic=>topic.slice(0,300));editedFields.current.add('topics');}
+    setContext(previous=>({...previous,...next,driveBriefDocumentId:document.id,driveBriefVersion:document.reviewed_version||undefined}));setDirty(true);setNotice('Contexto revisado do Drive aplicado. Confira os dados antes de gerar o rascunho.');
+  }
   const campaigns = useQuery({
     queryKey: ["monthly-editorial", agency],
     enabled: !!agency,
@@ -421,6 +431,7 @@ export function MonthlyEditorialPage() {
         <section hidden={wizardStep===0} className="space-y-4 rounded-2xl border border-white/10 p-5">
           <div hidden={wizardStep!==1}>
           <h2 className="text-xl font-semibold">Temas e referências</h2>
+          {reviewedDriveDocuments.length>0&&<section className="space-y-2 rounded-xl border border-orange-500/20 p-3" aria-label="Contextos revisados do Drive"><h3 className="font-medium">Contextos revisados do Drive</h3><p className="text-xs text-zinc-400">Somente revisões da versão atual do documento podem ser aplicadas.</p>{reviewedDriveDocuments.map(document=><button key={document.id} type="button" disabled={busy||locked} className="block rounded-lg border border-white/15 px-3 py-2 text-sm" onClick={()=>applyDriveContext(document)}>Usar contexto de {document.name}</button>)}</section>}
           <label className="block">
             Estratégia do cliente
             <select

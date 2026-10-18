@@ -29,24 +29,19 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 1200,
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks: (id) => {
-          if (id.includes('@supabase/')) {
-            return 'vendor-supabase'
-          }
-          if (id.includes('@tanstack/')) {
-            return 'vendor-tanstack'
-          }
-          if (id.includes('@dnd-kit/')) {
-            return 'vendor-dnd'
-          }
-          if (id.includes('lucide-react')) {
-            return 'vendor-icons'
-          }
-          if (id.includes('@react-pdf/')) {
-            return 'vendor-pdf'
-          }
+        // Keep shared React/runtime modules out of lazy PDF chunks.
+        codeSplitting: {
+          includeDependenciesRecursively: false,
+          groups: [
+            { name: 'vendor-react', test: /node_modules\/(react|react-dom|scheduler)\//, priority: 80 },
+            { name: 'vendor-supabase', test: /node_modules\/@supabase\//, priority: 60 },
+            { name: 'vendor-tanstack', test: /node_modules\/@tanstack\//, priority: 60 },
+            { name: 'vendor-dnd', test: /node_modules\/@dnd-kit\//, priority: 60 },
+            { name: 'vendor-icons', test: /node_modules\/lucide-react\//, priority: 60 },
+            { name: 'vendor-pdf', test: /node_modules\/@react-pdf\//, priority: 40 },
+          ],
         },
       },
     },

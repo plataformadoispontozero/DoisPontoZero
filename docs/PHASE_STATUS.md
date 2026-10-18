@@ -23,3 +23,7 @@ Propostas: módulo retirado por solicitação do usuário; rotas internas redire
 Snapshots `recovery_02` e `prompt_17` são históricos. Não descrevem o estado atual das verificações do banco. Testes controlados de navegador não comprovam OAuth, SMTP ou uso humano simultâneo. O relatório atual registra explicitamente quais operações foram verificadas com papéis SQL e rollback.
 
 Última publicação confirmada: implementação `62e18ee`, Cloudflare `0294b685-da52-43a8-8b97-2c40cd675b51`, bundle `index-CmcYykLr.js`; sete bundles conferidos no domínio. Evidência completa no relatório de fechamento web.
+
+## Homologação técnica controlada — 15/10/2026
+
+Onze fases ativas tiveram testes controlados aprovados; a remoção de Propostas também foi verificada. Foram 466 testes unitários e 364 cenários de navegador em três viewports, com 20 skips intencionais. Detalhes por fase: `docs/PLATFORM_HOMOLOGATION_STATUS.json`. Critérios reais continuam em `docs/PHASE_STATUS.json`; `production_ready=false` é preservado. Escritório Digital Fase 05 aguarda teste real de dois membros; Fase 06 não iniciada.

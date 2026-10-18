@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "project": "Dois.Zero Creative Agency OS",
-  "generated_at": "2026-10-13T15:11:22+00:00",
+  "generated_at": "2026-10-15T01:02:37.240444+02:00",
   "phases": [
     {
       "id": "phase-01",
@@ -14,8 +14,8 @@
       "pending_requirements": [
         "Aceite do dashboard com sessão real e dados operacionais da agência"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Design System com 17+ componentes e variantes semânticas",
         "AppShell responsivo com Sidebar retrátil e persistência de estado",
@@ -24,16 +24,19 @@
         "Suíte de testes unitários com Vitest",
         "Zero erros no build de produção (tsc e vite)"
       ],
-      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Shell e rotas responsivas exercitados em 15 rotas nos três viewports com APIs controladas",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 43 testes unitários e 54 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [
           "Domínio publicado e bundle conferido; não comprova todo o dashboard"
         ],
         "external_or_operational_pending": [
+          "Aceite do dashboard com sessão real e dados operacionais da agência"
+        ],
+        "pending": [
           "Aceite do dashboard com sessão real e dados operacionais da agência"
         ]
       }
@@ -53,20 +56,19 @@
         "Recebimento real de convite/recuperação depende de SMTP",
         "Aceite cadastro→aprovação→login com dois membros reais"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL com tabelas de autenticação, agências, membros, roles e permissões",
         "Políticas de Row Level Security (RLS) e funções seguras de verificação",
         "Cliente Supabase configurado com verificação de ambiente isSupabaseConfigured",
         "Definição de tipagens Database completas em src/lib/supabase/types.ts"
       ],
-      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Login, recuperação e reset implementados em AuthPage; cadastro e aprovação da equipe presentes",
-          "Supabase remoto usado nas migrations publicadas e testes SQL isolados",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 47 testes unitários e 48 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [
           "Migrations recentes verificadas por papéis em rollback; cobertura parcial de RLS",
@@ -74,6 +76,10 @@
         ],
         "external_or_operational_pending": [
           "Permission Studio: persistência de alterações ainda requer implementação/verificação",
+          "Recebimento real de convite/recuperação depende de SMTP",
+          "Aceite cadastro→aprovação→login com dois membros reais"
+        ],
+        "pending": [
           "Recebimento real de convite/recuperação depende de SMTP",
           "Aceite cadastro→aprovação→login com dois membros reais"
         ]
@@ -91,22 +97,26 @@
         "Conferir com a equipe a completude dos campos legados ausentes e vínculos de arquivo",
         "Exercitar edição e refresh do cliente em sessão real"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/BRIEFING_MIGRATION_MAP.md; src/features/clients/ClientWorkspacePage.tsx",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Modelagem da tabela clients com campos de branding, status e datas em PostgreSQL",
         "Políticas RLS para isolamento de clientes por agência",
         "Tipagem de Client integrada no sistema de projetos",
         "Componente de integração ClientBriefingsTab para visualização e exportação direta de briefings"
       ],
-      "stage": "LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "ClientsPage e ClientWorkspacePage implementados; perfil/contexto e links integrados",
-          "Mapeamento documentado de 29 clientes e 23 briefings nativos"
+          "Homologação controlada: 31 testes unitários e 24 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [],
         "external_or_operational_pending": [
+          "Conferir com a equipe a completude dos campos legados ausentes e vínculos de arquivo",
+          "Exercitar edição e refresh do cliente em sessão real"
+        ],
+        "pending": [
           "Conferir com a equipe a completude dos campos legados ausentes e vínculos de arquivo",
           "Exercitar edição e refresh do cliente em sessão real"
         ]
@@ -125,8 +135,8 @@
         "Aceite da esteira real calendário aprovado→demanda→responsável→entrega",
         "Exercitar Kanban/SLA e dependências com dois papéis reais"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL com 14 tabelas (projects, boards, columns, tasks, checklists, comments, attachments, links, activity)",
         "RPCs transacionais (create_project_with_board, move_task, get_project_progress)",
@@ -140,14 +150,18 @@
         "Painel unificado de tarefas (/tasks) com suporte a URL direta (/tasks/:taskId)",
         "Testes unitários automatizados em src/features/projects/projects.test.tsx"
       ],
-      "stage": "LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Projetos/tarefas e áreas de produção implementados; navegação responsiva verificada",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 32 testes unitários e 73 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [],
         "external_or_operational_pending": [
+          "Aceite da esteira real calendário aprovado→demanda→responsável→entrega",
+          "Exercitar Kanban/SLA e dependências com dois papéis reais"
+        ],
+        "pending": [
           "Aceite da esteira real calendário aprovado→demanda→responsável→entrega",
           "Exercitar Kanban/SLA e dependências com dois papéis reais"
         ]
@@ -165,8 +179,8 @@
       "pending_requirements": [
         "Upload real de avatar e gestão de squad com membros reais"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000003_phase05_squads.sql) com 5 tabelas (squads, squad_members, squad_goals, squad_performance_snapshots, squad_projects)",
         "RPCs transacionais (compute_squad_ranking, upsert_performance_snapshot)",
@@ -176,12 +190,11 @@
         "TanStack Query hooks em src/features/squads/hooks/useSquads.ts",
         "SquadsPage operacional com 4 abas (Squads, Ranking com pódio, Metas, Performance com anéis de progresso) e 3 diálogos modais"
       ],
-      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Perfil do membro e gestão de membros de squad implementados; 12 E2E controlados",
-          "RPC privada de data de nascimento e isolamento de squad testados",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 36 testes unitários e 9 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [
           "Migration de perfil aplicada e ACL/bucket conferidos; nenhum upload real testado",
@@ -190,6 +203,9 @@
         "external_or_operational_pending": [
           "Upload real de avatar e gestão de squad com membros reais",
           "Aniversários dependem de sincronização na plataforma; aviso offline não implementado"
+        ],
+        "pending": [
+          "Upload real de avatar e gestão de squad com membros reais"
         ]
       }
     },
@@ -205,8 +221,8 @@
         "Homologar envio público, edição, PDF e uso do briefing por cliente real",
         "Conferir autores legados cuja identidade não foi validada"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000004_phase06_briefings.sql) com 10 tabelas e 9 permissões",
         "Funções seguras RPC (get_public_briefing com token hash sanitizado, submit_public_briefing com snapshot imutável)",
@@ -220,14 +236,18 @@
         "Componente de integração para CRM Client Hub (ClientBriefingsTab)",
         "Suíte de testes com Vitest (43/43 passando) e build de produção 100% validado"
       ],
-      "stage": "LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Briefings nativos e histórico mapeados; builder e vínculos presentes",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 33 testes unitários e 30 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [],
         "external_or_operational_pending": [
+          "Homologar envio público, edição, PDF e uso do briefing por cliente real",
+          "Conferir autores legados cuja identidade não foi validada"
+        ],
+        "pending": [
           "Homologar envio público, edição, PDF e uso do briefing por cliente real",
           "Conferir autores legados cuja identidade não foi validada"
         ]
@@ -248,8 +268,8 @@
         "Aceite editorial completo com fatos do cliente e demanda real",
         "Revisar qualidade de copy/slides/roteiro com social media; motor determinístico não equivale a geração IA"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000005_phase07_strategy.sql) com 6 tabelas (content_strategies, editorial_pillars, content_ideas, editorial_items, strategy_versions, strategy_activity)",
         "Funções e RPCs transacionais: get_strategy_overview e generate_editorial_suggestions",
@@ -269,19 +289,21 @@
         "Rotas integradas no React Router (/strategy, /strategy/new, /strategy/:strategyId)",
         "Suíte de testes unitários Vitest (52/52 passando) e build de produção 100% verificado"
       ],
-      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Criação editorial guiada em quatro etapas, contexto do cliente e briefing automático",
-          "Exclusão de estratégia com confirmação e proteção de vínculos implementada",
-          "Social Media integra calendários nativos e produção; 6 E2E controlados",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 77 testes unitários e 48 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [
           "Exclusão/isolamento de estratégia verificados em rollback e migration aplicada",
           "Verificações delimitadas no Supabase e rotina de aniversários registradas no relatório de fechamento web; não equivalem a aceite global"
         ],
         "external_or_operational_pending": [
+          "Aceite editorial completo com fatos do cliente e demanda real",
+          "Revisar qualidade de copy/slides/roteiro com social media; motor determinístico não equivale a geração IA"
+        ],
+        "pending": [
           "Aceite editorial completo com fatos do cliente e demanda real",
           "Revisar qualidade de copy/slides/roteiro com social media; motor determinístico não equivale a geração IA"
         ]
@@ -295,8 +317,8 @@
         "Módulo removido; rotas redirecionadas e RPCs antigas desativadas. Histórico preservado."
       ],
       "pending_requirements": [],
-      "last_verified_at": "2026-10-14",
-      "evidence": "src/features/proposals; docs/FEATURE_INVENTORY.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000006_phase08_proposals.sql) com 11 tabelas e 6 permissões seguras RLS",
         "RPCs transacionais (get_public_proposal com hash SHA-256 e submit_public_proposal_feedback)",
@@ -340,8 +362,8 @@
         "Leitura e upload de arquivo real no Drive e pasta autorizada",
         "Avaliação real por cliente e preview de fontes Google; qualidade depende da imagem original"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000007_phase09_drive_presentations.sql) com 11 tabelas, RLS e RPC de visualização pública",
         "Tipagem de domínio completa em src/types/drive.ts e src/types/presentations.ts",
@@ -357,17 +379,20 @@
         "Componente de integração ClientPresentationsTab no Client Hub",
         "Suíte de testes automatizados Vitest (64/64 passando) e build de produção 100% verificado"
       ],
-      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Apresentações responsivas e avaliações aprovar/ajustar/reprovar implementadas",
-          "Três E2E controlados verificam imagem, decisões e restauração após refresh",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 81 testes unitários e 33 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [
           "Migration de avaliações aplicada; token inválido/expirado, escopo de material e ACL testados em rollback"
         ],
         "external_or_operational_pending": [
+          "Leitura e upload de arquivo real no Drive e pasta autorizada",
+          "Avaliação real por cliente e preview de fontes Google; qualidade depende da imagem original"
+        ],
+        "pending": [
           "Leitura e upload de arquivo real no Drive e pasta autorizada",
           "Avaliação real por cliente e preview de fontes Google; qualidade depende da imagem original"
         ]
@@ -389,8 +414,8 @@
         "Chat simultâneo de dois membros reais e notificações em navegador/dispositivo",
         "Aceite da equipe na rotina reunião→ata→ação→tarefa; persistência e idempotência já verificadas no banco"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000008_phase10_meetings_chat.sql) com 18 tabelas, RLS e RPC convert_action_item_to_task",
         "Tipagem de domínio em src/types/meetings.ts, src/types/chat.ts, src/types/notifications.ts",
@@ -408,12 +433,11 @@
         "Abas de integração ClientMeetingsTab no Client Hub e ProjectChatTab no Project Workspace",
         "Suíte de testes automatizados Vitest (69/69 passando) e build de produção 100% verificado"
       ],
-      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Salas de trabalho, mensagens diretas e presença com identidade servidor implementadas",
-          "Fluxos de reuniões e notificações presentes no código",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 44 testes unitários e 24 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [
           "Presença autorizada e isolamento de sala privada testados em rollback; migration aplicada",
@@ -423,6 +447,10 @@
           "Chat simultâneo de dois membros reais e notificações em navegador/dispositivo",
           "Homologar reunião→ata→ação→tarefa",
           "Áudio/vídeo de salas não implementados"
+        ],
+        "pending": [
+          "Chat simultâneo de dois membros reais e notificações em navegador/dispositivo",
+          "Aceite da equipe na rotina reunião→ata→ação→tarefa; persistência e idempotência já verificadas no banco"
         ]
       }
     },
@@ -439,8 +467,8 @@
       "pending_requirements": [
         "OAuth e uploads reais Google/Meta devem ser homologados"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Migration PostgreSQL (20261010000009_phase11_whitelabel.sql) com 5 tabelas (agency_branding, agency_preferences, agency_document_settings, agency_portal_settings, agency_settings_history)",
         "Row Level Security (RLS) estrita em todas as 5 tabelas com isolamento por agency_id",
@@ -460,12 +488,11 @@
         "Componente BrandPreview para visualização em tempo real de branding",
         "Suíte de testes automatizados Vitest (75/75 passando) e build de produção 100% verificado"
       ],
-      "stage": "LOCAL_VERIFIED_OPERATIONAL_ACCEPTANCE_PENDING",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "verification": {
         "local": [
-          "Configurações, identidade da agência, perfil e integrações presentes",
-          "Diagnostics consulta manifesto versionado; configuração não prova conexão saudável",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 69 testes unitários e 87 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [
           "Verificações delimitadas no Supabase e rotina de aniversários registradas no relatório de fechamento web; não equivalem a aceite global"
@@ -474,6 +501,9 @@
           "OAuth e uploads reais Google/Meta devem ser homologados",
           "Instaladores nativos assinados/distribuição e push offline dependem de contas e configuração",
           "Permission Studio requer conclusão e verificação antes de aceite"
+        ],
+        "pending": [
+          "OAuth e uploads reais Google/Meta devem ser homologados"
         ]
       }
     },
@@ -481,7 +511,7 @@
       "id": "phase-12",
       "name": "Fase 12 - Production Readiness, Final Audit, Security & Deployment Preparation",
       "status": "in_progress",
-      "stage": "PUBLISHED_PARTIAL_REMOTE_VERIFICATION",
+      "stage": "CONTROLLED_TECHNICAL_HOMOLOGATION_COMPLETE",
       "completed_requirements": [
         "Push e deploy Cloudflare executados com autorização; domínio e bundle conferidos",
         "Última publicação documenta lint/typecheck/build, 345 testes e 9 E2E controlados",
@@ -493,8 +523,8 @@
         "Teste operacional com membros/clientes reais e serviços externos",
         "Validar backup/restauração, observabilidade e desempenho em condições reais"
       ],
-      "last_verified_at": "2026-10-14",
-      "evidence": "docs/qa/phase-closure-web-2026-10-14.md",
+      "last_verified_at": "2026-10-15",
+      "evidence": "docs/qa/platform-homologation-2026-10-14.md",
       "historical_claims": [
         "Auditoria de arquitetura de software completa em docs/ARCHITECTURE_AUDIT.md",
         "Inventário detalhado de funcionalidades dos 12 módulos em docs/FEATURE_INVENTORY.md",
@@ -519,9 +549,8 @@
       ],
       "verification": {
         "local": [
-          "Push e deploy Cloudflare executados com autorização; domínio e bundle conferidos",
-          "Última publicação documenta lint/typecheck/build, 345 testes e 9 E2E controlados",
-          "Pacote de fechamento web: regressão integral e 76 cenários de navegador; evidência em docs/qa/phase-closure-web-2026-10-14.md"
+          "Homologação controlada: 34 testes unitários e 364 cenários de navegador aprovados",
+          "Typecheck, lint sem erros e build compilado verificados"
         ],
         "remote": [
           "Cloudflare b9c1704f-bfed-437c-ae11-1f7daa7aa8bb; bundle index-CEEgLE6o.js confirmado",
@@ -529,6 +558,11 @@
         ],
         "external_or_operational_pending": [
           "Auditoria de segurança global e avisos antigos de advisors ainda precisam resolução",
+          "Teste operacional com membros/clientes reais e serviços externos",
+          "Validar backup/restauração, observabilidade e desempenho em condições reais"
+        ],
+        "pending": [
+          "Proteção de senhas vazadas do Auth desativada; funções privilegiadas e tabelas privadas com acesso intencional documentados",
           "Teste operacional com membros/clientes reais e serviços externos",
           "Validar backup/restauração, observabilidade e desempenho em condições reais"
         ]

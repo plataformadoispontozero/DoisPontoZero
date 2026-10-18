@@ -189,15 +189,15 @@ export const router = createBrowserRouter([
       {
         path: "projects/:projectId",
         lazy: async () => ({
-          Component: (await import("@/features/projects/ProjectWorkspacePage"))
-            .ProjectWorkspacePage,
+          Component: (await import("@/features/projects/LegacyProjectRedirect"))
+            .LegacyProjectRedirect,
         }),
       },
       {
         path: "projects/:projectId/settings",
         lazy: async () => ({
-          Component: (await import("@/features/projects/ProjectWorkspacePage"))
-            .ProjectWorkspacePage,
+          Component: (await import("@/features/projects/LegacyProjectRedirect"))
+            .LegacyProjectRedirect,
         }),
       },
       {
@@ -374,9 +374,21 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: "office",
+        lazy: async () => ({Component: (await import("@/features/office/OfficePage")).OfficePage}),
+      },
+      {
+        path: "office/lobby",
+        lazy: async () => ({Component: (await import("@/features/office/OfficePage")).OfficePage}),
+      },
+      {
+        path: "chat/messages",
+        lazy: async () => ({Component: (await import("@/features/chat/ChatPage")).ChatPage}),
+      },
+      {
         path: "chat",
         lazy: async () => ({
-          Component: (await import("@/features/chat/ChatPage")).ChatPage,
+          Component: (await import("@/features/office/OfficePage")).ChatEntryPage,
         }),
       },
       {
@@ -565,6 +577,10 @@ export const router = createBrowserRouter([
                 await import("@/features/settings/IntegrationsCenterPage")
               ).IntegrationsCenterPage,
             }),
+          },
+          {
+            path: "integrations/livekit",
+            lazy: async () => ({ Component: (await import("@/features/settings/LivekitSettingsPage")).LivekitSettingsPage }),
           },
           {
             path: "integrations/meta",

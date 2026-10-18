@@ -1,3 +1,4 @@
+import {PresentationAssetThumbnail} from './presentationMedia'
 import {PresentationMaterialReviews} from './PresentationMaterialReviews';
 import {usePresentationReviews,latestMaterialReviews} from './hooks/usePresentationReviews';
 import React, { useState } from 'react';
@@ -329,7 +330,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                       {activeSectionAssets.map((asset: PresentationAsset) => (
                         <div key={asset.id} className="overflow-hidden rounded-2xl border border-white/10 bg-black/20 p-3 flex items-start justify-between gap-3">
                           <div className="min-w-0 flex-1">
-                            {asset.file_reference?.thumbnail_reference && <img src={asset.file_reference.thumbnail_reference} alt={asset.title} loading="lazy" className="mb-3 h-40 w-full rounded-xl object-contain bg-black/20"/>}
+                            {asset.file_reference && <PresentationAssetThumbnail asset={asset}/>}
                             <div className="flex items-center space-x-1 text-brand-primary mb-1">
                               <ImageIcon className="w-3.5 h-3.5" />
                               <span className="text-xs font-semibold truncate max-w-[140px]">{asset.title}</span>

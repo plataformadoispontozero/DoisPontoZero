@@ -1,4 +1,3 @@
-import {groupTasksByClient} from "@/features/tasks/taskGroups";
 import {ClientKanbanBoard} from "@/features/projects/components/ClientKanbanBoard";
 import {useMoveTaskGroup} from "@/features/tasks/hooks/useTasks";
 import { ClientMetaPanel } from "@/features/integrations/ClientMetaPanel";
@@ -305,7 +304,7 @@ function ProductionWorkspace({ department }: { department: string }) {
               )}
             </div>
           ) : view === "board" ? (
-            <><ClientKanbanBoard tasks={groupTasksByClient(tasks).filter(g=>g.tasks.some(t=>filtered.some(f=>f.id===t.id))).flatMap(g=>g.tasks)} regionPrefix="Demandas de" canMove={canMove} busy={groupMove.isPending||query.isFetching} onOpen={setSelected} onMove={async(items,status)=>{setMoveError('');try{await groupMove.mutateAsync({agencyId,taskIds:items.map(t=>t.id),status})}catch{setMoveError('Não foi possível movimentar. Nenhuma demanda foi alterada.')}}}/>{moveError&&<p role="alert">{moveError}</p>}</>
+            <><ClientKanbanBoard tasks={filtered} regionPrefix="Demandas de" canMove={canMove} busy={groupMove.isPending||query.isFetching} onOpen={setSelected} onMove={async(items,status)=>{setMoveError('');try{await groupMove.mutateAsync({agencyId,taskIds:items.map(t=>t.id),status})}catch{setMoveError('Não foi possível movimentar. Nenhuma demanda foi alterada.')}}}/>{moveError&&<p role="alert">{moveError}</p>}</>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">
               {filtered.map(card)}

@@ -31,6 +31,7 @@ export const navigationGroups = [
   { id: "system", label: "SISTEMA", items: ["settings"] },
 ];
 export function navigationContext(pathname: string) {
+  if(pathname==='/chat'||pathname.startsWith('/chat/'))return 'chat';
   return [...navItems]
     .sort((a, b) => b.path.length - a.path.length)
     .find((i) => matchPath({ path: i.path + "/*", end: false }, pathname))?.id;

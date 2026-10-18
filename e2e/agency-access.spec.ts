@@ -160,11 +160,11 @@ test('personal agenda lists real API meetings and deadlines and links to creatio
   await api(page,{agenda:true}); await login(page)
   await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible()
   await page.goto('/calendar')
-  await expect(page.getByRole('link',{name:'Reunião pessoal real',exact:true})).toBeVisible()
-  await expect(page.getByRole('link',{name:'Prazo da minha tarefa',exact:true})).toBeVisible()
+  await expect(page.getByRole('link',{name:/^Reunião pessoal real/})).toBeVisible()
+  await expect(page.getByRole('link',{name:/^Prazo da minha tarefa/})).toBeVisible()
   await expect(page.getByText('Reunião de outro usuário',{exact:true})).toHaveCount(0)
   await page.getByLabel('Período',{exact:true}).selectOption('week')
-  await expect(page.getByRole('link',{name:'Reunião pessoal real',exact:true})).toBeVisible()
+  await expect(page.getByRole('link',{name:/^Reunião pessoal real/})).toBeVisible()
   await page.getByRole('button',{name:'Novo Compromisso',exact:true}).click()
   await expect(page).toHaveURL(/\/meetings\/new$/)
 })
@@ -190,10 +190,10 @@ test('team invitation creates a manual link with the selected role and no false 
   await page.getByRole('button',{name:'Convidar Membro'}).click()
   await page.getByLabel('E-mail do convidado').fill('gestor@example.invalid')
   await page.getByLabel('Papel de acesso atribuído').selectOption(roleId)
-  await page.getByRole('button',{name:'Gerar Convite',exact:true}).click()
+  await page.getByRole('button',{name:'Enviar Convite',exact:true}).click()
   await expect(page.getByLabel('Link do convite')).toHaveValue('https://site.invalid/accept-invitation#id=test-id')
   expect(body).toEqual({email:'gestor@example.invalid',roleId,agencyId:agencyA})
-  await expect(page.getByText(/Nenhum e-mail foi enviado automaticamente/)).toBeVisible()
+  await expect(page.getByText(/Esta conta já existe e usa o login habitual/)).toBeVisible();await expect(page.getByText('Convite enviado por e-mail.',{exact:true})).toHaveCount(0)
   await page.goto('/team/unknown-member')
   await expect(page.getByRole('alert').filter({hasText:'Profissional não encontrado nesta agência.'})).toBeVisible()
 })
@@ -209,78 +209,20 @@ test('team-only login hides Google and keeps workspace protected', async ({ page
 })
 
 
-test("monthly generator imports briefing and respects format quantities", async ({
-  page,
-}) => {
-  await api(page);
-  await page.route("**/rest/v1/briefings?**", (route) =>
-    route.fulfill({
-      contentType: "application/json",
-      body: JSON.stringify([
-        { id: "brief-test", title: "Briefing mensal", status: "approved" },
-      ]),
-    }),
-  );
-  await page.route("**/rest/v1/rpc/get_editorial_briefing", (route) =>
-    route.fulfill({
-      json: {
-        id: "brief-test",
-        revision: "test-brief-revision",
-        updatedAt: "2026-10-12",
-        answers: [
-          { value: "Gerar contatos", label: "Objetivo" },
-          { value: "Empreendedores locais", label: "Público-alvo" },
-        ],
-      },
-    }),
-  );
-  await login(page);
-  await expect(
-    page.getByRole("heading", { name: "Visão Geral", exact: true }),
-  ).toBeVisible();
-  await page.goto("/editorial");
-  await page
-    .getByLabel("Cliente", { exact: true })
-    .selectOption("33333333-3333-4333-8333-333333333333");
-  await page.getByLabel("Briefing do cliente").selectOption("brief-test");
-  await expect(
-    page.getByRole("textbox", { name: "Objetivo", exact: true }),
-  ).toHaveValue("Gerar contatos");
-  await expect(
-    page.getByRole("textbox", { name: "Público-alvo", exact: true }),
-  ).toHaveValue("Empreendedores locais");
-  await page
-    .getByLabel("Temas aprovados para este mês", { exact: true })
-    .fill("Consultoria\nPlanejamento\nRotina");
-  await page.getByLabel("Post", { exact: true }).fill("1");
-  await page.getByLabel("Reels", { exact: true }).fill("1");
-  await page.getByLabel("Carrossel", { exact: true }).fill("1");
-  await page
-    .getByRole("button", { name: "Gerar calendário mensal", exact: true })
-    .click();
-  await expect(page.getByLabel(/Tema do conteúdo/)).toHaveCount(3);
-  await expect(
-    page.getByText("Prévia estratégica · campaign-rules-1.0"),
-  ).toBeVisible();
-  await expect(
-    page.getByLabel("Quantidade de slides do conteúdo 3"),
-  ).toHaveValue("7");
-  await expect(
-    page.getByLabel("Quantidade de cenas do conteúdo 2"),
-  ).toHaveValue("3");
-  await page.getByLabel("Quantidade de slides do conteúdo 3").fill("5");
-  await page
-    .getByRole("button", { name: "Remontar estrutura da peça", exact: true })
-    .nth(1)
-    .click();
-  await expect(page.getByLabel("Copy do conteúdo 3")).toHaveValue(/Slide 5:/);
-  await expect(page.getByLabel("Copy do conteúdo 3")).not.toHaveValue(
-    /Slide 6:/,
-  );
-  await page.screenshot({
-    path: `test-results/editorial-engine-${page.viewportSize()?.width}.png`,
-    fullPage: true,
-  });
+test("monthly generator imports briefing and respects format quantities", async ({page}) => {
+ await api(page);let saved:any;const campaignId='99999999-9999-4999-8999-999999999999',clientId='33333333-3333-4333-8333-333333333333';
+ await page.route('**/rest/v1/briefings?**',route=>route.fulfill({json:[{id:'brief-test',title:'Briefing mensal',status:'approved'}]}));
+ await page.route('**/rest/v1/rpc/get_editorial_briefing',route=>route.fulfill({json:{id:'brief-test',revision:'test-brief-revision',updatedAt:'2026-10-12',answers:[{value:'Gerar contatos',label:'Objetivo',questionKey:'objective'},{value:'Empreendedores locais',label:'Público-alvo'}]}}));
+ await page.route('**/rest/v1/rpc/save_monthly_editorial',route=>{saved=route.request().postDataJSON();return route.fulfill({json:campaignId})});
+ await page.route('**/rest/v1/monthly_editorial_campaigns?**',route=>{const campaign=saved?{id:campaignId,agency_id:agencyA,client_id:clientId,briefing_id:saved.p_briefing,month:saved.p_month,context:saved.p_context,items:saved.p_items,status:'draft',project_id:null}:null;return route.fulfill({json:new URL(route.request().url()).searchParams.has('id')?campaign:campaign?[campaign]:[]})});
+ await login(page);await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible();await page.goto('/editorial/new?clientId='+clientId);await page.getByRole('button',{name:/Direção editorial/}).click();
+ await expect(page.getByRole('textbox',{name:'Objetivo',exact:true})).toHaveValue('Gerar contatos');await expect(page.getByRole('textbox',{name:'Público-alvo',exact:true})).toHaveValue('Empreendedores locais');
+ await page.getByLabel('Tom de voz',{exact:true}).fill('Profissional');await page.getByLabel('Temas da campanha',{exact:true}).fill('Consultoria\nPlanejamento\nRotina');
+ await page.getByRole('button',{name:/Formatos e volume/}).click();for(const label of ['Post','Reels','Carrossel'])await page.getByLabel(label,{exact:true}).fill('1');
+ await page.getByRole('button',{name:/Revisar e gerar/}).click();await page.getByRole('button',{name:'Gerar calendário mensal',exact:true}).click();await expect(page.getByRole('button',{name:/^Abrir demanda \d+$/})).toHaveCount(3);
+ expect(saved.p_briefing).toBe('brief-test');expect(saved.p_context.objective).toBe('Gerar contatos');expect(saved.p_items.filter((i:any)=>i.format==='post')).toHaveLength(1);expect(saved.p_items.filter((i:any)=>i.format==='reels')).toHaveLength(1);expect(saved.p_items.filter((i:any)=>i.format==='carousel')).toHaveLength(1);
+ const carousel=saved.p_items.findIndex((i:any)=>i.format==='carousel');expect(saved.p_items[carousel].editorial.slides).toHaveLength(7);expect(saved.p_items.find((i:any)=>i.format==='reels').editorial.scenes).toHaveLength(3);
+ await page.getByRole('button',{name:'Abrir demanda '+(carousel+1),exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog.getByLabel('Texto da lâmina 7',{exact:true})).not.toHaveValue('');await dialog.getByLabel('Texto da lâmina 5',{exact:true}).fill('Copy revisada da quinta lâmina — TESTE');await dialog.getByRole('button',{name:'Salvar alterações',exact:true}).click();await expect(dialog.getByRole('button',{name:'Salvar alterações',exact:true})).toBeDisabled();expect(saved.p_items[carousel].editorial.slides).toHaveLength(7);expect(saved.p_items[carousel].editorial.slides[4].text).toBe('Copy revisada da quinta lâmina — TESTE');
 });
 
 test('public editorial review accepts copy suggestions and closes after approval without login', async ({page}) => {
@@ -312,13 +254,13 @@ test('grouped navigation preserves active section, settings footer and compact i
  const mobile=(page.viewportSize()?.width||1440)<768
  if(mobile)await page.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click()
  const nav=mobile?page.getByRole('dialog'):page.getByRole('complementary',{name:'Navegação Principal'})
- await expect(nav.getByRole('button',{name:'CLIENTES & COMERCIAL',exact:true})).toBeVisible()
- await nav.getByRole('button',{name:'CLIENTES & COMERCIAL',exact:true}).click()
+ await expect(nav.getByRole('button',{name:'CLIENTES & BRIEFINGS',exact:true})).toBeVisible()
+ await nav.getByRole('button',{name:'CLIENTES & BRIEFINGS',exact:true}).click()
  await expect(nav.getByRole('link',{name:'Clientes',exact:true})).toBeHidden()
  if(mobile)await page.getByRole('button',{name:'Fechar painel',exact:true}).click()
  await page.goto('/clients')
  if(mobile)await page.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click()
- await expect(nav.getByRole('button',{name:'CLIENTES & COMERCIAL',exact:true})).toHaveAttribute('aria-expanded','true')
+ await expect(nav.getByRole('button',{name:'CLIENTES & BRIEFINGS',exact:true})).toHaveAttribute('aria-expanded','true')
  await expect(nav.getByRole('link',{name:'Clientes',exact:true})).toHaveAttribute('aria-current','page')
  await expect(nav.getByRole('link',{name:'Configurações',exact:true})).toHaveCount(1)
  if(!mobile){
@@ -371,27 +313,14 @@ test('five notification sounds can be previewed and muted',async ({page})=>{
 
 
 test('new operational events play approval, production and client motifs without replaying history',async({page})=>{
- await api(page)
- await page.addInitScript(()=>{
-  const original=window.AudioContext
-  ;(window as any).__played=[]
-  window.AudioContext=new Proxy(original,{construct(target,args){const context=Reflect.construct(target,args) as AudioContext;const create=context.createOscillator.bind(context);context.createOscillator=()=>{const oscillator=create(),start=oscillator.start.bind(oscillator);oscillator.start=(...args:Parameters<typeof start>)=>{(window as any).__played.push(oscillator.frequency.value);return start(...args)};return oscillator};return context}})
- })
- let phase=0
- await page.route('**/rest/v1/monthly_editorial_campaigns?**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify([{id:'sound-test',status:phase===0?'pending':phase===1?'approved':'production'}])}))
- await page.route('**/rest/v1/clients?**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify(phase<3?[]:[{id:'new-client-sound',name:'Cliente do teste de áudio'}])}))
- await login(page);await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible();await page.goto('/notifications')
- const baseline=page.waitForResponse(r=>r.url().includes('/rest/v1/monthly_editorial_campaigns'))
- await page.getByRole('button',{name:'Ativar sons de notificação',exact:true}).click();await baseline
- await page.evaluate(()=>{(window as any).__played=[]})
- phase=1
- await expect.poll(()=>page.evaluate(()=>(window as any).__played),{timeout:20000}).toEqual([523,659,784])
- await page.evaluate(()=>{(window as any).__played=[]});phase=2
- await expect.poll(()=>page.evaluate(()=>(window as any).__played),{timeout:20000}).toEqual([220,330])
- await page.evaluate(()=>{(window as any).__played=[]});phase=3
- await expect.poll(()=>page.evaluate(()=>(window as any).__played),{timeout:20000}).toEqual([392,494,587,784])
-})
-
+ await api(page);await page.clock.install();await page.addInitScript(()=>{const original=window.AudioContext;(window as any).__played=[];window.AudioContext=new Proxy(original,{construct(target,args){const context=Reflect.construct(target,args) as AudioContext;const create=context.createOscillator.bind(context);context.createOscillator=()=>{const oscillator=create(),start=oscillator.start.bind(oscillator);oscillator.start=(...args:Parameters<typeof start>)=>{(window as any).__played.push(oscillator.frequency.value);return start(...args)};return oscillator};return context}})});
+ let phase=0;let reads=0;const events=[{id:'historical',type:'calendar_approved'},{id:'approval-new',type:'calendar_approved'},{id:'production-new',type:'calendar_production_started'},{id:'client-new',type:'client_created'}];
+ await page.route('**/rest/v1/notifications?**',route=>{reads++;return route.fulfill({json:events.slice(0,phase+1).map(e=>({...e,agency_id:agencyA,recipient_id:userId,title:e.id,body:'TESTE CONTROLADO',read_at:null,created_at:new Date().toISOString()}))})});
+ await login(page);await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible();await page.goto('/notifications');await expect.poll(()=>reads).toBeGreaterThan(0);await page.getByRole('button',{name:'Ativar sons de notificação',exact:true}).click();await page.evaluate(()=>{(window as any).__played=[]});
+ const expected=[[523,659,784],[220,330],[392,494,587,784]];
+ for(let i=0;i<3;i++){phase=i+1;const before=reads;await page.clock.runFor(15001);await expect.poll(()=>reads).toBeGreaterThan(before);await expect.poll(()=>page.evaluate(()=>(window as any).__played)).toEqual(expected[i]);await page.evaluate(()=>{(window as any).__played=[]})}
+ const before=reads;await page.clock.runFor(15001);await expect.poll(()=>reads).toBeGreaterThan(before);expect(await page.evaluate(()=>(window as any).__played)).toEqual([]);
+});
 
 test('production workspace groups and filters real demands and creates in its project', async ({page}) => {
   await api(page)
@@ -400,6 +329,7 @@ test('production workspace groups and filters real demands and creates in its pr
   let created:any, updated:any
   await page.route('https://audit-auth.supabase.co/rest/v1/**',async route=>{
     const u=new URL(route.request().url()), table=u.pathname.split('/').pop()
+    if(table==='move_task'){updated={column_id:route.request().postDataJSON().p_column_id,status:'review'};Object.assign(rows[0],updated);return route.fulfill({json:null})}
     if(table==='tasks'){
       if(route.request().method()==='PATCH'){updated=route.request().postDataJSON();Object.assign(rows[0],updated);return route.fulfill({json:null})}
       if(route.request().method()==='POST'){created=route.request().postDataJSON();return route.fulfill({json:{id:'13131313-1313-4313-8313-131313131313'}})}
@@ -413,18 +343,18 @@ test('production workspace groups and filters real demands and creates in its pr
   })
   await page.goto('/login');await page.getByLabel('E-mail',{exact:true}).fill(user.email);await page.getByLabel('Senha',{exact:true}).fill('test-only-password');await page.getByRole('button',{name:'Entrar',exact:true}).click();await expect(page).toHaveURL(/dashboard/)
   await page.goto('/production/design')
-  await expect(page.getByRole('heading',{name:'Identidade da campanha',exact:true})).toBeVisible()
+  await expect(page.locator('[data-client-card]')).toBeVisible();await page.locator('[data-client-card] button[aria-expanded=false]').click();await expect(page.getByRole('button',{name:/Identidade da campanha/})).toBeVisible()
   await page.getByLabel('Etapa',{exact:true}).selectOption('review')
   await expect(page.getByText('Nenhuma demanda corresponde aos filtros.')).toBeVisible()
   await page.getByLabel('Etapa',{exact:true}).selectOption('')
   await page.getByRole('button',{name:'Nova demanda',exact:true}).click()
   await page.getByLabel('Projeto da demanda').selectOption(projectId)
   await page.getByRole('button',{name:'Continuar',exact:true}).click()
-  await page.locator('#task-title').fill('Carrossel de lançamento')
+  await page.locator('#task-title').fill('Carrossel de lançamento');await page.getByLabel('Formato da demanda',{exact:true}).selectOption('carousel');for(const label of ['Texto de apoio','CTA','Legenda','Hashtags','Direção criativa','Ângulo e enquadramento'])await page.getByLabel(label,{exact:true}).fill(label+' — TESTE');await page.getByLabel('Lâminas do carrossel',{exact:true}).fill('Lâmina 1: Introdução\nLâmina 2: CTA')
   await page.getByRole('button',{name:'Criar Tarefa',exact:true}).click()
   await expect.poll(()=>created?.title).toBe('[Design] Carrossel de lançamento')
   expect(created.project_id).toBe(projectId);expect(created.agency_id).toBe(agencyA);expect(created.status).toBe('open')
-  await page.getByRole('button',{name:/Ver demanda/}).first().click()
+  for(const button of await page.locator('[data-client-card] button[aria-expanded=false]').all())await button.click();await page.getByRole('button',{name:/Identidade da campanha/}).first().click()
   await expect(page.locator('input').filter({hasNot:page.locator('[type=hidden]')}).first()).toBeVisible()
   await page.locator('[role=dialog] select').filter({has:page.locator('option[value="'+columnId+'"]')}).selectOption('20202020-2020-4020-8020-202020202020')
   await expect.poll(()=>updated?.status).toBe('review')
@@ -438,7 +368,7 @@ test('production workspace groups and filters real demands and creates in its pr
     await expect(page.getByText('Sua produção de '+title+' começa aqui.')).toBeVisible()
     if(path==='traffic') {
       await expect(page.getByRole('heading',{name:'Resultados dos clientes',exact:true})).toBeVisible()
-      await expect(page.getByText('Integração Meta pendente',{exact:true})).toBeVisible()
+      await page.getByLabel('Cliente dos resultados Meta',{exact:true}).selectOption('33333333-3333-4333-8333-333333333333');await page.getByRole('button',{name:'Consultar resultados',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Configure e autorize a integração Meta')
     }
   }
 })
@@ -457,20 +387,15 @@ test('production workspace respects consultation permissions and displays backen
 
 
 test('monthly generator consumes client strategy pillars and preserves exact campaign quotas',async({page})=>{
- await api(page,{owner:true});
- const strategy='77777777-7777-4777-8777-777777777777';
+ await api(page,{owner:true});const strategy='77777777-7777-4777-8777-777777777777',clientId='33333333-3333-4333-8333-333333333333',campaignId='99999999-9999-4999-8999-999999999999';let saved:any;
  await page.route('**/rest/v1/content_strategies?**',route=>route.fulfill({json:[{id:strategy,name:'Estratégia aprovada',objective:'Gerar contatos',target_audience:'Empreendedores locais',tone_of_voice:'Formal',brand_positioning:'Atendimento consultivo',restrictions:['Não mencionar desconto']}]}));
  await page.route('**/rest/v1/editorial_pillars?**',route=>route.fulfill({json:[{id:'88888888-8888-4888-8888-888888888888',name:'Consultoria aprovada',percentage:100,example_topics:['Planejamento','Consultoria','Rotina'],content_formats:['post','carrossel','reels']}]}));
- await login(page); await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible();
- await page.goto('/editorial');await page.getByLabel('Cliente',{exact:true}).selectOption('33333333-3333-4333-8333-333333333333');
- await page.getByLabel('Estratégia do cliente',{exact:true}).selectOption(strategy);
- await expect(page.getByRole('textbox',{name:'Objetivo',exact:true})).toHaveValue('Gerar contatos');
- await expect(page.getByRole('textbox',{name:'Restrições',exact:true})).toHaveValue('Não mencionar desconto');
- await expect(page.getByText(/Pilares elegíveis:/)).toContainText('Consultoria aprovada');
- await page.getByLabel('Post',{exact:true}).fill('1');await page.getByLabel('Reels',{exact:true}).fill('1');await page.getByLabel('Carrossel',{exact:true}).fill('1');
- await page.getByRole('button',{name:'Gerar calendário mensal',exact:true}).click();
- await expect(page.getByLabel(/Tema do conteúdo/)).toHaveCount(3);
- await expect(page.getByText(/3 propostas; 1 posts, 1 carrosséis e 1 reels/)).toContainText('Consultoria aprovada: 3');
+ await page.route('**/rest/v1/rpc/save_monthly_editorial',route=>{saved=route.request().postDataJSON();return route.fulfill({json:campaignId})});
+ await page.route('**/rest/v1/monthly_editorial_campaigns?**',route=>{const campaign=saved?{id:campaignId,agency_id:agencyA,client_id:clientId,month:saved.p_month,context:saved.p_context,items:saved.p_items,status:'draft',project_id:null}:null;return route.fulfill({json:new URL(route.request().url()).searchParams.has('id')?campaign:campaign?[campaign]:[]})});
+ await login(page);await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toBeVisible();await page.goto('/editorial/new?clientId='+clientId);await page.getByRole('button',{name:/Direção editorial/}).click();await page.getByLabel('Estratégia do cliente',{exact:true}).selectOption(strategy);
+ await expect(page.getByRole('textbox',{name:'Objetivo',exact:true})).toHaveValue('Gerar contatos');await expect(page.getByRole('textbox',{name:'Restrições',exact:true})).toHaveValue('Não mencionar desconto');await expect(page.getByText(/Pilares elegíveis:/)).toContainText('Consultoria aprovada');
+ await page.getByRole('button',{name:/Formatos e volume/}).click();for(const label of ['Post','Reels','Carrossel'])await page.getByLabel(label,{exact:true}).fill('1');await page.getByRole('button',{name:/Revisar e gerar/}).click();await page.getByRole('button',{name:'Gerar calendário mensal',exact:true}).click();await expect(page.getByRole('button',{name:/^Abrir demanda \d+$/})).toHaveCount(3);
+ expect(saved.p_context.strategyId).toBe(strategy);expect(saved.p_context.requestedCounts).toEqual({post:1,reels:1,carousel:1});expect(saved.p_items).toHaveLength(3);expect(saved.p_items.every((i:any)=>i.editorial.pillar==='Consultoria aprovada')).toBe(true);
 });
 
 test('password visibility and staged CSV import preserve confirmation and tenant',async({page})=>{
@@ -486,10 +411,10 @@ test('password visibility and staged CSV import preserve confirmation and tenant
 })
 test('Google missing configuration does not simulate a connection',async({page})=>{
  await api(page);await page.route('**/functions/v1/google-workspace',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({configured:false,connected:false})}))
- await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/settings/integrations/google');await expect(page.getByText('Configuração necessária no Google Cloud e no backend.',{exact:false})).toBeVisible();await expect(page.getByRole('button',{name:'Conectar Google Agenda e Drive'})).toBeDisabled()
+ await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/settings/integrations/google');await expect(page.getByText('Configuração necessária no Google Cloud e no backend.',{exact:false})).toBeVisible();await expect(page.getByRole('button',{name:'Conectar conta central Google da agência'})).toBeDisabled()
 })
 test('client journey queries stay scoped and editorial keeps selected client',async({page})=>{
- const reads=await api(page);await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/clients/33333333-3333-4333-8333-333333333333/workspace');await expect(page.getByRole('heading',{name:'Cliente da agência A',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Calendário e aprovação',exact:true})).toBeVisible();await page.getByRole('link',{name:'Planejar calendário deste cliente'}).click();await expect(page).toHaveURL(/editorial\?clientId=33333333/);expect(reads).toContain(`eq.${agencyA}`)
+ const reads=await api(page);await login(page);await expect(page).toHaveURL(/dashboard/);await page.goto('/clients/33333333-3333-4333-8333-333333333333/workspace');await expect(page.getByRole('heading',{name:'Cliente da agência A',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Calendário e aprovação',exact:true})).toBeVisible();await page.getByRole('link',{name:'Planejar calendário deste cliente'}).click();await expect(page).toHaveURL(/editorial\/new\?clientId=33333333/);await expect(page.getByLabel('Cliente',{exact:true})).toHaveValue('33333333-3333-4333-8333-333333333333');expect(reads).toContain(`eq.${agencyA}`)
 })
 
 test('changing agency discards CSV review and confirmation',async({page})=>{
@@ -504,7 +429,7 @@ test('Portuguese client export generates slug and translates status before confi
  await page.route('**/rest/v1/rpc/import_clients_csv', route => {
   const body=route.request().postDataJSON();
   expect(body.p_agency_id).toBe(agencyA);
-  expect(body.p_rows).toEqual([{row:2,name:'Agência São José',slug:'agencia-sao-jose',status:'active'}]);
+  expect(body.p_rows).toEqual([{row:2,name:'Agência São José',slug:'agencia-sao-jose',status:'active',profile:{niche:'Serviços',source_id:'externo'}}]);
   imported=true;
   return route.fulfill({contentType:'application/json',body:JSON.stringify({results:[{row:2,status:'imported',message:'Cliente cadastrado.'}]})});
  });
@@ -515,7 +440,7 @@ test('Portuguese client export generates slug and translates status before confi
  const chooser=await chooserPromise;
  await chooser.setFiles({name:'exportacao.csv',mimeType:'text/csv',buffer:Buffer.from('\uFEFFID;Nome do cliente;Status;Nicho\r\nexterno;Agência São José;ativo;Serviços')});
  await expect(page.getByRole('cell',{name:'agencia-sao-jose',exact:true})).toBeVisible();
- await expect(page.getByText('Colunas não importadas:',{exact:false})).toContainText('ID, Nicho');
+ await expect(page.getByText('Colunas não importadas:',{exact:false})).toContainText('nenhuma');
  await page.getByRole('button',{name:'Revisar importação'}).click(); expect(imported).toBe(false);
  await page.getByRole('button',{name:'Confirmar e importar clientes'}).click();
  await expect(page.getByText('Linha 2: imported — Cliente cadastrado.')).toBeVisible(); expect(imported).toBe(true);
@@ -531,5 +456,5 @@ test('Google network error can be retried and configuration instructions identif
  available=true; await page.getByRole('button',{name:'Tentar novamente',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Ativar Agenda e Drive no Google Cloud'})).toBeVisible();
  await expect(page.getByRole('link',{name:'Abrir credenciais do Google Cloud'})).toHaveAttribute('href',/firm-pentameter-474412-h7/);
- await expect(page.getByRole('button',{name:'Conectar Google Agenda e Drive'})).toBeDisabled();
+ await expect(page.getByRole('button',{name:'Conectar conta central Google da agência'})).toBeDisabled();
 });

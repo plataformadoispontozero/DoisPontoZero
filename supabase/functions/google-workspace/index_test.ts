@@ -10,10 +10,13 @@ Deno.test('Google OAuth checks session/permission, uses PKCE, encrypts credentia
  globalThis.fetch=async(input:RequestInfo|URL,init?:RequestInit)=>{
   const url=String(input),body=String(init?.body||'')
   if(url.endsWith('/auth/v1/user'))return json({id:'11111111-1111-4111-8111-111111111111',email:'test@example.invalid'})
+  if(url.includes('/rpc/integration_provider_secret'))return json({ciphertext:null})
+  if(url.includes('/rpc/google_workspace_connection'))return json({user:saved?'11111111-1111-4111-8111-111111111111':null})
+  if(url.includes('/rpc/google_workspace_connect')){const args=JSON.parse(body);if(!authorized)return json({message:'permission denied'},403);saved=args.p_ciphertext;return json({})}
   if(url.includes('/rpc/google_workspace_permission'))return json(authorized)
   if(url.includes('/rpc/google_workspace_secret')){const args=JSON.parse(body);if(args.p_action==='state'){state=args;return json({})}if(args.p_action==='consume'){if(!state||state.p_hash!==args.p_hash)return json({message:'invalid state'},400);const value={agency:state.p_agency,user:state.p_user,ciphertext:state.p_ciphertext};state=null;return json(value)}if(args.p_action==='save'){saved=args.p_ciphertext;return json({})}if(args.p_action==='read')return json({ciphertext:saved});return json({})}
   if(url.includes('/rest/v1/agency_members'))return json({id:'member-test'})
-  if(url==='https://oauth2.googleapis.com/token'){tokenCalls++;const params=new URLSearchParams(body);assert(params.has('code_verifier'),'PKCE verifier required');return json({access_token:'provider-access-only',refresh_token:'provider-refresh-only',expires_in:3600,scope:'openid email https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/calendar.events.readonly'})}
+  if(url==='https://oauth2.googleapis.com/token'){tokenCalls++;const params=new URLSearchParams(body);assert(params.has('code_verifier'),'PKCE verifier required');return json({access_token:'provider-access-only',refresh_token:'provider-refresh-only',expires_in:3600,scope:'openid email https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/calendar.events.readonly'})}
   if(url==='https://openidconnect.googleapis.com/v1/userinfo')return json({sub:'account-test',email:'google@example.invalid',email_verified:true})
   throw Error(`Unexpected test request: ${new URL(url).pathname}`)
  }

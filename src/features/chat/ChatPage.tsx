@@ -1,3 +1,5 @@
+import {officeEnabled} from '@/features/office/officeFeature'
+import {OfficeOverview} from '@/features/office/OfficeOverview'
 import { useAgencyId, usePermission } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -38,7 +40,7 @@ import { useSquads } from '../squads/hooks/useSquads'
 import { useProjects } from '../projects/hooks/useProjects'
 import type { ChatChannel, ChatMessage, ChannelType, ChannelVisibility } from '@/types/chat'
 
-export const ChatPage: React.FC = () => {
+export const ChatPage: React.FC<{officeMode?:boolean}> = ({officeMode=false}) => {
   const agencyId = useAgencyId()
   const canMeet = usePermission('meetings.view')
   const canCreateRoom = usePermission('chat.create_channels')
@@ -55,7 +57,7 @@ export const ChatPage: React.FC = () => {
 
   // Active Target Selection
   const activeChannelId = channelId || null
-  const roomPresence=useRoomPresence(channelId)
+  const roomPresence=useRoomPresence(safeChannels.some(c=>c.id===channelId)?channelId:null)
   const activeConversationId = conversationId || null
   const isConversationMode = Boolean(activeConversationId)
   const activeTargetId = isConversationMode ? activeConversationId : activeChannelId
@@ -149,7 +151,7 @@ export const ChatPage: React.FC = () => {
         <div className="p-3 border-b border-surface-border flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-content-secondary flex items-center">
             <MessageSquare className="w-4 h-4 mr-1.5 text-brand-primary" />
-            Team Chat · Salas
+            {officeMode?'Escritório Digital':officeEnabled?'Mensagens · Escritório Digital':'Team Chat · Salas'}
           </h2>
           <Button variant="ghost" size="sm" aria-label="Criar novo canal" disabled={!canCreateRoom} onClick={openCreate}>
             <Plus className="w-4 h-4" />
@@ -221,7 +223,7 @@ export const ChatPage: React.FC = () => {
       {/* ÁREA CENTRAL DE MENSAGENS */}
       <div className="min-w-0 min-h-0 flex-1 flex flex-col h-full bg-surface-card overflow-hidden">
         {(actionError||channelsError||conversationsError||messagesError||membersError||markRead.error)&&<div role="alert" className="p-3 text-sm text-red-400">{actionError||'Não foi possível sincronizar o chat. Confira sua conexão e tente novamente.'}</div>}
-        {showingRooms?<div className="flex-1 overflow-y-auto"><WorkRooms rooms={visibleChannels} onEnter={id=>navigate(`/chat/channels/${id}`)} onCreate={openCreate} canCreate={canCreateRoom} onMeetings={canMeet?()=>navigate('/meetings'):undefined}/></div>:<>
+        {showingRooms?<div className="flex-1 overflow-y-auto"><>{officeMode&&<OfficeOverview rooms={safeChannels.length} loading={isLoadingChannels} failed={!!channelsError}/>}<WorkRooms compact={officeMode} rooms={visibleChannels} onEnter={id=>navigate(`/chat/channels/${id}`)} onCreate={openCreate} canCreate={canCreateRoom} onMeetings={canMeet?()=>navigate('/meetings'):undefined}/></></div>:<>
         {/* Chat Header */}
         <div className="p-3.5 border-b border-surface-border flex items-center justify-between bg-surface-card">
           <div className="flex items-center space-x-2">
@@ -249,7 +251,7 @@ export const ChatPage: React.FC = () => {
           </div>
         </div>
 
-        {!isConversationMode&&<div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-3 text-xs text-zinc-400" aria-label="Presença na sala">{roomPresence.isError?<span role="status">Presença indisponível. As mensagens continuam disponíveis.</span>:roomPresence.isFetching&&!roomPresence.data?<span>Verificando presença…</span>:<><span title="Atividade na sala nos últimos dois minutos">Presentes nesta sala</span>{roomPresence.data?.map(person=><span key={person.user_id} className="flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">{person.avatar_url?<img src={person.avatar_url} alt="" className="h-5 w-5 rounded-full"/>:<span aria-hidden="true" className="h-2 w-2 rounded-full bg-orange-400"/>}{person.name||'Membro da equipe'}</span>)}</>}</div>}
+        {!isConversationMode&&<div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-3 text-xs text-zinc-400" aria-label="Presença na sala">{roomPresence.isError?<span role="status">Presença indisponível. As mensagens continuam disponíveis.</span>:roomPresence.isFetching&&!roomPresence.data?<span>Verificando presença…</span>:<><span title="Presença da equipe na sala de mensagens">Presentes nesta sala</span>{roomPresence.data?.map(person=><span key={person.user_id} className="flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">{person.avatar_url?<img src={person.avatar_url} alt="" className="h-5 w-5 rounded-full"/>:<span aria-hidden="true" className="h-2 w-2 rounded-full bg-orange-400"/>}{person.name||'Membro da equipe'}</span>)}</>}</div>}
         {/* Message Feed */}
         <div className="min-h-0 flex-1 overflow-y-auto p-5 space-y-5 bg-gradient-to-b from-white/[0.01] to-transparent">
           {isLoadingMessages ? (

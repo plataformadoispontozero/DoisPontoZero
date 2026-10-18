@@ -148,10 +148,12 @@ async function fetchProjectProgress(projectId: string): Promise<ProjectProgress>
 // Hooks
 // -------------------------
 export function useProjects(agencyId?: string) {
+  const activeAgencyId = useAgencyId()
+  const targetAgencyId = agencyId ?? activeAgencyId
   return useQuery({
-    queryKey: projectKeys.list(agencyId ?? ''),
-    queryFn: () => fetchProjects(agencyId!),
-    enabled: isSupabaseConfigured && !!agencyId,
+    queryKey: projectKeys.list(targetAgencyId),
+    queryFn: () => fetchProjects(targetAgencyId),
+    enabled: isSupabaseConfigured && !!targetAgencyId,
     staleTime: 30_000,
   })
 }

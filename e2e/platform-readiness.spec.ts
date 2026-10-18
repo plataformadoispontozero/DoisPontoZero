@@ -33,6 +33,7 @@ async function api(page: Page, options: { member?: boolean; owner?: boolean; fai
       {id:'66666666-6666-4666-8666-666666666666',title:'Reunião de outro usuário',starts_at:new Date().toISOString(),organizer_id:'other-user',meeting_participants:[]},
     ])
     if (options.agenda && table === 'tasks') return respond([{id:'77777777-7777-4777-8777-777777777777',title:'Prazo da minha tarefa',due_date:new Date().toISOString().slice(0,10),task_assignees:[{user_id:userId}]}])
+    if (table === 'get_management_kanban') return respond({tasks:[],has_more:false,next_offset:0})
     if (table === 'notifications') {
       reads.push('notification:' + url.searchParams.get('recipient_id'))
       if (url.searchParams.has('user_id')) return respond({code:'42703',message:'column user_id does not exist'},400)
@@ -101,7 +102,7 @@ test('social workflow loads selected client and links its actual campaign stage'
  await expect(page.getByRole('heading',{name:'Demandas do cliente'})).toBeVisible();
  await expect(page.getByRole('link',{name:'Criar calendário'})).toHaveAttribute('href','/editorial/new?clientId=33333333-3333-4333-8333-333333333333');
  await expect(page.getByRole('link',{name:'Abrir calendário'})).toHaveAttribute('href','/editorial?clientId=33333333-3333-4333-8333-333333333333&campaignId=77777777-7777-4777-8777-777777777777');
- await expect(page.getByRole('link',{name:'Abrir produção'})).toHaveAttribute('href','/projects/66666666-6666-4666-8666-666666666666');
+ await expect(page.getByRole('link',{name:'Abrir produção'})).toHaveCount(0);
  expect(reads).toContain('social:eq.'+agencyA+':eq.33333333-3333-4333-8333-333333333333:eq.2026-10-01');
  expect(reads.some(r=>r.includes('demo-agency'))).toBe(false);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
@@ -125,7 +126,7 @@ test('presentation fits its container and persists per-material decisions',async
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
  await expect(page.getByRole('link',{name:/Drive/})).toHaveCount(0);
  await page.getByRole('button',{name:'Aprovar',exact:true}).first().click();await expect(page.getByText('Aprovado',{exact:true})).toBeVisible();
- await page.getByRole('button',{name:'Solicitar ajuste',exact:true}).last().click();await page.getByLabel('O que precisa mudar?').fill('Ajustar contraste');await page.getByRole('button',{name:'Enviar retorno'}).click();await expect(page.getByText('Ajuste solicitado',{exact:true})).toBeVisible();
- await page.reload();await expect(page.getByText('Aprovado',{exact:true})).toBeVisible();await expect(page.getByText('Ajustar contraste',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Próxima imagem'}).click();await page.getByRole('button',{name:'Reprovar',exact:true}).click();await page.getByLabel('Por que o material foi reprovado?').fill('Ajustar contraste');await page.getByRole('button',{name:'Enviar retorno'}).click();await expect(page.getByText('Reprovado',{exact:true})).toBeVisible();
+ await page.reload();await expect(page.getByText('Aprovado',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Próxima imagem'}).click();await expect(page.getByText('Ajustar contraste',{exact:true})).toBeVisible();
  await page.screenshot({path:testInfo.outputPath('presentation-responsive.png'),fullPage:true});
 });

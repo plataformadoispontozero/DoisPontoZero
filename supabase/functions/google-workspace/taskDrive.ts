@@ -14,7 +14,7 @@ export async function handleTaskDrive(input:Input):Promise<Response>{
  async function request(url:string,options:RequestInit={}){const r=await fetch(url,{...options,headers:{...auth,...options.headers}});if(!r.ok){if(r.status===401)throw new DriveError('A conexão com o Google precisa ser renovada.',401);if(r.status===404)throw new DriveError('A pasta ou arquivo não foi encontrado no Google Drive.',404);if(r.status===429)throw new DriveError('O Google Drive está limitando temporariamente os envios.',429);if(r.status===403)throw new DriveError('Esta pasta ainda não está autorizada para envio. Solicite autorização à gestão.',403);throw new DriveError('O Google Drive não concluiu a operação. Tente novamente.',502)}return r}
  async function meta(fileId:string){if(!id(fileId))throw new DriveError('Referência Drive inválida.');return (await request(`https://www.googleapis.com/drive/v3/files/${fileId}?fields=id,name,mimeType,parents,trashed,isAppAuthorized,capabilities(canAddChildren),size,version,appProperties,thumbnailLink&supportsAllDrives=true`)).json()}
  const parents=async(fileId:string)=>{const m=await meta(fileId);return m.trashed||m.mimeType==='application/vnd.google-apps.shortcut'?[]:(m.parents||[])};
- function folderView(m:Record<string,unknown>){const capabilities=m.capabilities as {canAddChildren?:boolean}|undefined;return {id:m.id,name:m.name,parentId:(m.parents as string[]|undefined)?.[0]||null,isAppAuthorized:m.isAppAuthorized===true,canUpload:m.isAppAuthorized===true&&capabilities?.canAddChildren===true}}
+ function folderView(m:Record<string,unknown>){const capabilities=m.capabilities as {canAddChildren?:boolean}|undefined;return {id:m.id,name:m.name,parentId:(m.parents as string[]|undefined)?.[0]||null,isAppAuthorized:m.isAppAuthorized===true,canAddChildren:capabilities?.canAddChildren===true,canUpload:m.isAppAuthorized===true&&capabilities?.canAddChildren===true}}
  try{
   const clientRoot=folderIdFromUrl(c.clientDriveUrl),agencyRoot=folderIdFromUrl(configuration.rootFolderUrl);
   if(!clientRoot&&body.action==='task-drive-list')return reply({client:{id:c.clientId,name:c.clientName},root:null,folder:null,folders:[],files:[],attachments:[],savedFolderId:c.savedFolderId,period:{dueDate:c.dueDate,editorialMonth:c.editorialMonth||null},canManage:c.canManage,canAuthorize:centralAdmin,missingClientFolder:true});
@@ -29,6 +29,7 @@ export async function handleTaskDrive(input:Input):Promise<Response>{
 
   if(body.action==='task-drive-picker-session'){
    if(!centralAdmin)throw new DriveError('Somente a gestão autorizada pode conceder acesso à pasta pelo Google Picker.',403);
+   if(configuration.projectNumber&&/^\d+-/.test(configuration.clientId)&&configuration.clientId.split('-')[0]!==configuration.projectNumber)throw new DriveError('O número do projeto do Google Picker não corresponde ao cliente OAuth. Confira a integração Google nas configurações.',409);
    if(!configuration.apiKey||!configuration.projectNumber)throw new DriveError('Configure o Google Picker na integração existente.',409);
    return reply({accessToken,apiKey:configuration.apiKey,appId:configuration.projectNumber,folderId:target.id});
   }
@@ -40,6 +41,20 @@ export async function handleTaskDrive(input:Input):Promise<Response>{
    const root=target.id===clientRoot?target:await folder(clientRoot);
    const files=(data.files||[]).filter((m:{parents?:string[];mimeType?:string})=>m.parents?.includes(target.id)&&m.mimeType!=='application/vnd.google-apps.shortcut');
    return reply({client:{id:c.clientId,name:c.clientName},root:{id:root.id,name:root.name},folder:folderView(target),folders:files.filter((m:{mimeType:string})=>m.mimeType===FOLDER).map(folderView),files:files.filter((m:{mimeType:string})=>m.mimeType!==FOLDER),attachments:gallery.data||[],savedFolderId:c.savedFolderId,period:{dueDate:c.dueDate,editorialMonth:c.editorialMonth||null},canManage:c.canManage,canAuthorize:centralAdmin,destinationWarning,nextPageToken:data.nextPageToken||null});
+  }
+  if(body.action==='task-drive-import-file'){
+   if(!c.canManage)throw new DriveError('Sem permissão para vincular arquivos a esta demanda.',403);
+   if(!id(body.fileId))throw new DriveError('Arquivo do Drive inválido.');
+   const m=await meta(body.fileId);
+   if(m.trashed||m.mimeType===FOLDER||!m.parents?.includes(target.id))throw new DriveError('Selecione um arquivo que esteja diretamente na pasta escolhida.',403);
+   if(!/^image\/(png|jpeg|webp|gif|avif)$/.test(String(m.mimeType))||!Number.isSafeInteger(Number(m.size))||Number(m.size)<1||Number(m.size)>524288000)throw new DriveError('Selecione uma imagem PNG, JPG, WebP, GIF ou AVIF de até 500 MB.');
+   if(!m.version)throw new DriveError('O Google Drive não retornou a versão desta imagem. Atualize a pasta e tente novamente.');
+   const driveUrl=`https://drive.google.com/file/d/${m.id}/view`;
+   const inserted=await admin.from('task_attachments').insert({agency_id:c.agencyId,task_id:c.taskId,client_id:c.clientId,file_name:m.name,storage_path:`drive:${m.id}`,mime_type:m.mimeType,file_size:Number(m.size),uploaded_by:userId,storage_provider:'google_drive',google_file_id:m.id,google_folder_id:target.id,google_file_version:String(m.version),google_drive_url:driveUrl}).select('*').maybeSingle();
+   if(inserted.error&&inserted.error.code!=='23505')throw new DriveError('Não foi possível vincular esta imagem à demanda.',503);
+   let attachment=inserted.data;
+   if(!attachment){const existing=await admin.from('task_attachments').select('*').eq('task_id',c.taskId).eq('google_file_id',m.id).eq('storage_provider','google_drive').maybeSingle();if(existing.error||!existing.data)throw new DriveError('A imagem já está vinculada, mas não foi possível atualizar a referência.',503);attachment=existing.data;}
+   return reply({attachment});
   }
   if(!c.canManage&&body.action!=='task-drive-preview')throw new DriveError('Sem permissão para gerenciar arquivos desta demanda.',403);
   if(body.action==='task-drive-set-folder'){
