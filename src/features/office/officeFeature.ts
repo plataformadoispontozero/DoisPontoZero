@@ -3,3 +3,5 @@ export function officeRolloutEnabled(value:string|undefined,production:boolean){
 export const officeEnabled=officeRolloutEnabled(import.meta.env.VITE_ENABLE_DIGITAL_OFFICE,import.meta.env.PROD)
 
 export const officeControlsEnabled=officeEnabled&&officeFlagEnabled(import.meta.env.VITE_ENABLE_OFFICE_CONTROLS)
+export const officeCallsEnabled=officeControlsEnabled&&officeFlagEnabled(import.meta.env.VITE_ENABLE_OFFICE_CALLS)
+export const officeMediaEnabled=officeControlsEnabled&&officeFlagEnabled(import.meta.env.VITE_ENABLE_OFFICE_MEDIA)

@@ -85,6 +85,7 @@ export type OfficeDatabase = { public: { Tables: {
           mention_notifications: boolean
           office_auto_join: boolean
           office_camera_id: string | null
+          office_do_not_disturb: boolean
           office_microphone_id: string | null
           office_preferred_room: string | null
           office_speaker_id: string | null
@@ -96,6 +97,7 @@ export type OfficeDatabase = { public: { Tables: {
           mention_notifications?: boolean
           office_auto_join?: boolean
           office_camera_id?: string | null
+          office_do_not_disturb?: boolean
           office_microphone_id?: string | null
           office_preferred_room?: string | null
           office_speaker_id?: string | null
@@ -107,6 +109,7 @@ export type OfficeDatabase = { public: { Tables: {
           mention_notifications?: boolean
           office_auto_join?: boolean
           office_camera_id?: string | null
+          office_do_not_disturb?: boolean
           office_microphone_id?: string | null
           office_preferred_room?: string | null
           office_speaker_id?: string | null
@@ -136,6 +139,12 @@ export type OfficeDatabase = { public: { Tables: {
           },
         ]
       }
+      office_voice_invitations: {
+        Row: { accepted_at:string|null;agency_id:string;caller_id:string;created_at:string;expires_at:string;id:string;recipient_id:string;resolved_at:string|null;status:'pending'|'accepted'|'declined'|'cancelled'|'expired'|'ended' }
+        Insert: { accepted_at?:string|null;agency_id:string;caller_id:string;created_at?:string;expires_at?:string;id?:string;recipient_id:string;resolved_at?:string|null;status?:'pending'|'accepted'|'declined'|'cancelled'|'expired'|'ended' }
+        Update: { accepted_at?:string|null;agency_id?:string;caller_id?:string;created_at?:string;expires_at?:string;id?:string;recipient_id?:string;resolved_at?:string|null;status?:'pending'|'accepted'|'declined'|'cancelled'|'expired'|'ended' }
+        Relationships: []
+      }
 }; Functions: {
       office_configure_room: {
         Args: { p_agency: string; p_enabled: boolean; p_room: string }
@@ -143,4 +152,9 @@ export type OfficeDatabase = { public: { Tables: {
       }
       office_directory: { Args: { p_agency: string }; Returns: Json }
       office_presence_directory: { Args: { p_agency: string }; Returns: Json }
+      office_voice_invite_send: { Args: { p_agency:string;p_recipient:string }; Returns: Json }
+      office_voice_invite_directory: { Args: { p_agency:string }; Returns: Json }
+      office_voice_invite_respond: { Args: { p_invitation:string;p_response:string }; Returns: Json }
+      office_voice_set_do_not_disturb: { Args: { p_agency:string;p_enabled:boolean }; Returns: undefined }
+      office_voice_context: { Args: { p_room:string;p_consume?:boolean }; Returns: Json }
 } } }

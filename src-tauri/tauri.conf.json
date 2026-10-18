@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Dois.Zero \u2014 Workspace",
+        "title": "Dois.Zero — Workspace",
         "width": 1280,
         "height": 820,
         "minWidth": 390,
@@ -20,7 +20,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' asset: http://asset.localhost data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'self'; frame-src 'none'"
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' asset: http://asset.localhost data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost https://*.supabase.co wss://*.supabase.co https://*.livekit.cloud wss://*.livekit.cloud; object-src 'none'; base-uri 'self'; frame-src 'none'; media-src 'self' blob:"
     }
   },
   "bundle": {
@@ -32,7 +32,10 @@
       "../public/app-icons/app.icns",
       "../public/app-icons/app.ico"
     ],
-    "shortDescription": "Opera\u00e7\u00e3o da ag\u00eancia Dois.Zero",
-    "category": "Productivity"
+    "shortDescription": "Operação da agência Dois.Zero",
+    "category": "Productivity",
+    "macOS": {
+      "infoPlist": "Info.plist"
+    }
   }
 }

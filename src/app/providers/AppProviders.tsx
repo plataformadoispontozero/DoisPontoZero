@@ -4,12 +4,13 @@ import { BrandingProvider } from '@/app/providers/BrandingProvider'
 import { ToastProvider } from '@/components/ui/Toast'
 import {officeEnabled} from '@/features/office/officeFeature'
 import {OfficePresenceProvider} from '@/features/office/OfficePresenceProvider'
+import {OfficeCallsProvider} from '@/features/office/OfficeCallsProvider'
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider'
 const OfficeVoiceProvider=lazy(()=>import('@/features/office/OfficeVoiceProvider').then(module=>({default:module.OfficeVoiceProvider})))
 function VoiceScope({children}:{children:ReactNode}){
  const auth=useAuth()
  if(!officeEnabled||!auth.session)return children
- return <Suspense fallback={<p role="status" className="p-6 text-sm">Carregando salas de voz…</p>}><OfficeVoiceProvider>{children}</OfficeVoiceProvider></Suspense>
+ return <Suspense fallback={<p role="status" className="p-6 text-sm">Carregando salas de voz…</p>}><OfficeVoiceProvider><OfficeCallsProvider>{children}</OfficeCallsProvider></OfficeVoiceProvider></Suspense>
 }
 
 function ScopedProviders({ children }: { children: ReactNode }) {

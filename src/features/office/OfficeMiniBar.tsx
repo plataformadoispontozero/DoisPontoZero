@@ -1,10 +1,12 @@
 import {Link} from 'react-router-dom'
 import {Mic,MicOff,LogOut,Headphones} from 'lucide-react'
 import {useOfficeVoice} from './OfficeVoiceContext'
+import {useOfficeCalls} from './OfficeCallsContext'
 import {officeControlsEnabled} from './officeFeature'
 
 export function OfficeMiniBar(){
  const voice=useOfficeVoice()
+ const calls=useOfficeCalls()
  if(!officeControlsEnabled||(!voice.roomId&&!voice.error))return null
  const connected=voice.state==='connected'
  const speakers=connected?voice.participants.filter(p=>p.speaking).map(p=>p.name):[]
@@ -17,7 +19,7 @@ export function OfficeMiniBar(){
     <span role="status" className="block truncate text-xs text-zinc-400">{status}{connected?` · ${voice.participants.length} na sala`:''}</span>
     {speakers.length>0&&<span className="block truncate text-xs text-emerald-300">Falando: {speakers.join(', ')}</span>}
    </Link>
-   {voice.roomId&&<><button type="button" aria-label={voice.microphone?'Desligar microfone da sala':'Ligar microfone da sala'} aria-pressed={voice.microphone} disabled={!connected||voice.microphoneBusy} className={button} onClick={()=>void voice.setMicrophone(!voice.microphone)}>{voice.microphone?<Mic aria-hidden="true" className="h-4 w-4"/>:<MicOff aria-hidden="true" className="h-4 w-4"/>}<span className="hidden sm:inline">{voice.microphone?'Microfone ligado':'Microfone desligado'}</span></button><button type="button" aria-label="Sair da sala de voz" className={button+' border-red-400/40 text-red-200'} onClick={()=>void voice.leave()}><LogOut aria-hidden="true" className="h-4 w-4"/><span className="hidden sm:inline">Sair</span></button></>}
+   {voice.roomId&&<><button type="button" aria-label={voice.microphone?'Desligar microfone da sala':'Ligar microfone da sala'} aria-pressed={voice.microphone} disabled={!connected||voice.microphoneBusy} className={button} onClick={()=>void voice.setMicrophone(!voice.microphone)}>{voice.microphone?<Mic aria-hidden="true" className="h-4 w-4"/>:<MicOff aria-hidden="true" className="h-4 w-4"/>}<span className="hidden sm:inline">{voice.microphone?'Microfone ligado':'Microfone desligado'}</span></button><button type="button" aria-label="Sair da sala de voz" className={button+' border-red-400/40 text-red-200'} onClick={()=>void (calls.current?calls.leave():voice.leave())}><LogOut aria-hidden="true" className="h-4 w-4"/><span className="hidden sm:inline">Sair</span></button></>}
   </div>
   {voice.audioBlocked&&<button type="button" className="mt-2 min-h-11 rounded-lg bg-orange-600 px-3 text-sm" onClick={()=>void voice.startAudio()}>Ativar áudio da sala</button>}
   {voice.error&&<p role="alert" className="mt-2 max-h-24 overflow-y-auto text-xs text-red-200">{voice.error} <Link to="/office" className="underline">Voltar às salas</Link></p>}

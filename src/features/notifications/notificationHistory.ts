@@ -13,6 +13,7 @@ export function notificationDestination(notification: AppNotification): string |
   if (notification.resource_type === 'meeting') return `/meetings/${notification.resource_id}`
   if (notification.resource_type === 'chat_conversation') return `/chat/direct/${notification.resource_id}`
   if (notification.resource_type === 'chat_channel') return `/chat/channels/${notification.resource_id}`
+  if (notification.resource_type === 'office_voice_invitation') return '/office'
   return null
 }
 
@@ -25,6 +26,7 @@ export function notificationTypeLabel(type: string): string {
     meeting_cancelled: 'Reuniões canceladas', meeting_action_assigned: 'Ações de reunião',
     chat_mention: 'Menções no chat', chat_direct_message: 'Mensagens diretas',
     chat_channel_message: 'Mensagens de canal', team_registration_pending: 'Cadastros aguardando aprovação', team_registration_requested: 'Solicitações de cadastro',
+    office_voice_invitation: 'Convites para conversa de voz',
     team_registration_request: 'Solicitações de cadastro', team_registration_approved: 'Cadastros aprovados',
     team_registration_rejected: 'Cadastros recusados',
   }

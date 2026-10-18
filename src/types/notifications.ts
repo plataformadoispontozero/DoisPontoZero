@@ -20,6 +20,7 @@ export type NotificationType =
   | 'chat_mention'
   | 'chat_direct_message'
   | 'chat_channel_message'
+  | 'office_voice_invitation'
 
 export interface AppNotification {
   id: string
