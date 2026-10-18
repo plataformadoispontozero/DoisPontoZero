@@ -17,6 +17,7 @@ async function setup(page:Page,index:number,hub:PresenceHub){
  if(table==='agency_members')data=[{agency_id:agency,role_id:'33333333-3333-4333-8333-333333333333',status:'active',agencies:{id:agency,name:'Agência QA',status:'active'},roles:{name:'OWNER'}}]
  if(table==='office_presence_directory')data=members
  if(table==='office_directory')data=[]
+ if(table==='get_management_kanban')data={tasks:[],has_more:false,next_offset:0}
  await route.fulfill({json:data})})
  await page.goto('/login');await page.getByLabel('E-mail',{exact:true}).fill(user.email);await page.getByLabel('Senha',{exact:true}).fill('TEST_ONLY_PASSWORD');await page.getByRole('button',{name:'Entrar',exact:true}).click();await expect(page).toHaveURL(/dashboard/);await page.goto('/office')
 }
@@ -33,3 +34,5 @@ test('published existing image survives an expired Drive thumbnail and page refr
  await page.route('https://audit-auth.supabase.co/**',r=>{const name=new URL(r.request().url()).pathname.split('/').pop();if(name==='google-workspace'){const body=r.request().postDataJSON();expect(body).toMatchObject({action:'presentation-media',assetId:id,publicToken:'PUBLIC_TEST_LINK_123456789012345'});images++;return r.fulfill({contentType:'application/octet-stream',headers:{'X-Presentation-Media-Type':'image/png','Access-Control-Expose-Headers':'X-Presentation-Media-Type'},body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jq1sAAAAASUVORK5CYII=','base64')})}if(name==='get_public_showcase')return r.fulfill({json:{presentation:{title:'Entrega publicada'},sections:[],assets:[{id,title:'Arte publicada',mime_type:'image/png',thumbnail_reference:'https://lh3.googleusercontent.com/EXPIRED',web_view_link:'https://drive.google.com/file/d/google_file_12345/view'}]}});return r.fulfill({json:[]})})
  await page.goto('/showcase/PUBLIC_TEST_LINK_123456789012345');const image=page.getByRole('img',{name:'Arte publicada',exact:true});await expect(image).toHaveAttribute('src',/^blob:/);await expect.poll(()=>image.evaluate((node:HTMLImageElement)=>node.naturalWidth)).toBeGreaterThan(0);await page.reload();await expect(image).toHaveAttribute('src',/^blob:/);await expect.poll(()=>image.evaluate((node:HTMLImageElement)=>node.naturalWidth)).toBeGreaterThan(0);expect(images).toBeGreaterThanOrEqual(2);expect(expired).toBe(0)
 })
+
+test('old project workspace routes resolve to the grouped management board',async({page})=>{const hub=new PresenceHub();await setup(page,0,hub);await page.goto('/projects/66666666-6666-4666-8666-666666666666');await expect(page).toHaveURL(/\/projects$/);await expect(page.getByRole('heading',{name:'Kanban Geral',level:1})).toBeVisible();await expect(page.getByText('PROGRESSO GERAL')).toHaveCount(0)})

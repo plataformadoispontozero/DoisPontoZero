@@ -42,6 +42,22 @@ test('Design groups the demand by client and opens the shared central dialog',as
  await setup(page);await page.goto('/production/design');await expect(page.getByRole('region',{name:'Demandas de Aurora Café — TESTE FICTÍCIO'})).toBeVisible();await expandClients(page);await page.getByRole('button',{name:/Arte Aurora/}).click();await expect(page.getByRole('dialog')).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
+test('production Kanban and list keep the same IDs after filtering by assignee',async({page})=>{
+ await setup(page)
+ const first={...task,id:'filter-ana',title:'[Design] Tarefa Ana — TESTE',status:'open' as const,assignees:[{user_id:userId,profile:{full_name:'Ana — TESTE'}}]}
+ const second={...task,id:'filter-bruno',title:'[Design] Tarefa Bruno — TESTE',status:'open' as const,assignees:[{user_id:'22222222-2222-4222-8222-222222222222',profile:{full_name:'Bruno — TESTE'}}]}
+ await page.route('**/rest/v1/tasks*',route=>route.fulfill({json:[first,second]}))
+ await page.goto('/production/design')
+ await expandClients(page)
+ await expect(page.locator('[data-demand-card]')).toHaveCount(2)
+ await page.getByLabel('Responsável').selectOption('me')
+ await expect(page.locator('[data-demand-card]')).toHaveCount(1)
+ await expect(page.locator('[data-demand-card]')).toHaveAttribute('data-demand-card','filter-ana')
+ await page.getByRole('button',{name:'Ver lista'}).click()
+ await expect(page.getByRole('button',{name:/Tarefa Ana/})).toBeVisible()
+ await expect(page.getByRole('button',{name:/Tarefa Bruno/})).toHaveCount(0)
+})
+
 for(const [department,prefix] of [['video','[Videomaker]'],['traffic','[Tráfego Pago]']])test(`${department} groups assigned test demands without inventing connected accounts`,async({page})=>{
  await setup(page,prefix);await page.goto(`/production/${department}`);
  await expect(page.getByRole('region',{name:'Demandas de Aurora Café — TESTE FICTÍCIO'})).toBeVisible();
@@ -79,6 +95,20 @@ test('old public proposal links show retirement without any backend lookup',asyn
 test('Tasks starts with a client group and opens demands only after expansion',async({page})=>{
  await setup(page);await page.goto('/tasks');await expect(page.getByRole('heading',{name:'Tarefas & Produção'})).toBeVisible();const group=page.locator('details[aria-label="Demandas de Aurora Café — TESTE FICTÍCIO"]');await expect(group).toBeVisible();await expect(page.getByRole('button',{name:/Arte Aurora/})).toBeHidden();await group.locator('summary').click();await expandClients(page);await page.getByRole('button',{name:/Arte Aurora/}).click();await expect(page.getByRole('dialog')).toBeVisible();
 });
+test('tasks.create can create a task in a selected existing project without projects.create',async({page})=>{
+ await setup(page,'[Design]',task.description,'MEMBER')
+ await page.route('**/rest/v1/projects*',route=>route.fulfill({json:[{id:'project',agency_id:agency,name:'Projeto autorizado — TESTE',status:'active'}]}))
+ await page.route('**/rest/v1/project_boards*',route=>route.fulfill({json:{id:'board',agency_id:agency,project_id:'project',is_default:true}}))
+ await page.route('**/rest/v1/board_columns*',route=>route.fulfill({json:[{id:'column',agency_id:agency,board_id:'board',name:'A fazer',category:'backlog',position:0,color:'#30303B'}]}))
+ let saved:Record<string,unknown>|null=null
+ await page.route('**/rest/v1/rpc/create_task_with_assignees',async route=>{saved=route.request().postDataJSON();await route.fulfill({json:'new-task-id'})})
+ await page.goto('/tasks')
+ const create=page.getByRole('button',{name:'Nova Tarefa',exact:true});await expect(create).toBeEnabled();await create.click()
+ await expect(page.getByRole('dialog')).toContainText('Escolha o projeto da tarefa')
+ await page.getByRole('button',{name:'Continuar',exact:true}).click()
+ const dialog=page.getByRole('dialog');await dialog.getByLabel('Título').fill('Tarefa independente — TESTE');await dialog.getByRole('button',{name:'Criar Tarefa',exact:true}).click()
+ await expect.poll(()=>saved?.p_project_id).toBe('project');expect(saved).toMatchObject({p_agency_id:agency,p_board_id:'board',p_column_id:'column',p_title:'Tarefa independente — TESTE'})
+})
 test('management Kanban shows client columns and preserves the central demand dialog',async({page})=>{
  await setup(page);await page.goto('/projects');await expect(page.getByRole('heading',{name:'Kanban Geral',exact:true})).toBeVisible();await expect(page.getByRole('region',{name:'Kanban de Aurora Café — TESTE FICTÍCIO'})).toBeVisible();await expandClients(page);await page.getByRole('button',{name:/Arte Aurora/}).click();await expect(page.getByRole('dialog')).toBeVisible();
 });

@@ -1,8 +1,8 @@
 import {FunctionsHttpError} from '@supabase/supabase-js';
 import {supabase} from '@/lib/supabase/client';
 import {isGoogleUploadUrl} from '../../../supabase/functions/google-workspace/drive';
-export interface DriveFolder {id:string;name:string;canUpload?:boolean;isAppAuthorized?:boolean}
-export function driveError(status:number,message?:string){return ({401:'A conexão com o Google precisa ser renovada.',403:'Você não tem permissão para esta demanda ou a pasta ainda não está autorizada para envio.',404:'A pasta ou arquivo não foi encontrado no Google Drive.',429:'O Google Drive está limitando temporariamente os envios. Tente novamente.'} as Record<number,string>)[status]||message||'Não foi possível acessar o Google Drive.';}
+export interface DriveFolder {id:string;name:string;canUpload?:boolean;isAppAuthorized?:boolean;canAddChildren?:boolean}
+export function driveError(status:number,message?:string){return ({401:'A conexão com o Google precisa ser renovada.',403:message||'Você não tem permissão para esta demanda ou a pasta ainda não está autorizada para envio.',404:'A pasta ou arquivo não foi encontrado no Google Drive.',429:'O Google Drive está limitando temporariamente os envios. Tente novamente.'} as Record<number,string>)[status]||message||'Não foi possível acessar o Google Drive.';}
 export async function googleDriveRequest(action:string,context:Record<string,unknown>,extra:Record<string,unknown>={}){
  if(!supabase)throw Error('Conexão indisponível.');
  const {data,error,response}=await supabase.functions.invoke('google-workspace',{body:{...extra,...context,action}});

@@ -1,6 +1,6 @@
 import {defaultPhotography} from '@/features/production/photographicDirection'
 import {PhotographyDirectionFields} from '@/features/production/PhotographyDirectionFields'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {serializeCreativeDemand,type CreativeDemand} from './creativeDemand'
 import { Plus } from 'lucide-react'
 import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogFooter } from '@/components/ui/Dialog'
@@ -57,6 +57,8 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   const [creative,setCreative]=useState<CreativeDemand>(emptyCreative)
   const structured=creative.format!=='general'
   const [error, setError] = useState('')
+  const requestId = useRef<string | null>(null)
+  if (!requestId.current) requestId.current = crypto.randomUUID()
 
   // Reset form when opened
   React.useEffect(() => {
@@ -73,6 +75,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       })
       setCreative(emptyCreative())
       setError('')
+      requestId.current = crypto.randomUUID()
     }
   }, [open, defaultColumnId, columns, emptyCreative])
 
@@ -86,6 +89,8 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     if(structured&&[creative.support,creative.cta,creative.caption,creative.hashtags,creative.direction,creative.angle].some(v=>!v.trim())){setError('Preencha texto de apoio, CTA, legenda, hashtags, direção criativa e ângulo.');return}
     if(structured&&creative.format!=='post'&&!creative.sequence.trim()){setError('Descreva as lâminas do carrossel ou as cenas do vídeo.');return}
     try {
+      const activeRequestId=requestId.current||crypto.randomUUID()
+      requestId.current=activeRequestId
       const category = columns.find(c => c.id === form.column_id)?.category
       await createTask.mutateAsync({
         form: { ...form, description:structured?serializeCreativeDemand({...creative,title:form.title}):form.description, title: `${structured?(creative.format==='reels'?'[Videomaker]':'[Design]'):titlePrefix} ${form.title.trim()}`.trim() },
@@ -93,8 +98,10 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
         projectId,
         boardId,
         agencyId,
+        requestId: activeRequestId,
       })
       toast.success('Tarefa criada com sucesso!')
+      requestId.current = crypto.randomUUID()
       onOpenChange(false)
     } catch (err) {
       toast.error('Erro ao criar tarefa.')

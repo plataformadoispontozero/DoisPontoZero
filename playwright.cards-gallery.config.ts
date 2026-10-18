@@ -1,0 +1,3 @@
+import {defineConfig} from '@playwright/test'
+import baseline from './playwright.homologation.config'
+export default defineConfig({...baseline,testMatch:['platform-readiness.spec.ts','office-presence.spec.ts','presentation-preview.spec.ts'],grep:/social workflow loads|presentation fits|old project workspace|published existing image|public presentation displays|gallery switches/,workers:1,reporter:[['list'],['json',{outputFile:'/private/tmp/cards-gallery-browser.json'}]],outputDir:'/private/tmp/cards-gallery-browser-results',projects:[{name:'desktop',use:{viewport:{width:1440,height:900}}},{name:'mobile',use:{viewport:{width:390,height:844},isMobile:true,hasTouch:true}}]})

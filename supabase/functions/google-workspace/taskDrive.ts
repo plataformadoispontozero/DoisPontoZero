@@ -14,7 +14,7 @@ export async function handleTaskDrive(input:Input):Promise<Response>{
  async function request(url:string,options:RequestInit={}){const r=await fetch(url,{...options,headers:{...auth,...options.headers}});if(!r.ok){if(r.status===401)throw new DriveError('A conexão com o Google precisa ser renovada.',401);if(r.status===404)throw new DriveError('A pasta ou arquivo não foi encontrado no Google Drive.',404);if(r.status===429)throw new DriveError('O Google Drive está limitando temporariamente os envios.',429);if(r.status===403)throw new DriveError('Esta pasta ainda não está autorizada para envio. Solicite autorização à gestão.',403);throw new DriveError('O Google Drive não concluiu a operação. Tente novamente.',502)}return r}
  async function meta(fileId:string){if(!id(fileId))throw new DriveError('Referência Drive inválida.');return (await request(`https://www.googleapis.com/drive/v3/files/${fileId}?fields=id,name,mimeType,parents,trashed,isAppAuthorized,capabilities(canAddChildren),size,version,appProperties,thumbnailLink&supportsAllDrives=true`)).json()}
  const parents=async(fileId:string)=>{const m=await meta(fileId);return m.trashed||m.mimeType==='application/vnd.google-apps.shortcut'?[]:(m.parents||[])};
- function folderView(m:Record<string,unknown>){const capabilities=m.capabilities as {canAddChildren?:boolean}|undefined;return {id:m.id,name:m.name,parentId:(m.parents as string[]|undefined)?.[0]||null,isAppAuthorized:m.isAppAuthorized===true,canUpload:m.isAppAuthorized===true&&capabilities?.canAddChildren===true}}
+ function folderView(m:Record<string,unknown>){const capabilities=m.capabilities as {canAddChildren?:boolean}|undefined;return {id:m.id,name:m.name,parentId:(m.parents as string[]|undefined)?.[0]||null,isAppAuthorized:m.isAppAuthorized===true,canAddChildren:capabilities?.canAddChildren===true,canUpload:m.isAppAuthorized===true&&capabilities?.canAddChildren===true}}
  try{
   const clientRoot=folderIdFromUrl(c.clientDriveUrl),agencyRoot=folderIdFromUrl(configuration.rootFolderUrl);
   if(!clientRoot&&body.action==='task-drive-list')return reply({client:{id:c.clientId,name:c.clientName},root:null,folder:null,folders:[],files:[],attachments:[],savedFolderId:c.savedFolderId,period:{dueDate:c.dueDate,editorialMonth:c.editorialMonth||null},canManage:c.canManage,canAuthorize:centralAdmin,missingClientFolder:true});
@@ -29,6 +29,7 @@ export async function handleTaskDrive(input:Input):Promise<Response>{
 
   if(body.action==='task-drive-picker-session'){
    if(!centralAdmin)throw new DriveError('Somente a gestão autorizada pode conceder acesso à pasta pelo Google Picker.',403);
+   if(configuration.projectNumber&&/^\d+-/.test(configuration.clientId)&&configuration.clientId.split('-')[0]!==configuration.projectNumber)throw new DriveError('O número do projeto do Google Picker não corresponde ao cliente OAuth. Confira a integração Google nas configurações.',409);
    if(!configuration.apiKey||!configuration.projectNumber)throw new DriveError('Configure o Google Picker na integração existente.',409);
    return reply({accessToken,apiKey:configuration.apiKey,appId:configuration.projectNumber,folderId:target.id});
   }

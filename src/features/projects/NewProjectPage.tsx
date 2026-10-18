@@ -77,13 +77,13 @@ export const NewProjectPage: React.FC = () => {
     if (!validate() || createProject.isPending) return
 
     try {
-      const newProjectId = await createProject.mutateAsync({
+      await createProject.mutateAsync({
         ...form,
         name: form.name.trim(),
         agency_id: MOCK_AGENCY_ID,
       })
       toast.success('Projeto criado com sucesso!')
-      navigate(`/projects/${newProjectId}`)
+      navigate(managementPath)
     } catch (err) {
       toast.error('Erro ao criar projeto. Verifique os dados e tente novamente.')
       console.error(err)

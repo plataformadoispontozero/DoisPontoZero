@@ -1,0 +1,12 @@
+import {it,expect,vi} from 'vitest'
+import {fireEvent,render,screen,waitFor} from '@testing-library/react'
+import {TaskCardCover} from './TaskCardCover'
+const h=vi.hoisted(()=>({request:vi.fn()}))
+vi.mock('@/features/auth/AuthProvider',()=>({useAgencyId:()=> 'agency'}))
+vi.mock('./driveProduction',()=>({googleDriveRequest:h.request}))
+it('uses the authorized selected attachment and revokes its local preview when the cover changes',async()=>{
+ h.request.mockResolvedValue(new Blob(['art'],{type:'image/webp'}));const create=vi.spyOn(URL,'createObjectURL').mockReturnValueOnce('blob:first').mockReturnValueOnce('blob:second'),revoke=vi.spyOn(URL,'revokeObjectURL').mockImplementation(()=>{});try{const r=render(<TaskCardCover cover={{task_id:'task',attachment_id:'first',file_name:'capa.png',selected:true}}/>);await waitFor(()=>expect(screen.getByRole('img')).toHaveAttribute('src','blob:first'));expect(h.request).toHaveBeenCalledWith('task-drive-preview',{agencyId:'agency',taskId:'task'},{attachmentId:'first'});r.rerender(<TaskCardCover cover={{task_id:'task',attachment_id:'second',file_name:'outra.png',selected:true}}/>);await waitFor(()=>expect(screen.getByRole('img')).toHaveAttribute('src','blob:second'));expect(revoke).toHaveBeenCalledWith('blob:first');r.unmount();expect(revoke).toHaveBeenCalledWith('blob:second')}finally{create.mockRestore();revoke.mockRestore()}
+})
+it('navigates the demand carousel with next and previous controls and loads the selected slide',async()=>{
+ h.request.mockResolvedValue(new Blob(['slide'],{type:'image/webp'}));const create=vi.spyOn(URL,'createObjectURL').mockImplementation((blob)=>`blob:${(blob as Blob).size}:${Math.random()}`),revoke=vi.spyOn(URL,'revokeObjectURL').mockImplementation(()=>{});try{render(<TaskCardCover carousel cover={{task_id:'task',attachment_id:'first',file_name:'01.png',selected:true,gallery:[{attachment_id:'first',file_name:'01.png'},{attachment_id:'second',file_name:'02.png'}]}}/>);await screen.findByRole('img');expect(screen.getByText('1 / 2')).toBeInTheDocument();fireEvent.click(screen.getByRole('button',{name:'Próxima lâmina'}));expect(screen.getByText('2 / 2')).toBeInTheDocument();await waitFor(()=>expect(h.request).toHaveBeenLastCalledWith('task-drive-preview',{agencyId:'agency',taskId:'task'},{attachmentId:'second'}));fireEvent.click(screen.getByRole('button',{name:'Lâmina anterior'}));expect(screen.getByText('1 / 2')).toBeInTheDocument();}finally{create.mockRestore();revoke.mockRestore()}
+})
