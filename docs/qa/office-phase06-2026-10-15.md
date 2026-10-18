@@ -8,7 +8,7 @@ COMMAND 06: controles globais da conexão de voz já existente. OfficeMiniBar na
 
 Barra com sala, estado real, participantes, fala, ligar/desligar microfone, sair e atalho para /office. Áudio bloqueado mostra ação explícita; erro mostra retorno às salas. Reconexão desativa microfone e não mostra falantes antigos como ativos. Layout fixa controles acima da navegação móvel, respeita largura da sidebar e reserva espaço no conteúdo. Sobreposições da aplicação usam z-index superior.
 
-A flag VITE_ENABLE_OFFICE_CONTROLS exige true e Escritório habilitado. Fase 06 ativa somente em homologação; produção continua com a flag desligada.
+A flag VITE_ENABLE_OFFICE_CONTROLS exige true e Escritório habilitado. Na primeira homologação, a flag ficou desligada em produção; o rollout parcial da Fase 06 foi feito em 19/10/2026 e está registrado abaixo.
 
 ## Verificação
 
@@ -34,8 +34,12 @@ Fechar navegador, suspender sistema ou recarregar encerra a sessão de mídia; a
 
 ## Publicação
 
-Builds reais aprovados. Homologação publicada com VITE_ENABLE_OFFICE_CONTROLS=true: versão 5d8c708c-25bd-418c-b175-6cae5f98ae57. Produção com VITE_ENABLE_OFFICE_CONTROLS=false: versão a43b1817-a25e-4b45-a1f1-4dc89ddd900f. Produção continua sem ativar os controles globais.
+Builds reais aprovados. Homologação publicada com VITE_ENABLE_OFFICE_CONTROLS=true: versão 5d8c708c-25bd-418c-b175-6cae5f98ae57. A versão de produção inicial usava VITE_ENABLE_OFFICE_CONTROLS=false (versão a43b1817-a25e-4b45-a1f1-4dc89ddd900f); rollout parcial posterior registrado abaixo.
 
 ## Atualização de 18/10/2026
 
 Typecheck, lint, build e 488 testes passaram nesta rodada. O teste humano de áudio contínuo entre duas contas não foi observado por esta sessão; o aceite do responsável está registrado separadamente e não é apresentado como validação de áudio.
+
+## Atualização de produção — 19/10/2026
+
+Após o responsável mostrar que a plataforma pública ainda exibia a Fase 05, foi publicado o Worker `doispontozero` com `VITE_ENABLE_OFFICE_CONTROLS=true`, mantendo `VITE_ENABLE_OFFICE_CALLS=false` e `VITE_ENABLE_OFFICE_MEDIA=false`. Versão Cloudflare `c6e43e38-8de7-45b8-8719-2fe835ddc72a`. Verificação em `https://doispontozero.renatodesigner.com.br/office` confirmou “FASE 06 · EM HOMOLOGAÇÃO” e os controles de presença. Convites privados e controles de mídia continuam desligados na interface pública.
