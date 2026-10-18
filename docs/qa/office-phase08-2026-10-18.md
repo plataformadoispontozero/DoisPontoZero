@@ -18,6 +18,8 @@ Preferências de dispositivo e volume ficam no armazenamento local deste navegad
 
 Build de homologação publicado no worker `doispontozero-office-homologacao`; versão `ace34794-b6a7-4f70-9dec-b17453e7322a`. A conexão ao canal da sala foi validada no navegador: estado “Conectado”, qualidade “Excelente” e saída limpa da sala. Microfone, câmera e compartilhamento permaneceram desligados; captura real desses dispositivos ainda precisa de validação manual. Sem ativação em produção.
 
+Em 19/10/2026, após autorização explícita, a Edge Function `office-room-token` foi publicada no projeto Supabase `doispontozero` (`main` / produção). O painel confirmou “Successfully updated edge function”. O token agora dá suporte às fontes de microfone, câmera e compartilhamento de tela e à validação de nomes de salas de chamadas privadas. A interface continua com a flag de mídia desligada em produção; testes de captura real seguem pendentes.
+
 Após o responsável reportar `No room provided`, a revisão confirmou que o conteúdo agora recebe o `RoomContext` do LiveKit. Também foi desativado `singlePeerConnection` para evitar a falha de renegociação WebRTC observada no browser (`Attempted to modify the PeerConnection's configuration in an unsupported way`). A regressão direcionada, typecheck e suíte completa passaram; a conexão foi repetida com sucesso no build de homologação acima.
 
 ## Opção de Google Meet

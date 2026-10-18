@@ -91,6 +91,7 @@
     "homologation": "stage_room_connection_verified_microphone_camera_and_screen_capture_pending",
     "stage_worker_version": "ace34794-b6a7-4f70-9dec-b17453e7322a",
     "production_enabled": false,
+    "supabase_backend_deployment": "office-room-token deployed to main/PRODUCTION on 2026-10-19 with user authorization; UI media flag remains disabled",
     "google_meet_assessment": "Can be initiated from the Office flow using a Meet link/API; complete Meet video UI does not embed in the Office page. OAuth required to create spaces.",
     "evidence": "docs/qa/office-phase08-2026-10-18.md"
   },
