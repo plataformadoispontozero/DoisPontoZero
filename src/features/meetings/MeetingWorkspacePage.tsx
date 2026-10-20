@@ -80,7 +80,10 @@ export const MeetingWorkspacePage: React.FC = () => {
 
   // Convert to Task State
   const [convertingActionId, setConvertingActionId] = useState<string | null>(null)
-  const [selectedProjectId, setSelectedProjectId] = useState(projects[0]?.id || '')
+  const [requestedProjectId, setSelectedProjectId] = useState('')
+  const selectedProjectId = projects.some(project => project.id === requestedProjectId)
+    ? requestedProjectId
+    : projects[0]?.id || ''
 
   if (isError) return <div role="alert">Não foi possível carregar a reunião. <Button onClick={() => void refetch()}>Tentar novamente</Button></div>
   if (!isLoading && !meeting) return <div>Reunião não encontrada. <Button onClick={() => navigate('/meetings')}>Voltar às reuniões</Button></div>

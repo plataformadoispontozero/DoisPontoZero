@@ -270,6 +270,7 @@ export function useCreateTask() {
       projectId,
       boardId,
       agencyId,
+      requestId,
       initialStatus = 'open',
     }: {
       initialStatus?: TaskStatus
@@ -277,71 +278,26 @@ export function useCreateTask() {
       projectId: string
       boardId: string
       agencyId: string
+      requestId: string
     }) => {
       if (!supabase) throw new Error('Supabase não configurado')
-
-      // Calculate position (append at end of column)
-      const { data: existingTasks } = await supabase
-        .from('tasks')
-        .select('position')
-        .eq('column_id', form.column_id)
-        .is('archived_at', null)
-        .order('position', { ascending: false })
-        .limit(1)
-
-      const maxPos = existingTasks?.[0]?.position ?? 0
-      const newPosition = maxPos + 1000
-
-      const { data: task, error: taskErr } = await supabase
-        .from('tasks')
-        .insert({
-          agency_id: agencyId,
-          project_id: projectId,
-          board_id: boardId,
-          column_id: form.column_id,
-          parent_task_id: form.parent_task_id,
-          title: form.title,
-          status: initialStatus,
-          completed_at: initialStatus === 'done' ? new Date().toISOString() : null,
-          description: form.description || null,
-          priority: form.priority,
-          start_date: form.start_date,
-          due_date: form.due_date,
-          position: newPosition,
-          created_by: (await supabase.auth.getUser()).data.user?.id ?? '',
-        })
-        .select('id')
-        .single()
-
-      if (taskErr) throw taskErr
-
-      // Add assignees
-      if (form.assignee_ids.length > 0 && task) {
-        const assigneeInserts = form.assignee_ids.map((uid) => ({
-          agency_id: agencyId,
-          task_id: task.id,
-          user_id: uid,
-        }))
-
-        const { error: assignErr } = await supabase
-          .from('task_assignees')
-          .insert(assigneeInserts)
-
-        if (assignErr) throw assignErr
-      }
-
-      // Log activity
-      if (task) {
-        await supabase.from('task_activity').insert({
-          agency_id: agencyId,
-          task_id: task.id,
-          actor_user_id: (await supabase.auth.getUser()).data.user?.id ?? null,
-          action: 'created',
-          metadata: { title: form.title },
-        })
-      }
-
-      return task?.id
+      const { data, error } = await supabase.rpc('create_task_with_assignees', {
+        p_agency_id: agencyId,
+        p_project_id: projectId,
+        p_board_id: boardId,
+        p_column_id: form.column_id,
+        p_parent_task_id: form.parent_task_id,
+        p_title: form.title,
+        p_description: form.description || null,
+        p_priority: form.priority,
+        p_status: initialStatus,
+        p_start_date: form.start_date,
+        p_due_date: form.due_date,
+        p_assignee_ids: [...new Set(form.assignee_ids)],
+        p_request_id: requestId,
+      })
+      if (error) throw error
+      return data
     },
     onSuccess: (_, { projectId }) => {
       qc.invalidateQueries({ queryKey: taskKeys.all })

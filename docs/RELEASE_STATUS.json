@@ -13,7 +13,8 @@
     "Endpoints publicados: sessão ausente recusada",
     "Serviços reais e aceite operacional permanecem identificados",
     "478 testes de regressão; 3 cenários de presença, navegação e imagens; seis arquivos reais Ambience recuperados",
-    "Escritório Fase 06: 484 testes aprovados; barra global validada em desktop e celular"
+    "Escritório Fase 06: 484 testes aprovados; barra global validada em desktop e celular",
+    "Cards e apresentações: 488 casos verificados e teste adicional de capa aprovado; banco e backend atualizados"
   ],
   "deliveries": [
     {
@@ -300,6 +301,42 @@
       "technical_status": "verified",
       "pending": [
         "Validar áudio contínuo durante navegação com dois membros e aceitar a Fase 06. Fase 07 não iniciada."
+      ]
+    },
+    {
+      "id": "task-covers-gallery",
+      "title": "Capas nos cards e navegação da apresentação",
+      "phases": [
+        "phase-04",
+        "phase-09"
+      ],
+      "result": "Preview autenticado no card e no detalhe da demanda. Capa selecionável entre os arquivos da demanda; carrossel usa uma capa. Apresentação com setas, teclado e arraste; Aprovar/Reprovar por material e motivo obrigatório na reprovação.",
+      "technical_status": "verified",
+      "pending": [
+        "Conferir o fluxo diário de upload e seleção de capa com um arquivo real da equipe."
+      ]
+    },
+    {
+      "id": "retired-project-workspace",
+      "title": "Fluxo único de demandas por cliente",
+      "phases": [
+        "phase-04",
+        "phase-07"
+      ],
+      "result": "Quadro antigo de projeto retirado das rotas. Links antigos direcionam a gestão ao Kanban agrupado por cliente; acesso Abrir produção removido da esteira Social Media. Projetos e demandas preservados.",
+      "technical_status": "verified",
+      "pending": []
+    },
+    {
+      "id": "drive-write-flow",
+      "title": "Criar pasta e enviar arquivos na demanda",
+      "phases": [
+        "phase-09"
+      ],
+      "result": "Autorização da pasta integrada à criação e envio, com revalidação de escrita. Acesso somente leitura informa necessidade de Editor; erro específico do servidor preservado. Google Picker verifica correspondência com projeto OAuth.",
+      "technical_status": "verified",
+      "pending": [
+        "Confirmar autorização no Google Picker e criação/upload na pasta real com a sessão do responsável."
       ]
     }
   ]

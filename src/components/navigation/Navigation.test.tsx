@@ -29,7 +29,7 @@ describe('Navigation Components - Phase 01', () => {
     expect(screen.getByText('Estratégia')).toBeInTheDocument()
     expect(screen.queryByText('Propostas')).not.toBeInTheDocument()
     expect(screen.getByText('Reuniões')).toBeInTheDocument()
-    expect(screen.getByText('Chat')).toBeInTheDocument()
+    expect(screen.getByText('Escritório Digital')).toBeInTheDocument()
     expect(screen.getByText('Apresentações')).toBeInTheDocument()
 
     // Sistema

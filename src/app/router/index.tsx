@@ -189,15 +189,15 @@ export const router = createBrowserRouter([
       {
         path: "projects/:projectId",
         lazy: async () => ({
-          Component: (await import("@/features/projects/ProjectWorkspacePage"))
-            .ProjectWorkspacePage,
+          Component: (await import("@/features/projects/LegacyProjectRedirect"))
+            .LegacyProjectRedirect,
         }),
       },
       {
         path: "projects/:projectId/settings",
         lazy: async () => ({
-          Component: (await import("@/features/projects/ProjectWorkspacePage"))
-            .ProjectWorkspacePage,
+          Component: (await import("@/features/projects/LegacyProjectRedirect"))
+            .LegacyProjectRedirect,
         }),
       },
       {

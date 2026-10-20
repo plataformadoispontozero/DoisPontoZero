@@ -26,10 +26,10 @@ function renderWithProviders(ui: React.ReactElement) {
 }
 
 describe('Team Chat Feature Suite', () => {
-  it('renders Team Chat main page with channels sidebar and message feed', async () => {
+  it('renders office messages with channels sidebar and message feed', async () => {
     renderWithProviders(<ChatPage />)
 
-    expect(screen.getByText(/Team Chat/i)).toBeInTheDocument()
+    expect(screen.getByText('Mensagens · Escritório Digital')).toBeInTheDocument()
     expect(screen.getAllByText(/geral/i)[0]).toBeInTheDocument()
     expect(screen.getByText(/Mensagens Diretas/i)).toBeInTheDocument()
   })

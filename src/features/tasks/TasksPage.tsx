@@ -1,6 +1,6 @@
 import { ClientTaskGroups } from './ClientTaskGroups'
 import { useTask } from '@/features/tasks/hooks/useTasks'
-import { useProjectBoard } from '@/features/projects/hooks/useProjects'
+import { useProjectBoard, useProjects } from '@/features/projects/hooks/useProjects'
 import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { useAgencyId, usePermission } from '@/features/auth/AuthProvider'
 import React, { useState, useEffect } from 'react'
@@ -24,6 +24,8 @@ import { TaskListView } from '@/features/projects/components/TaskListView'
 import { TaskCalendarView } from '@/features/projects/components/TaskCalendarView'
 import { TaskDetailPanel } from '@/features/projects/components/TaskDetailPanel'
 import { CreateTaskDialog } from '@/features/projects/components/CreateTaskDialog'
+import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogFooter } from '@/components/ui/Dialog'
+import { Select } from '@/components/ui/Select'
 import { useTasks } from '@/features/tasks/hooks/useTasks'
 import type { Task, BoardColumn, Priority, TaskStatus } from '@/types/projects'
 
@@ -212,7 +214,9 @@ const DEMO_TASKS: Task[] = [
 
 export const TasksPage: React.FC = () => {
   const MOCK_AGENCY_ID = useAgencyId()
-  const canCreateProject=usePermission('projects.create')
+  const canCreateTask=usePermission('tasks.create')
+  const projectsQuery=useProjects()
+  const projects=projectsQuery.data||[]
 
   const { taskId } = useParams<{ taskId?: string }>()
   const navigate = useNavigate()
@@ -223,6 +227,8 @@ export const TasksPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(taskId ?? null)
   const [createTaskOpen, setCreateTaskOpen] = useState(false)
+  const [chooseTaskProjectOpen,setChooseTaskProjectOpen]=useState(false)
+  const [requestedCreateProjectId,setRequestedCreateProjectId]=useState('')
 
   // Sync state if URL param changes
   useEffect(() => {
@@ -249,7 +255,9 @@ export const TasksPage: React.FC = () => {
   const { data: selectedTaskData } = useTask(selectedTaskId ?? undefined)
   const activeTask = selectedTaskData ?? serverTasks.find(task => task.id === selectedTaskId)
   const { data: activeBoard } = useProjectBoard(activeTask?.project_id)
-  const openCreateTask = () => {if(canCreateProject){if(isSupabaseConfigured)navigate('/projects/new');else setCreateTaskOpen(true)}}
+  const createProject = projects.find(project=>project.id===requestedCreateProjectId)||projects[0]
+  const createBoardQuery=useProjectBoard(isSupabaseConfigured&&(chooseTaskProjectOpen||createTaskOpen)?createProject?.id:undefined)
+  const openCreateTask = () => {if(canCreateTask){if(isSupabaseConfigured)setChooseTaskProjectOpen(true);else setCreateTaskOpen(true)}}
 
   // Demo fixtures are limited to the unconfigured local environment.
   const tasksToDisplay = isSupabaseConfigured ? serverTasks : DEMO_TASKS
@@ -275,7 +283,7 @@ export const TasksPage: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
-              disabled={!canCreateProject}
+              disabled={!canCreateTask}
               onClick={openCreateTask}
               className="h-9 px-4 text-xs font-semibold"
             >
@@ -353,12 +361,24 @@ export const TasksPage: React.FC = () => {
       </Tabs>
 
       {/* Modals */}
+      <Dialog open={chooseTaskProjectOpen} onOpenChange={setChooseTaskProjectOpen}>
+        <DialogHeader onClose={()=>setChooseTaskProjectOpen(false)}><DialogTitle>Escolha o projeto da tarefa</DialogTitle></DialogHeader>
+        <DialogContent className="space-y-3">
+          <p className="text-sm text-[#B8B8C0]">A tarefa será criada no quadro do projeto selecionado.</p>
+          {projectsQuery.isLoading?<p role="status">Carregando projetos…</p>:projectsQuery.isError?<p role="alert">Não foi possível carregar os projetos. Atualize a página e tente novamente.</p>:projects.length===0?<p>Nenhum projeto disponível para sua conta.</p>:<Select aria-label="Projeto da nova tarefa" value={createProject?.id||''} onChange={event=>setRequestedCreateProjectId(event.target.value)} options={projects.map(project=>({value:project.id,label:project.name}))}/>}
+          {createBoardQuery.isError&&<p role="alert">Não foi possível carregar o quadro deste projeto.</p>}
+        </DialogContent>
+        <DialogFooter>
+          <Button variant="ghost" size="sm" onClick={()=>setChooseTaskProjectOpen(false)}>Cancelar</Button>
+          <Button variant="primary" size="sm" disabled={!createProject||projectsQuery.isLoading||projectsQuery.isError||createBoardQuery.isLoading||createBoardQuery.isError||!createBoardQuery.data?.id||!createBoardQuery.data?.columns?.length} onClick={()=>{setChooseTaskProjectOpen(false);setCreateTaskOpen(true)}}>Continuar</Button>
+        </DialogFooter>
+      </Dialog>
       <CreateTaskDialog
         open={createTaskOpen}
         onOpenChange={setCreateTaskOpen}
-        columns={isSupabaseConfigured ? activeBoard?.columns ?? [] : DEMO_COLUMNS}
-        projectId={isSupabaseConfigured ? activeTask?.project_id ?? '' : 'proj-1'}
-        boardId={isSupabaseConfigured ? activeTask?.board_id ?? '' : 'board-1'}
+        columns={isSupabaseConfigured ? createBoardQuery.data?.columns ?? [] : DEMO_COLUMNS}
+        projectId={isSupabaseConfigured ? createProject?.id ?? '' : 'proj-1'}
+        boardId={isSupabaseConfigured ? createBoardQuery.data?.id ?? '' : 'board-1'}
         agencyId={MOCK_AGENCY_ID}
       />
 
