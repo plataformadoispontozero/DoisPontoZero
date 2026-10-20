@@ -27,3 +27,12 @@ Público: clientes que recebem a apresentação para conhecer e aprovar entregas
 - Flags de produção anteriores preservadas: escritório/controles true; chamadas/mídia do escritório false.
 - Homologação publicada na versão `22479d63-0a07-4382-9da2-ff435cbc2f2c`, com suas flags anteriores de escritório/controles/chamadas/mídia true.
 - Nenhuma alteração de banco ou Edge Function nesta entrega; a consulta da logo foi somente leitura.
+
+## Ajuste solicitado: grade animada em loop, full hero
+
+- Substituídas as curvas SVG por grade CSS com quadrículas de 48 px e linhas principais de 192 px. Translação linear de 192 px em 48 segundos: o fim coincide com a repetição do padrão, sem salto.
+- Fundo cobre toda a largura da hero; altura mínima ocupa a viewport descontando o cabeçalho. Conteúdo das seções mantém sua largura de leitura.
+- Pausa e movimento reduzido preservados; animação apenas por transform, sem JavaScript por frame ou novas dependências.
+- Build aprovado; 12 testes focados passaram. Inspeção visual no showcase publicado confirmou a grade de ponta a ponta e a composição centralizada.
+- Produção atualizada: `fffac84e-d839-4e4a-bc89-0b6a4bef030d`.
+- Evidência: `/tmp/dois-hero-grade-loop-20261020.png`.
