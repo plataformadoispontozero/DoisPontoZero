@@ -45,7 +45,7 @@ describe('Fase 11 — White Label Studio & Advanced Settings Suite', () => {
     expect(screen.getByText('Configurações da Dois.Zero')).toBeInTheDocument()
     expect(screen.queryByText('White Label Studio')).not.toBeInTheDocument()
     expect(screen.getByText('Versão da plataforma: 0.2.0')).toBeInTheDocument()
-    expect(screen.getByText('Permission Studio')).toBeInTheDocument()
+    expect(screen.getByText('Acessos')).toBeInTheDocument()
   })
 
   it('renders WhiteLabelStudioPage with color editor and brand preview', () => {
@@ -55,13 +55,13 @@ describe('Fase 11 — White Label Studio & Advanced Settings Suite', () => {
     expect(screen.getByDisplayValue('Dois.Zero')).toBeInTheDocument()
   })
 
-  it('renders PermissionStudioPage matrix with roles and modules', async () => {
+  it('renders access profiles and sectors', async () => {
     renderWithProviders(<PermissionStudioPage />)
 
-    expect(screen.getByText('Permission Studio & Matriz de Controle de Acesso')).toBeInTheDocument()
-    await screen.findByText('ADMIN')
-    expect(screen.getAllByText('OWNER').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('ADMIN').length).toBeGreaterThan(0)
+    expect(screen.getByText('Acessos por setor')).toBeInTheDocument()
+    await screen.findByRole('option', {name:'Administrador'})
+    expect(screen.getByLabelText('Perfil de acesso')).toBeInTheDocument()
+    expect(screen.getByRole('option', {name:'Proprietário'})).toBeInTheDocument()
   })
 
   it('renders TeamManagementPage with active members', () => {

@@ -1,4 +1,4 @@
-import {render,screen,fireEvent,waitFor} from '@testing-library/react'
+import {render,screen,fireEvent,waitFor,cleanup} from '@testing-library/react'
 import {beforeEach,describe,it,expect,vi} from 'vitest'
 import {PermissionStudioPage} from './PermissionStudioPage'
 const state=vi.hoisted(()=>({rpc:vi.fn(),invalidate:vi.fn(),reload:vi.fn(),success:vi.fn(),error:vi.fn(),querySpy:vi.fn(),auth:{} as any,query:{} as any}))
@@ -6,12 +6,37 @@ vi.mock('@/features/auth/AuthProvider',()=>({useAuth:()=>state.auth,useAgencyId:
 vi.mock('@/lib/supabase/client',()=>({supabase:{rpc:(...args:unknown[])=>state.rpc(...args)},isSupabaseConfigured:true}))
 vi.mock('@tanstack/react-query',()=>({useQuery:(options:unknown)=>{state.querySpy(options);return state.query},useQueryClient:()=>({invalidateQueries:state.invalidate})}))
 vi.mock('@/components/ui/Toast',()=>({toast:{success:state.success,error:state.error}}))
-beforeEach(()=>{state.rpc.mockReset().mockResolvedValue({error:null});state.invalidate.mockReset().mockResolvedValue(undefined);state.reload.mockReset();state.success.mockReset();state.error.mockReset();state.querySpy.mockReset();state.auth={user:{id:'session-a'},activeAgency:{agencyId:'agency-a',roleName:'OWNER'},permissions:new Set(),isDemo:false,reloadAccess:state.reload};state.query={data:{roles:[{id:'owner',name:'OWNER'},{id:'designer',name:'DESIGNER'}],permissions:[{id:'tasks',permission_key:'tasks.view'},{id:'clients',permission_key:'clients.view'}],grants:[{role_id:'designer',permission_id:'clients',allowed:true}]},isError:false,isLoading:false,isFetching:false}})
-describe('Permission Studio persisted matrix',()=>{
- it('sends only changed cells, preserves OWNER and reloads access after server success',async()=>{render(<PermissionStudioPage/>);expect(screen.getByRole('checkbox',{name:'OWNER: tasks.view'})).toBeChecked();expect(screen.getByRole('checkbox',{name:'OWNER: tasks.view'})).toBeDisabled();fireEvent.click(screen.getByRole('checkbox',{name:'DESIGNER: tasks.view'}));fireEvent.click(screen.getByRole('button',{name:'Salvar Matriz'}));await waitFor(()=>expect(state.rpc).toHaveBeenCalledWith('set_agency_role_permissions',{p_agency_id:'agency-a',p_changes:[{role_id:'designer',permission_id:'tasks',allowed:true}]}));await waitFor(()=>expect(state.reload).toHaveBeenCalledOnce());expect(state.invalidate).toHaveBeenCalledWith({queryKey:['permission-matrix','agency-a','session-a']});expect(state.success).toHaveBeenCalledOnce();})
- it('disables saving when the user reverts the draft to the existing matrix',()=>{render(<PermissionStudioPage/>);const box=screen.getByRole('checkbox',{name:'DESIGNER: tasks.view'});fireEvent.click(box);expect(screen.getByRole('button',{name:'Salvar Matriz'})).toBeEnabled();fireEvent.click(box);expect(screen.getByRole('button',{name:'Salvar Matriz'})).toBeDisabled();expect(state.rpc).not.toHaveBeenCalled()})
- it('blocks further checkbox changes during the save',async()=>{let finish!:(value:{error:null})=>void;state.rpc.mockReturnValue(new Promise(resolve=>{finish=resolve}));render(<PermissionStudioPage/>);fireEvent.click(screen.getByRole('checkbox',{name:'DESIGNER: tasks.view'}));fireEvent.click(screen.getByRole('button',{name:'Salvar Matriz'}));await waitFor(()=>expect(screen.getByRole('checkbox',{name:'DESIGNER: clients.view'})).toBeDisabled());finish({error:null});await waitFor(()=>expect(screen.getByRole('checkbox',{name:'DESIGNER: clients.view'})).toBeEnabled())})
- it('retains the draft on a backend rejection and shows no simulated success',async()=>{state.rpc.mockResolvedValue({error:{message:'Forbidden'}});render(<PermissionStudioPage/>);fireEvent.click(screen.getByRole('checkbox',{name:'DESIGNER: tasks.view'}));fireEvent.click(screen.getByRole('button',{name:'Salvar Matriz'}));await waitFor(()=>expect(state.error).toHaveBeenCalledOnce());expect(screen.getByRole('checkbox',{name:'DESIGNER: tasks.view'})).toBeChecked();expect(screen.getByRole('button',{name:'Salvar Matriz'})).toBeEnabled();expect(state.success).not.toHaveBeenCalled();expect(state.reload).not.toHaveBeenCalled()})
- it('clears old drafts when another user opens the same agency and isolates the query identity',async()=>{const view=render(<PermissionStudioPage/>);fireEvent.click(screen.getByRole('checkbox',{name:'DESIGNER: tasks.view'}));state.auth={...state.auth,user:{id:'session-b'}};view.rerender(<PermissionStudioPage/>);await waitFor(()=>expect(screen.getByRole('checkbox',{name:'DESIGNER: tasks.view'})).not.toBeChecked());expect(screen.getByRole('button',{name:'Salvar Matriz'})).toBeDisabled();expect(state.querySpy).toHaveBeenLastCalledWith(expect.objectContaining({queryKey:['permission-matrix','agency-a','session-b']}));expect(state.rpc).not.toHaveBeenCalled()})
- it('does not permit saving without permission or after catalogue load errors',()=>{state.auth={...state.auth,activeAgency:{agencyId:'agency-a',roleName:'DESIGNER'}};const view=render(<PermissionStudioPage/>);expect(screen.getByRole('checkbox',{name:'DESIGNER: tasks.view'})).toBeDisabled();state.auth={...state.auth,activeAgency:{agencyId:'agency-a',roleName:'OWNER'}};state.query.isError=true;view.rerender(<PermissionStudioPage/>);expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível carregar');expect(screen.getByRole('button',{name:'Salvar Matriz'})).toBeDisabled();expect(state.rpc).not.toHaveBeenCalled()})
+beforeEach(()=>{
+ cleanup();vi.clearAllMocks();state.rpc.mockResolvedValue({error:null});state.invalidate.mockResolvedValue(undefined)
+ state.auth={user:{id:'session-a'},activeAgency:{agencyId:'agency-a',roleName:'OWNER'},permissions:new Set(),isDemo:false,reloadAccess:state.reload}
+ state.query={data:{roles:[{id:'owner',name:'OWNER'},{id:'designer',name:'DESIGNER'}],permissions:[{id:'view',permission_key:'tasks.view',module:'tasks'},{id:'edit',permission_key:'tasks.edit',module:'tasks'},{id:'clients',permission_key:'clients.view',module:'clients'}],grants:[{role_id:'designer',permission_id:'clients',allowed:true}]},isError:false,isLoading:false,isFetching:false}
+})
+describe('Acessos por setor',()=>{
+ it('saves only changed permissions and reloads access',async()=>{
+  render(<PermissionStudioPage/>);fireEvent.change(screen.getByLabelText('Acesso a Produção e tarefas'),{target:{value:'work'}})
+  fireEvent.click(screen.getByRole('button',{name:'Salvar acessos'}))
+  await waitFor(()=>expect(state.rpc).toHaveBeenCalledWith('set_agency_role_permissions',{p_agency_id:'agency-a',p_changes:[{role_id:'designer',permission_id:'view',allowed:true},{role_id:'designer',permission_id:'edit',allowed:true}]}))
+  await waitFor(()=>expect(state.reload).toHaveBeenCalledOnce());expect(state.success).toHaveBeenCalledOnce()
+ })
+ it('protects the owner profile',()=>{
+  render(<PermissionStudioPage/>);fireEvent.change(screen.getByLabelText('Perfil de acesso'),{target:{value:'owner'}})
+  expect(screen.getByLabelText('Acesso a Produção e tarefas')).toBeDisabled();expect(screen.getByRole('button',{name:'Salvar acessos'})).toBeDisabled()
+ })
+ it('disables saving after reverting the draft',()=>{
+  render(<PermissionStudioPage/>);const sector=screen.getByLabelText('Acesso a Produção e tarefas')
+  fireEvent.change(sector,{target:{value:'work'}});fireEvent.change(sector,{target:{value:'none'}})
+  expect(screen.getByRole('button',{name:'Salvar acessos'})).toBeDisabled()
+ })
+ it('keeps the draft when the server rejects the change',async()=>{
+  state.rpc.mockResolvedValue({error:{message:'Forbidden'}});render(<PermissionStudioPage/>);fireEvent.change(screen.getByLabelText('Acesso a Produção e tarefas'),{target:{value:'read'}});fireEvent.click(screen.getByRole('button',{name:'Salvar acessos'}))
+  await waitFor(()=>expect(state.error).toHaveBeenCalledOnce());expect(screen.getByLabelText('Acesso a Produção e tarefas')).toHaveValue('read');expect(state.reload).not.toHaveBeenCalled()
+ })
+ it('clears the draft after a session change',async()=>{
+  const view=render(<PermissionStudioPage/>);fireEvent.change(screen.getByLabelText('Acesso a Produção e tarefas'),{target:{value:'work'}})
+  state.auth={...state.auth,user:{id:'session-b'}};view.rerender(<PermissionStudioPage/>);await waitFor(()=>expect(screen.getByLabelText('Acesso a Produção e tarefas')).toHaveValue('none'))
+ })
+ it('does not allow edits without permission or after load errors',()=>{
+  state.auth.activeAgency.roleName='MEMBER';const view=render(<PermissionStudioPage/>);expect(screen.getByLabelText('Acesso a Produção e tarefas')).toBeDisabled()
+  state.auth.activeAgency.roleName='OWNER';state.query.isError=true;view.rerender(<PermissionStudioPage/>);expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível carregar');expect(screen.getByLabelText('Acesso a Produção e tarefas')).toBeDisabled()
+ })
 })

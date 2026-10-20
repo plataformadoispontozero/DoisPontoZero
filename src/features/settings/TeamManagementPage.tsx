@@ -1,5 +1,6 @@
 import { RegistrationRequestsPanel } from '@/features/team/RegistrationRequestsPanel'
 import { memberRoleOptions } from '@/features/team/memberRoleOptions'
+import { OwnershipSettings } from './components/OwnershipSettings'
 import React, { useState } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -69,6 +70,7 @@ export const TeamManagementPage: React.FC = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       <RegistrationRequestsPanel roles={roles} />
+      <OwnershipSettings members={members} unavailable={isError || rolesLoading} />
       {isError && <p role="alert">Não foi possível carregar os dados da equipe. Nenhum registro de demonstração substitui esta falha.</p>}
       {!canInvite && <p>Você não tem permissão para convidar membros desta agência.</p>}
       {inviteLink && <section className="space-y-3 rounded-xl border border-orange-400/40 p-4" aria-label="Convite criado">
@@ -205,10 +207,7 @@ export const TeamManagementPage: React.FC = () => {
                       disabled={!canUpdateRole || member.role_name === 'OWNER'}
                       value={member.role_id}
                       onChange={(e) => handleRoleChange(member.id, member.role_name, e.target.value)}
-                      options={roles.map((r) => ({
-                        value: r.id,
-                        label: r.name,
-                      }))}
+                      options={member.role_name === 'OWNER' ? [{value: member.role_id, label: 'Proprietário'}] : roleOptions}
                     />
                   </div>
 

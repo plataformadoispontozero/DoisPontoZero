@@ -34,7 +34,7 @@ export const settingsTabs: SettingsTabItem[] = [
   { id: 'appearance', label: 'Aparência & Tema', path: '/settings/appearance', icon: SunMoon },
   { id: 'notifications', label: 'Central de notificações', path: '/settings/notifications', icon: Bell },
   { id: 'team', label: 'Gestão de Equipe', path: '/settings/team', icon: Users },
-  { id: 'permissions', label: 'Permission Studio', path: '/settings/permissions', icon: ShieldCheck },
+  { id: 'permissions', label: 'Acessos', path: '/settings/permissions', icon: ShieldCheck },
   { id: 'workspace', label: 'Preferências', path: '/settings/workspace', icon: Globe2 },
   { id: 'documents', label: 'Branding de PDFs', path: '/settings/documents', icon: FileSpreadsheet },
   { id: 'client-experience', label: 'Client Portals', path: '/settings/client-experience', icon: MonitorCheck },
