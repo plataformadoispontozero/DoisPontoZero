@@ -76,12 +76,22 @@ function sectionImages(section: PreviewSection) {
 }
 
 
+function PresentationCarousel({assets,publicToken,onReview,reviews}:{assets:PreviewAsset[]}&ReviewProps){
+ const strip=useRef<HTMLDivElement>(null),drag=useRef<{x:number;left:number}|null>(null),moved=useRef(false)
+ const move=(direction:number)=>{const node=strip.current;if(node)node.scrollBy({left:direction*((node.firstElementChild as HTMLElement)?.offsetWidth+16||node.clientWidth*.85),behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}
+ return <div role="region" aria-label="Carrossel de artes" tabIndex={0} onKeyDown={e=>{if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&!(e.target as HTMLElement).closest('input,textarea,select')){e.preventDefault();move(e.key==='ArrowLeft'?-1:1)}}}>
+ <div className="mb-4 flex items-center justify-between gap-3"><p className="text-sm text-orange-300">Carrossel · {assets.length} lâminas</p><div className="flex gap-2"><button aria-label="Lâmina anterior" className="rounded-lg border border-white/20 p-3" onClick={()=>move(-1)}><ChevronLeft className="h-5 w-5"/></button><button aria-label="Próxima lâmina" className="rounded-lg border border-white/20 p-3" onClick={()=>move(1)}><ChevronRight className="h-5 w-5"/></button></div></div>
+ <div ref={strip} style={{touchAction:'pan-x pan-y'}} className="flex cursor-grab gap-4 overflow-x-auto pb-5 snap-x snap-mandatory active:cursor-grabbing" onPointerDown={e=>{moved.current=false;if(e.pointerType==='mouse'&&e.button===0&&(e.target as Element).closest('img'))drag.current={x:e.clientX,left:e.currentTarget.scrollLeft}}} onPointerMove={e=>{if(!drag.current)return;const dx=e.clientX-drag.current.x;if(Math.abs(dx)>8)moved.current=true;if(moved.current){e.currentTarget.setPointerCapture(e.pointerId);e.currentTarget.style.scrollSnapType='none';e.currentTarget.scrollLeft=drag.current.left-dx}}} onPointerUp={e=>{drag.current=null;e.currentTarget.style.scrollSnapType='';if(e.currentTarget.hasPointerCapture(e.pointerId))e.currentTarget.releasePointerCapture(e.pointerId)}} onPointerCancel={()=>{drag.current=null;if(strip.current)strip.current.style.scrollSnapType=''}} onClickCapture={e=>{if(moved.current){e.preventDefault();e.stopPropagation();moved.current=false}}} onDragStart={e=>e.preventDefault()}>
+ {[...assets].sort((a,b)=>a.title.localeCompare(b.title,'pt-BR',{numeric:true,sensitivity:'base'})).map((item,i)=><div key={item.id} className="w-[85%] shrink-0 snap-start @2xl:w-[45%] @5xl:w-[31%]"><p className="mb-2 text-xs text-orange-300">Lâmina {i+1}</p><PresentationMedia asset={item} publicToken={publicToken} onReview={onReview} review={reviews?.[item.id]}/></div>)}
+ </div><p className="mt-2 text-xs text-zinc-400">Use as setas ou arraste para os lados para ver as lâminas.</p></div>
+}
+
 export function PresentationGallery({assets,publicToken,onReview,reviews,layout='grid'}:{assets:PreviewAsset[];layout?:string}&ReviewProps){
  const [index,setIndex]=useState(0),gesture=useRef<{x:number;y:number;id:number}|null>(null),swiped=useRef(false)
  const current=Math.min(index,Math.max(0,assets.length-1)),asset=assets[current]
  if(!asset)return null
  if(layout==='grid')return <div role="region" aria-label="Galeria de materiais" className="grid min-w-0 items-stretch gap-6 @2xl:grid-cols-2 @5xl:grid-cols-3">{assets.map(item=><PresentationMedia key={item.id} asset={item} publicToken={publicToken} onReview={onReview} review={reviews?.[item.id]}/>)}</div>
- if(layout==='carousel')return <div role="region" aria-label="Carrossel de artes" className="flex gap-4 overflow-x-auto pb-5 snap-x snap-mandatory">{[...assets].sort((a,b)=>a.title.localeCompare(b.title,'pt-BR',{numeric:true,sensitivity:'base'})).map((item,i)=><div key={item.id} className="w-[85%] shrink-0 snap-start @2xl:w-[45%] @5xl:w-[31%]"><p className="mb-2 text-xs text-orange-300">Lâmina {i+1}</p><PresentationMedia asset={item} publicToken={publicToken} onReview={onReview} review={reviews?.[item.id]}/></div>)}</div>
+ if(layout==='carousel')return <PresentationCarousel assets={assets} publicToken={publicToken} onReview={onReview} reviews={reviews}/>
  const move=(delta:number)=>setIndex(i=>(Math.min(i,assets.length-1)+delta+assets.length)%assets.length)
  const button='flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-white/20 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-orange-400'
  return <div role="region" aria-label="Galeria de materiais" tabIndex={0} onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();move(e.key==='ArrowLeft'?-1:1)}}} className="min-w-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400">

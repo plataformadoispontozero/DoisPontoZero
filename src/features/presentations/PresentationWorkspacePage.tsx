@@ -65,7 +65,7 @@ export const PresentationWorkspacePage: React.FC = () => {
 
   // New section dialog
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
-  const [newPresentationSectionType, setNewPresentationSectionType] = useState<PresentationSectionType>('custom');
+  const [newPresentationSectionType, setNewPresentationSectionType] = useState<PresentationSectionType|'carousel'>('gallery');
   const [newSectionTitle, setNewSectionTitle] = useState('');
 
   // Add Drive File dialog
@@ -100,10 +100,10 @@ export const PresentationWorkspacePage: React.FC = () => {
   const handleAddSectionSubmit = async () => {
     if (!newSectionTitle.trim()) return;
     await addSection({
-      section_type: newPresentationSectionType,
+      section_type: newPresentationSectionType==='carousel'?'gallery':newPresentationSectionType,
       title: newSectionTitle,
       description: '',
-      content: {},
+      content: {media_layout:newPresentationSectionType==='carousel'?'carousel':'grid'},
       position: sections.length
     });
     setNewSectionTitle('');
@@ -232,7 +232,7 @@ export const PresentationWorkspacePage: React.FC = () => {
       </div>
 
       {/* Quick delivery sections keep the social workflow explicit. */}
-      {activeTab==='editor'&&<div className="rounded-2xl border border-white/10 p-4"><p className="mb-3 text-sm font-semibold">Adicionar entregas</p><div className="flex flex-wrap gap-3">{[{title:'Posts',type:'gallery',layout:'grid'},{title:'Carrossel',type:'gallery',layout:'carousel'},{title:'Reels',type:'video',layout:'grid'}].map(preset=><Button key={preset.title} variant="outline" disabled={addingDelivery} onClick={()=>void addDelivery(preset)}><Plus className="mr-2 h-4 w-4"/>{preset.title}</Button>)}</div><p className="mt-3 text-xs text-zinc-400">Escolha o formato, importe os materiais do Drive e confira a prévia.</p></div>}
+      {activeTab==='editor'&&<div className="rounded-2xl border border-white/10 p-4"><p className="mb-3 text-sm font-semibold">Adicionar entregas</p><div className="flex flex-wrap gap-3">{[{title:'Post',type:'gallery',layout:'grid'},{title:'Carrossel',type:'gallery',layout:'carousel'},{title:'Reels',type:'video',layout:'grid'}].map(preset=><Button key={preset.title} variant="outline" disabled={addingDelivery} onClick={()=>void addDelivery(preset)}><Plus className="mr-2 h-4 w-4"/>{preset.title}</Button>)}</div><p className="mt-3 text-xs text-zinc-400">Escolha o formato, importe os materiais do Drive e confira a prévia.</p></div>}
       {/* TAB 1: VISUAL BUILDER */}
       {activeTab === 'editor' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -261,7 +261,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-content-secondary uppercase tracking-wider">
-                      {SECTION_TYPES.find(t=>t.type===sec.section_type)?.label||sec.section_type}
+                      {sec.content?.media_layout==='carousel'?'Carrossel':sec.section_type==='gallery'?'Post':sec.section_type==='video'?'Reels':SECTION_TYPES.find(t=>t.type===sec.section_type)?.label||sec.section_type}
                     </span>
                     <div className="flex items-center space-x-1" onClick={e => e.stopPropagation()}>
                       <button
@@ -572,10 +572,10 @@ export const PresentationWorkspacePage: React.FC = () => {
             <label className="block text-xs font-semibold text-content-secondary mb-1">Tipo de Layout</label>
             <Select style={{colorScheme: 'dark'}}
               value={newPresentationSectionType}
-              onChange={e => setNewPresentationSectionType(e.target.value as PresentationSectionType)}
+              onChange={e => setNewPresentationSectionType(e.target.value as PresentationSectionType|'carousel')}
               className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
             >
-              {SECTION_TYPES.map((st) => (
+              {[{type:'gallery',label:'Post'},{type:'carousel',label:'Carrossel'},{type:'video',label:'Reels'}].map((st) => (
                 <option key={st.type} value={st.type}>{st.label}</option>
               ))}
             </Select>
