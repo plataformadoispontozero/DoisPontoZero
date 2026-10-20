@@ -1,261 +1,52 @@
-// ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
-// FASE 09: PRESENTATION STUDIO HOME & DASHBOARD
-// Route: /presentations
-// ============================================================
+import {useState} from 'react'
+import {Link,useNavigate} from 'react-router-dom'
+import {ArrowDown,ArrowUpRight,Plus,Search,Layers,Copy,Trash2,RotateCcw,Calendar,ExternalLink,Download,LayoutGrid,List,HardDrive} from 'lucide-react'
+import {usePermission} from '@/features/auth/AuthProvider'
+import {Button} from '@/components/ui/Button'
+import {Input} from '@/components/ui/Input'
+import {Dialog,DialogHeader,DialogTitle,DialogContent,DialogFooter} from '@/components/ui/Dialog'
+import {usePresentations,useCreatePresentation,useUpdatePresentation} from './hooks/usePresentations'
+import {nextPresentationPeriod,reusablePresentation} from './presentationReuse'
+import {PresentationAssetThumbnail} from './presentationMedia'
+import type {Presentation,PresentationStatus} from '@/types/presentations'
 
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import {
-  Plus,
-  Search,
-  Tv,
-  ExternalLink,
-  Edit3,
-  Clock,
-  CheckCircle2,
-  Download,
-  LayoutGrid,
-  List as ListIcon,
-  Layers,
-  HardDrive,
-  Calendar,
-} from 'lucide-react'
-import { PageHeader } from '@/components/ui/PageHeader'
-import { Card } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Input } from '@/components/ui/Input'
-import { Select } from '@/components/ui/Select'
-import { Skeleton } from '@/components/ui/Skeleton'
-import { usePresentations } from './hooks/usePresentations'
-import type { PresentationStatus } from '@/types/presentations'
-
-export const PresentationsPage: React.FC = () => {
-  const { data: presentations = [], isLoading } = usePresentations()
-
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-
-  const totalCount = presentations.length
-  const draftCount = presentations.filter((p) => p.status === 'draft' || p.status === 'internal_review').length
-  const publishedCount = presentations.filter((p) => p.status === 'published').length
-
-  const filteredPresentations = presentations.filter((pres) => {
-    const matchesSearch =
-      pres.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (pres.client_name || '').toLowerCase().includes(searchTerm.toLowerCase())
-
-    const matchesStatus = statusFilter === 'all' || pres.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
-
-  return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      <PageHeader
-        title="Presentation Studio"
-        subtitle="Transforme entregas criativas em apresentações e showcases de alto impacto visual."
-        breadcrumbs={[
-          { label: 'Visão Geral', href: '/dashboard' },
-          { label: 'Apresentações' },
-        ]}
-        actions={
-          <div className="flex items-center gap-2">
-            <Link to="/drive">
-              <Button variant="outline" size="sm">
-                <HardDrive className="w-4 h-4 mr-1.5 text-blue-400" />
-                Google Drive
-              </Button>
-            </Link>
-            <Link to="/presentations/new">
-              <Button variant="primary" size="sm">
-                <Plus className="w-4 h-4 mr-1.5" />
-                Nova Apresentação
-              </Button>
-            </Link>
-          </div>
-        }
-      />
-
-      {/* Real KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="p-4 flex items-center justify-between border-border/60 bg-surface/50">
-          <div>
-            <p className="text-xs text-text-muted font-medium">Total de Apresentações</p>
-            <p className="text-2xl font-bold text-text-primary mt-1">{totalCount}</p>
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-            <Tv className="w-5 h-5" />
-          </div>
-        </Card>
-
-        <Card className="p-4 flex items-center justify-between border-border/60 bg-surface/50">
-          <div>
-            <p className="text-xs text-text-muted font-medium">Em Elaboração</p>
-            <p className="text-2xl font-bold text-amber-400 mt-1">{draftCount}</p>
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
-            <Clock className="w-5 h-5" />
-          </div>
-        </Card>
-
-        <Card className="p-4 flex items-center justify-between border-border/60 bg-surface/50">
-          <div>
-            <p className="text-xs text-text-muted font-medium">Publicadas (Showcases)</p>
-            <p className="text-2xl font-bold text-emerald-400 mt-1">{publishedCount}</p>
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-            <CheckCircle2 className="w-5 h-5" />
-          </div>
-        </Card>
-      </div>
-
-      {/* Filter and View Modes */}
-      <Card className="p-4 border-border/60">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-1 items-center gap-3 w-full sm:w-auto">
-            <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-              <Input
-                placeholder="Buscar por título ou cliente..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-
-            <Select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              options={[
-                { value: 'all', label: 'Todos os Status' },
-                { value: 'draft', label: 'Rascunhos' },
-                { value: 'published', label: 'Publicadas' },
-              ]}
-              className="w-44"
-            />
-          </div>
-
-          <div className="flex items-center gap-1 bg-surface-hover p-1 rounded-lg border border-border/60">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-md transition-colors ${
-                viewMode === 'grid' ? 'bg-primary text-white' : 'text-text-muted hover:text-text-primary'
-              }`}
-            >
-              <LayoutGrid className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-md transition-colors ${
-                viewMode === 'list' ? 'bg-primary text-white' : 'text-text-muted hover:text-text-primary'
-              }`}
-            >
-              <ListIcon className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </Card>
-
-      {/* Presentation Cards */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-48 rounded-xl" />
-          ))}
-        </div>
-      ) : filteredPresentations.length === 0 ? (
-        <Card className="p-12 text-center border-dashed border-border/80">
-          <Tv className="w-12 h-12 mx-auto text-text-muted mb-4 opacity-50" />
-          <h3 className="text-lg font-semibold text-text-primary mb-1">Nenhuma apresentação encontrada</h3>
-          <p className="text-sm text-text-muted max-w-md mx-auto mb-6">
-            Crie sua primeira apresentação para expor materiais do Google Drive aos clientes em formato de showcase.
-          </p>
-          <Link to="/presentations/new">
-            <Button variant="primary" size="sm">
-              <Plus className="w-4 h-4 mr-1.5" />
-              Criar Apresentação
-            </Button>
-          </Link>
-        </Card>
-      ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredPresentations.map((pres) => (
-            <Card
-              key={pres.id}
-              className="p-5 flex flex-col justify-between border-border/60 hover:border-primary/40 transition-all group"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Badge variant={pres.status === 'published' ? 'success' : 'neutral'}>
-                    {pres.status === 'published' ? 'Publicada' : 'Rascunho'}
-                  </Badge>
-                  <span className="text-xs text-text-muted font-medium flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-primary" />
-                    {pres.period_month}/{pres.period_year}
-                  </span>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-text-primary text-base group-hover:text-primary transition-colors line-clamp-1">
-                    {pres.title}
-                  </h4>
-                  <p className="text-xs text-text-muted mt-1">Cliente: <strong className="text-text-primary">{pres.client_name}</strong></p>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-border/40 flex items-center justify-between gap-2">
-                <Link to={`/presentations/${pres.id}`} className="flex-1">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Edit3 className="w-3.5 h-3.5 mr-1" />
-                    Editar
-                  </Button>
-                </Link>
-
-                {pres.public_token && (
-                  <a
-                    href={`/showcase/${pres.public_token}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Abrir Showcase Público do Cliente"
-                  >
-                    <Button variant="ghost" size="sm" className="px-2">
-                      <ExternalLink className="w-4 h-4 text-text-muted hover:text-primary" />
-                    </Button>
-                  </a>
-                )}
-
-                <Link to={`/presentations/${pres.id}/export`} title="Exportar PDF Oficial">
-                  <Button variant="ghost" size="sm" className="px-2">
-                    <Download className="w-4 h-4 text-text-muted hover:text-primary" />
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <Card className="divide-y divide-border/40 border-border/60 overflow-hidden">
-          {filteredPresentations.map((pres) => (
-            <div key={pres.id} className="p-4 flex items-center justify-between gap-4 hover:bg-surface-hover/50 transition-colors">
-              <div>
-                <h4 className="font-medium text-text-primary text-base">{pres.title}</h4>
-                <p className="text-xs text-text-muted">Cliente: {pres.client_name} • Período: {pres.period_month}/{pres.period_year}</p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Link to={`/presentations/${pres.id}`}>
-                  <Button variant="outline" size="sm">
-                    <Edit3 className="w-3.5 h-3.5 mr-1" />
-                    Abrir Workspace
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </Card>
-      )}
-    </div>
-  )
+const statusLabels:Record<PresentationStatus,string>={draft:'Rascunho',internal_review:'Em revisão',approved:'Aprovada',published:'Publicada',archived:'Arquivada'}
+const field='min-h-11 rounded-xl border border-white/15 bg-[#19191e] px-3 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400'
+export function PresentationsPage(){
+ const query=usePresentations(),presentations=query.data||[],navigate=useNavigate(),create=useCreatePresentation(),update=useUpdatePresentation()
+ const canCreate=usePermission('presentations.create'),canEdit=usePermission('presentations.edit'),canDelete=usePermission('presentations.delete'),canExport=usePermission('presentations.export')
+ const [search,setSearch]=useState(''),[filter,setFilter]=useState('all'),[mode,setMode]=useState<'grid'|'list'>('grid')
+ const [action,setAction]=useState<{kind:'reuse'|'archive'|'restore';source:Presentation}|null>(null),[title,setTitle]=useState(''),[month,setMonth]=useState(1),[year,setYear]=useState(2026),[error,setError]=useState(''),[notice,setNotice]=useState('')
+ const busy=create.isPending||update.isPending
+ const active=presentations.filter(p=>p.status!=='archived'),published=active.filter(p=>p.status==='published'),drafts=active.filter(p=>p.status==='draft'||p.status==='internal_review')
+ const filtered=presentations.filter(p=>(filter==='all'?p.status!=='archived':p.status===filter)&&`${p.title} ${p.client_name||''}`.toLocaleLowerCase('pt-BR').includes(search.toLocaleLowerCase('pt-BR')))
+ const openAction=(kind:'reuse'|'archive'|'restore',source:Presentation)=>{setError('');setNotice('');if(kind==='reuse'){const next=nextPresentationPeriod(source.period_month,source.period_year);setMonth(next.month);setYear(next.year);setTitle(`${source.client_name||'Apresentação'} — ${String(next.month).padStart(2,'0')}/${next.year}`)}setAction({kind,source})}
+ const submit=async()=>{
+  if(!action||busy)return
+  setError('')
+  try{
+   if(action.kind==='reuse'){
+    if(!canCreate)throw new Error('Você não tem permissão para criar apresentações.')
+    const next=await create.mutateAsync(reusablePresentation(action.source,month,year,title));setAction(null);navigate(`/presentations/${next.id}`)
+   }else{
+    if(!canEdit||action.kind==='archive'&&!canDelete)throw new Error('Você não tem permissão para esta ação.')
+    await update.mutateAsync({id:action.source.id,status:action.kind==='archive'?'archived':'draft'});setNotice(action.kind==='archive'?'Apresentação movida para Arquivadas. Você pode restaurá-la pelo filtro.':'Apresentação restaurada como rascunho.');setAction(null)
+   }
+  }catch(cause){setError(cause instanceof Error?cause.message:'Não foi possível concluir a ação. Tente novamente.')}
+ }
+ return <div className="space-y-10 pb-12">
+  <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#151517] px-6 py-9 sm:px-10 lg:py-14">
+   <div className="grid items-start gap-10 lg:grid-cols-[1.3fr_0.7fr]"><div className="space-y-6"><p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-300">Presentation Studio</p><h1 className="max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">Boas entregas merecem<br className="hidden sm:block"/> uma boa apresentação.</h1><p className="max-w-xl text-base leading-relaxed text-zinc-400">Transforme os materiais da sua equipe em uma página para o cliente explorar, avaliar e aprovar. Do primeiro conceito ao próximo mês.</p><div className="flex flex-wrap gap-3">{canCreate&&<Link to="/presentations/new" className="inline-flex min-h-12 items-center gap-3 rounded-full bg-orange-600 px-6 text-sm font-semibold text-white hover:bg-orange-500"><Plus className="h-4 w-4"/>Nova Apresentação</Link>}<a href="#presentation-library" className="inline-flex min-h-12 items-center gap-3 rounded-full border border-white/20 px-5 text-sm text-white hover:bg-white/5">Explorar apresentações<ArrowDown className="h-4 w-4"/></a></div></div><aside className="rounded-2xl border border-white/10 bg-[#1c1c20] p-6"><p className="mb-6 text-xs uppercase tracking-[0.16em] text-zinc-400">Seu fluxo criativo</p>{[['01','Organize a narrativa','Estruture as seções e selecione os materiais.'],['02','Compartilhe com o cliente','Uma página para apresentar e receber retorno.'],['03','Prepare o próximo ciclo','Reaproveite a estrutura no mês seguinte.']].map(([n,label,description])=><div key={n} className="flex gap-4 border-t border-white/10 py-4"><span className="text-xs text-orange-300">{n}</span><div><p className="text-sm font-medium text-white">{label}</p><p className="mt-1 text-xs leading-relaxed text-zinc-400">{description}</p></div></div>)}</aside></div>
+   <div className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6">{[[active.length,'Apresentações'],[drafts.length,'Em elaboração'],[published.length,'Publicadas']].map(([count,label])=><div key={label}><p className="text-2xl font-semibold text-white">{query.isLoading?'—':count}</p><p className="mt-1 text-xs text-zinc-400">{label}</p></div>)}</div>
+  </section>
+  <section id="presentation-library" className="scroll-mt-6 space-y-6" aria-label="Biblioteca de apresentações"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[0.16em] text-orange-300">Do planejamento à aprovação</p><h2 className="mt-2 text-2xl font-semibold text-white">Suas apresentações</h2></div><Link to="/drive" className="inline-flex min-h-11 items-center gap-2 text-sm text-zinc-300 hover:text-white"><HardDrive className="h-4 w-4"/>Google Drive<ArrowUpRight className="h-4 w-4"/></Link></div>
+   <div className="flex flex-wrap items-center gap-3"><div className="relative min-w-0 flex-1 basis-60"><Search aria-hidden="true" className="pointer-events-none absolute left-4 top-3.5 h-4 w-4 text-zinc-500"/><Input aria-label="Buscar apresentação" placeholder="Buscar por título ou cliente…" value={search} onChange={e=>setSearch(e.target.value)} className="min-h-11 pl-11"/></div><select aria-label="Filtrar apresentações por status" className={field} value={filter} onChange={e=>setFilter(e.target.value)}>{[['all','Todas as ativas'],...Object.entries(statusLabels)].map(([value,label])=><option key={value} value={value}>{label}</option>)}</select><div className="flex gap-1 rounded-xl border border-white/10 p-1">{(['grid','list'] as const).map(value=><button key={value} type="button" aria-label={value==='grid'?'Exibir em grade':'Exibir em lista'} aria-pressed={mode===value} onClick={()=>setMode(value)} className={`flex h-10 w-10 items-center justify-center rounded-lg ${mode===value?'bg-white/10 text-white':'text-zinc-500'}`}>{value==='grid'?<LayoutGrid className="h-4 w-4"/>:<List className="h-4 w-4"/>}</button>)}</div></div>
+   {notice&&<p role="status" className="rounded-xl border border-emerald-500/20 p-4 text-sm text-emerald-300">{notice}</p>}
+   {query.isError?<div role="alert" className="rounded-xl border border-red-500/30 p-6 text-sm text-red-200">Não foi possível carregar as apresentações.<button className="ml-3 underline" onClick={()=>void query.refetch()}>Tentar novamente</button></div>:query.isLoading?<p role="status" className="py-12 text-zinc-400">Carregando apresentações…</p>:!filtered.length?<div className="rounded-2xl border border-dashed border-white/15 px-6 py-14 text-center"><Layers className="mx-auto mb-4 h-9 w-9 text-zinc-500"/><h3 className="text-lg font-semibold text-white">Nenhuma apresentação encontrada</h3><p className="mx-auto mt-2 max-w-md text-sm text-zinc-400">{search?'Tente outro título ou nome de cliente.':filter==='archived'?'As apresentações que você apagar aparecerão aqui para restauração.':'Comece com uma nova apresentação ou escolha outro status.'}</p></div>:<div className={mode==='grid'?'grid gap-5 md:grid-cols-2 xl:grid-cols-3':'grid gap-4'}>{filtered.map(pres=>{const cover=[...(pres.assets||[])].sort((a,b)=>a.position-b.position).find(a=>a.file_reference?.mime_type?.startsWith('image/')||/\.(png|jpe?g|webp|gif|avif)$/i.test(a.title));return <article key={pres.id} className={`overflow-hidden rounded-2xl border border-white/10 bg-[#19191d] ${mode==='list'?'sm:grid sm:grid-cols-[minmax(0,1fr)_auto]':''}`}>
+    <div className="min-w-0 p-5">{mode==='grid'&&<Link to={`/presentations/${pres.id}`} className="block" aria-label={`Editar ${pres.title}`}>{cover?<PresentationAssetThumbnail asset={cover}/>:<div className="mb-5 flex h-40 items-center justify-between rounded-xl border border-white/5 bg-[#242428] p-6"><span className="max-w-[75%] break-words text-2xl font-medium leading-tight text-zinc-300">{pres.client_name||'Projeto criativo'}</span><ArrowUpRight className="h-6 w-6 shrink-0 text-orange-300"/></div>}</Link>}<div className="flex flex-wrap items-center justify-between gap-2 text-xs"><span className={`rounded-full border px-3 py-1 ${pres.status==='published'?'border-emerald-500/30 text-emerald-300':'border-white/10 text-zinc-300'}`}>{statusLabels[pres.status]||pres.status}</span><span className="inline-flex items-center gap-1.5 text-zinc-400"><Calendar className="h-3.5 w-3.5"/>{String(pres.period_month).padStart(2,'0')}/{pres.period_year}</span></div><h3 className="mt-4 break-words text-lg font-semibold leading-snug text-white"><Link to={`/presentations/${pres.id}`} className="hover:text-orange-300">{pres.title}</Link></h3><p className="mt-2 text-xs text-zinc-400">{pres.client_name||'Cliente'} · {pres.sections?.length||0} seções · {pres.assets?.length||0} materiais</p></div>
+    <div className="flex flex-col justify-end gap-3 border-t border-white/10 p-5 sm:min-w-52"><div className="flex flex-wrap items-center gap-2"><Link to={`/presentations/${pres.id}`} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-sm text-white hover:bg-white/5">{canEdit?'Editar':'Visualizar'}<ArrowUpRight className="h-4 w-4"/></Link>{pres.public_token&&pres.status==='published'&&<a aria-label={`Abrir apresentação pública de ${pres.title}`} href={`/showcase/${pres.public_token}`} target="_blank" rel="noopener noreferrer" className="p-3 text-zinc-400 hover:text-white"><ExternalLink className="h-4 w-4"/></a>}{canExport&&<Link aria-label={`Exportar PDF de ${pres.title}`} to={`/presentations/${pres.id}/export`} className="p-3 text-zinc-400 hover:text-white"><Download className="h-4 w-4"/></Link>}</div><div className="flex flex-wrap gap-x-5 gap-y-2">{canCreate&&<button onClick={()=>openAction('reuse',pres)} className="inline-flex min-h-10 items-center gap-2 text-xs text-orange-300 hover:text-orange-200"><Copy className="h-3.5 w-3.5"/>Reaproveitar</button>}{pres.status==='archived'?canEdit&&<button onClick={()=>openAction('restore',pres)} className="inline-flex min-h-10 items-center gap-2 text-xs text-zinc-300"><RotateCcw className="h-3.5 w-3.5"/>Restaurar</button>:canDelete&&canEdit&&<button onClick={()=>openAction('archive',pres)} className="inline-flex min-h-10 items-center gap-2 text-xs text-zinc-400 hover:text-red-300"><Trash2 className="h-3.5 w-3.5"/>Apagar</button>}</div></div>
+   </article>})}</div>}
+  </section>
+  <Dialog open={!!action} onOpenChange={open=>{if(!open&&!busy)setAction(null)}}><DialogHeader onClose={()=>{if(!busy)setAction(null)}}><DialogTitle>{action?.kind==='reuse'?'Reaproveitar apresentação':action?.kind==='restore'?'Restaurar apresentação':'Apagar apresentação?'}</DialogTitle></DialogHeader><DialogContent><p className="mb-4 break-words text-sm text-zinc-300">{action?.source.title}</p>{action?.kind==='reuse'?<div className="space-y-4"><p className="text-sm leading-relaxed text-zinc-400">Uma nova apresentação será criada como rascunho para o mesmo cliente, com a estrutura e os textos atuais. Imagens, arquivos, aprovações e link público não serão copiados. Revise os textos para o novo período.</p><label className="grid gap-2 text-sm">Título<Input value={title} onChange={e=>setTitle(e.target.value)} maxLength={240}/></label><div className="grid grid-cols-2 gap-3"><label className="grid gap-2 text-sm">Mês<select className={field} value={month} onChange={e=>setMonth(Number(e.target.value))}>{Array.from({length:12},(_,i)=><option key={i+1} value={i+1}>{new Intl.DateTimeFormat('pt-BR',{month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(2026,i,1)))}</option>)}</select></label><label className="grid gap-2 text-sm">Ano<Input type="number" min={2020} max={9999} value={year} onChange={e=>setYear(Number(e.target.value))}/></label></div></div>:<p className="text-sm leading-relaxed text-zinc-400">{action?.kind==='restore'?'A apresentação voltará à lista como rascunho. Confira os materiais antes de publicar novamente.':'A apresentação irá para Arquivadas e deixará de aparecer para o cliente. Você poderá restaurá-la pelo filtro. Os arquivos originais do Drive serão preservados.'}</p>}{error&&<p role="alert" className="mt-4 text-sm text-red-300">{error}</p>}</DialogContent><DialogFooter><Button variant="outline" disabled={busy} onClick={()=>setAction(null)}>Cancelar</Button><Button loading={busy} disabled={busy||action?.kind==='reuse'&&!title.trim()} onClick={()=>void submit()}>{action?.kind==='reuse'?'Criar rascunho do novo mês':action?.kind==='restore'?'Restaurar como rascunho':'Mover para Arquivadas'}</Button></DialogFooter></Dialog>
+ </div>
 }

@@ -394,6 +394,7 @@ export function useCreatePresentation() {
       period_month: number
       period_year: number
       template_id?: string
+      sections_snapshot?: Array<Partial<PresentationSection>>
       description?: string
     }): Promise<Presentation> => {
       if (isSupabaseConfigured && supabase) {
@@ -416,7 +417,7 @@ export function useCreatePresentation() {
         const template = payload.template_id
           ? INITIAL_PRESENTATION_TEMPLATES.find((t) => t.id === payload.template_id)
           : undefined
-        const templateSections = template?.sections_snapshot.map((s, idx) => ({
+        const templateSections = (payload.sections_snapshot ?? template?.sections_snapshot)?.map((s, idx) => ({
           agency_id: agencyId,
           presentation_id: row.id,
           section_type: s.section_type || 'custom',
@@ -453,7 +454,7 @@ export function useCreatePresentation() {
       const template = payload.template_id
         ? INITIAL_PRESENTATION_TEMPLATES.find((t) => t.id === payload.template_id)
         : undefined
-      const sections: PresentationSection[] = template?.sections_snapshot.map((s, idx) => ({
+      const sections: PresentationSection[] = (payload.sections_snapshot ?? template?.sections_snapshot)?.map((s, idx) => ({
         id: `sec-${newId}-${idx}`,
         agency_id: agencyId,
         presentation_id: newId,
