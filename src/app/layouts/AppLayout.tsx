@@ -54,7 +54,7 @@ export const AppLayout: React.FC = () => {
       <MobileNav />
 
       {/* Área Central de Conteúdo */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden md:ml-[var(--office-sidebar-width)] transition-[margin] motion-reduce:transition-none">
         <TopBar />
         {failedAreas && <div role="alert" className="px-4 py-3 text-xs text-[#FB7185] border-b border-[#30303B]">Não foi possível carregar: {failedAreas}. Verifique a conexão e as permissões. Nenhum dado de demonstração substitui essa falha. <button type="button" className="underline ml-2" onClick={()=>void queryClient.invalidateQueries({predicate:query=>query.state.status==='error',refetchType:'active'})}>Tentar novamente</button></div>}
         {auth.isDemo && <div role="status" className="px-4 py-2 text-xs text-[#FBBF24] border-b border-[#30303B]">Demonstração local — dados não persistidos no Supabase.</div>}

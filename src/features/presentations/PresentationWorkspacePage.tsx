@@ -1,3 +1,4 @@
+import {usePermission} from '@/features/auth/AuthProvider'
 import {PresentationAssetThumbnail} from './presentationMedia'
 import {PresentationMaterialReviews} from './PresentationMaterialReviews';
 import {usePresentationReviews,latestMaterialReviews} from './hooks/usePresentationReviews';
@@ -28,6 +29,8 @@ export const PresentationWorkspacePage: React.FC = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
   const navigate = useNavigate();
   const cache = useQueryClient();
+  const canManageLinks=usePermission('presentations.manage_public_links');
+  const [addingDelivery,setAddingDelivery]=useState(false);
 
   const {
     presentation,
@@ -43,6 +46,8 @@ export const PresentationWorkspacePage: React.FC = () => {
     removeAsset,
     publishPresentation,
     createPublicLink,
+    sharingToken,
+    sharingLinkError,
     isPublishing,
     isCreatingLink
   } = useSinglePresentation(presentationId);
@@ -66,7 +71,7 @@ export const PresentationWorkspacePage: React.FC = () => {
   // Add Drive File dialog
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   // Public link notification
-  const [copiedLink, setCopiedLink] = useState<string | null>(null);
+  const [copiedLink, setCopiedLink] = useState<{id:string;url:string} | null>(null);
 
   if (isLoading) {
     return (
@@ -132,15 +137,18 @@ export const PresentationWorkspacePage: React.FC = () => {
     const token = await createPublicLink();
     if (token) {
       const fullUrl = `${window.location.origin}/showcase/${token}`;
-      await navigator.clipboard.writeText(fullUrl);
-      setCopiedLink(fullUrl);
-      setTimeout(() => setCopiedLink(null), 4000);
+      setCopiedLink({id:presentation.id,url:fullUrl});
+      try{await navigator.clipboard.writeText(fullUrl);toast.success('Link copiado.')}catch{toast.error('Link gerado. Selecione e copie o endereço no campo.')}
+
     }
     } catch (err) { toast.error((err as {message?: string})?.message || 'Não foi possível gerar ou copiar o link.'); }
   };
 
+  const addDelivery=async(preset:{title:string;type:string;layout:string})=>{if(addingDelivery)return;setAddingDelivery(true);try{const created=await addSection({section_type:preset.type as PresentationSectionType,title:preset.title,content:{media_layout:preset.layout},position:sections.length});if(created){setSelectedSectionId(created.id);setIsAddAssetOpen(true)}}catch{toast.error('Não foi possível adicionar a seção.')}finally{setAddingDelivery(false)}};
+  const shareUrl=(copiedLink?.id===presentation.id?copiedLink.url:null)||(sharingToken?`${window.location.origin}/showcase/${sharingToken}`:null);
   return (
     <div className="space-y-6 pb-16">
+      {canManageLinks&&<Card className="flex flex-wrap items-center gap-3 p-4"><div className="min-w-0 flex-1"><p className="text-xs text-zinc-400">Link de aprovação do cliente</p>{shareUrl?<input aria-label="Link de aprovação" readOnly value={shareUrl} className="mt-2 w-full rounded-lg border border-white/15 bg-black/20 p-2 text-sm" onFocus={e=>e.target.select()}/>:<p className="mt-1 text-sm">{sharingLinkError?'Não foi possível recuperar o link. Tente novamente.':'Gere o link uma vez. Ele ficará disponível aqui nos próximos acessos.'}</p>}{presentation.status!=='published'&&<p className="mt-2 text-xs text-amber-300">Publique a apresentação para permitir o acesso do cliente.</p>}</div>{shareUrl?<><Button variant="outline" onClick={()=>void navigator.clipboard.writeText(shareUrl).then(()=>toast.success('Link copiado.')).catch(()=>toast.error('Selecione e copie o link no campo.'))}>Copiar link</Button><a href={shareUrl} target="_blank" rel="noreferrer" className="text-sm text-orange-300 underline">Abrir aprovação</a></>:<Button loading={isCreatingLink} onClick={handleGenerateLink}>Gerar link de aprovação</Button>}</Card>}
       <PresentationMaterialReviews reviews={materialReviews.data||[]} assets={assets} error={materialReviews.isError}/>
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-orange-500/20 bg-gradient-to-r from-orange-500/10 to-transparent p-4 text-sm"><span className="font-semibold text-orange-300">{presentation.client_name || 'Apresentação do cliente'}</span><span className="text-zinc-400">{sections.length} seções · {assets.length} materiais</span><Button variant="ghost" size="sm" onClick={()=>setActiveTab('preview')}>Ver apresentação <Eye className="ml-2 h-4 w-4"/></Button></div>
       {/* Top Header */}
@@ -223,6 +231,8 @@ export const PresentationWorkspacePage: React.FC = () => {
         </div>
       </div>
 
+      {/* Quick delivery sections keep the social workflow explicit. */}
+      {activeTab==='editor'&&<div className="rounded-2xl border border-white/10 p-4"><p className="mb-3 text-sm font-semibold">Adicionar entregas</p><div className="flex flex-wrap gap-3">{[{title:'Posts',type:'gallery',layout:'grid'},{title:'Carrossel',type:'gallery',layout:'carousel'},{title:'Reels',type:'video',layout:'grid'}].map(preset=><Button key={preset.title} variant="outline" disabled={addingDelivery} onClick={()=>void addDelivery(preset)}><Plus className="mr-2 h-4 w-4"/>{preset.title}</Button>)}</div><p className="mt-3 text-xs text-zinc-400">Escolha o formato, importe os materiais do Drive e confira a prévia.</p></div>}
       {/* TAB 1: VISUAL BUILDER */}
       {activeTab === 'editor' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -476,23 +486,24 @@ export const PresentationWorkspacePage: React.FC = () => {
               <div className="pt-4 space-y-3">
                 <h4 className="text-sm font-semibold text-content-primary flex items-center">
                   <ShieldCheck className="w-4 h-4 mr-1.5 text-brand-primary" />
-                  Gerar Novo Link de Acesso Público
+                  Link de acesso público
                 </h4>
 
                 <Button
                   loading={isCreatingLink}
+                  disabled={!canManageLinks}
                   onClick={handleGenerateLink}
                   className="bg-brand-primary hover:bg-brand-primary/90"
                 >
                   <Copy className="w-4 h-4 mr-2" />
-                  Gerar Link Tokenizado
+                  Gerar ou recuperar link
                 </Button>
 
-                {copiedLink && (
+                {copiedLink?.id===presentation.id && (
                   <div className="p-3 bg-status-success/10 border border-status-success/30 rounded-lg text-xs text-status-success flex items-center justify-between">
                     <span>Link seguro copiado para a área de transferência!</span>
                     <a
-                      href={copiedLink}
+                      href={copiedLink.url}
                       target="_blank"
                       rel="noreferrer"
                       className="underline font-semibold flex items-center"

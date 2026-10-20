@@ -1,4 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render as rtlRender, screen } from '@testing-library/react'
+import {QueryClient,QueryClientProvider} from '@tanstack/react-query'
+const render=(ui:React.ReactNode)=>rtlRender(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}>{ui}</QueryClientProvider>)
 import { describe, expect, it,vi } from 'vitest'
 import { PresentationPreview, PresentationMedia,highQualityThumbnail } from './PresentationPreview'
 
@@ -37,5 +39,11 @@ it('renders section illustrations without registering fake Drive references and 
 });
 
 it('navigates images by arrows and keyboard while keeping decisions on the exact asset',async()=>{
- const {PresentationGallery}=await import('./PresentationPreview');const save=vi.fn().mockResolvedValue(undefined);render(<PresentationGallery assets={[{id:'first',title:'Post 1',thumbnail_reference:'https://example.com/1.png'},{id:'second',title:'Post 2',thumbnail_reference:'https://example.com/2.png'}]} onReview={save}/>);expect(screen.getByRole('img',{name:'Post 1'})).toBeVisible();expect(screen.queryByRole('button',{name:'Solicitar ajuste'})).toBeNull();fireEvent.click(screen.getByRole('button',{name:'Próxima imagem'}));expect(screen.getByRole('img',{name:'Post 2'})).toBeVisible();fireEvent.click(screen.getByRole('button',{name:'Aprovar'}));expect(save).toHaveBeenCalledWith('second','approved','');fireEvent.keyDown(screen.getByRole('region',{name:'Galeria de materiais'}),{key:'ArrowLeft'});expect(screen.getByRole('img',{name:'Post 1'})).toBeVisible()
+ const {PresentationGallery}=await import('./PresentationPreview');const save=vi.fn().mockResolvedValue(undefined);render(<PresentationGallery layout="slideshow" assets={[{id:'first',title:'Post 1',thumbnail_reference:'https://example.com/1.png'},{id:'second',title:'Post 2',thumbnail_reference:'https://example.com/2.png'}]} onReview={save}/>);expect(screen.getByRole('img',{name:'Post 1'})).toBeVisible();expect(screen.queryByRole('button',{name:'Solicitar ajuste'})).toBeNull();fireEvent.click(screen.getByRole('button',{name:'Próxima imagem'}));expect(screen.getByRole('img',{name:'Post 2'})).toBeVisible();fireEvent.click(screen.getByRole('button',{name:'Aprovar'}));expect(save).toHaveBeenCalledWith('second','approved','');fireEvent.keyDown(screen.getByRole('region',{name:'Galeria de materiais'}),{key:'ArrowLeft'});expect(screen.getByRole('img',{name:'Post 1'})).toBeVisible()
+})
+
+it('shows individual posts together by default and orders carousel slides numerically',async()=>{
+ const {PresentationGallery}=await import('./PresentationPreview');const assets=[{id:'ten',title:'Post 10',thumbnail_reference:'https://example.com/10.png'},{id:'two',title:'Post 2',thumbnail_reference:'https://example.com/2.png'},{id:'one',title:'Post 1',thumbnail_reference:'https://example.com/1.png'}]
+ const page=render(<PresentationGallery assets={assets}/>);expect(screen.getAllByRole('img')).toHaveLength(3);expect(screen.queryByRole('button',{name:'Próxima imagem'})).toBeNull();page.unmount()
+ render(<PresentationGallery assets={assets} layout="carousel"/>);expect(screen.getAllByRole('img').map(node=>node.getAttribute('alt'))).toEqual(['Post 1','Post 2','Post 10']);expect(screen.getByRole('region',{name:'Carrossel de artes'})).toBeVisible()
 })

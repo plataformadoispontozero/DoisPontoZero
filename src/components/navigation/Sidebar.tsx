@@ -29,7 +29,7 @@ export const Sidebar: React.FC<{
       }
       aria-label="Navegação Principal"
       data-collapsed={collapsed}
-      className={`hidden md:flex flex-col h-svh sticky top-0 shrink-0 bg-[var(--color-surface)] border-r border-[var(--color-border)] transition-[width] motion-reduce:transition-none z-30 ${collapsed ? "w-[72px]" : "w-[248px]"}`}
+      className={`hidden md:flex flex-col h-svh fixed inset-y-0 left-0 shrink-0 bg-[var(--color-surface)] border-r border-[var(--color-border)] transition-[width] motion-reduce:transition-none z-30 ${collapsed ? "w-[72px]" : "w-[248px]"}`}
     >
       <div
         className={`shrink-0 border-b border-[var(--color-border)] flex items-center ${collapsed ? "flex-col justify-center gap-1 py-3" : "h-20 justify-between px-3.5"}`}
@@ -62,7 +62,7 @@ export const Sidebar: React.FC<{
       </div>
       <nav
         aria-label="Módulos da agência"
-        className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2.5 py-3"
+        className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2.5 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <NavigationGroups collapsed={collapsed} />
       </nav>

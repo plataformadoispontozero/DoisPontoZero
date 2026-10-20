@@ -1,3 +1,4 @@
+import {presentationVideo} from './presentationVideo.ts'
 import {authorizePresentationMedia} from './presentationMediaContext.ts'
 import { createClient } from 'npm:@supabase/supabase-js@2.117.3'
 import { providerConfiguration, type ProviderConfiguration } from '../_shared/providerConfig.ts'
@@ -22,7 +23,7 @@ async function open(value:string){const [iv,data]=JSON.parse(value).map((s:strin
 Deno.serve(async(req:Request)=>{
  const requestOrigin=req.headers.get('origin')||''
  const allowedOrigins=new Set([origin,'https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev','tauri://localhost','https://tauri.localhost','http://tauri.localhost'])
- const headers={'Content-Type':'application/json','Cache-Control':'no-store','Access-Control-Allow-Origin':allowedOrigins.has(requestOrigin)?requestOrigin:origin,'Access-Control-Allow-Headers':corsHeaders['Access-Control-Allow-Headers'],'Access-Control-Allow-Methods':'POST, OPTIONS','Vary':'Origin'}
+ const headers={'Content-Type':'application/json','Cache-Control':'no-store','Access-Control-Allow-Origin':allowedOrigins.has(requestOrigin)?requestOrigin:origin,'Access-Control-Allow-Headers':corsHeaders['Access-Control-Allow-Headers']+', range','Access-Control-Allow-Methods':'GET, POST, OPTIONS','Vary':'Origin'}
  const reply=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers})
  const back=(status:string)=>new Response(null,{status:303,headers:{Location:`${origin}/settings/integrations/google?google=${status}`,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}})
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers})
@@ -33,6 +34,24 @@ Deno.serve(async(req:Request)=>{
  let requestConfig:ProviderConfiguration|null=null
  async function tokens(params:Record<string,string>){const r=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({...params,client_id:requestConfig?.clientId||env('GOOGLE_WORKSPACE_CLIENT_ID'),client_secret:requestConfig?.clientSecret||env('GOOGLE_WORKSPACE_CLIENT_SECRET')})});if(!r.ok)throw Error('Autorização Google não concluída.');return r.json()}
  try {
+  const mediaDeps={
+    authorize:(request:Request,input:{assetId:string;publicToken?:string})=>authorizePresentationMedia(request,input,{admin,member:authorization=>createClient(env('SUPABASE_URL'),env('SUPABASE_ANON_KEY'),{global:{headers:{Authorization:authorization}},auth:{persistSession:false,autoRefreshToken:false}})}),
+    accessToken:async (agency:string)=>{
+     requestConfig=await providerConfiguration(admin,agency,'google');if(!configured()||!requestConfig)throw Error('unavailable')
+     const central=await connection('read',agency);if(!central.user)throw Error('unavailable')
+     const stored=await secret('read',agency,central.user);if(!stored.ciphertext)throw Error('unavailable')
+     let token=await open(stored.ciphertext)
+     if(token.expires_at<Date.now()+60000){const fresh=await tokens({grant_type:'refresh_token',refresh_token:token.refresh_token});token={...token,...fresh,refresh_token:token.refresh_token,expires_at:Date.now()+fresh.expires_in*1000};await secret('save',agency,central.user,undefined,await seal(token))}
+     return token.access_token
+    }
+   }
+  if(req.method==='GET'&&new URL(req.url).searchParams.has('media')){
+   const raw=new URL(req.url).searchParams.get('media')||'';if(raw.length>12000||!/^[A-Za-z0-9_-]+$/.test(raw))return reply({error:'Link inválido.'},400)
+   const ticket=await open(new TextDecoder().decode(Uint8Array.from(atob(raw.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0))))
+   if(!ticket.expires||ticket.expires<Date.now())return reply({error:'Link expirado.'},403)
+   const authorizedRequest=new Request(req,{headers:{...Object.fromEntries(req.headers),authorization:ticket.authorization||''}})
+   return presentationVideo(authorizedRequest,{assetId:ticket.assetId,publicToken:ticket.publicToken},headers,mediaDeps)
+  }
   if(req.method==='GET'){
    if(!configured())return back('configuration_required')
    const url=new URL(req.url),state=url.searchParams.get('state')||'';if(state.length!==43)return back('invalid_state')
@@ -58,17 +77,14 @@ Deno.serve(async(req:Request)=>{
    const reader=req.clone().body?.getReader();let previewRaw='',previewSize=0;const decoder=new TextDecoder()
    if(reader)while(true){const part=await reader.read();if(part.done)break;previewSize+=part.value.byteLength;if(previewSize>65536){void reader.cancel().catch(()=>{});return reply({error:'Solicitação inválida.'},400)}previewRaw+=decoder.decode(part.value,{stream:true})}
    previewRaw+=decoder.decode();let previewBody:any=null;try{previewBody=JSON.parse(previewRaw)}catch{/* Existing authenticated request validation handles invalid JSON. */}
-   if(previewBody?.action==='presentation-media')return presentationMedia(req,previewBody,headers,{
-    authorize:(request,input)=>authorizePresentationMedia(request,input,{admin,member:authorization=>createClient(env('SUPABASE_URL'),env('SUPABASE_ANON_KEY'),{global:{headers:{Authorization:authorization}},auth:{persistSession:false,autoRefreshToken:false}})}),
-    accessToken:async agency=>{
-     requestConfig=await providerConfiguration(admin,agency,'google');if(!configured()||!requestConfig)throw Error('unavailable')
-     const central=await connection('read',agency);if(!central.user)throw Error('unavailable')
-     const stored=await secret('read',agency,central.user);if(!stored.ciphertext)throw Error('unavailable')
-     let token=await open(stored.ciphertext)
-     if(token.expires_at<Date.now()+60000){const fresh=await tokens({grant_type:'refresh_token',refresh_token:token.refresh_token});token={...token,...fresh,refresh_token:token.refresh_token,expires_at:Date.now()+fresh.expires_in*1000};await secret('save',agency,central.user,undefined,await seal(token))}
-     return token.access_token
-    }
-   })
+   if(previewBody?.action==='presentation-media')return presentationMedia(req,previewBody,headers,mediaDeps)
+   if(previewBody?.action==='presentation-video-ticket'){
+    if(typeof previewBody.assetId!=='string'||!/^[0-9a-f-]{36}$/i.test(previewBody.assetId)||('publicToken'in previewBody&&(typeof previewBody.publicToken!=='string'||previewBody.publicToken.length>512)))return reply({error:'Material inválido.'},400)
+    const input={assetId:previewBody.assetId,...(previewBody.publicToken?{publicToken:previewBody.publicToken}:{})}
+    if(!await mediaDeps.authorize(req,input))return reply({error:'Acesso não autorizado.'},403)
+    const ticket=base64(new TextEncoder().encode(await seal({...input,authorization:input.publicToken?'':req.headers.get('authorization'),expires:Date.now()+15*60000})))
+    return reply({url:`${env('SUPABASE_URL')}/functions/v1/google-workspace?media=${ticket}`})
+   }
   }
   if(req.method!=='POST')return reply({error:'Método inválido.'},405)
   const authorization=req.headers.get('authorization')||''
@@ -79,6 +95,19 @@ Deno.serve(async(req:Request)=>{
   const body=JSON.parse(raw),agency=body.agencyId
   if(raw.length>4096&&body.action!=='chat-drive-send')return reply({error:'Solicitação inválida.'},400)
   if(typeof agency!=='string'||!/^[0-9a-f-]{36}$/i.test(agency))return reply({error:'Agência inválida.'},400)
+  if(['presentation-sharing-read','presentation-sharing-create'].includes(body.action)){
+   const permission=await caller.rpc('has_agency_permission',{p_agency_id:agency,p_permission_key:'presentations.manage_public_links'});
+   if(permission.error||permission.data!==true)return reply({error:'Permissão para gerenciar links necessária.'},403)
+   if(typeof body.presentationId!=='string'||!/^[0-9a-f-]{36}$/i.test(body.presentationId))return reply({error:'Apresentação inválida.'},400)
+   const existing=await admin.rpc('presentation_sharing_secret',{p_agency:agency,p_presentation:body.presentationId});if(existing.error)throw Error('Não foi possível recuperar o link.')
+   if(existing.data){const saved=await open(existing.data);return reply({token:saved.token})}
+   if(body.action==='presentation-sharing-read')return reply({token:null})
+   if(!configured())return reply({error:'Configuração de criptografia indisponível.'},503)
+   const created=await caller.rpc('create_presentation_public_link',{p_agency:agency,p_presentation:body.presentationId});if(created.error||typeof created.data!=='string')throw Error('Não foi possível gerar o link.')
+   const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(created.data)))).map(n=>n.toString(16).padStart(2,'0')).join('');
+   const stored=await admin.rpc('presentation_sharing_secret',{p_agency:agency,p_presentation:body.presentationId,p_hash:digest,p_ciphertext:await seal({token:created.data})});if(stored.error)throw Error('Não foi possível guardar o link.')
+   return reply({token:created.data})
+  }
   const chatAction=['chat-drive-send','chat-drive-read'].includes(body.action)
   let chatContext:Record<string,unknown>|null=null
   if(chatAction){const result=await caller.rpc('chat_drive_context',{p_agency:agency,p_channel:body.action==='chat-drive-send'?(body.channelId||null):null,p_conversation:body.action==='chat-drive-send'?(body.conversationId||null):null,p_attachment:body.action==='chat-drive-read'?body.attachmentId:null});if(result.error||!result.data)return reply({error:'Acesso ao chat e material necessário.'},403);chatContext=result.data;if(body.action==='chat-drive-read'){body.clientId=chatContext!.client_id;body.folderId=chatContext!.drive_folder_id}}

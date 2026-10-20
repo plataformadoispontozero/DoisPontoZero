@@ -34,7 +34,7 @@ export const SECTION_TYPES: { type: PresentationSectionType; label: string; desc
 export const INITIAL_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
   {
     id: 'tmpl-pres-001',
-    name: 'Social Media Monthly Showcase',
+    name: 'Aprovação mensal — Posts, Carrossel e Reels',
     description: 'Apresentação mensal de entregas de redes sociais, reels e métricas operacionais.',
     category: 'Social Media',
     sections_snapshot: [
@@ -46,12 +46,17 @@ export const INITIAL_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
       {
         section_type: 'overview',
         title: 'Resumo das Entregas do Mês',
-        content: { text: 'Neste mês focamos em acelerar a produção de reels e fortalecer a autoridade estética da marca.' },
+        content: {},
       },
       {
         section_type: 'gallery',
-        title: 'Peças & Carrosséis Publicados',
-        content: { text: 'Confira as principais peças desenvolvidas para o feed e stories.' },
+        title: 'Posts',
+        content: { media_layout:'grid' },
+      },
+      {
+        section_type:'gallery',
+        title:'Carrossel',
+        content:{media_layout:'carousel'},
       },
       {
         section_type: 'video',
@@ -61,7 +66,7 @@ export const INITIAL_PRESENTATION_TEMPLATES: PresentationTemplate[] = [
       {
         section_type: 'results',
         title: 'Resultados Operacionais',
-        content: { list: ['12 Posts de Feed Entregues', '8 Reels Finalizados', '100% dos prazos cumpridos'] },
+        content: {},
       },
       {
         section_type: 'next_steps',
@@ -232,18 +237,16 @@ export function useSinglePresentation(presentationId?: string) {
 
   const query = usePresentation(presentationId)
   const updateMutation = useUpdatePresentation()
+  const sharingLink = useQuery({queryKey:['presentation-sharing-link',agencyId,presentationId],enabled:!!agencyId&&!!presentationId&&(auth.activeAgency?.roleName==='OWNER'||auth.permissions?.has('presentations.manage_public_links')),queryFn:async()=>{if(!supabase)return null;const result=await supabase.functions.invoke('google-workspace',{body:{action:'presentation-sharing-read',agencyId,presentationId}});if(result.error)throw result.error;return result.data?.token as string|null}})
   const publicLinkMutation = useMutation({
     mutationFn: async () => {
       if (!presentation) throw new Error('Apresentação não encontrada')
       if (!isSupabaseConfigured || !supabase) return presentation.public_token || `demo-${presentation.id}`
       if (!agencyId) throw new Error('Sessão e agência são obrigatórias.')
-      const { data, error } = await supabase.rpc('create_presentation_public_link', {
-        p_agency: agencyId,
-        p_presentation: presentation.id,
-      })
-      if (error) throw error
-      if (!data || typeof data !== 'string') throw new Error('O servidor não retornou um token público válido.')
-      return data
+      const {data,error}=await supabase.functions.invoke('google-workspace',{body:{action:'presentation-sharing-create',agencyId,presentationId:presentation.id}})
+      if(error)throw error
+      if(!data?.token||typeof data.token!=='string')throw new Error('O servidor não retornou um link válido.')
+      return data.token as string
     },
   })
 
@@ -270,6 +273,8 @@ export function useSinglePresentation(presentationId?: string) {
       id: presentation.id,
       sections: [...sections, newSec],
     })
+    await query.refetch()
+    return newSec
   }
 
   const updateSection = async ({ sectionId, updates }: { sectionId: string; updates: Partial<PresentationSection> }) => {
@@ -343,7 +348,9 @@ export function useSinglePresentation(presentationId?: string) {
   }
 
   const createPublicLink = async () => {
-    return publicLinkMutation.mutateAsync()
+    const token=await publicLinkMutation.mutateAsync()
+    await sharingLink.refetch()
+    return token
   }
 
   return {
@@ -361,6 +368,8 @@ export function useSinglePresentation(presentationId?: string) {
     removeAsset,
     publishPresentation,
     createPublicLink,
+    sharingToken: sharingLink.data,
+    sharingLinkError: sharingLink.isError,
     isPublishing: updateMutation.isPending,
     isCreatingLink: publicLinkMutation.isPending,
   }
@@ -613,4 +622,9 @@ export function useUpdatePresentation() {
       return updated
     },
   })
+}
+
+export function useDeletePresentation(){
+ const auth=useAuth(),cache=useQueryClient(),agency=auth.activeAgency?.agencyId
+ return useMutation({mutationFn:async({id,confirmation}:{id:string;confirmation:string})=>{if(!supabase||!agency)throw Error('Sessão necessária.');const result=await supabase.rpc('delete_presentation_permanently',{p_agency:agency,p_presentation:id,p_confirmation:confirmation});if(result.error)throw result.error;if(result.data!==true)throw Error('A apresentação não foi excluída.');return id},onSuccess:id=>{cache.removeQueries({queryKey:['presentation',agency,id]});cache.removeQueries({queryKey:['presentation-sharing-link',agency,id]});void cache.invalidateQueries({queryKey:['presentations']});void cache.invalidateQueries({queryKey:['client-presentations']});cache.removeQueries({queryKey:['presentation-media']});cache.removeQueries({queryKey:['presentation-reel']})}})
 }

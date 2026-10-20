@@ -59,12 +59,13 @@ export const PublicShowcaseViewPage: React.FC = () => {
         }
 
         setData(showcaseResult as ShowcaseData);
+        setLoadedToken(publicToken);setLoading(false);
         const history=await supabase.rpc('get_showcase_material_reviews',{p_token:publicToken});
         if(!active)return;
         setReviewLoadError(!!history.error);
         const restored:Record<string,{decision:MaterialDecision;note:string}>={};
         if(!history.error&&Array.isArray(history.data)) for(const entry of history.data) if(!restored[entry.asset_id]) restored[entry.asset_id]={decision:entry.decision,note:entry.note};
-        setReviews(restored);
+        setReviews(current=>({...restored,...current}));
       } catch (err: any) {
         if(!active)return;
         console.error('Erro ao buscar showcase público:', err);

@@ -11,7 +11,7 @@ export function reusablePresentation(source:Presentation,month:number,year:numbe
   description:source.description||undefined,period_month:month,period_year:year,
   sections_snapshot:[...(source.sections||[])].sort((a,b)=>a.position-b.position).map(section=>({
    section_type:section.section_type,title:section.title,description:section.description,
-   content:{...(typeof section.content.text==='string'?{text:section.content.text}:{}),...(typeof section.content.subtitle==='string'?{subtitle:section.content.subtitle}:{}),...(Array.isArray(section.content.list)?{list:section.content.list.filter((value:unknown)=>typeof value==='string')}:{} )},
+   content:{...(['grid','carousel'].includes(section.content.media_layout)?{media_layout:section.content.media_layout}:{}),...(typeof section.content.text==='string'?{text:section.content.text}:{}),...(typeof section.content.subtitle==='string'?{subtitle:section.content.subtitle}:{}),...(Array.isArray(section.content.list)?{list:section.content.list.filter((value:unknown)=>typeof value==='string')}:{} )},
   })),
  }
 }
