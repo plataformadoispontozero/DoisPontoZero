@@ -1,4 +1,4 @@
-import { fireEvent, render as rtlRender, screen } from '@testing-library/react'
+import { fireEvent, render as rtlRender, screen, waitFor } from '@testing-library/react'
 import {QueryClient,QueryClientProvider} from '@tanstack/react-query'
 const render=(ui:React.ReactNode)=>rtlRender(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}>{ui}</QueryClientProvider>)
 import { describe, expect, it,vi } from 'vitest'
@@ -8,7 +8,7 @@ describe('shared presentation preview', () => {
   it('renders ordered sections and real material thumbnails, including unassigned materials', () => {
     render(<PresentationPreview presentation={{ title: 'Campanha de outubro', client_name: 'Cliente real', period_month: 10, period_year: 2026 }} sections={[{ id: 'second', section_type: 'gallery', title: 'Peças', position: 1, content: {text:'Direção visual da campanha'} }, { id: 'first', section_type: 'objectives', title: 'Objetivo', position: 0, content: {list:['Divulgar lançamento']} }]} assets={[{id:'art',section_id:'second',title:'Arte WebP',file_reference:{mime_type:'image/webp',thumbnail_reference:'https://lh3.googleusercontent.com/art',web_view_link:'https://drive.google.com/file/d/art/view'}},{id:'extra',title:'Manual',web_view_link:'https://drive.google.com/file/d/manual/view'}]} />)
     expect(screen.getAllByRole('heading', {level:2}).map(node => node.textContent)).toEqual(['Objetivo','Peças','Materiais complementares'])
-    expect(screen.getByText('Cliente real · outubro / 2026')).toBeInTheDocument()
+    expect(screen.getAllByText('Cliente real')[0]).toBeInTheDocument();expect(screen.getByText('outubro / 2026')).toBeInTheDocument()
     expect(screen.getByText('Direção visual da campanha')).toBeInTheDocument()
     expect(screen.getByRole('img',{name:'Arte WebP'})).toHaveAttribute('src','https://lh3.googleusercontent.com/art')
     expect(screen.queryByRole('link',{name:/Drive/})).not.toBeInTheDocument();expect(screen.getAllByRole('button',{name:'Aprovar'})[0]).toBeDisabled()
@@ -39,11 +39,23 @@ it('renders section illustrations without registering fake Drive references and 
 });
 
 it('navigates images by arrows and keyboard while keeping decisions on the exact asset',async()=>{
- const {PresentationGallery}=await import('./PresentationPreview');const save=vi.fn().mockResolvedValue(undefined);render(<PresentationGallery layout="slideshow" assets={[{id:'first',title:'Post 1',thumbnail_reference:'https://example.com/1.png'},{id:'second',title:'Post 2',thumbnail_reference:'https://example.com/2.png'}]} onReview={save}/>);expect(screen.getByRole('img',{name:'Post 1'})).toBeVisible();expect(screen.queryByRole('button',{name:'Solicitar ajuste'})).toBeNull();fireEvent.click(screen.getByRole('button',{name:'Próxima imagem'}));expect(screen.getByRole('img',{name:'Post 2'})).toBeVisible();fireEvent.click(screen.getByRole('button',{name:'Aprovar'}));expect(save).toHaveBeenCalledWith('second','approved','');fireEvent.keyDown(screen.getByRole('region',{name:'Galeria de materiais'}),{key:'ArrowLeft'});expect(screen.getByRole('img',{name:'Post 1'})).toBeVisible()
+ const {PresentationGallery}=await import('./PresentationPreview');const save=vi.fn().mockResolvedValue(undefined);render(<PresentationGallery layout="slideshow" assets={[{id:'first',title:'Post 1',thumbnail_reference:'https://example.com/1.png'},{id:'second',title:'Post 2',thumbnail_reference:'https://example.com/2.png'}]} onReview={save}/>);expect(screen.getByRole('img',{name:'Post 1'})).toBeVisible();expect(screen.getByRole('button',{name:'Solicitar ajuste'})).toBeEnabled();fireEvent.click(screen.getByRole('button',{name:'Próxima imagem'}));expect(screen.getByRole('img',{name:'Post 2'})).toBeVisible();fireEvent.click(screen.getByRole('button',{name:'Aprovar'}));expect(save).toHaveBeenCalledWith('second','approved','');fireEvent.keyDown(screen.getByRole('region',{name:'Galeria de materiais'}),{key:'ArrowLeft'});expect(screen.getByRole('img',{name:'Post 1'})).toBeVisible()
 })
 
 it('shows individual posts together by default and orders carousel slides numerically',async()=>{
  const {PresentationGallery}=await import('./PresentationPreview');const assets=[{id:'ten',title:'Post 10',thumbnail_reference:'https://example.com/10.png'},{id:'two',title:'Post 2',thumbnail_reference:'https://example.com/2.png'},{id:'one',title:'Post 1',thumbnail_reference:'https://example.com/1.png'}]
  const page=render(<PresentationGallery assets={assets}/>);expect(screen.getAllByRole('img')).toHaveLength(3);expect(screen.queryByRole('button',{name:'Próxima imagem'})).toBeNull();page.unmount()
  render(<PresentationGallery assets={assets} layout="carousel"/>);expect(screen.getAllByRole('img').map(node=>node.getAttribute('alt'))).toEqual(['Post 1','Post 2','Post 10']);expect(screen.getByRole('region',{name:'Carrossel de artes'})).toBeVisible()
+})
+
+it('shows a requested adjustment immediately and lets the client edit its comment',async()=>{
+ const save=vi.fn().mockResolvedValue(undefined);render(<PresentationMedia asset={{id:'art-edit',title:'Arte editável'}} onReview={save}/>);
+ fireEvent.click(screen.getByRole('button',{name:'Solicitar ajuste'}));expect(screen.getByRole('button',{name:'Enviar retorno'})).toBeDisabled();fireEvent.change(screen.getByLabelText('Qual ajuste precisa ser feito?'),{target:{value:'Aumentar o título'}});fireEvent.click(screen.getByRole('button',{name:'Enviar retorno'}));await waitFor(()=>expect(screen.getByText('Aumentar o título',{selector:'p'})).toBeVisible());expect(screen.getByText('Ajuste solicitado')).toBeVisible();
+ fireEvent.click(screen.getByRole('button',{name:'Editar retorno'}));expect(screen.getByLabelText('Comentário para a equipe')).toHaveValue('Aumentar o título');expect(screen.getByLabelText('Decisão')).toHaveValue('changes_requested');fireEvent.change(screen.getByLabelText('Comentário para a equipe'),{target:{value:'Aumentar o título e o contraste'}});fireEvent.click(screen.getByRole('button',{name:'Salvar retorno'}));await waitFor(()=>expect(screen.getByText('Aumentar o título e o contraste',{selector:'p'})).toBeVisible());expect(screen.queryByText('Aumentar o título')).toBeNull();expect(save).toHaveBeenLastCalledWith('art-edit','changes_requested','Aumentar o título e o contraste')
+})
+it('approving after an adjustment clears the old note from the current card',async()=>{
+ const save=vi.fn().mockResolvedValue(undefined);render(<PresentationMedia asset={{id:'reviewed',title:'Arte'}} review={{decision:'changes_requested',note:'Comentário anterior'}} onReview={save}/>);fireEvent.click(screen.getByRole('button',{name:'Aprovar'}));expect(await screen.findByText('Aprovado')).toBeVisible();expect(screen.queryByText('Comentário anterior')).toBeNull();expect(save).toHaveBeenCalledWith('reviewed','approved','')
+})
+it('keeps the saved comment when editing fails and preserves the draft for retry',async()=>{
+ render(<PresentationMedia asset={{id:'review-failure',title:'Arte'}} review={{decision:'changes_requested',note:'Retorno salvo'}} onReview={vi.fn().mockRejectedValue(Error('Falha ao registrar'))}/>);fireEvent.click(screen.getByRole('button',{name:'Editar retorno'}));fireEvent.change(screen.getByLabelText('Comentário para a equipe'),{target:{value:'Novo retorno'}});fireEvent.click(screen.getByRole('button',{name:'Salvar retorno'}));expect(await screen.findAllByText('Falha ao registrar')).not.toHaveLength(0);expect(screen.getByText('Retorno salvo')).toBeVisible();expect(screen.getByLabelText('Comentário para a equipe')).toHaveValue('Novo retorno')
 })

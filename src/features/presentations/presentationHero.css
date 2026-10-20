@@ -19,12 +19,17 @@
  animation: presentation-grid-loop 48s linear infinite;
 }
 .presentation-hero[data-paused='true'] .presentation-hero__grid { animation-play-state: paused; }
-.presentation-hero__content { width: 100%; max-width: 1020px; display: grid; justify-items: center; gap: 28px; }
+.presentation-hero__content { width: 100%; max-width: 1100px; display: grid; justify-items: center; gap: 26px; }
 .presentation-hero__logo { display: block; width: auto; max-width: min(260px, 70cqw); height: auto; max-height: 88px; object-fit: contain; margin-bottom: 8px; }
-.presentation-hero__client { max-width: 28ch; font-size: clamp(20px, 2.6cqw, 30px); line-height: 1.25; font-weight: 500; letter-spacing: -.025em; color: #fafafa; }
-.presentation-hero__title { max-width: 28ch; font-size: clamp(32px, 5.1cqw, 68px); line-height: 1.1; font-weight: 600; letter-spacing: -.04em; overflow-wrap: anywhere; text-wrap: balance; }
+.presentation-hero__client { max-width: 42ch; font-size: clamp(20px, 2.4cqw, 28px); line-height: 1.25; font-weight: 500; letter-spacing: -.025em; color: #fafafa; }
+.presentation-hero__title { max-width: 24ch; font-size: clamp(38px, 7cqw, 96px); line-height: 1.04; font-weight: 600; letter-spacing: -.04em; overflow-wrap: anywhere; text-wrap: balance; }
 .presentation-hero__motion { position: absolute; bottom: 16px; right: 16px; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 8px 12px; border-radius: 8px; font-size: 11px; color: #a1a1aa; }
 .presentation-hero__motion:hover { color: white; background: rgb(255 255 255 / .04); }
 .presentation-hero__motion:focus-visible { outline: 2px solid #fb923c; outline-offset: 2px; }
 @keyframes presentation-grid-loop { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(192px, 192px, 0); } }
 @media (prefers-reduced-motion: reduce) { .presentation-hero__grid { animation: none; } .presentation-hero__motion { display: none; } }
+
+.presentation-hero__eyebrow { display: inline-flex; align-items: center; justify-content: center; gap: 10px; max-width: 100%; border: 1px solid rgb(251 146 60 / .2); border-radius: 999px; padding: 9px 16px; font-size: 11px; line-height: 1.5; text-transform: uppercase; letter-spacing: .16em; color: #fdba74; }
+.presentation-hero__eyebrow span { flex-shrink: 0; width: 5px; height: 5px; border-radius: 50%; background: #fb923c; }
+
+.presentation-hero__title[data-detailed="true"] { font-size: clamp(36px, 5.4cqw, 72px); }
