@@ -149,7 +149,7 @@ export const navItems: NavItem[] = [
   },
   {
     id: "chat",
-    label: officeEnabled?"Escritório Digital":"Chat",
+    label: "Escritório Digital",
     path: officeEnabled?"/office":"/chat",
     icon: officeEnabled?Building2:MessageSquare,
     section: "tools",
