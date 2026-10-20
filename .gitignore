@@ -45,3 +45,4 @@ dist-public-test/
 # Private exports and local agent outputs
 backup-agencia-*.json
 .manus/mcp-results/
+.dyad/
