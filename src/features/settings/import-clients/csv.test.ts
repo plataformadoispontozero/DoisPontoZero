@@ -50,13 +50,8 @@ describe("CSV de clientes", () => {
     const explicit = parseCsv("nome;slug\nNome;INVALIDO");
     expect(previewCsv(explicit,autoMapping(explicit.headers),[])[0].errors.join()).toContain("Slug obrigatório");
   });
-  it("limita registros e tamanho", () => {
-    expect(() =>
-      parseCsv(
-        "name,slug\n" +
-          Array.from({ length: 501 }, (_, i) => `Nome,n-${i}`).join("\n"),
-      ),
-    ).toThrow();
+  it("aceita mais de 500 registros e mantém validação", () => {
+    expect(parseCsv("name,slug\n" + Array.from({ length: 501 }, (_, i) => `Nome,n-${i}`).join("\n")).records).toHaveLength(501);
     expect(() => parseCsv("x".repeat(2097153))).toThrow();
   });
 });

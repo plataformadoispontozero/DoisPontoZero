@@ -4,6 +4,7 @@
 // Generator function: Renders PDF Document to Blob and Triggers Download
 // ============================================================
 
+import '@/components/pdf/pdfRuntime'
 import React from 'react'
 import { pdf } from '@react-pdf/renderer'
 import type { BriefingPdfModel } from './types'

@@ -460,3 +460,22 @@ export function useRevokePublicLink(agencyId: string, briefingId: string) {
     },
   })
 }
+
+/** Server transaction preserves responses and revokes public links when archiving. */
+export function useArchiveBriefing(agencyId: string) {
+  const cache = useQueryClient()
+  return useMutation({
+    mutationFn: async ({id, archived}: {id: string; archived: boolean}) => {
+      if (!isSupabaseConfigured || !supabase || !agencyId) throw new Error('Conexão da agência indisponível.')
+      const {data,error} = await supabase.rpc('set_briefing_archived', {p_agency: agencyId,p_briefing: id,p_archived: archived})
+      if (error) throw new Error(error.message)
+      if (data !== id) throw new Error('O servidor não confirmou a alteração do briefing.')
+      return {id,archived}
+    },
+    onSuccess: ({id}) => {
+      void cache.invalidateQueries({queryKey:['briefings',agencyId]})
+      void cache.invalidateQueries({queryKey:['briefing',agencyId,id]})
+      void cache.invalidateQueries({queryKey:['briefing_public_links',agencyId,id]})
+    },
+  })
+}

@@ -10,6 +10,7 @@ export interface MonthlyItem {
 export interface EditorialContext {
   planningMode?: 'automatic';
   monthlyDirection?: string;
+  seasonalDates?: string;
   generationProvider?: 'rules'|'gemini';
   generationModel?: string;
   requestedCounts?: Record<EditorialFormat, number>;

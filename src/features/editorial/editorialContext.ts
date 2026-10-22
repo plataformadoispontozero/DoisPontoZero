@@ -3,7 +3,7 @@ import type { EditorialContext } from './monthlyPlanner';
 import type { HistoryEntry, PillarInput } from './campaignEngine';
 export interface SuggestedTopic { text: string; source: string }
 export interface LegacyEditorialSource { id: string; payload: Record<string, unknown> }
-const text = (value: unknown) => typeof value === 'string' ? value.trim().slice(0, 500) : '';
+const text = (value: unknown) => {if(typeof value!=='string')return '';const result=value.trim().slice(0,500);const normalized=result.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[.!]$/,'');return /^(nao informad[oa]|n\/a|nao se aplica|sem informacao|a definir|null|undefined)$/.test(normalized)?'':result;};
 export function suggestEditorialTopics(profile: ClientProfile, briefs: LegacyEditorialSource[], strategies: LegacyEditorialSource[]): SuggestedTopic[] {
  const suggestions: SuggestedTopic[] = [];
  const add = (value: unknown, source: string) => { const original = text(value); const candidate = original.length>140?original.slice(0,137).replace(/\s+\S*$/, '').trim()+'…':original; if(candidate && !suggestions.some(s=>s.text.toLocaleLowerCase()===candidate.toLocaleLowerCase())) suggestions.push({text:candidate,source}); };
@@ -12,12 +12,13 @@ export function suggestEditorialTopics(profile: ClientProfile, briefs: LegacyEdi
  const latestBrief=briefs[0];
  if(latestBrief){ for(const key of ['produtos_servicos','dores_principais','objecoes_comuns']){const v=text(latestBrief.payload[key]);if(v)add(`${key==='produtos_servicos'?'Entenda os serviços':key==='dores_principais'?'Orientações sobre':'Dúvidas sobre'}: ${v}`,'Sugestão baseada no briefing histórico');} }
  const niche=text(profile.niche);
- if(niche){add(`Como escolher serviços de ${niche}`,'Sugestão baseada no nicho do cadastro');add(`Dúvidas frequentes sobre ${niche}`,'Sugestão baseada no nicho do cadastro');}
+ if(niche&&!/^(servicos?|outros?)$/i.test(niche.normalize('NFD').replace(/[\u0300-\u036f]/g,''))){add(`Como escolher serviços de ${niche}`,'Sugestão baseada no nicho do cadastro');add(`Dúvidas frequentes sobre ${niche}`,'Sugestão baseada no nicho do cadastro');}
  const positioning=text(profile.positioning||profile.differential);
  if(positioning)add(`O que considerar sobre ${positioning}`,'Sugestão baseada no posicionamento do cadastro');
  return suggestions.slice(0,8);
 }
-export function missingEditorialInputs(context: EditorialContext, pillars: PillarInput[]): string[] {
+export function missingEditorialInputs(context: EditorialContext, pillars: PillarInput[], mode:'rules'|'gemini'='rules'): string[] {
+ if(mode==='gemini'){const issues:string[]=[];if((context.monthlyDirection||'').trim().length<20)issues.push('direção, copy e estratégia do mês com pelo menos 20 caracteres');if(!context.audience.trim())issues.push('público-alvo do cliente no briefing ou cadastro');return issues;}
  const missing:string[]=[];
  if(!context.objective.trim())missing.push('objetivo do mês');
  if(!context.audience.trim())missing.push('público-alvo');

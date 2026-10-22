@@ -306,17 +306,11 @@ const routes: RouteObject[] = [
       },
       {
         path: "strategy",
-        lazy: async () => ({
-          Component: (await import("@/features/strategy/StrategyPage"))
-            .StrategyPage,
-        }),
+        element: <Navigate to="/editorial" replace />,
       },
       {
         path: "strategy/new",
-        lazy: async () => ({
-          Component: (await import("@/features/strategy/NewStrategyPage"))
-            .NewStrategyPage,
-        }),
+        element: <Navigate to="/editorial/new" replace />,
       },
       {
         path: "strategy/:strategyId",

@@ -1,7 +1,7 @@
 import {createClient} from 'npm:@supabase/supabase-js@2.117.3'
 import {configurationAvailable,encryptCredential,decryptCredential} from '../_shared/providerConfig.ts'
 import {createEditorialAiHandler} from './handler.ts'
-import {callGemini,calendarPrompt} from './gemini.ts'
+import {callGemini,calendarPrompt,planningPrompt,planningSchema,calendarSchemaForCount} from './gemini.ts'
 import {type AiConfiguration} from './contract.ts'
 const env=(name:string)=>Deno.env.get(name)||''
 // Every database request is bounded, including auth. Credentials remain inside this function.
@@ -41,7 +41,8 @@ Deno.serve(createEditorialAiHandler({
   }
   return{name:String(result.data.name).slice(0,200),profile,history:(history.data||[]).map(h=>({month:h.month,themes:Array.isArray(h.items)?h.items.slice(0,12).map((i:Record<string,unknown>)=>String(i.title||i.theme||'').slice(0,120)):[]}))}
  },
- generate:(config,input,client)=>callGemini(config,calendarPrompt(input,client)),
+ plan:(config,input,client)=>callGemini(config,planningPrompt(input,client),false,fetch,60_000,planningSchema),
+ generate:(config,input,client)=>callGemini(config,calendarPrompt(input,client),false,fetch,60_000,calendarSchemaForCount(input.count)),
  test:config=>callGemini(config,'Respond only OK.',true),
- log:code=>console.error(JSON.stringify({event:'editorial_ai_failure',code})),
+ log:(code,diagnostic)=>console.error(JSON.stringify({event:'editorial_ai_failure',code,...(diagnostic?{upstreamStatus:diagnostic.upstreamStatus,canonicalCode:diagnostic.canonicalCode,...(diagnostic.validationReason?{validationReason:diagnostic.validationReason}:{}),...(diagnostic.finishReason?{finishReason:diagnostic.finishReason}:{}),...(diagnostic.stage?{stage:diagnostic.stage,batchCount:diagnostic.batchCount,priorItemCount:diagnostic.priorItemCount,formatCounts:diagnostic.formatCounts}:{})}:{})})),
 }))

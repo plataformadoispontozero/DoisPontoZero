@@ -31,7 +31,9 @@ export default defineConfig({
     chunkSizeWarningLimit: 1200,
     rolldownOptions: {
       output: {
-        // Keep shared React/runtime modules out of lazy PDF chunks.
+        // Keep shared React/runtime modules separate. Let Rolldown place the PDF dependency
+        // graph together: splitting only @react-pdf packages creates cycles with
+        // pdfkit/fontkit dependencies hoisted into application PDF components.
         codeSplitting: {
           includeDependenciesRecursively: false,
           groups: [
@@ -40,7 +42,6 @@ export default defineConfig({
             { name: 'vendor-tanstack', test: /node_modules\/@tanstack\//, priority: 60 },
             { name: 'vendor-dnd', test: /node_modules\/@dnd-kit\//, priority: 60 },
             { name: 'vendor-icons', test: /node_modules\/lucide-react\//, priority: 60 },
-            { name: 'vendor-pdf', test: /node_modules\/@react-pdf\//, priority: 40 },
           ],
         },
       },

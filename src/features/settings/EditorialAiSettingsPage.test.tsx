@@ -25,11 +25,11 @@ describe('editorial AI connection settings',()=>{
   expect(state.invoke.mock.calls.at(-1)?.[1].body).toEqual({action:'test',agencyId:'agency-a'})
  })
  it('preserves an existing key by omitting a blank credential and requires saving changes before testing',async()=>{
-  state.invoke.mockImplementation(async(_name:string,{body}:any)=>({data:body.action==='status'?{...base,provider:'gemini',model:'model-a',apiKeyConfigured:true,allowApprovedData:true,generationAvailable:true}:{...base,provider:'gemini',model:body.model,apiKeyConfigured:true,allowApprovedData:true},error:null}))
+  state.invoke.mockImplementation(async(_name:string,{body}:any)=>({data:body.action==='status'?{...base,provider:'gemini',model:'gemini-test-a',apiKeyConfigured:true,allowApprovedData:true,generationAvailable:true}:{...base,provider:'gemini',model:body.model,apiKeyConfigured:true,allowApprovedData:true},error:null}))
   await loaded();expect(screen.getByLabelText('Chave da API Gemini')).toHaveValue('')
   expect(screen.getByRole('checkbox')).toBeChecked()
   expect(screen.getByRole('button',{name:'Testar conexão Gemini'})).toBeEnabled()
-  fireEvent.change(screen.getByLabelText('Modelo'),{target:{value:'model-b'}})
+  fireEvent.change(screen.getByLabelText('Modelo'),{target:{value:'gemini-test-b'}})
   expect(screen.getByRole('button',{name:'Testar conexão Gemini'})).toBeDisabled()
   fireEvent.click(screen.getByRole('button',{name:'Salvar conexão de IA'}))
   await screen.findByText(/Configuração salva com segurança/)

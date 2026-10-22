@@ -17,9 +17,9 @@ describe('client JSON import review',()=>{
   expect(rows[1].errors.join()).toContain('Slug repetido')
  })
  it.each(['{}','[]','[null]','{"data":"invalid"}','[{"name":{"value":"nested"}}]','[{"name":"Cliente","profile":{"tone":[]}}]'])('rejects unsupported JSON %s',input=>expect(()=>parseClientJson(input)).toThrow())
- it('rejects over 500 records and excessive fields',()=>{
-  expect(()=>parseClientJson(JSON.stringify(Array.from({length:501},()=>({name:'Cliente'}))))).toThrow('500')
-  expect(()=>parseClientJson(JSON.stringify([Object.fromEntries(Array.from({length:31},(_,i)=>['field'+i,'value']))]))).toThrow('30')
+ it('accepts more than 500 records and 100 fields, rejects more than 512',()=>{
+  expect(parseClientJson(JSON.stringify(Array.from({length:501},()=>({name:'Cliente'})))).records).toHaveLength(501)
+  expect(()=>parseClientJson(JSON.stringify([Object.fromEntries(Array.from({length:513},(_,i)=>['field'+i,'value']))]))).toThrow('512')
  })
  it('reads JSON and CSV files into the same document contract',async()=>{
   const file=(name:string,text:string)=>({name,type:'',size:text.length,arrayBuffer:async()=>new TextEncoder().encode(text).buffer}) as File

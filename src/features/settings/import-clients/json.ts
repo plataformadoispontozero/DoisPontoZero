@@ -1,17 +1,17 @@
-import { CSV_LIMITS, parseCsv, type CsvDocument } from './csv'
+import { CSV_LIMITS, type CsvDocument } from './csv'
 
 const isRecord = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value)
 const scalar = (value: unknown): value is string | number | boolean | null => value === null || ['string', 'number', 'boolean'].includes(typeof value)
 
 /** Convert exported client records into the same reviewed mapping/validation pipeline as CSV. */
 export function parseClientJson(input: string): CsvDocument {
-  if (new TextEncoder().encode(input).byteLength > CSV_LIMITS.bytes) throw Error('Arquivo acima de 2 MB.')
+  if (new TextEncoder().encode(input).byteLength > CSV_LIMITS.bytes) throw Error('Arquivo acima de 1 GiB.')
   let value: unknown
   try { value = JSON.parse(input.replace(/^\uFEFF/, '')) } catch { throw Error('JSON inválido. Exporte um array de clientes ou um objeto com data/clients/clientes.') }
   if (isRecord(value)) value = value.clients ?? value.clientes ?? value.data
   if (isRecord(value)) value = value.clients ?? value.clientes
   if (!Array.isArray(value) || !value.length) throw Error('O JSON precisa conter uma lista não vazia de clientes em um array, data, clients ou clientes.')
-  if (value.length > CSV_LIMITS.rows) throw Error('Limite de 500 registros excedido.')
+  if (value.length > CSV_LIMITS.rows) throw Error('Limite de 1.000.000 de registros excedido.')
   const headers: string[] = []
   const rows = value.map((item, index) => {
     if (!isRecord(item)) throw Error(`Registro ${index + 1}: cada cliente precisa ser um objeto.`)
@@ -33,14 +33,10 @@ export function parseClientJson(input: string): CsvDocument {
     return row
   })
   if (!headers.length || headers.some(h => !h.trim())) throw Error('Campos JSON vazios ou ausentes.')
-  if (headers.length > CSV_LIMITS.columns) throw Error('Limite de 30 colunas excedido. Exporte apenas os dados dos clientes.')
+  if (headers.length > CSV_LIMITS.columns) throw Error('Limite de 512 colunas excedido. Exporte apenas os dados dos clientes.')
   return { headers, delimiter: ',', records: rows.map((row, index) => ({row:index + 1, cells:headers.map(h => row.get(h) ?? '')})) }
 }
 
-export async function readClientImportFile(file: File): Promise<CsvDocument> {
-  if (file.size > CSV_LIMITS.bytes) throw Error('Arquivo acima de 2 MB.')
-  let text: string
-  try { text = new TextDecoder('utf-8', {fatal:true}).decode(await file.arrayBuffer()) }
-  catch { throw Error('Arquivo inválido. Exporte como CSV ou JSON em UTF-8.') }
-  return /\.json$/i.test(file.name) || file.type === 'application/json' ? parseClientJson(text) : parseCsv(text)
+export async function readClientImportFile(file: File) {
+  return (await import('./stream')).scanClientFile(file);
 }

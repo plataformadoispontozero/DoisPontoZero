@@ -4,6 +4,15 @@ import { emptyContext } from './monthlyPlanner';
 const context = {...emptyContext, objective:'Autoridade', audience:'Empresas', topics:['Serviços']};
 const counts = {post:4,reels:4,carousel:2};
 describe('preparação editorial',()=>{
+ it('aceita direção mensal livre no percurso e na geração Gemini sem lista manual de temas',()=>{
+  const direction={...emptyContext,audience:'Público registrado no briefing',monthlyDirection:'Neste mês queremos explicar os serviços cadastrados com foco em reconhecimento da marca.'};
+  expect(editorialStepIssues(1,'a','2026-10',direction,counts,[])).toEqual([]);
+  expect(editorialStepIssues(2,'a','2026-10',direction,counts,[],'gemini')).toEqual([]);
+  expect(editorialStepIssues(2,'a','2026-10',direction,counts,[],'rules')).toContain('objetivo do mês');
+ });
+ it('exige direção mensal suficiente para IA mesmo quando há temas do planejamento por regras',()=>{
+  expect(editorialStepIssues(2,'a','2026-10',{...context,monthlyDirection:'curta'},counts,[],'gemini')).toContain('direção, copy e estratégia do mês com pelo menos 20 caracteres');
+ });
  it('permite completar a direção depois de selecionar cliente e mês',()=>expect(editorialStepIssues(0,'a','2026-10',emptyContext,counts,[])).toEqual([]));
  it('impede pular direção incompleta',()=>expect(editorialStepIssues(1,'a','2026-10',emptyContext,counts,[])).toContain('objetivo do mês'));
  it('rejeita mês inválido',()=>expect(editorialStepIssues(0,'a','2026-13',context,counts,[])).not.toEqual([]));

@@ -105,7 +105,7 @@ export function validateEditorialItems(
   items: MonthlyItem[],
   context: EditorialContext,
 ) {
-  if(items.length>12)throw Error("Uma campanha permite até 12 materiais no total.");
+  if(items.length>90)throw Error("Uma campanha permite até 90 materiais no total.");
   const blocked = forbiddenTerms(context),
     signatures = new Set<string>();
   for (const item of items) {
@@ -259,12 +259,12 @@ export function generateCampaignPlan(
   const total = counts.post + counts.reels + counts.carousel;
   if (
     Object.values(counts).some(
-      (n) => !Number.isInteger(n) || n < 0 || n > 12,
+      (n) => !Number.isInteger(n) || n < 0 || n > 90,
     ) ||
     total < 1 ||
-    total > 12
+    total > 90
   )
-    throw Error("Configure de 1 a 12 materiais no total por cliente/mês.");
+    throw Error("Configure de 1 a 90 materiais no total por cliente/mês.");
   if (!client.trim() || !context.objective.trim() || !context.audience.trim())
     throw Error("Preencha cliente, objetivo e público antes de gerar.");
   const slidesCount = context.carouselSlides ?? 5,
