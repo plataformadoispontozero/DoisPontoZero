@@ -5,7 +5,7 @@ import {parseEditorialDirection,automaticFormatCounts,automaticEditorialContext}
 import {useDriveBriefDocuments,currentDriveReview,type DriveBriefDocument} from '@/features/briefing/driveDocuments'
 import { editorialSteps, editorialStepIssues } from "./editorialWizard";
 import { EditorialPieceEditor } from "./EditorialPieceEditor";
-import { briefingEditorialContext, missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
+import { briefingEditorialContext, briefingSpecialDates, missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
 import { readClientProfile } from "@/features/clients/clientProfile";
 import { useEffect, useRef,useState } from "react";
 import { Link, useSearchParams,useLocation,useNavigate } from "react-router-dom";
@@ -110,7 +110,7 @@ export function MonthlyEditorialPage() {
   });
   const contractedVolume=readClientProfile(clients.data?.find(c=>c.id===client)?.profile).monthly_content_count;
   const command=monthlyCommand(context);
-  const planKey=JSON.stringify([agency,client,month,command,context.objective,context.audience,context.tone,context.positioning,context.restrictions,context.approvedFacts,context.forbiddenTerms,contractedVolume]);
+  const planKey=JSON.stringify([agency,client,month,command,context.objective,context.audience,context.tone,context.positioning,context.restrictions,context.approvedFacts,context.forbiddenTerms,context.briefSpecialDates,context.includeBriefSpecialDates,contractedVolume]);
   const currentPlan=preparedPlan?.key===planKey?preparedPlan:null;
   const counts=id?loadedCounts:generationMode==='gemini'&&currentPlan?currentPlan.formatCounts:automaticFormatCounts(contractedVolume);
   async function aiRequest(body:Record<string,unknown>){
@@ -174,6 +174,12 @@ export function MonthlyEditorialPage() {
       };
     },
   });
+  const knownSpecialDates=briefingSpecialDates([
+    (clients.data?.find(c=>c.id===client)?.profile||{}) as Record<string,unknown>,
+    ...(historicalBriefs.data||[]).slice(0,1).map(b=>b.payload),
+    {special_dates:details.data?.briefSpecialDates||''},
+  ]);
+  useEffect(()=>{if(!id)setContext(old=>old.briefSpecialDates===knownSpecialDates?old:{...old,briefSpecialDates:knownSpecialDates});},[client,id,knownSpecialDates]);
   useEffect(()=>{if(client&&!id&&briefs.data&&!briefs.isFetching&&selectedBriefClient.current!==client){selectedBriefClient.current=client;if(!briefing&&briefs.data.length)setBriefing(briefs.data[0].id);}},[client,id,briefing,briefs.data,briefs.isFetching]);
   const driveDocuments=useDriveBriefDocuments(client||undefined);
   const reviewedDriveDocuments=(driveDocuments.data||[]).filter(document=>document.agency_id===agency&&document.client_id===client&&currentDriveReview(document));
@@ -224,7 +230,7 @@ export function MonthlyEditorialPage() {
   });
   useEffect(() => {
     if (details.data && !id) {
-      setContext(old=>({...old,...Object.fromEntries(Object.entries(details.data!).filter(([key])=>!editedFields.current.has(key)))}));
+      setContext(old=>({...old,...Object.fromEntries(Object.entries(details.data!).filter(([key])=>key!=='briefSpecialDates'&&!editedFields.current.has(key)))}));
       setDirty(true);
     }
   }, [details.data, id]);
@@ -437,6 +443,12 @@ export function MonthlyEditorialPage() {
             <p id="monthly-direction-help" className="text-sm text-zinc-400">A IA usará esta direção mensal junto ao briefing e ao histórico do cliente para gerar os conteúdos. Use informações aprovadas e escreva pelo menos 20 caracteres.</p>
             <p id="monthly-direction-count" className="text-xs text-zinc-400">{(context.monthlyDirection||'').length} / 6000 caracteres</p>
           </div>
+          {!!context.briefSpecialDates&&<div className="rounded-xl border border-orange-500/25 bg-orange-500/5 p-4 space-y-3">
+            <details><summary className="cursor-pointer font-medium">Datas especiais do briefing e cadastro</summary><p className="mt-3 whitespace-pre-wrap text-sm text-zinc-300">{context.briefSpecialDates}</p></details>
+            <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={!!context.includeBriefSpecialDates} disabled={locked||busy||generationMode!=='gemini'} onChange={e=>{setContext({...context,includeBriefSpecialDates:e.target.checked});setDirty(true)}}/>Incluir as datas especiais que correspondem ao mês deste calendário</label>
+            {generationMode!=='gemini'&&<p className="text-sm text-orange-200">Selecione Gemini para criar automaticamente as copies das datas especiais.</p>}
+            <p className="text-sm text-zinc-400">Você também pode pedir na direção: “Inclua as datas especiais do briefing com copy completa”. O Gemini considera apenas as datas do mês escolhido e cria headline, apoio, legenda e roteiro ou lâminas conforme o formato. Confira datas e informações antes de aprovar.</p>
+          </div>}
           <label className="block text-sm">Datas sazonais e compromissos do mês (opcional)<textarea className={control} rows={3} maxLength={1000} disabled={locked||busy} value={context.seasonalDates||''} placeholder="Ex.: 12/11: aniversário da empresa; 20/11: campanha institucional aprovada. Informe as datas que devem entrar no calendário." onChange={e=>{setContext({...context,seasonalDates:e.target.value});setDirty(true)}}/></label>
           <p className="text-sm text-zinc-400">Inclua no comando as quantidades desejadas: 8 Reels, 2 carrosséis e 2 posts; ou 18 materiais, sendo 10 Reels, 4 posts e 4 carrosséis. Sem quantidades, a IA propõe o mix conforme o cliente e a estratégia.</p>
           <label className="block text-sm">Como criar o calendário<select aria-label="Modo de planejamento" className={control} value={generationMode} disabled={busy} onChange={e=>{modeChosen.current=true;setGenerationMode(e.target.value as 'rules'|'gemini')}}><option value="rules">Planejamento por regras (sem IA)</option><option value="gemini">Gemini · estratégia e mix por cliente</option></select></label>

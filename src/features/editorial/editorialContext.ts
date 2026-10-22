@@ -48,9 +48,20 @@ export function briefingEditorialContext(answers:BriefContextAnswer[]):Partial<E
  const result:Partial<EditorialContext>={};
  const fields:[keyof EditorialContext,string[],RegExp][]=[['objective',['objetivo_principal','objective','objetivo'],/objetivo principal|objective|goals/],['audience',['persona_descricao','target_audience','publico_alvo','audience'],/publico.alvo|persona.descricao|audience/],['tone',['tom_de_voz','tone','tom_comunicacao'],/tom de comunicacao|tom de voz|tone/],['positioning',['posicionamento','brand_positioning','diferenciais'],/posicion|position|diferencia/],['restrictions',['palavras_proibidas','restrictions','restricoes'],/restri|proibi/],['visualGuidance',['direcao_visual','identidade_visual','visual_guidance'],/direcao.visual|identidade.visual|visual.guidance/]];
  for(const [field,keys,pattern] of fields){const value=pick(keys,pattern);if(value)(result as Record<string,unknown>)[field]=value;}
+ const specialDates=briefingSpecialDates([],answers);if(specialDates)result.briefSpecialDates=specialDates;
  const topics=pick(['temas_aprovados','approved_topics'],/temas.aprovados|approved.topics/);if(topics)result.topics=topics.split(/\n/).map(t=>t.trim()).filter(Boolean);
  const forbidden=pick(['termos_proibidos','palavras_proibidas','forbidden_terms'],/termos.proibidos|palavras.proibidas|forbidden.terms/);if(forbidden)result.forbiddenTerms=forbidden.split(/\n|;/).map(t=>t.trim()).filter(Boolean);
  const avoided=pick(['temas_evitar','temas_a_evitar','avoided_topics'],/temas.a.evitar|temas.evitar|avoided.topics/);if(avoided)result.avoidedTopics=avoided.split(/\n|;/).map(t=>t.trim()).filter(Boolean);
  const facts=pick(['fatos_aprovados','approved_facts'],/fatos.aprovados|approved.facts/);if(facts)result.approvedFacts=facts.split('\n').map(t=>t.trim()).filter(Boolean);
  return result;
+}
+
+/** Preserve the client's supplied wording; dates are interpreted by the monthly planner, not invented here. */
+export function briefingSpecialDates(sources:Record<string,unknown>[], answers:BriefContextAnswer[]=[]):string {
+ const normalize=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ const matches=(s:string)=>/(specialdates|datasespeciais|datascomemorativas|datasimportantes|datassazonais|calendariosazonal)/.test(normalize(s));
+ const values:unknown[]=[];
+ for(const source of sources)for(const [key,value] of Object.entries(source))if(matches(key))values.push(value);
+ for(const answer of answers)if(matches(answer.questionKey||'')||matches(answer.label||''))values.push(answer.value);
+ return [...new Set(values.flatMap(value=>typeof value==='string'?[value.trim()]:Array.isArray(value)?value.filter((v):v is string=>typeof v==='string').map(v=>v.trim()):[]).filter(Boolean))].join('\n\n');
 }

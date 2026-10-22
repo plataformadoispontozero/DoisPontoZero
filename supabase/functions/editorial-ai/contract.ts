@@ -29,6 +29,8 @@ export function parseGenerationInput(body:Record<string,unknown>):GenerationInpu
  const context:Record<string,unknown>={}
  for(const field of ['objective','audience','tone','positioning','restrictions','visualGuidance']){if(body.context[field]!==undefined){if(!string(body.context[field],3000))return null;context[field]=body.context[field]}}
  for(const field of ['approvedFacts','forbiddenTerms','avoidedTopics','topics']){const v=body.context[field];if(v!==undefined){if(!Array.isArray(v)||v.length>40||v.some(x=>!string(x,500,1)))return null;context[field]=v}}
+ if(body.context.briefSpecialDates!==undefined){if(!string(body.context.briefSpecialDates,6000))return null;context.briefSpecialDates=body.context.briefSpecialDates;}
+ if(body.context.includeBriefSpecialDates!==undefined){if(typeof body.context.includeBriefSpecialDates!=='boolean')return null;context.includeBriefSpecialDates=body.context.includeBriefSpecialDates;}
  const generated=body.generatedSoFar;
  if(generated!==undefined&&(!Array.isArray(generated)||generated.length>90||generated.some(v=>!record(v)||!string(v.title,120,3)||typeof v.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(v.date)||!v.date.startsWith(body.month+'-'))))return null;
  return{clientId:body.clientId,month:body.month,direction:body.direction.trim(),context,count,formatCounts:counts as unknown as FormatCounts,...(generated?{generatedSoFar:generated as {date:string;title:string}[]}:{})}
