@@ -1,3 +1,4 @@
+import { CurrentValidation } from './CurrentValidation'
 import { ReleaseDiagnostics } from './ReleaseDiagnostics'
 import { reconcileReleasePhases } from './releaseEvidence'
 import React, { useState, useMemo } from 'react'
@@ -97,6 +98,7 @@ export const DiagnosticsPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
+      <CurrentValidation />
       <ReleaseDiagnostics />
       <div>
         <h3 className="text-lg font-bold text-[#F8F9FC] flex items-center gap-2">

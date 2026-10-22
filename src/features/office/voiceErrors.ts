@@ -1,3 +1,4 @@
+import {DisconnectReason} from 'livekit-client'
 export class VoiceEntryError extends Error {
  constructor(public readonly code:string){super(code);this.name='VoiceEntryError'}
 }
@@ -34,4 +35,22 @@ export async function tokenInvocationError(error:unknown){
   return new VoiceEntryError('backend_unavailable')
  }
  return new VoiceEntryError(candidate?.name==='AbortError'?'token_timeout':'token_network')
+}
+
+/** Only predefined SDK reason codes reach the UI; never display server error payloads. */
+export function voiceDisconnectMessage(reason:unknown):string {
+ const disconnected:Partial<Record<DisconnectReason,string>>={
+  [DisconnectReason.DUPLICATE_IDENTITY]:'Esta conta entrou na sala em outra aba ou dispositivo. Use uma única aba por conta; para testar duas pessoas, entre com contas diferentes. [VOICE_DUPLICATE_IDENTITY]',
+  [DisconnectReason.PARTICIPANT_REMOVED]:'Sua participação foi encerrada pelo servidor. Confira o acesso à sala antes de entrar novamente. [VOICE_PARTICIPANT_REMOVED]',
+  [DisconnectReason.ROOM_DELETED]:'Esta sala foi removida. Volte às salas e escolha uma sala disponível. [VOICE_ROOM_DELETED]',
+  [DisconnectReason.ROOM_CLOSED]:'A sala foi encerrada. Volte às salas para iniciar uma nova conexão. [VOICE_ROOM_CLOSED]',
+  [DisconnectReason.SERVER_SHUTDOWN]:'O servidor de voz está reiniciando. Aguarde um momento e entre novamente. [VOICE_SERVER_SHUTDOWN]',
+  [DisconnectReason.MIGRATION]:'O servidor de voz mudou a conexão de região. Entre novamente para reconectar. [VOICE_SERVER_MIGRATION]',
+  [DisconnectReason.STATE_MISMATCH]:'A sessão da sala não pôde ser retomada. Entre novamente para iniciar uma conexão nova. [VOICE_STATE_MISMATCH]',
+  [DisconnectReason.JOIN_FAILURE]:'Não foi possível concluir a entrada na sala. Confira a conexão e entre novamente. [VOICE_JOIN_FAILURE]',
+  [DisconnectReason.SIGNAL_CLOSE]:'A conexão de sinalização com o LiveKit foi interrompida. Confira a rede e entre novamente. [VOICE_SIGNAL_CLOSED]',
+  [DisconnectReason.CONNECTION_TIMEOUT]:'A conexão com a sala excedeu o tempo de resposta. Confira a rede e entre novamente. [VOICE_CONNECTION_TIMEOUT]',
+  [DisconnectReason.MEDIA_FAILURE]:'O transporte de áudio e vídeo foi interrompido. Confira a rede ou teste outra conexão antes de entrar novamente. [VOICE_MEDIA_FAILURE]',
+ }
+ return typeof reason==='number'&&disconnected[reason as DisconnectReason]||'A conexão com a sala terminou. Entre novamente para reconectar. [VOICE_DISCONNECTED]'
 }

@@ -1,9 +1,11 @@
+import { RouteErrorPage } from "./RouteErrorPage";
+import type { RouteObject } from "react-router-dom";
 import { AuthPage } from "@/features/auth/AuthPage";
 import { ProtectedWorkspace } from "@/features/auth/ProtectedWorkspace";
 import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 import { SettingsLayout } from "@/features/settings/components/SettingsLayout";
 
-export const router = createBrowserRouter([
+const routes: RouteObject[] = [
   {
     path: "/",
     lazy: async () => ({
@@ -642,4 +644,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+export const router = createBrowserRouter(routes.map(route=>({...route,errorElement:<RouteErrorPage/>})));

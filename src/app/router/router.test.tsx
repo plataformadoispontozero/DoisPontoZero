@@ -96,7 +96,7 @@ describe('All 12 Phase 01 Functional Routes Render Test', () => {
   })
 
   it('renders route: /presentations (Apresentações)', () => {
-    testRoute('/presentations', /Presentation Studio/i)
+    testRoute('/presentations', /Boas entregas merecem uma boa apresentação/i)
   })
 
   it('renders route: /settings (Configurações)', () => {

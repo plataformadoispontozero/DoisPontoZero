@@ -1,0 +1,124 @@
+[
+  {
+    "path": "/dashboard",
+    "rendered": true,
+    "headings": [
+      "55 heading Visão Geral, Value: 1",
+      "60 heading Indicadores Operacionais, Value: 3",
+      "63 heading Projetos ativos, Value: 3"
+    ],
+    "technicalError": false
+  },
+  {
+    "path": "/calendar",
+    "rendered": true,
+    "headings": [
+      "58 heading Minha Agenda, Value: 1",
+      "75 heading 1 de outubro de 2026 — 31 de outubro de 2026, Value: 2"
+    ],
+    "technicalError": false
+  },
+  {
+    "path": "/projects",
+    "rendered": true,
+    "headings": [
+      "55 heading Kanban Geral, Value: 1",
+      "77 heading A fazer 0, Value: 2",
+      "80 heading Em produção 0, Value: 2"
+    ],
+    "technicalError": false
+  },
+  {
+    "path": "/tasks",
+    "rendered": true,
+    "headings": [
+      "58 heading Tarefas & Produção, Value: 1"
+    ],
+    "technicalError": false
+  },
+  {
+    "path": "/clients",
+    "heading": "Clientes & Contas",
+    "rendered": true
+  },
+  {
+    "path": "/briefings",
+    "heading": "Briefing Studio",
+    "rendered": true
+  },
+  {
+    "path": "/team",
+    "heading": "Equipe & Profissionais",
+    "rendered": true
+  },
+  {
+    "path": "/squads",
+    "heading": "Squads & Equipes",
+    "rendered": true
+  },
+  {
+    "path": "/production/design",
+    "heading": "Design",
+    "rendered": true
+  },
+  {
+    "path": "/production/video",
+    "heading": "Vídeo & Motion",
+    "rendered": true
+  },
+  {
+    "path": "/production/traffic",
+    "heading": "Tráfego Pago",
+    "rendered": true
+  },
+  {
+    "path": "/social-media",
+    "heading": "Social Media",
+    "rendered": true
+  },
+  {
+    "path": "/strategy",
+    "heading": "Strategy Studio",
+    "rendered": true
+  },
+  {
+    "path": "/editorial",
+    "heading": "Calendários e demandas",
+    "rendered": true
+  },
+  {
+    "path": "/meetings",
+    "heading": "Meeting Hub",
+    "rendered": true
+  },
+  {
+    "path": "/office",
+    "heading": "Escritório Digital",
+    "rendered": true
+  },
+  {
+    "path": "/presentations",
+    "heading": "Boas entregas merecem\numa boa apresentação.",
+    "rendered": true
+  },
+  {
+    "path": "/profile",
+    "heading": "Meu perfil",
+    "rendered": true
+  },
+  {
+    "path": "/drive",
+    "heading": "Google Drive Browser",
+    "rendered": true
+  },
+  {
+    "path": "/notifications",
+    "heading": "Central de Notificações",
+    "rendered": true
+  },
+  {
+    "path": "/settings",
+    "heading": "Central de Configurações do Workspace",
+    "rendered": true
+  }
+]

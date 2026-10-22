@@ -11,3 +11,12 @@ it('distinguishes token failures from signaling and never displays raw credentia
  expect(voiceEntryMessage(await tokenInvocationError(new DOMException('PRIVATE','AbortError')),'token')).toContain('VOICE_TOKEN_TIMEOUT')
  expect(voiceEntryMessage(new VoiceEntryError('livekit_not_configured'),'token')).toContain('VOICE_CONFIG')
 })
+
+import {DisconnectReason} from 'livekit-client'
+import {voiceDisconnectMessage} from './voiceErrors'
+it('maps terminal SDK disconnect reasons to safe, actionable diagnostics',()=>{
+ for(const [reason,code]of [[DisconnectReason.DUPLICATE_IDENTITY,'VOICE_DUPLICATE_IDENTITY'],[DisconnectReason.PARTICIPANT_REMOVED,'VOICE_PARTICIPANT_REMOVED'],[DisconnectReason.ROOM_DELETED,'VOICE_ROOM_DELETED'],[DisconnectReason.ROOM_CLOSED,'VOICE_ROOM_CLOSED'],[DisconnectReason.SERVER_SHUTDOWN,'VOICE_SERVER_SHUTDOWN'],[DisconnectReason.MIGRATION,'VOICE_SERVER_MIGRATION'],[DisconnectReason.STATE_MISMATCH,'VOICE_STATE_MISMATCH'],[DisconnectReason.JOIN_FAILURE,'VOICE_JOIN_FAILURE'],[DisconnectReason.SIGNAL_CLOSE,'VOICE_SIGNAL_CLOSED'],[DisconnectReason.CONNECTION_TIMEOUT,'VOICE_CONNECTION_TIMEOUT'],[DisconnectReason.MEDIA_FAILURE,'VOICE_MEDIA_FAILURE']]as const)expect(voiceDisconnectMessage(reason)).toContain(code)
+ expect(voiceDisconnectMessage(DisconnectReason.DUPLICATE_IDENTITY)).toContain('contas diferentes')
+ expect(voiceDisconnectMessage({message:'PRIVATE_TOKEN'})).toContain('VOICE_DISCONNECTED')
+ expect(voiceDisconnectMessage({message:'PRIVATE_TOKEN'})).not.toContain('PRIVATE_TOKEN')
+})

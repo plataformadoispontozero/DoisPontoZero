@@ -1,5 +1,5 @@
 import {Room,RoomEvent,ConnectionState,type Participant} from 'livekit-client'
-import {voiceEntryMessage} from './voiceErrors'
+import {voiceEntryMessage,voiceDisconnectMessage} from './voiceErrors'
 import {initialVoice,type VoiceSnapshot,type VoiceToken} from './voiceState'
 export {initialVoice} from './voiceState'
 export type {VoiceSnapshot,VoiceToken} from './voiceState'
@@ -30,6 +30,7 @@ export class OfficeVoiceSession {
    if(generation!==this.generation)return
    let room:Room|null=null
    let stage:'token'|'connection'|'media'='token'
+   let terminalDisconnect=false
    try{
     this.request=new AbortController()
     const credentials=await this.token(id,this.request.signal)
@@ -39,13 +40,13 @@ export class OfficeVoiceSession {
     room.on(RoomEvent.ConnectionStateChanged,state=>{if(this.room===room&&generation===this.generation)this.emit({state:state===ConnectionState.Connected?'connected':state===ConnectionState.Reconnecting||state===ConnectionState.SignalReconnecting?'reconnecting':'connecting'})})
     for(const event of [RoomEvent.ParticipantConnected,RoomEvent.ParticipantDisconnected,RoomEvent.ActiveSpeakersChanged,RoomEvent.TrackMuted,RoomEvent.TrackUnmuted,RoomEvent.LocalTrackPublished,RoomEvent.LocalTrackUnpublished,RoomEvent.ConnectionQualityChanged,RoomEvent.AudioPlaybackStatusChanged])room.on(event,refresh)
     room.on(RoomEvent.SignalConnected,()=>{if(this.room===room&&generation===this.generation)stage='media'})
-    room.on(RoomEvent.Disconnected,()=>{if(this.room===room&&generation===this.generation){this.room=null;this.emit({...initialVoice,state:'error',error:'A conexão com a sala terminou. Entre novamente para reconectar.'})}})
+    room.on(RoomEvent.Disconnected,reason=>{if(this.room===room&&generation===this.generation){terminalDisconnect=true;room!.removeAllListeners();this.room=null;this.emit({...initialVoice,state:'error',error:voiceDisconnectMessage(reason)})}})
     // Room.connect subscribes only; no capture/publish calls on entry.
     await room.connect(credentials.serverUrl,credentials.token,{autoSubscribe:true})
     if(this.preferredOutput)await room.switchActiveDevice('audiooutput',this.preferredOutput).catch(()=>false)
-    if(generation!==this.generation){room.removeAllListeners();await room.disconnect(true);if(this.room===room)this.room=null;return}
+    if(terminalDisconnect||this.room!==room||generation!==this.generation){room.removeAllListeners();await room.disconnect(true);if(this.room===room)this.room=null;return}
     this.emit({state:'connected'});this.members(room)
-   }catch(error){if(room){room.removeAllListeners();await room.disconnect(true);if(this.room===room)this.room=null}if(generation===this.generation)this.emit({...initialVoice,state:'error',error:voiceEntryMessage(error,stage)})}
+   }catch(error){if(room){room.removeAllListeners();await room.disconnect(true);if(this.room===room)this.room=null}if(!terminalDisconnect&&generation===this.generation)this.emit({...initialVoice,state:'error',error:voiceEntryMessage(error,stage)})}
   });return this.queue
  }
  leave(){this.request?.abort();++this.generation;const room=this.room;this.room=null;room?.removeAllListeners();this.emit({...initialVoice});this.queue=this.queue.catch(()=>{}).then(async()=>{await room?.disconnect(true)});return this.queue}
