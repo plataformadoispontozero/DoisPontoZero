@@ -1,5 +1,6 @@
 import {officeEnabled} from '@/features/office/officeFeature'
 import {OfficeOverview} from '@/features/office/OfficeOverview'
+import {useOfficeVoice} from '@/features/office/OfficeVoiceContext'
 import { useAgencyId, usePermission } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -41,6 +42,9 @@ import { useProjects } from '../projects/hooks/useProjects'
 import type { ChatChannel, ChatMessage, ChannelType, ChannelVisibility } from '@/types/chat'
 
 export const ChatPage: React.FC<{officeMode?:boolean}> = ({officeMode=false}) => {
+  const voice = useOfficeVoice()
+  const [showRoomNavigation,setShowRoomNavigation] = useState(false)
+  const focusedOffice = officeMode && Boolean(voice.roomId)
   const agencyId = useAgencyId()
   const canMeet = usePermission('meetings.view')
   const canCreateRoom = usePermission('chat.create_channels')
@@ -146,7 +150,7 @@ export const ChatPage: React.FC<{officeMode?:boolean}> = ({officeMode=false}) =>
   return (
     <div className="h-[calc(100dvh-8.5rem)] min-h-[540px] max-h-[1000px] flex flex-col md:flex-row bg-surface-card border border-surface-border rounded-xl overflow-hidden animate-in fade-in duration-200">
       {/* SIDEBAR DE CONVERSAS E CANAIS */}
-      <div className="w-full md:w-72 max-h-56 md:max-h-none border-r border-surface-border flex flex-col bg-surface-subtle/50 shrink-0">
+      <div hidden={focusedOffice&&!showRoomNavigation} className={`${focusedOffice&&!showRoomNavigation?'hidden':'flex'} w-full md:w-72 max-h-56 md:max-h-none border-r border-surface-border flex-col bg-surface-subtle/50 shrink-0`}>
         {/* Sidebar Header */}
         <div className="p-3 border-b border-surface-border flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-content-secondary flex items-center">
@@ -222,6 +226,7 @@ export const ChatPage: React.FC<{officeMode?:boolean}> = ({officeMode=false}) =>
 
       {/* ÁREA CENTRAL DE MENSAGENS */}
       <div className="min-w-0 min-h-0 flex-1 flex flex-col h-full bg-surface-card overflow-hidden">
+        {focusedOffice&&<div className="border-b border-surface-border px-4 py-2"><button type="button" aria-expanded={showRoomNavigation} className="min-h-11 rounded-lg border border-surface-border px-3 text-sm" onClick={()=>setShowRoomNavigation(value=>!value)}>{showRoomNavigation?'Recolher salas e mensagens':'Mostrar salas e mensagens'}</button></div>}
         {(actionError||channelsError||conversationsError||messagesError||membersError||markRead.error)&&<div role="alert" className="p-3 text-sm text-red-400">{actionError||'Não foi possível sincronizar o chat. Confira sua conexão e tente novamente.'}</div>}
         {showingRooms?<div className="flex-1 overflow-y-auto"><>{officeMode&&<OfficeOverview rooms={safeChannels.length} loading={isLoadingChannels} failed={!!channelsError}/>}<WorkRooms compact={officeMode} rooms={visibleChannels} onEnter={id=>navigate(`/chat/channels/${id}`)} onCreate={openCreate} canCreate={canCreateRoom} onMeetings={canMeet?()=>navigate('/meetings'):undefined}/></></div>:<>
         {/* Chat Header */}

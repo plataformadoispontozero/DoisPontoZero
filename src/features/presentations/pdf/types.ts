@@ -10,6 +10,14 @@ export interface PresentationPdfBranding {
   logoUrl: string
   primaryColor: string
   website: string
+  symbolUrl?: string
+  headerStyle?: "centered_logo" | "left_logo" | "minimal"
+  pageFormat?: "A4" | "Letter"
+  documentFont?: string
+  showLogo?: boolean
+  showWatermark?: boolean
+  watermarkOpacity?: number
+  footerText?: string
 }
 
 export interface PresentationPdfModel {

@@ -1,5 +1,5 @@
 // ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
+// DOIS.ZERO | 2.0
 // FASE 06: PDF STUDIO
 // Master PDF Document Component
 // ============================================================
@@ -40,7 +40,7 @@ export const BriefingPdfDocument: React.FC<{ model: BriefingPdfModel }> = ({ mod
 
 
       {/* 2. Content Pages */}
-      <Page size="A4" style={styles.contentPage}>
+      <Page size={model.branding.pageFormat === "Letter" ? "LETTER" : "A4"} style={[styles.contentPage,{fontFamily:model.branding.documentFont || "Helvetica"}]}>
         {/* Centered Watermark across all pages (fixed) */}
         <BriefingPdfWatermark branding={model.branding} />
 

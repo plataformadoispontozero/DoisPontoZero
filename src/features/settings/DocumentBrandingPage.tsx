@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -6,6 +6,9 @@ import { Select } from '@/components/ui/Select'
 import { toast } from '@/components/ui/Toast'
 import { useAgencyDocumentSettings, useAgencyBranding } from './hooks/useAgencySettings'
 import { FileSpreadsheet, Save, FileText, CheckCircle2, Eye } from 'lucide-react'
+import { PdfPreview } from '@/components/pdf/PdfPreview'
+import { resolveDocumentPdfBranding, platformDocumentText } from '@/features/briefing/pdf/documentBranding'
+import type { BriefingPdfModel } from '@/features/briefing/pdf/types'
 import type { HeaderStyle, PageFormat } from '@/types/whitelabel'
 
 const DocumentBrandingPageForm: React.FC = () => {
@@ -14,7 +17,7 @@ const DocumentBrandingPageForm: React.FC = () => {
 
   const [formData, setFormData] = useState({
     headerStyle: documentSettings.header_style,
-    footerText: documentSettings.footer_text,
+    footerText: platformDocumentText(documentSettings.footer_text),
     showLogo: documentSettings.show_logo,
     showWatermark: documentSettings.show_watermark,
     watermarkOpacity: documentSettings.watermark_opacity,
@@ -23,6 +26,38 @@ const DocumentBrandingPageForm: React.FC = () => {
   })
 
   const [isSaving, setIsSaving] = useState(false)
+  const [previewBlob, setPreviewBlob] = useState<Blob | null>(null)
+  const [previewError, setPreviewError] = useState('')
+  const [isPreviewing, setIsPreviewing] = useState(false)
+  const generation = useRef(0)
+  useEffect(() => () => { generation.current++ }, [])
+  const preview = async () => {
+    const request = ++generation.current
+    setIsPreviewing(true); setPreviewError('')
+    try {
+      const pdfBranding = resolveDocumentPdfBranding(branding, {...documentSettings,
+        header_style:formData.headerStyle,footer_text:formData.footerText,show_logo:formData.showLogo,
+        show_watermark:formData.showWatermark,watermark_opacity:Number(formData.watermarkOpacity),
+        page_format:formData.pageFormat,document_font:formData.documentFont,
+      })
+      const model: BriefingPdfModel = {
+        briefingId:'preview-only',documentId:'PRÉVIA',title:'Direção estratégica',clientName:'Cliente',
+        category:'social_media',categoryLabel:'Social Media',version:1,statusLabel:'Prévia não salva',
+        formattedDate:new Intl.DateTimeFormat('pt-BR').format(new Date()),branding:pdfBranding,
+        metadata:{totalQuestions:2,answeredQuestions:2,completionRate:100,generatedAt:new Date().toISOString()},
+        sections:[{id:'preview-section',title:'Contexto do cliente',questions:[
+          {id:'objective',label:'Objetivo',questionType:'text',answerText:'Apresentar o objetivo da campanha e as informações confirmadas no briefing.',hasAnswer:true},
+          {id:'audience',label:'Público e comunicação',questionType:'text',answerText:'Organizar o público-alvo, o tom de voz e a direção visual aprovados para o cliente.',hasAnswer:true},
+        ]}],
+      }
+      const {generateBriefingPdfBlob} = await import('@/features/briefing/pdf/generateBriefingPdf')
+      const result = await generateBriefingPdfBlob(model)
+      URL.revokeObjectURL(result.blobUrl)
+      if (request === generation.current) setPreviewBlob(result.blob)
+    } catch { if (request === generation.current) setPreviewError('Não foi possível gerar a prévia. Tente novamente.') }
+    finally { if (request === generation.current) setIsPreviewing(false) }
+  }
+
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,7 +141,7 @@ const DocumentBrandingPageForm: React.FC = () => {
 
                 <div>
                   <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
-                    Fonte dos Documentos (@react-pdf)
+                    Fonte dos Documentos
                   </label>
                   <Select
                     value={formData.documentFont}
@@ -120,6 +155,7 @@ const DocumentBrandingPageForm: React.FC = () => {
                 </div>
               </div>
 
+              <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={formData.showLogo} onChange={e=>setFormData({...formData,showLogo:e.target.checked})}/>Exibir logotipo oficial da agência</label>
               {/* Slider de Opacidade de Marca d'Água */}
               <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] space-y-3">
                 <div className="flex items-center justify-between">
@@ -167,69 +203,21 @@ const DocumentBrandingPageForm: React.FC = () => {
                 <Input
                   value={formData.footerText}
                   onChange={(e) => setFormData({ ...formData, footerText: e.target.value })}
-                  placeholder="Ex: Documento confidencial gerado via Creative Agency OS"
+                  placeholder="Ex: Documento confidencial gerado pela plataforma 2.0"
                 />
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Painel Direito de Previsualização da Folha PDF (Col 5) */}
         <div className="lg:col-span-5 space-y-3">
-          <span className="text-xs font-semibold text-[#B8B8C0] flex items-center gap-1.5 px-1">
-            <Eye className="w-3.5 h-3.5 text-[#FF8759]" />
-            Simulação da Folha PDF ({formData.pageFormat})
-          </span>
-
-          <div className="bg-white text-black rounded-xl p-6 shadow-2xl relative min-h-[420px] flex flex-col justify-between text-xs overflow-hidden">
-            {/* Marca d'água de fundo */}
-            {formData.showWatermark && (
-              <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-                style={{ opacity: formData.watermarkOpacity }}
-              >
-                <div
-                  className="w-48 h-48 rounded-full border-8 border-current flex items-center justify-center font-bold text-6xl text-slate-800"
-                  style={{ color: branding.primary_color }}
-                >
-                  {branding.display_name.charAt(0)}
-                </div>
-              </div>
-            )}
-
-            {/* Cabeçalho do PDF */}
-            <div className="border-b border-slate-200 pb-3 relative z-10 text-center space-y-1">
-              <h2
-                className="text-base font-bold text-slate-900"
-                style={{ color: branding.primary_color }}
-              >
-                {branding.display_name}
-              </h2>
-              <p className="text-[10px] text-slate-500">{branding.tagline}</p>
-            </div>
-
-            {/* Conteúdo Exemplo */}
-            <div className="space-y-3 py-4 relative z-10 text-slate-700">
-              <div className="h-3 bg-slate-200 rounded w-3/4" />
-              <div className="h-2.5 bg-slate-100 rounded w-full" />
-              <div className="h-2.5 bg-slate-100 rounded w-5/6" />
-              <div className="h-2.5 bg-slate-100 rounded w-4/6" />
-              <div className="mt-4 p-3 bg-slate-50 rounded border border-slate-200">
-                <span className="font-semibold text-[11px] block text-slate-900">
-                  Resumo de Escopo & Entregáveis
-                </span>
-                <span className="text-[10px] text-slate-500">
-                  Branding, Motion Design e Campanha Digital.
-                </span>
-              </div>
-            </div>
-
-            {/* Rodapé do PDF */}
-            <div className="border-t border-slate-200 pt-2 flex items-center justify-between text-[9px] text-slate-400 relative z-10">
-              <span>{formData.footerText}</span>
-              <span>Página 1 de 1</span>
-            </div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h4 className="text-sm font-semibold">Prévia real do PDF ({formData.pageFormat})</h4>
+            <Button type="button" variant="secondary" loading={isPreviewing} onClick={()=>void preview()}><Eye className="h-4 w-4"/>Atualizar prévia PDF</Button>
           </div>
+          <p className="text-xs text-content-secondary">Gerada pelo mesmo modelo dos briefings, com logotipo, símbolo central, conteúdo e paginação. Atualize a prévia após alterar os parâmetros; ela não cadastra nenhum briefing.</p>
+          {previewError && <p role="alert" className="text-sm text-red-400">{previewError}</p>}
+          {previewBlob ? <PdfPreview blob={previewBlob} title="Prévia real do branding PDF"/> : <div className="rounded-xl border border-dashed border-border-default p-8 text-center text-sm text-content-secondary">Clique em Atualizar prévia PDF para conferir o documento gerado.</div>}
         </div>
       </div>
     </form>

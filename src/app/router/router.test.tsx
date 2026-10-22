@@ -83,7 +83,7 @@ describe('All 12 Phase 01 Functional Routes Render Test', () => {
   })
 
   it('renders route: /strategy (Estratégia)', () => {
-    testRoute('/strategy', /Strategy Studio|Estratégia & Diagnósticos/i)
+    testRoute('/strategy', /Estratégia e calendário/i)
   })
 
 

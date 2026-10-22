@@ -35,7 +35,7 @@ function resolveBranding(customBranding?: Record<string, any>) {
     customBranding?.website ||
     'https://doispontozero.renatodesigner.com.br'
 
-  return { agencyName, logoUrl, primaryColor, website }
+  return { agencyName, logoUrl, primaryColor, website, symbolUrl:customBranding?.symbolUrl, headerStyle:customBranding?.headerStyle, pageFormat:customBranding?.pageFormat, documentFont:customBranding?.documentFont, showLogo:customBranding?.showLogo, showWatermark:customBranding?.showWatermark, watermarkOpacity:customBranding?.watermarkOpacity, footerText:customBranding?.footerText }
 }
 
 export function transformPresentationToPdfModel(

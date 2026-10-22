@@ -581,6 +581,10 @@ const routes: RouteObject[] = [
             }),
           },
           {
+            path: "integrations/editorial-ai",
+            lazy: async () => ({ Component: (await import("@/features/settings/EditorialAiSettingsPage")).EditorialAiSettingsPage }),
+          },
+          {
             path: "integrations/livekit",
             lazy: async () => ({ Component: (await import("@/features/settings/LivekitSettingsPage")).LivekitSettingsPage }),
           },

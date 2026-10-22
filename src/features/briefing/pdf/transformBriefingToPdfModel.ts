@@ -1,5 +1,5 @@
 // ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
+// DOIS.ZERO | 2.0
 // FASE 06: PDF STUDIO
 // Transform Briefing & Answers into Validated BriefingPdfModel
 // ============================================================
@@ -17,13 +17,19 @@ export function transformBriefingToPdfModel(
   }
 
   const branding: PdfBrandingConfig = {
-    agencyName: brandingConfig?.agencyName || 'Dois.Zero Creative Agency',
+    agencyName: brandingConfig?.agencyName || '2.0',
     logoUrl: brandingConfig?.logoUrl,
     symbolUrl: brandingConfig?.symbolUrl,
     primaryColor: brandingConfig?.primaryColor || '#C74410',
     secondaryColor: brandingConfig?.secondaryColor || '#1C1C24',
     accentColor: brandingConfig?.accentColor || '#FF8759',
-    footerText: brandingConfig?.footerText || 'Documento confidencial gerado por Creative Agency OS.',
+    headerStyle: brandingConfig?.headerStyle,
+    pageFormat: brandingConfig?.pageFormat,
+    documentFont: brandingConfig?.documentFont,
+    showLogo: brandingConfig?.showLogo,
+    showWatermark: brandingConfig?.showWatermark,
+    watermarkOpacity: brandingConfig?.watermarkOpacity,
+    footerText: brandingConfig?.footerText ?? 'Documento confidencial gerado por 2.0.',
   }
 
   const category = (briefing.template?.category || 'general') as keyof typeof BRIEFING_CATEGORY_CONFIG
@@ -116,6 +122,7 @@ export function transformBriefingToPdfModel(
   const documentId = `BRF-${briefing.id.slice(0, 8).toUpperCase()}-V${version}`
 
   const model: BriefingPdfModel = {
+    agencyId: briefing.agency_id,
     briefingId: briefing.id,
     documentId,
     title: briefing.title,

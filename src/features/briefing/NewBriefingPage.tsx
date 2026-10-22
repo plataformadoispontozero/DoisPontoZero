@@ -1,3 +1,4 @@
+import { officialBriefingTemplates } from './templates/officialCatalog'
 import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -42,7 +43,7 @@ export const NewBriefingPage: React.FC = () => {
 
   const templateQuery = useBriefingTemplates(DEMO_AGENCY_ID)
   const clientQuery = useClients(DEMO_AGENCY_ID)
-  const templates = templateQuery.data ?? []
+  const templates = officialBriefingTemplates(templateQuery.data ?? [])
   const availableClients = clientQuery.data ?? []
   const createBriefing = useCreateBriefing(DEMO_AGENCY_ID)
 

@@ -75,7 +75,7 @@ export const TopBar: React.FC = () => {
       <header className="hidden md:flex h-14 items-center justify-between px-6 border-b border-[#30303B] bg-[#101014]/80 backdrop-blur-md sticky top-0 z-20">
         {/* ESQUERDA: Breadcrumb & Título Contextual */}
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-[#98989F] font-medium">Dois.Zero</span>
+          <span className="text-[#98989F] font-medium">2.0</span>
           <span className="text-[#30303B]">/</span>
           <span className="text-[#F8F9FC] font-semibold">{currentTitle}</span>
         </div>

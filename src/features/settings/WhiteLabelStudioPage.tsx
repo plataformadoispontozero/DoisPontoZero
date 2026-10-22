@@ -455,7 +455,7 @@ const WhiteLabelStudioPageForm: React.FC = () => {
                     className="text-lg font-bold text-[#F8F9FC]"
                     style={{ fontFamily: draft.heading_font }}
                   >
-                    Dois.Zero — Creative Agency OS
+                    Dois.Zero — 2.0
                   </h4>
                   <p
                     className="text-xs text-[#B8B8C0] leading-relaxed"

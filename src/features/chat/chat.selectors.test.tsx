@@ -4,7 +4,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ChatPage } from './ChatPage'
 vi.mock('./hooks/useRoomPresence',()=>({useRoomPresence:()=>({data:[],isError:false,isFetching:false})}))
-const state = vi.hoisted(() => ({ canCreate:true, loading: false, error: null as Error | null, create: vi.fn(), direct: vi.fn() }))
+const state = vi.hoisted(() => ({ roomId:null as string|null, canCreate:true, loading: false, error: null as Error | null, create: vi.fn(), direct: vi.fn() }))
+vi.mock('@/features/office/OfficeVoiceContext',()=>({useOfficeVoice:()=>({roomId:state.roomId})}))
+vi.mock('@/features/office/OfficeOverview',()=>({OfficeOverview:()=> <div>Apresentação da sala</div>}))
 vi.mock('@/features/auth/AuthProvider', () => ({ useAgencyId: () => 'agency',usePermission:(key:string)=>key!=='chat.create_channels'||state.canCreate }))
 vi.mock('../squads/hooks/useSquads', () => ({ useSquads: () => ({ data: [] }) }))
 vi.mock('../projects/hooks/useProjects', () => ({ useProjects: () => ({ data: [] }) }))
@@ -15,9 +17,16 @@ vi.mock('./hooks/useChat', () => ({
  useStartDirect: () => ({mutateAsync:state.direct,isPending:false}),
  useCreateChannel: () => ({mutateAsync:state.create,isPending:false}),
 }))
-beforeEach(() => { state.canCreate=true;state.loading=false;state.error=null;state.create.mockReset();state.direct.mockReset();state.create.mockResolvedValue({id:'channel'}); })
+beforeEach(() => { state.roomId=null;state.canCreate=true;state.loading=false;state.error=null;state.create.mockReset();state.direct.mockReset();state.create.mockResolvedValue({id:'channel'}); })
 function mount(){render(<MemoryRouter><ChatPage/></MemoryRouter>)}
 describe('Chat selectors', () => {
+ it('reclaims the conversation sidebar during an office call and lets the user reopen it',()=>{
+  state.roomId='room';const view=render(<MemoryRouter><ChatPage officeMode/></MemoryRouter>);
+  expect(screen.queryByRole('button',{name:'Criar novo canal'})).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button',{name:'Mostrar salas e mensagens'}));expect(screen.getByRole('button',{name:'Criar novo canal'})).toBeVisible();
+  fireEvent.click(screen.getByRole('button',{name:'Recolher salas e mensagens'}));expect(screen.queryByRole('button',{name:'Criar novo canal'})).not.toBeInTheDocument();
+  state.roomId=null;view.rerender(<MemoryRouter><ChatPage officeMode/></MemoryRouter>);expect(screen.getByRole('button',{name:'Criar novo canal'})).toBeVisible();
+ })
  it('blocks room creation when its permission is revoked',()=>{state.canCreate=false;mount();expect(screen.getByRole('button',{name:'Criar novo canal'})).toBeDisabled();fireEvent.click(screen.getByRole('button',{name:'Criar sala de trabalho'}));expect(screen.queryByRole('dialog')).not.toBeInTheDocument();expect(state.create).not.toHaveBeenCalled()})
  it('blocks direct selection while members are loading', () => {state.loading=true;mount();expect(screen.getByRole('combobox',{name:'Iniciar mensagem direta'})).toBeDisabled()})
  it('does not send private participants into a public channel', async () => {

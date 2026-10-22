@@ -1,5 +1,5 @@
 // ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
+// DOIS.ZERO | 2.0
 // FASE 06: PDF STUDIO
 // Running Header Component (Centered Logo, Proper Aspect Ratio)
 // ============================================================
@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
 
 export const BriefingPdfHeader: React.FC<{ branding: PdfBrandingConfig }> = ({ branding }) => {
   return (
-    <View style={styles.headerContainer} fixed>
-      {branding.logoUrl ? (
+    <View style={[styles.headerContainer,{justifyContent:branding.headerStyle === "left_logo" ? "flex-start" : "center",borderBottomColor:branding.headerStyle === "minimal" ? branding.primaryColor : "#F3F4F6"}]} fixed>
+      {branding.logoUrl && branding.showLogo !== false && branding.headerStyle !== "minimal" ? (
         <Image src={branding.logoUrl} style={styles.logoImage} />
       ) : (
         <Text style={styles.agencyText}>{branding.agencyName}</Text>

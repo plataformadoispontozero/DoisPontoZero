@@ -33,7 +33,7 @@ interface Props {
 export const PresentationPdfFooter: React.FC<Props> = ({ branding }) => {
   return (
     <View style={styles.footerContainer} fixed>
-      <Text style={styles.footerText} render={() => `${branding.agencyName} • ${branding.website}`} />
+      <Text style={styles.footerText} render={() => branding.footerText || `${branding.agencyName} • ${branding.website}`} />
       <Text
         style={styles.footerText}
         render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`}

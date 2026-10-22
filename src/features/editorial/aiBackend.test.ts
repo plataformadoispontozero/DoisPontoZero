@@ -1,0 +1,30 @@
+import {describe,it,expect,vi} from 'vitest'
+import {automaticCounts,configurationFromInput,parseGenerationInput,validateGeneratedItems,publicStatus,localOllamaUrl} from '../../../supabase/functions/editorial-ai/contract'
+import {createEditorialAiHandler,type AiDependencies} from '../../../supabase/functions/editorial-ai/handler'
+import {callGemini} from '../../../supabase/functions/editorial-ai/gemini'
+const agencyId='11111111-1111-4111-8111-111111111111',clientId='22222222-2222-4222-8222-222222222222'
+const config={provider:'gemini' as const,model:'gemini-2.5-flash',apiKey:'secret-123456789012345678',ollamaUrl:'http://localhost:11434',allowApprovedData:true}
+const input={clientId,month:'2026-10',direction:'Criar campanha educativa para o cliente.',context:{},count:1,formatCounts:{post:1,carousel:0,reels:0}}
+const item={date:'2026-10-05',format:'post',title:'Conteúdo educativo',headline:'Conheça a solução',support:'Leia a legenda',caption:'Saiba como esta solução ajuda o seu negócio.',visual:'Fotografia do produto aprovado'}
+function deps():AiDependencies{return{authenticate:async()=>({userId:clientId,canManage:true,canGenerate:true}),configuration:async()=>config,secureStorageAvailable:()=>true,save:vi.fn(),client:async()=>({name:'Cliente',profile:{},history:[]}),reserve:async()=>true,generate:async()=>({items:[item]}),test:vi.fn()}}
+function req(body:unknown,headers={}){return new Request('https://function.test',{method:'POST',headers:{authorization:'Bearer jwt','content-type':'application/json',...headers},body:JSON.stringify({agencyId,...body as object})})}
+describe('editorial backend contract',()=>{
+ it('preserves blank key without returning it',()=>{const next=configurationFromInput({...config,apiKey:''},config)!;expect(next.apiKey).toBe(config.apiKey);expect(JSON.stringify(publicStatus(next,true))).not.toContain(config.apiKey)})
+ it('only prepares loopback Ollama, excludes external endpoints',()=>{expect(localOllamaUrl('http://localhost:11434')).toBe('http://localhost:11434');expect(localOllamaUrl('https://internal.example')).toBeNull();expect(localOllamaUrl('http://user@localhost')).toBeNull()})
+ it('uses exact automatic mix and rejects inconsistent counts',()=>{expect(automaticCounts(12)).toEqual({post:5,carousel:4,reels:3});expect(parseGenerationInput({...input,count:13})).toBeNull();expect(parseGenerationInput({...input,formatCounts:{post:2,carousel:0,reels:0}})).toBeNull()})
+ it('validates actual dates, concise art and response mix',()=>{const parsed=parseGenerationInput(input)!;expect(validateGeneratedItems({items:[item]},parsed)).toHaveLength(1);expect(validateGeneratedItems({items:[{...item,date:'2026-10-32'}]},parsed)).toBeNull();expect(validateGeneratedItems({items:[{...item,headline:'x'.repeat(101)}]},parsed)).toBeNull()})
+ it('validates carousel length and reels timing',()=>{const reel={...item,format:'reels',duration:30,scenes:[10,10,10].map(seconds=>({seconds,text:'Texto de apoio',visual:'Cena do produto'}))};expect(validateGeneratedItems({items:[reel]},{...input,formatCounts:{post:0,carousel:0,reels:1}})).toHaveLength(1);expect(validateGeneratedItems({items:[{...reel,duration:40}]},{...input,formatCounts:{post:0,carousel:0,reels:1}})).toBeNull()})
+})
+describe('editorial backend authorization and limits',()=>{
+ it('allows social media safe status but denies save',async()=>{const d=deps();d.authenticate=async()=>({userId:clientId,canManage:false,canGenerate:true});const handler=createEditorialAiHandler(d);expect((await handler(req({action:'status'}))).status).toBe(200);expect((await handler(req({action:'save',...config}))).status).toBe(403);expect(d.save).not.toHaveBeenCalled()})
+ it('denies missing auth before access',async()=>{const response=await createEditorialAiHandler(deps())(req({action:'status'},{authorization:''}));expect(response.status).toBe(401)})
+ it('denies client outside RLS before generation',async()=>{const d=deps();d.client=async()=>null;d.generate=vi.fn();expect((await createEditorialAiHandler(d)(req({action:'generate',...input}))).status).toBe(403);expect(d.generate).not.toHaveBeenCalled()})
+ it('stops at daily quota without provider call',async()=>{const d=deps();d.reserve=async()=>false;d.generate=vi.fn();expect((await createEditorialAiHandler(d)(req({action:'generate',...input}))).status).toBe(429);expect(d.generate).not.toHaveBeenCalled()})
+ it('returns draft and safe provider information only',async()=>{const response=await createEditorialAiHandler(deps())(req({action:'generate',...input}));expect(response.status).toBe(200);expect(await response.json()).toMatchObject({requiresReview:true,provider:'gemini',items:[item]})})
+ it('Ollama never calls a backend provider',async()=>{const d=deps();d.configuration=async()=>({...config,provider:'ollama',apiKey:''});d.generate=vi.fn();const response=await createEditorialAiHandler(d)(req({action:'generate',...input}));expect((await response.json()).code).toBe('local_prepared_only');expect(d.generate).not.toHaveBeenCalled()})
+ it('safe errors exclude raw backend messages',async()=>{const d=deps();d.configuration=async()=>{throw Error(config.apiKey)};const response=await createEditorialAiHandler(d)(req({action:'status'}));expect(await response.text()).not.toContain(config.apiKey)})
+})
+describe('Gemini transport',()=>{
+ it('uses fixed endpoint with header key, one request and no paid fallback',async()=>{const fetcher=vi.fn(async()=>new Response('',{status:429}));await expect(callGemini(config,'hello',false,fetcher)).rejects.toMatchObject({code:'provider_quota_exceeded'});expect(fetcher).toHaveBeenCalledTimes(1);const [url,options]=fetcher.mock.calls[0] as unknown as [string,RequestInit];expect(url).toMatch(/^https:\/\/generativelanguage.googleapis.com\/v1beta\/models\//);expect(url).not.toContain(config.apiKey);expect(options.redirect).toBe('error')})
+ it('accepts a benign successful test',async()=>{const fetcher=vi.fn(async()=>Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:'OK'}]}}]}));expect(await callGemini(config,'Respond only OK.',true,fetcher)).toEqual({verified:true})})
+})

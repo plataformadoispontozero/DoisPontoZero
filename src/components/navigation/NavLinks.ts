@@ -57,7 +57,7 @@ export const navItems: NavItem[] = [
   },
   {
     id: "editorial",
-    label: "Calendário Editorial",
+    label: "Estratégia e calendário",
     path: "/editorial",
     icon: CalendarDays,
     section: "tools",

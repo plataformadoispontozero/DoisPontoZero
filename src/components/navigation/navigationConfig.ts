@@ -21,7 +21,7 @@ export const navigationGroups = [
   {
     id: "strategy",
     label: "ESTRATÉGIA & CONTEÚDO",
-    items: ["social-media", "strategy", "editorial"],
+    items: ["social-media", "editorial"],
   },
   {
     id: "communication",
@@ -31,6 +31,7 @@ export const navigationGroups = [
   { id: "system", label: "SISTEMA", items: ["settings"] },
 ];
 export function navigationContext(pathname: string) {
+  if(pathname==='/strategy'||pathname.startsWith('/strategy/'))return 'editorial';
   if(pathname==='/chat'||pathname.startsWith('/chat/'))return 'chat';
   return [...navItems]
     .sort((a, b) => b.path.length - a.path.length)

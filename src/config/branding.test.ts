@@ -4,7 +4,7 @@ import { defaultBranding } from '@/config/branding'
 describe('White Label Branding Configuration - Phase 01', () => {
   it('should define core platform attributes correctly', () => {
     expect(defaultBranding.name).toBe('Dois.Zero')
-    expect(defaultBranding.category).toBe('Creative Agency OS')
+    expect(defaultBranding.category).toBe('2.0')
     expect(defaultBranding.slogan).toBe('Sua agência. Tudo conectado.')
   })
 

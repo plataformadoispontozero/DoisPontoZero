@@ -15,7 +15,7 @@ describe('appearance settings available MVP behavior', () => {
     state.isLoading = false
     rerender(<AppearanceSettingsPage />)
     expect(screen.getByRole('button', {name:/Sincronizado com Sistema/})).toHaveAttribute('aria-pressed','true')
-    expect(screen.getByRole('button', {name:'Salvar Preferência'})).toBeDisabled()
+    expect(screen.getByRole('button', {name:'Salvar Preferência'})).toBeEnabled()
   })
   it('offers retry after loading fails', () => {
     state.isError = true
@@ -24,13 +24,19 @@ describe('appearance settings available MVP behavior', () => {
     fireEvent.click(screen.getByRole('button', {name:'Tentar novamente'}))
     expect(state.refetch).toHaveBeenCalledOnce()
   })
-  it('makes supported theme a native button and does not offer nonfunctional modes', async () => {
+  it('saves all three functional themes', async () => {
     render(<AppearanceSettingsPage />)
-    expect(screen.getByRole('button', {name:/Tema Claro/})).toBeDisabled()
-    expect(screen.getByRole('button', {name:/Sincronizado com Sistema/})).toBeDisabled()
+    expect(screen.getByRole('button', {name:/Tema Claro/})).toBeEnabled()
+    expect(screen.getByRole('button', {name:/Sincronizado com Sistema/})).toBeEnabled()
     expect(screen.getByRole('button', {name:/Tema Escuro/})).toHaveAttribute('aria-pressed','true')
     fireEvent.click(screen.getByRole('button', {name:'Salvar Preferência'}))
     await waitFor(() => expect(state.update).toHaveBeenCalledWith({theme_mode:'dark'}))
+    fireEvent.click(screen.getByRole('button', {name:/Tema Claro/}))
+    fireEvent.click(screen.getByRole('button', {name:'Salvar Preferência'}))
+    await waitFor(() => expect(state.update).toHaveBeenCalledWith({theme_mode:'light'}))
+    fireEvent.click(screen.getByRole('button', {name:/Sincronizado com Sistema/}))
+    fireEvent.click(screen.getByRole('button', {name:'Salvar Preferência'}))
+    await waitFor(() => expect(state.update).toHaveBeenCalledWith({theme_mode:'system'}))
   })
   it('does not carry the previous agency theme into another agency form', () => {
     state.branding = {agency_id:'agency-a', theme_mode:'system'}

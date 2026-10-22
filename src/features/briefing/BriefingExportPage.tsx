@@ -1,8 +1,6 @@
 import {PdfPreview} from '@/components/pdf/PdfPreview'
-import { isSupabaseConfigured } from '@/lib/supabase/client'
-import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
+// DOIS.ZERO | 2.0
 // FASE 06: PDF STUDIO — EXPORT & PREVIEW
 // Route: /briefings/:briefingId/export
 // ============================================================
@@ -29,146 +27,31 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Input } from '@/components/ui/Input'
 import { useBriefing } from './hooks/useBriefings'
-import { useBranding } from '@/app/providers/BrandingProvider'
 import { transformBriefingToPdfModel } from './pdf/transformBriefingToPdfModel'
 import { downloadBriefingPdf, generateBriefingPdfBlob } from './pdf/generateBriefingPdf'
-import { INITIAL_BRIEFING_TEMPLATES } from './constants/initialTemplates'
+import { useAgencyBranding, useAgencyDocumentSettings } from '@/features/settings/hooks/useAgencySettings'
+import { resolveDocumentPdfBranding } from './pdf/documentBranding'
 import type { BriefingPdfModel } from './pdf/types'
 import { toast } from '@/components/ui/Toast'
 
 
 
 export const BriefingExportPage: React.FC = () => {
-  const DEMO_AGENCY_ID = useAgencyId()
-
   const { briefingId } = useParams<{ briefingId: string }>()
-  const { branding: appBranding } = useBranding()
   const { data: realBriefing, isLoading } = useBriefing(briefingId)
 
-  // Fallback demo briefing if empty
-  const fallbackTpl = INITIAL_BRIEFING_TEMPLATES[0]
-  const briefing =
-    realBriefing || {
-      id: briefingId || 'demo-briefing-1',
-      agency_id: DEMO_AGENCY_ID,
-      client_id: 'client-1',
-      template_id: fallbackTpl.id,
-      template_version: 1,
-      title: 'Briefing de Identidade Visual e Posicionamento',
-      description: 'Demandas estruturais para rebranding corporativo e manual de marca.',
-      status: 'submitted' as const,
-      created_by: null,
-      assigned_to: null,
-      created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-      updated_at: new Date().toISOString(),
-      submitted_at: new Date().toISOString(),
-      approved_at: null,
-      archived_at: null,
-      client: {
-        id: 'client-1',
-        agency_id: DEMO_AGENCY_ID,
-        name: 'Natura Cosméticos',
-        slug: 'natura',
-        logo_url: null,
-        status: 'active' as const,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      },
-      template: {
-        id: fallbackTpl.id,
-        agency_id: DEMO_AGENCY_ID,
-        name: fallbackTpl.name,
-        description: fallbackTpl.description,
-        category: fallbackTpl.category,
-        status: 'published' as const,
-        version: 1,
-        created_by: null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        archived_at: null,
-        sections: fallbackTpl.sections.map((s, idx) => ({
-          id: s.id,
-          agency_id: DEMO_AGENCY_ID,
-          template_id: fallbackTpl.id,
-          title: s.title,
-          description: s.description ?? null,
-          position: idx,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })),
-        questions: fallbackTpl.sections.flatMap((s) =>
-          s.questions.map((q, qIdx) => ({
-            id: q.id,
-            agency_id: DEMO_AGENCY_ID,
-            template_id: fallbackTpl.id,
-            section_id: s.id,
-            question_key: q.question_key,
-            label: q.label,
-            description: q.description ?? null,
-            question_type: q.question_type,
-            is_required: q.is_required,
-            position: qIdx,
-            options: q.options || [],
-            validation_rules: {},
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }))
-        ),
-      },
-      answers: [
-        {
-          id: 'ans-1',
-          agency_id: DEMO_AGENCY_ID,
-          briefing_id: briefingId || 'demo-briefing-1',
-          question_id: 'q-br-1-1',
-          answer_value:
-            'A empresa nasceu com a meta de conectar produtos naturais sustentáveis com o consumidor contemporâneo.',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: 'ans-2',
-          agency_id: DEMO_AGENCY_ID,
-          briefing_id: briefingId || 'demo-briefing-1',
-          question_id: 'q-br-1-2',
-          answer_value: 'Democratizar a pureza botânica com zero crueldade e embalagens circulares.',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: 'ans-3',
-          agency_id: DEMO_AGENCY_ID,
-          briefing_id: briefingId || 'demo-briefing-1',
-          question_id: 'q-br-2-1',
-          answer_value: 'Cosméticos 100% orgânicos com fórmula bioativa patenteada.',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: 'ans-4',
-          agency_id: DEMO_AGENCY_ID,
-          briefing_id: briefingId || 'demo-briefing-1',
-          question_id: 'q-br-3-1',
-          answer_value: 'Público 25-45 anos, consciente, urbano, classes A/B.',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: 'ans-5',
-          agency_id: DEMO_AGENCY_ID,
-          briefing_id: briefingId || 'demo-briefing-1',
-          question_id: 'q-br-8-1',
-          answer_value: ['logo', 'manual', 'colors_typo'],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-      ],
-    }
+  const briefing = realBriefing
+  const savedBranding = useAgencyBranding()
+  const savedDocuments = useAgencyDocumentSettings()
+  const documentBranding = resolveDocumentPdfBranding(savedBranding.branding, savedDocuments.documentSettings)
 
   // Custom White Label options for PDF
-  const [agencyName, setAgencyName] = useState(appBranding.company.legalName || 'Dois.Zero Creative Agency')
-  const [primaryColor, setPrimaryColor] = useState(appBranding.colors.primary || '#C74410')
-  const [footerText, setFooterText] = useState('Documento confidencial gerado por Creative Agency OS.')
+  const [agencyNameOverride, setAgencyName] = useState<string>()
+  const agencyName = agencyNameOverride ?? documentBranding.agencyName
+  const [primaryColorOverride, setPrimaryColor] = useState<string>()
+  const primaryColor = primaryColorOverride ?? documentBranding.primaryColor
+  const [footerTextOverride, setFooterText] = useState<string>()
+  const footerText = footerTextOverride ?? documentBranding.footerText ?? 'Documento confidencial gerado por 2.0.'
   const [previewBlob,setPreviewBlob]=useState<Blob|null>(null)
   const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null)
   useEffect(()=>()=>{if(previewBlobUrl)URL.revokeObjectURL(previewBlobUrl)},[previewBlobUrl])
@@ -176,7 +59,7 @@ export const BriefingExportPage: React.FC = () => {
 
   // Build PDF model lazily inside handlers to avoid render-time throw
   const buildModel = (): BriefingPdfModel =>
-    transformBriefingToPdfModel(briefing as any, { agencyName, primaryColor, footerText, ...(/^dois[.\s_-]*zero\b/i.test(agencyName)?{logoUrl:'/pdf-brand/wordmark.jpg',symbolUrl:'/pdf-brand/symbol.jpg'}:{}) })
+    transformBriefingToPdfModel(briefing as any, { ...documentBranding, agencyName, primaryColor, footerText })
 
   // Handle direct download
   const handleDownload = async () => {
@@ -209,7 +92,7 @@ export const BriefingExportPage: React.FC = () => {
   }
 
   // Show loading spinner while briefing is fetching from Supabase
-  if (isLoading) {
+  if (isLoading || savedBranding.isLoading || savedDocuments.isLoading) {
     return (
       <div className="p-12 text-center text-content-secondary">
         <div className="animate-spin w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full mx-auto mb-4" />
@@ -219,7 +102,7 @@ export const BriefingExportPage: React.FC = () => {
   }
 
   // Only block when Supabase is configured, loading finished, and no briefing found
-  if (isSupabaseConfigured && !isLoading && !realBriefing) {
+  if (!realBriefing || savedBranding.isError || savedDocuments.isError) {
     return (
       <div role="alert" className="p-8 text-center space-y-3">
         <p className="text-sm font-semibold text-content-primary">Briefing não encontrado.</p>
@@ -235,7 +118,7 @@ export const BriefingExportPage: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <PageHeader
         title="PDF Studio — Exportação Editorial"
-        subtitle="Gerador de documentos A4 com diagramação editorial, logotipo e marca-d'água personalizada da agência."
+        subtitle="Gerador de documentos com diagramação editorial, logotipo e marca-d'água personalizada da agência."
         breadcrumbs={[
           { label: 'Visão Geral', href: '/dashboard' },
           { label: 'Briefings', href: '/briefings' },

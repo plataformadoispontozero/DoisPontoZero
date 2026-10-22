@@ -26,7 +26,8 @@ describe('Navigation Components - Phase 01', () => {
 
     // Ferramentas
     expect(screen.getByText('Briefings')).toBeInTheDocument()
-    expect(screen.getByText('Estratégia')).toBeInTheDocument()
+    expect(screen.getByText('Estratégia e calendário')).toBeInTheDocument()
+    expect(screen.queryByText('Estratégia')).not.toBeInTheDocument()
     expect(screen.queryByText('Propostas')).not.toBeInTheDocument()
     expect(screen.getByText('Reuniões')).toBeInTheDocument()
     expect(screen.getByText('Escritório Digital')).toBeInTheDocument()

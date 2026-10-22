@@ -1,3 +1,5 @@
+import {adaptAiCalendar,type AiCalendarResult} from './aiCalendarAdapter';
+import {automaticFormatCounts,automaticEditorialContext} from './automaticEditorialPlan';
 import {useDriveBriefDocuments,currentDriveReview,type DriveBriefDocument} from '@/features/briefing/driveDocuments'
 import { editorialSteps, editorialStepIssues } from "./editorialWizard";
 import { EditorialPieceEditor } from "./EditorialPieceEditor";
@@ -65,7 +67,7 @@ export function MonthlyEditorialPage() {
     [briefing, setBriefing] = useState(""),
     [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [context, setContext] = useState<EditorialContext>(emptyContext),
-    [counts, setCounts] = useState({ post: 4, reels: 4, carousel: 2 }),
+    [loadedCounts, setCounts] = useState({ post: 5, reels: 3, carousel: 4 }),
     [items, setItems] = useState<MonthlyItem[]>([]);
   const [id, setId] = useState<string | null>(null),
     [dirty, setDirty] = useState(false),
@@ -83,6 +85,9 @@ export function MonthlyEditorialPage() {
   const editedFields=useRef(new Set<string>());
   const selectedBriefClient=useRef("");
 
+  const [generationMode,setGenerationMode]=useState<'rules'|'gemini'>('rules');
+  const generationScope=useRef('');generationScope.current=`${agency}:${client}:${month}`;
+  const aiConnection=useQuery({queryKey:['editorial-ai-status',agency],enabled:!!agency,queryFn:async()=>{const r=await supabase!.functions.invoke('editorial-ai',{body:{agencyId:agency,action:'status'}});if(r.error||r.data?.error)throw Error('Não foi possível verificar a IA editorial.');return r.data as {generationAvailable:boolean;model:string;provider:string}}});
   const inputs = useCampaignInputs(agency, client, context.strategyId, id);
   const clients = useQuery({
     queryKey: ["editorial-clients", agency],
@@ -97,6 +102,7 @@ export function MonthlyEditorialPage() {
       return r.data;
     },
   });
+  const counts=id?loadedCounts:automaticFormatCounts(readClientProfile(clients.data?.find(c=>c.id===client)?.profile).monthly_content_count);
   function clientContext(clientId:string){const profile=readClientProfile(clients.data?.find(c=>c.id===clientId)?.profile);return {...emptyContext,objective:profile.monthly_objective||'',audience:profile.target_audience||'',tone:profile.tone||'',positioning:profile.positioning||profile.differential||''};}
   useEffect(()=>{if(client&&!id&&!dirty&&clients.data)setContext(clientContext(client));},[client,id,dirty,clients.data]);
   const historicalBriefs=useQuery({queryKey:['editorial-legacy-briefs',agency,client],enabled:!!client,queryFn:async()=>{const r=await supabase!.from('client_legacy_records').select('id,payload,source_created_at').eq('agency_id',agency).eq('client_id',client).eq('source_kind','briefings').order('source_created_at',{ascending:false});if(r.error)throw r.error;return r.data as {id:string;payload:Record<string,unknown>;source_created_at:string|null}[];}});
@@ -299,7 +305,7 @@ export function MonthlyEditorialPage() {
     <div className="space-y-6">
       <PageHeader
         title={creating?'Criar calendário editorial':'Calendários e demandas'}
-        subtitle={creating?'Defina cliente, estratégia, formatos e quantidades. A geração salva um rascunho para revisão.':'Conteúdos organizados por campanha. Abra uma demanda para revisar copy, roteiro e direção visual.'}
+        subtitle={creating?'Selecione cliente e briefing. O plano distribui até 12 materiais automaticamente. A geração salva um rascunho para revisão.':'Conteúdos organizados por campanha. Abra uma demanda para revisar copy, roteiro e direção visual.'}
       />
       {notice && (
         <p role="status" className="rounded-xl border border-orange-400/30 p-4">
@@ -317,6 +323,7 @@ export function MonthlyEditorialPage() {
         </p>
       )}
       <div className="flex flex-wrap gap-3">
+        {!creating&&<Link className="inline-flex min-h-11 items-center rounded-lg border border-white/15 px-4 text-sm text-orange-200 focus-visible:outline-2 focus-visible:outline-orange-400" to="/strategy">Estratégia do cliente</Link>}
         {!creating&&<Button onClick={()=>{newCampaign();navigate(`/editorial/new${client?'?clientId='+client:''}`);}}>Criar calendário</Button>}
         {creating&&<Link className="text-sm text-orange-200 underline" to="/editorial">Voltar aos calendários</Link>}
         {campaigns.isFetching && (
@@ -394,7 +401,7 @@ export function MonthlyEditorialPage() {
             planejamento, sem inventar fatos do cliente.
           </p>
           </div><div hidden={wizardStep!==1}>
-          <h2 className="text-xl font-semibold mb-4">O que vamos comunicar?</h2>
+          <h2 className="text-xl font-semibold mb-4">O que vamos comunicar?</h2><p className="mb-4 text-sm text-zinc-400">Direção preenchida a partir do cadastro e do briefing disponível. Revise o objetivo, o público e as restrições antes de continuar; informações ausentes não são inventadas.</p>
           {(
             [
               "objective",
@@ -505,9 +512,10 @@ export function MonthlyEditorialPage() {
               Reimportar briefing vigente
             </Button>
           )}
+          <label className="block">Direção, copy e estratégia deste mês<textarea className={control} rows={5} disabled={locked||busy} placeholder="Cole o posicionamento, as prioridades e a direção de conteúdo do mês. As informações devem estar aprovadas para uso na campanha." value={context.monthlyDirection||''} onChange={e=>{setContext({...context,monthlyDirection:e.target.value});setDirty(true)}}/></label>
           <label className="block">Temas da campanha<textarea className={control} rows={5} disabled={locked} placeholder="Um tema por linha" value={(context.topics||[]).join("\n")} onChange={e=>{editedFields.current.add("topics");setContext({...context,topics:e.target.value.split("\n").filter(v=>v.trim())});setDirty(true);}}/></label>
           <p className="text-xs text-zinc-400">As sugestões usam o cadastro e histórico do cliente. Ajuste os temas para esta campanha.</p>
-          <details className="rounded-xl border border-white/10 p-3"><summary className="cursor-pointer text-sm text-orange-200">Fatos, termos e direção visual (opcional)</summary><div className="space-y-4 mt-4">
+          <details className="rounded-xl border border-white/10 p-3"><summary className="cursor-pointer text-sm text-orange-200">Fatos, termos e direção visual do briefing</summary><div className="space-y-4 mt-4">
           {(
             [
               "approvedFacts",
@@ -562,82 +570,17 @@ export function MonthlyEditorialPage() {
           </label>
           </div></details>
           </div><div hidden={wizardStep!==2}>
-          <h2 className="text-xl font-semibold mb-4">Defina as entregas deste mês</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <label>
-              Slides por carrossel
-              <Input
-                type="number"
-                min={3}
-                max={10}
-                value={context.carouselSlides ?? 7}
-                disabled={locked}
-                onChange={(e) => {
-                  setContext({
-                    ...context,
-                    carouselSlides: Number(e.target.value),
-                  });
-                  setDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Cenas por reel
-              <Input
-                type="number"
-                min={3}
-                max={10}
-                value={context.reelsScenes ?? 3}
-                disabled={locked}
-                onChange={(e) => {
-                  setContext({
-                    ...context,
-                    reelsScenes: Number(e.target.value),
-                  });
-                  setDirty(true);
-                }}
-              />
-            </label>
-            <label>
-              Duração do reel (segundos)
-              <Input
-                type="number"
-                min={10}
-                max={90}
-                value={context.reelsSeconds ?? 30}
-                disabled={locked}
-                onChange={(e) => {
-                  setContext({
-                    ...context,
-                    reelsSeconds: Number(e.target.value),
-                  });
-                  setDirty(true);
-                }}
-              />
-            </label>
-          </div>
-          {(["post", "reels", "carousel"] as EditorialFormat[]).map((f) => (
-            <label className="block" key={f}>
-              {formatNames[f]}
-              <Input
-                type="number"
-                min="0"
-                max="30"
-                step="1"
-                value={counts[f]}
-                disabled={locked}
-                onChange={(e) =>
-                  setCounts({ ...counts, [f]: Number(e.target.value) })
-                }
-              />
-            </label>
-          ))}
+          <h2 className="text-xl font-semibold mb-4">Seu plano automático do mês</h2>
+          <p className="text-sm text-zinc-300">Até 12 materiais por cliente, respeitando o volume cadastrado. Cada carrossel completo conta como um material. O mix é distribuído automaticamente para a revisão da equipe.</p>
+          <div className="grid gap-3 sm:grid-cols-3 mt-4">{(['post','carousel','reels'] as const).map(format=><div key={format} className="rounded-xl border border-white/15 p-4"><p className="text-sm text-zinc-400">{formatNames[format]}</p><p className="mt-2 text-2xl font-semibold">{counts[format]}</p></div>)}</div>
+          <ul className="mt-4 space-y-2 text-sm text-zinc-300"><li>Carrossel: 5 lâminas; a equipe pode ampliar até 8 na revisão de cada peça.</li><li>Reels: roteiros de 30, 40 ou 50 segundos, com cenas distribuídas automaticamente.</li><li>Arte com título e apoio curtos. Detalhes e contexto ficam na legenda.</li></ul>
+          <p className="mt-4 text-sm text-orange-200">O histórico do cliente é conferido antes de gerar. Temas do mês anterior não são repetidos; se faltarem temas elegíveis, complete a direção editorial.</p>
           </div><div hidden={wizardStep!==3}>
           <h2 className="text-xl font-semibold mb-4">Confira sua campanha</h2>
           <dl className="grid gap-3 sm:grid-cols-2 mb-4 text-sm"><div><dt className="text-zinc-400">Briefing de referência</dt><dd>{briefs.data?.find(b=>b.id===briefing)?.title||'Direção preenchida pela equipe'}</dd></div><div><dt className="text-zinc-400">Público-alvo</dt><dd>{context.audience||'Não informado'}</dd></div><div><dt className="text-zinc-400">Tom de voz</dt><dd>{context.tone||'Não informado'}</dd></div><div><dt className="text-zinc-400">Posicionamento</dt><dd>{context.positioning||'Não informado'}</dd></div></dl>
           <p className="text-sm mb-4">Temas: {(context.topics||[]).join(' · ')||'Temas dos pilares selecionados'}</p>
           <p className="text-sm text-orange-200 mb-4">A geração salva um rascunho para revisão da equipe. O cliente não recebe um link e nenhuma demanda entra em produção nesta etapa.</p>
-          <div className="rounded-xl border border-orange-500/25 bg-orange-500/5 p-4 mb-4"><p className="font-semibold">{name} · {month}</p><p className="text-sm text-zinc-300 mt-2">{counts.post} posts · {counts.reels} reels · {counts.carousel} carrosséis</p><p className="text-sm text-zinc-300">{context.carouselSlides??7} slides por carrossel · {context.reelsScenes??3} cenas por reel · {context.reelsSeconds??30} segundos</p><p className="text-sm mt-3">Objetivo: {context.objective||'Complete na direção editorial'}</p></div>
+          <div className="rounded-xl border border-orange-500/25 bg-orange-500/5 p-4 mb-4"><p className="font-semibold">{name} · {month}</p><p className="text-sm text-zinc-300 mt-2">{counts.post} posts · {counts.reels} reels · {counts.carousel} carrosséis</p><p className="text-sm text-zinc-300">5 lâminas por carrossel · Reels de 30, 40 ou 50 segundos</p><p className="text-sm mt-3">Objetivo: {context.objective||'Complete na direção editorial'}</p></div>
           {missingEditorialInputs(context,inputs.pillars.data||[]).length>0&&<p role="status" className="text-orange-200 mb-4">Complete na etapa Direção editorial: {missingEditorialInputs(context,inputs.pillars.data||[]).join('; ')}.</p>}
           {(inputs.history.isError ||
             inputs.repertoire.isError ||
@@ -681,19 +624,29 @@ export function MonthlyEditorialPage() {
                 const effectiveContext={...context,topics:context.topics?.length?context.topics:topicSuggestions.map(t=>t.text)};
                 const missing=missingEditorialInputs(effectiveContext,inputs.pillars.data||[]);
                 if(missing.length)throw Error(`Antes de gerar, complete: ${missing.join("; ")}. Volte à etapa Direção editorial para completar os dados.`);
-                const engineContext = {
+                const engineContext = automaticEditorialContext({
                   ...effectiveContext,
                   engineVersion: ENGINE_VERSION,
                   repertoireVersion: inputs.repertoire.data?.version || 0,
                   requestedCounts: { ...counts },
-                };
-                const generated=generateMonthlyPlan(month, name, engineContext, counts, {
+                });
+                const scope=generationScope.current;
+                let generated:MonthlyItem[];
+                if(generationMode==='gemini'){
+                  if(!aiConnection.data?.generationAvailable)throw Error('Configure e teste o Gemini em Configurações → IA editorial antes de gerar.');
+                  if((context.monthlyDirection||'').trim().length<20)throw Error('Informe a direção, copy e estratégia do mês com pelo menos 20 caracteres.');
+                  const result=await supabase!.functions.invoke('editorial-ai',{body:{agencyId:agency,action:'generate',clientId:client,month,direction:context.monthlyDirection,context:engineContext,count:Object.values(counts).reduce((a,b)=>a+b,0),formatCounts:counts}});
+                  if(result.error||result.data?.error)throw Error(result.data?.error||'A IA não concluiu a geração. Confira a conexão e a cota; nenhum rascunho foi salvo.');
+                  if(generationScope.current!==scope)throw Error('O cliente ou a agência mudou. Gere novamente no contexto correto.');
+                  generated=adaptAiCalendar(result.data as AiCalendarResult,engineContext,month,counts,inputs.history.data||[]);
+                  engineContext.generationProvider='gemini';engineContext.generationModel=result.data.model;
+                }else {engineContext.generationProvider='rules';generated=generateMonthlyPlan(month, name, automaticEditorialContext(engineContext), counts, {
                     clientId: client,
                     pillars: inputs.pillars.data || [],
                     history: inputs.history.data || [],
                     repertoire: inputs.repertoire.data?.families,
-                  });
-                setItems(generated);setContext(engineContext);setDirty(true);
+                  });}
+                setItems(generated);setContext(engineContext);setCounts(counts);setDirty(true);
                 const campaignId=await save(generated,engineContext);
                 setItems(generated);
                 setContext(engineContext);
@@ -707,12 +660,13 @@ export function MonthlyEditorialPage() {
                 navigate(`/editorial?clientId=${client}&campaignId=${campaignId}`);
             })}
           >
-            Gerar calendário mensal
+            {generationMode==='gemini'?'Gerar calendário com IA Gemini':'Gerar calendário mensal'}
           </Button>
           {items.length>0&&!id&&<p className="text-sm text-orange-200">Prévia gerada com {items.length} demandas. Se a gravação falhou, confira a mensagem e gere novamente para tentar salvar; suas entradas foram mantidas.</p>}
+          <label className="block space-y-2 text-sm"><span>Motor de geração</span><select aria-label="Motor de geração" className={control} disabled={busy} value={generationMode} onChange={e=>setGenerationMode(e.target.value as 'rules'|'gemini')}><option value="rules">Planejamento por regras (sem IA)</option><option value="gemini">Gemini · inteligência artificial</option></select></label>
+          {generationMode==='gemini'&&<p className="text-sm text-zinc-400">{aiConnection.data?.generationAvailable?'A direção do mês e os dados aprovados do cliente serão enviados ao Gemini. A cota depende do projeto configurado.':'Conexão Gemini ainda não disponível ou não verificada.'} <Link className="text-orange-300 underline" to="/settings/integrations/editorial-ai">Configurar IA editorial</Link></p>}
           <p className="text-sm text-[#B8B8C0]">
-            As quantidades são ajustáveis para cada campanha; nenhum pacote fixo
-            é imposto ao cliente.
+            O volume segue o cadastro do cliente, com limite de 12 materiais. O rascunho exige revisão antes da publicação e da produção.
           </p>
           {id && (
             <label className="block">
@@ -895,7 +849,7 @@ export function MonthlyEditorialPage() {
                       aria-label={`Quantidade de ${item.format === "carousel" ? "slides" : "cenas"} do conteúdo ${index + 1}`}
                       type="number"
                       min={3}
-                      max={10}
+                      max={item.format === "carousel" ? 8 : 10}
                       disabled={locked}
                       value={
                         pieceSizes[index]?.size ??

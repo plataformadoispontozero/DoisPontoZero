@@ -7,10 +7,10 @@ import {
   CLIENT_FIELDS,
   autoMapping,
   previewCsv,
-  readCsvFile,
   type ColumnMapping,
   type CsvDocument,
 } from "./csv";
+import { readClientImportFile } from "./json";
 export default function ImportClientsPage() {
   const agency = useAgencyId();
   return <ImportClientsWizard key={agency || "no-agency"} />;
@@ -65,7 +65,7 @@ function ImportClientsWizard() {
     setResult([]);
     setConfirm(false);
     try {
-      const parsed = await readCsvFile(file);
+      const parsed = await readClientImportFile(file);
       setDocument(parsed);
       setFilename(file.name);
       setMapping(autoMapping(parsed.headers));
@@ -73,7 +73,7 @@ function ImportClientsWizard() {
     } catch (e) {
       setDocument(null);
       setMessage(
-        e instanceof Error ? e.message : "Não foi possível ler o CSV.",
+        e instanceof Error ? e.message : "Não foi possível ler o arquivo CSV ou JSON.",
       );
     }
   }
@@ -105,9 +105,9 @@ function ImportClientsWizard() {
   }
   return (
     <section className="space-y-5">
-      <h2 className="text-xl font-semibold">Importar clientes via CSV</h2>
+      <h2 className="text-xl font-semibold">Importar clientes via CSV ou JSON</h2>
       <p>
-        Importação CSV disponível. Exporte manualmente seu arquivo em UTF-8. Até
+        Importe CSV ou JSON exportado do Lovable, em UTF-8. JSON aceita uma lista de clientes ou um objeto com data/clients e dados de profile. Até
         2 MB, 500 clientes e 30 colunas. Clientes novos serão cadastrados. Você poderá completar os dados ausentes de clientes já cadastrados, com revisão e confirmação.
       </p>
       {!allowed ? (
@@ -120,7 +120,7 @@ function ImportClientsWizard() {
           disabled={busy}
           onClick={() => fileInput.current?.click()}
         >
-          {document ? "Trocar arquivo CSV" : "Selecionar arquivo CSV"}
+          {document ? "Trocar arquivo CSV ou JSON" : "Selecionar arquivo CSV ou JSON"}
         </button>
         <p className="text-sm text-zinc-300">
           {document ? `Arquivo selecionado: ${filename}` : "Selecione o arquivo para visualizar os clientes. Depois, revise e confirme a importação."}
@@ -128,9 +128,9 @@ function ImportClientsWizard() {
         <input
           ref={fileInput}
           className="hidden"
-          aria-label="Arquivo CSV"
+          aria-label="Arquivo CSV ou JSON"
           type="file"
-          accept=".csv,text/csv"
+          accept=".csv,.json,text/csv,application/json"
           disabled={busy}
           onChange={(e) => {
             const f = e.target.files?.[0];

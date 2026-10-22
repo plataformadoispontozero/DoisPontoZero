@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
+import {PresentationPdfWatermark} from './PresentationPdfWatermark'
 import type { PresentationPdfModel } from './types'
 
 const styles = StyleSheet.create({
@@ -83,9 +84,10 @@ interface Props {
 
 export const PresentationPdfCover: React.FC<Props> = ({ model }) => {
   return (
-    <Page size="A4" style={styles.page}>
+    <Page size={model.branding.pageFormat === "Letter" ? "LETTER" : "A4"} style={[styles.page,{fontFamily:model.branding.documentFont || "Helvetica"}]}>
+      {model.branding.showWatermark!==false&&<PresentationPdfWatermark logoUrl={model.branding.symbolUrl} opacity={model.branding.watermarkOpacity}/>}
       <View style={styles.topSection}>
-        {model.branding.logoUrl ? (
+        {model.branding.logoUrl && model.branding.showLogo !== false ? (
           <Image src={model.branding.logoUrl} style={styles.logo} />
         ) : (
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#C74410', marginBottom: 24 }}>

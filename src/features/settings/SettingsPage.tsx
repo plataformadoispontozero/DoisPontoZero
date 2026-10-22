@@ -19,7 +19,7 @@ export const SettingsPage: React.FC = () => {
     <div className="space-y-8 animate-in fade-in duration-200">
       <PageHeader
         title="Configurações do Sistema"
-        subtitle="Parâmetros do Creative Agency OS, identidade da agência e infraestrutura local."
+        subtitle="Parâmetros do 2.0, identidade da agência e infraestrutura local."
         breadcrumbs={[
           { label: 'Visão Geral', href: '/dashboard' },
           { label: 'Configurações' },

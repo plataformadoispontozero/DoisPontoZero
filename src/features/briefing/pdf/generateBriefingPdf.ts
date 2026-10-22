@@ -1,5 +1,5 @@
 // ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
+// DOIS.ZERO | 2.0
 // FASE 06: PDF STUDIO
 // Generator function: Renders PDF Document to Blob and Triggers Download
 // ============================================================
@@ -9,6 +9,7 @@ import { pdf } from '@react-pdf/renderer'
 import type { BriefingPdfModel } from './types'
 import { BriefingPdfDocument } from './BriefingPdfDocument'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
+import { toast } from '@/components/ui/Toast'
 
 export interface GeneratePdfResult {
   blob: Blob
@@ -41,24 +42,26 @@ export async function downloadBriefingPdf(model: BriefingPdfModel): Promise<void
   document.body.removeChild(link)
 
   // 2. Record export in database if Supabase is active
-  if (isSupabaseConfigured && supabase) {
+  if (isSupabaseConfigured && supabase && model.agencyId) {
     try {
-      await supabase.from('briefing_exports').insert({
-        agency_id: 'demo-agency',
+      const exported = await supabase.from('briefing_exports').insert({
+        agency_id: model.agencyId,
         briefing_id: model.briefingId,
         file_path: `local_exports/${fileName}`,
         export_format: 'pdf',
         branding_snapshot: model.branding,
       })
 
-      await supabase.from('briefing_activity').insert({
-        agency_id: 'demo-agency',
+      if (exported.error) throw exported.error
+      const activity = await supabase.from('briefing_activity').insert({
+        agency_id: model.agencyId,
         briefing_id: model.briefingId,
         action: 'pdf_exported',
         metadata: { fileName, generatedAt: new Date().toISOString() },
       })
+      if (activity.error) throw activity.error
     } catch (err) {
-      console.warn('Could not record PDF export in Supabase:', err)
+      toast.error('O PDF foi baixado, mas não foi possível registrar a exportação no histórico. Atualize a página e confira sua conexão.')
     }
   }
 

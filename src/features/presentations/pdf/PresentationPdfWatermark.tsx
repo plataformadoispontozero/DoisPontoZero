@@ -10,10 +10,10 @@ import { View, Image, StyleSheet } from '@react-pdf/renderer'
 const styles = StyleSheet.create({
   watermarkContainer: {
     position: 'absolute',
-    top: 250,
-    left: 150,
-    right: 150,
-    bottom: 250,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
     opacity: 0.05,
@@ -28,13 +28,14 @@ const styles = StyleSheet.create({
 
 interface Props {
   logoUrl?: string
+  opacity?: number
 }
 
-export const PresentationPdfWatermark: React.FC<Props> = ({ logoUrl }) => {
+export const PresentationPdfWatermark: React.FC<Props> = ({ logoUrl, opacity=0.05 }) => {
   if (!logoUrl) return null
 
   return (
-    <View style={styles.watermarkContainer} fixed>
+    <View style={[styles.watermarkContainer,{opacity}]} fixed>
       <Image src={logoUrl} style={styles.logo} />
     </View>
   )

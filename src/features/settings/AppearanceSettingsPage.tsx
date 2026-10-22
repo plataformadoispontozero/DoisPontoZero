@@ -33,10 +33,10 @@ const AppearanceSettingsPageForm: React.FC = () => {
             Aparência & Temas Visuais
           </h3>
           <p className="text-xs text-[#B8B8C0]">
-            Confira o tema disponível para a equipe e a preferência registrada da agência.
+            Escolha o tema da equipe ou acompanhe a aparência do sistema.
           </p>
         </div>
-        <Button type="submit" variant="accent" size="sm" loading={isSaving} disabled={selectedTheme !== 'dark'}>
+        <Button type="submit" variant="accent" size="sm" loading={isSaving} disabled={isSaving}>
           <Save className="w-4 h-4" />
           <span>Salvar Preferência</span>
         </Button>
@@ -46,7 +46,7 @@ const AppearanceSettingsPageForm: React.FC = () => {
         <CardHeader>
           <CardTitle className="text-sm">Modo de Tema Padrão do Workspace</CardTitle>
           <CardDescription className="text-xs">
-            O MVP utiliza o tema escuro. Os modos claro e automático ainda não estão disponíveis na interface.
+            Escuro, claro ou automático. A preferência salva é aplicada ao espaço de trabalho.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -79,7 +79,7 @@ const AppearanceSettingsPageForm: React.FC = () => {
             {/* Opção Tema Claro */}
             <button
               type="button"
-              disabled
+              onClick={() => setSelectedTheme('light')}
               aria-pressed={selectedTheme === 'light'}
               className={`p-4 rounded-xl border-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101014] disabled:cursor-not-allowed disabled:opacity-60 ${
                 selectedTheme === 'light'
@@ -97,14 +97,14 @@ const AppearanceSettingsPageForm: React.FC = () => {
               </div>
               <span className="block text-sm font-bold text-[#F8F9FC]">Tema Claro (Light Mode)</span>
               <p className="text-xs text-[#B8B8C0] mt-1">
-                Indisponível nesta versão. A interface permanece no tema escuro.
+                Superfícies claras, textos escuros e contraste para trabalhar durante o dia.
               </p>
             </button>
 
             {/* Opção Sistema */}
             <button
               type="button"
-              disabled
+              onClick={() => setSelectedTheme('system')}
               aria-pressed={selectedTheme === 'system'}
               className={`p-4 rounded-xl border-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101014] disabled:cursor-not-allowed disabled:opacity-60 ${
                 selectedTheme === 'system'
@@ -122,7 +122,7 @@ const AppearanceSettingsPageForm: React.FC = () => {
               </div>
               <span className="block text-sm font-bold text-[#F8F9FC]">Sincronizado com Sistema</span>
               <p className="text-xs text-[#B8B8C0] mt-1">
-                Indisponível nesta versão. Não acompanha o tema do dispositivo.
+                Acompanha automaticamente as mudanças de aparência do dispositivo.
               </p>
             </button>
           </div>
@@ -132,7 +132,7 @@ const AppearanceSettingsPageForm: React.FC = () => {
               Regra de Hierarquia de Aparência
             </span>
             <p className="text-[11px]">
-              As cores e os logotipos da agência são configurados em Identidade visual. O tema disponível nesta versão é escuro.
+              As cores e os logotipos da agência são configurados em Identidade visual. O tema acompanha esta preferência sem alterar as artes e os materiais dos clientes.
             </p>
           </div>
         </CardContent>
