@@ -68,3 +68,33 @@ it('does not hijack arrow keys inside an expanded carousel material',async()=>{
  const event=new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true});
  image.dispatchEvent(event);expect(event.defaultPrevented).toBe(false);
 })
+
+it('navigates expanded carousel images numerically without moving the underlying carousel or changing reviews',async()=>{
+ const {PresentationGallery}=await import('./PresentationPreview');const save=vi.fn();
+ render(<PresentationGallery layout="carousel" onReview={save} assets={[{id:'ten',title:'Arte 10',thumbnail_reference:'https://example.com/10.png'},{id:'two',title:'Arte 2',thumbnail_reference:'https://example.com/2.png'},{id:'one',title:'Arte 1',thumbnail_reference:'https://example.com/1.png'}]}/>);
+ fireEvent.click(screen.getByRole('button',{name:'Ampliar Arte 2'}));
+ expect(screen.getByRole('img',{name:'Visualização ampliada de Arte 2'})).toBeVisible();
+ fireEvent.click(screen.getByRole('button',{name:'Próximo material ampliado'}));
+ expect(screen.getByRole('img',{name:'Visualização ampliada de Arte 10'})).toBeVisible();
+ fireEvent.keyDown(screen.getByRole('region',{name:'Materiais ampliados'}),{key:'ArrowRight'});
+ expect(screen.getByRole('img',{name:'Visualização ampliada de Arte 1'})).toBeVisible();
+ fireEvent.keyDown(screen.getByRole('region',{name:'Materiais ampliados'}),{key:'ArrowLeft'});
+ expect(screen.getByRole('img',{name:'Visualização ampliada de Arte 10'})).toBeVisible();expect(save).not.toHaveBeenCalled();
+ fireEvent.keyDown(document,{key:'Escape'});expect(screen.queryByRole('region',{name:'Materiais ampliados'})).not.toBeInTheDocument();
+})
+it('supports horizontal drag in enlarged images and ignores vertical or cancelled gestures',async()=>{
+ const {PresentationGallery}=await import('./PresentationPreview');
+ render(<PresentationGallery assets={[{id:'one',title:'Post A',thumbnail_reference:'https://example.com/a.png'},{id:'two',title:'Post B',thumbnail_reference:'https://example.com/b.png'}]}/>);
+ fireEvent.click(screen.getByRole('button',{name:'Ampliar Post A'}));
+ const surface=screen.getByRole('img',{name:'Visualização ampliada de Post A'}).parentElement!;
+ const pointer=(type:string,x:number,y:number)=>{const event=new Event(type,{bubbles:true});Object.assign(event,{isPrimary:true,button:0,pointerId:1,clientX:x,clientY:y});fireEvent(surface,event)};
+ pointer('pointerdown',200,100);pointer('pointerup',190,220);expect(screen.getByRole('img',{name:'Visualização ampliada de Post A'})).toBeVisible();
+ pointer('pointerdown',200,100);pointer('pointercancel',100,100);pointer('pointerup',100,100);expect(screen.getByRole('img',{name:'Visualização ampliada de Post A'})).toBeVisible();
+ pointer('pointerdown',200,100);pointer('pointerup',100,105);expect(screen.getByRole('img',{name:'Visualização ampliada de Post B'})).toBeVisible();
+})
+it('keeps reels out of the enlarged image sequence',async()=>{
+ const {PresentationGallery}=await import('./PresentationPreview');
+ render(<PresentationGallery assets={[{id:'one',title:'Post',mime_type:'image/png',thumbnail_reference:'https://example.com/a.png'},{id:'reel',title:'Reel',mime_type:'video/mp4',thumbnail_reference:'https://example.com/reel.png'}]}/>);
+ fireEvent.click(screen.getByRole('button',{name:'Ampliar Post'}));
+ expect(screen.getByRole('img',{name:'Visualização ampliada de Post'})).toBeVisible();expect(screen.queryByRole('button',{name:'Próximo material ampliado'})).not.toBeInTheDocument();
+})

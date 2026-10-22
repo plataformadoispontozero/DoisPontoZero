@@ -1,9 +1,9 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.117.3'
+import { registrationRateLimitHashes } from './rateLimit.ts'
 const site='https://doispontozero.renatodesigner.com.br'
 const origins=new Set([site,'https://doispontozero.marketingrenatodesigner.workers.dev'])
 const professions=new Set(['designer','social_media','videomaker','paid_traffic','manager'])
 const targetAgency='a0f00e64-e8ba-44e5-b0cf-2ad7adb44211'
-async function hash(value:string){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))).map(n=>n.toString(16).padStart(2,'0')).join('')}
 Deno.serve(async(req:Request)=>{
  const origin=req.headers.get('origin')||''
  const headers={'Content-Type':'application/json','Cache-Control':'no-store','Access-Control-Allow-Origin':origins.has(origin)?origin:site,'Access-Control-Allow-Headers':'authorization, apikey, x-client-info, content-type','Access-Control-Allow-Methods':'POST, OPTIONS','Vary':'Origin'}
@@ -26,9 +26,7 @@ Deno.serve(async(req:Request)=>{
    const name=typeof body.name==='string'?body.name.trim():''
    if(body.honey)return reply({submitted:true})
    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254||name.length<2||name.length>120||!professions.has(body.profession)||typeof body.password!=='string'||body.password.length<10||body.password.length>128)return reply({error:'Confira nome, e-mail, função e senha com pelo menos 10 caracteres.'},400)
-   // Gateway IP provenance is not guaranteed here; use a shared conservative bucket.
-   const ip='public-registration'
-   const reserved=await admin.rpc('reserve_team_registration',{p_ip_hash:await hash(ip+secret),p_email_hash:await hash(email+secret)})
+   const reserved=await admin.rpc('reserve_team_registration',await registrationRateLimitHashes(email,secret))
    if(reserved.error)return reply({error:'Cadastro indisponível. Tente mais tarde.'},503)
    if(!reserved.data)return reply({error:'Muitas solicitações. Aguarde antes de tentar novamente.'},429)
    const created=await admin.auth.admin.createUser({email,password:body.password,email_confirm:false,user_metadata:{full_name:name}})
