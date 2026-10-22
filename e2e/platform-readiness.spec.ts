@@ -125,8 +125,10 @@ test('presentation fits its container and persists per-material decisions',async
  const widths=await page.getByRole('img',{name:/Arte/}).evaluateAll(imgs=>imgs.map(img=>img.getBoundingClientRect().width));expect(widths.every(w=>w>250)).toBe(true);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
  await expect(page.getByRole('link',{name:/Drive/})).toHaveCount(0);
- await page.getByRole('button',{name:'Aprovar',exact:true}).first().click();await expect(page.getByText('Aprovado',{exact:true})).toBeVisible();
- await page.getByRole('button',{name:'Próxima imagem'}).click();await page.getByRole('button',{name:'Reprovar',exact:true}).click();await page.getByLabel('Por que o material foi reprovado?').fill('Ajustar contraste');await page.getByRole('button',{name:'Enviar retorno'}).click();await expect(page.getByText('Reprovado',{exact:true})).toBeVisible();
- await page.reload();await expect(page.getByText('Aprovado',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Próxima imagem'}).click();await expect(page.getByText('Ajustar contraste',{exact:true})).toBeVisible();
+ const firstMaterial=page.getByRole('article').filter({has:page.getByRole('heading',{name:'Arte a',exact:true})});
+ const secondMaterial=page.getByRole('article').filter({has:page.getByRole('heading',{name:'Arte b',exact:true})});
+ await firstMaterial.getByRole('button',{name:'Aprovar',exact:true}).click();await expect(firstMaterial.getByText('Aprovado',{exact:true})).toBeVisible();
+ await secondMaterial.getByRole('button',{name:'Reprovar',exact:true}).click();await page.getByLabel('Por que o material foi reprovado?').fill('Ajustar contraste');await page.getByRole('button',{name:'Enviar retorno'}).click();await expect(page.getByText('Reprovado',{exact:true})).toBeVisible();
+ await page.reload();await expect(firstMaterial.getByText('Aprovado',{exact:true})).toBeVisible();await expect(secondMaterial.getByText('Ajustar contraste',{exact:true})).toBeVisible();
  await page.screenshot({path:testInfo.outputPath('presentation-responsive.png'),fullPage:true});
 });

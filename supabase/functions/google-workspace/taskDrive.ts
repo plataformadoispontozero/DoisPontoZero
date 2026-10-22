@@ -1,3 +1,4 @@
+import {googleFetch,isGoogleTimeout} from './googleFetch.ts';
 import type {SupabaseClient} from 'npm:@supabase/supabase-js@2.117.3';
 import type {ProviderConfiguration} from '../_shared/providerConfig.ts';
 import {folderIdFromUrl,isFolderDescendant,isGoogleUploadUrl} from './drive.ts';
@@ -11,7 +12,7 @@ export async function handleTaskDrive(input:Input):Promise<Response>{
  const {body,context:c,admin,accessToken,configuration,centralAdmin,userId,headers}=input;
  const reply=(value:unknown,status=200)=>new Response(JSON.stringify(value),{status,headers});
  const auth={Authorization:`Bearer ${accessToken}`};
- async function request(url:string,options:RequestInit={}){const r=await fetch(url,{...options,headers:{...auth,...options.headers}});if(!r.ok){if(r.status===401)throw new DriveError('A conexão com o Google precisa ser renovada.',401);if(r.status===404)throw new DriveError('A pasta ou arquivo não foi encontrado no Google Drive.',404);if(r.status===429)throw new DriveError('O Google Drive está limitando temporariamente os envios.',429);if(r.status===403)throw new DriveError('Esta pasta ainda não está autorizada para envio. Solicite autorização à gestão.',403);throw new DriveError('O Google Drive não concluiu a operação. Tente novamente.',502)}return r}
+ async function request(url:string,options:RequestInit={}){const r=await googleFetch(url,{...options,headers:{...auth,...options.headers}});if(!r.ok){if(r.status===401)throw new DriveError('A conexão com o Google precisa ser renovada.',401);if(r.status===404)throw new DriveError('A pasta ou arquivo não foi encontrado no Google Drive.',404);if(r.status===429)throw new DriveError('O Google Drive está limitando temporariamente os envios.',429);if(r.status===403)throw new DriveError('Esta pasta ainda não está autorizada para envio. Solicite autorização à gestão.',403);throw new DriveError('O Google Drive não concluiu a operação. Tente novamente.',502)}return r}
  async function meta(fileId:string){if(!id(fileId))throw new DriveError('Referência Drive inválida.');return (await request(`https://www.googleapis.com/drive/v3/files/${fileId}?fields=id,name,mimeType,parents,trashed,isAppAuthorized,capabilities(canAddChildren),size,version,appProperties,thumbnailLink&supportsAllDrives=true`)).json()}
  const parents=async(fileId:string)=>{const m=await meta(fileId);return m.trashed||m.mimeType==='application/vnd.google-apps.shortcut'?[]:(m.parents||[])};
  function folderView(m:Record<string,unknown>){const capabilities=m.capabilities as {canAddChildren?:boolean}|undefined;return {id:m.id,name:m.name,parentId:(m.parents as string[]|undefined)?.[0]||null,isAppAuthorized:m.isAppAuthorized===true,canAddChildren:capabilities?.canAddChildren===true,canUpload:m.isAppAuthorized===true&&capabilities?.canAddChildren===true}}
@@ -107,5 +108,5 @@ export async function handleTaskDrive(input:Input):Promise<Response>{
    return new Response(bytes,{headers:{...headers,'Content-Type':'application/octet-stream','X-Preview-Mime':mime,'X-Content-Type-Options':'nosniff','Access-Control-Expose-Headers':'X-Preview-Mime'}});
   }
   throw new DriveError('Operação de arquivos inválida.');
- }catch(error){return reply({error:error instanceof DriveError?error.message:'Não foi possível acessar os arquivos desta demanda.'},error instanceof DriveError?error.status:503)}
+ }catch(error){if(isGoogleTimeout(error))return reply({error:'O Google demorou para responder. Confira se a operação foi concluída antes de tentar novamente.',code:'GOOGLE_TIMEOUT'},504);return reply({error:error instanceof DriveError?error.message:'Não foi possível acessar os arquivos desta demanda.'},error instanceof DriveError?error.status:503)}
 }

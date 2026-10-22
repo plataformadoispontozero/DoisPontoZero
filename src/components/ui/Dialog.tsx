@@ -10,22 +10,33 @@ export interface DialogProps {
   className?: string
 }
 
+const openDialogs: symbol[] = []
+let previousBodyOverflow = ''
+
 export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children, className }) => {
+  const changeRef = React.useRef(onOpenChange)
+  React.useLayoutEffect(() => { changeRef.current = onOpenChange }, [onOpenChange])
   React.useLayoutEffect(() => {
+    if (!open) return
+    const token = Symbol('dialog')
+    if (openDialogs.length === 0) previousBodyOverflow = document.body.style.overflow
+    openDialogs.push(token)
+    document.body.style.overflow = 'hidden'
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onOpenChange(false)
+      if (event.key === 'Escape' && openDialogs.at(-1) === token) {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        changeRef.current(false)
+      }
     }
-    if (open) {
-      document.body.style.overflow = 'hidden'
-      document.addEventListener('keydown', handleKeyDown, true)
-    } else {
-      document.body.style.overflow = 'unset'
-    }
+    document.addEventListener('keydown', handleKeyDown, true)
     return () => {
-      document.body.style.overflow = 'unset'
+      const index = openDialogs.indexOf(token)
+      if (index >= 0) openDialogs.splice(index, 1)
+      if (openDialogs.length === 0) document.body.style.overflow = previousBodyOverflow
       document.removeEventListener('keydown', handleKeyDown, true)
     }
-  }, [open, onOpenChange])
+  }, [open])
 
   if (!open) return null
 

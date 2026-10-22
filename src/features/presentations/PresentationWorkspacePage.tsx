@@ -67,6 +67,8 @@ export const PresentationWorkspacePage: React.FC = () => {
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
   const [newPresentationSectionType, setNewPresentationSectionType] = useState<PresentationSectionType|'carousel'>('gallery');
   const [newSectionTitle, setNewSectionTitle] = useState('');
+  const [creatingSection, setCreatingSection] = useState(false);
+  const [createSectionError, setCreateSectionError] = useState('');
 
   // Add Drive File dialog
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
@@ -98,16 +100,25 @@ export const PresentationWorkspacePage: React.FC = () => {
   const activeSectionAssets = selectedSection ? assets.filter((a: PresentationAsset) => a.section_id === selectedSection.id) : [];
 
   const handleAddSectionSubmit = async () => {
-    if (!newSectionTitle.trim()) return;
-    await addSection({
-      section_type: newPresentationSectionType==='carousel'?'gallery':newPresentationSectionType,
-      title: newSectionTitle,
-      description: '',
-      content: {media_layout:newPresentationSectionType==='carousel'?'carousel':'grid'},
-      position: sections.length
-    });
-    setNewSectionTitle('');
-    setIsAddSectionOpen(false);
+    if (!newSectionTitle.trim() || creatingSection) return;
+    setCreatingSection(true);
+    setCreateSectionError('');
+    try {
+      const created = await addSection({
+        section_type: newPresentationSectionType === 'carousel' ? 'gallery' : newPresentationSectionType,
+        title: newSectionTitle.trim(),
+        description: '',
+        content: { media_layout: newPresentationSectionType === 'carousel' ? 'carousel' : 'grid' },
+        position: sections.length,
+      });
+      if (created) setSelectedSectionId(created.id);
+      setNewSectionTitle('');
+      setIsAddSectionOpen(false);
+    } catch {
+      setCreateSectionError('Não foi possível criar a seção. Seu título foi preservado; tente novamente.');
+    } finally {
+      setCreatingSection(false);
+    }
   };
 
   const handleMoveSection = async (index: number, direction: 'up' | 'down') => {
@@ -554,14 +565,16 @@ export const PresentationWorkspacePage: React.FC = () => {
       )}
 
       {/* DIALOG: ADD SECTION */}
-      <Dialog open={isAddSectionOpen} onOpenChange={setIsAddSectionOpen}>
+      <Dialog open={isAddSectionOpen} onOpenChange={open => { if (!creatingSection) {setIsAddSectionOpen(open);setCreateSectionError('');} }}>
         <div className="p-6 space-y-4">
           <h3 className="text-lg font-bold text-content-primary">Adicionar Nova Seção</h3>
           <div>
-            <label className="block text-xs font-semibold text-content-secondary mb-1">Título</label>
+            <label htmlFor="presentation-new-section-title" className="block text-xs font-semibold text-content-secondary mb-1">Título</label>
             <input
               type="text"
+              id="presentation-new-section-title"
               value={newSectionTitle}
+              disabled={creatingSection}
               onChange={e => setNewSectionTitle(e.target.value)}
               placeholder="Ex: Entrega 01 - Visual Identity"
               className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
@@ -569,9 +582,10 @@ export const PresentationWorkspacePage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-content-secondary mb-1">Tipo de Layout</label>
-            <Select style={{colorScheme: 'dark'}}
+            <label htmlFor="presentation-new-section-format" className="block text-xs font-semibold text-content-secondary mb-1">Tipo de Layout</label>
+            <Select id="presentation-new-section-format" style={{colorScheme: 'dark'}}
               value={newPresentationSectionType}
+              disabled={creatingSection}
               onChange={e => setNewPresentationSectionType(e.target.value as PresentationSectionType|'carousel')}
               className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
             >
@@ -581,9 +595,10 @@ export const PresentationWorkspacePage: React.FC = () => {
             </Select>
           </div>
 
+          {createSectionError && <p role="alert" className="text-sm text-rose-300">{createSectionError}</p>}
           <div className="flex justify-end space-x-2 pt-2">
-            <Button variant="ghost" onClick={() => setIsAddSectionOpen(false)}>Cancelar</Button>
-            <Button onClick={handleAddSectionSubmit} disabled={!newSectionTitle.trim()}>Adicionar</Button>
+            <Button variant="ghost" disabled={creatingSection} onClick={() => {setIsAddSectionOpen(false);setCreateSectionError('');}}>Cancelar</Button>
+            <Button loading={creatingSection} onClick={() => void handleAddSectionSubmit()} disabled={creatingSection || !newSectionTitle.trim()}>Adicionar</Button>
           </div>
         </div>
       </Dialog>

@@ -1,6 +1,7 @@
 // @vitest-environment node
 import {describe,it,expect,vi,afterEach} from 'vitest';
 import ts from 'typescript';
+import {googleFetch,isGoogleTimeout,GoogleRequestTimeoutError} from '../../../supabase/functions/google-workspace/googleFetch';
 import source from '../../../supabase/functions/google-workspace/taskDrive.ts?raw';
 import {folderIdFromUrl,isFolderDescendant,isGoogleUploadUrl} from '../../../supabase/functions/google-workspace/drive';
 import {validTaskDriveUpload,matchesTaskUploadFile,TASK_DRIVE_PREVIEW_MAX_BYTES} from '../../../supabase/functions/google-workspace/taskDriveHelpers';
@@ -17,7 +18,7 @@ function runtime(extra:Record<string,unknown>={}){
  vi.stubGlobal('fetch',google);
  const script=source.split('\n').filter(line=>!line.startsWith('import ')).join('\n').replace('export async function handleTaskDrive','async function handleTaskDrive');
  const js=ts.transpileModule(script,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText;
- const handler=new Function('folderIdFromUrl','isFolderDescendant','isGoogleUploadUrl','validTaskDriveUpload','matchesTaskUploadFile','TASK_DRIVE_PREVIEW_MAX_BYTES',js+';return handleTaskDrive;')(folderIdFromUrl,isFolderDescendant,isGoogleUploadUrl,validTaskDriveUpload,matchesTaskUploadFile,TASK_DRIVE_PREVIEW_MAX_BYTES);
+ const handler=new Function('googleFetch','isGoogleTimeout','folderIdFromUrl','isFolderDescendant','isGoogleUploadUrl','validTaskDriveUpload','matchesTaskUploadFile','TASK_DRIVE_PREVIEW_MAX_BYTES',js+';return handleTaskDrive;')(googleFetch,isGoogleTimeout,folderIdFromUrl,isFolderDescendant,isGoogleUploadUrl,validTaskDriveUpload,matchesTaskUploadFile,TASK_DRIVE_PREVIEW_MAX_BYTES);
  const run=(body:Record<string,unknown>,ctx=context)=>handler({body,context:ctx,admin,accessToken:'server-only-token',configuration:{rootFolderUrl:`https://drive.google.com/drive/folders/${agencyRoot}`},centralAdmin:false,userId:'designer',headers:{'Content-Type':'application/json'}}) as Promise<Response>;
  return {run,rpc,google,admin};
 }
@@ -28,3 +29,5 @@ describe('actual task Drive Edge handler',()=>{
  it('rejects completion with Google file metadata forged for another client before metadata RPC',async()=>{const session={id:'session',agency_id:'agency',task_id:'task',client_id:'client',folder_id:selected,file_name:'art.webp',mime_type:'image/webp',file_size:123,uploaded_by:'designer',kind:'original',expires_at:'2099-01-01'};const r=runtime({googleFile12345:{id:'googleFile12345',name:'art.webp',mimeType:'image/webp',size:'123',version:'1',parents:[selected],appProperties:{uploadId:'session',agencyId:'agency',clientId:'forged',taskId:'task',uploadedBy:'designer',kind:'original'}}});r.rpc.mockResolvedValue({data:session,error:null});const result=await r.run({action:'task-drive-upload-finish',uploadId:'session',fileId:'googleFile12345'});expect(result.status).toBe(403);expect(r.rpc.mock.calls.map(x=>x[0])).toEqual(['task_drive_upload_session'])});
  it('returns a small thumbnail Blob without fetching original video bytes',async()=>{const r=runtime({googleFile12345:{id:'googleFile12345',mimeType:'video/mp4',parents:[selected],thumbnailLink:'https://lh3.googleusercontent.com/thumbnail'}});const chain:Record<string,unknown>={then:(resolve:(v:unknown)=>unknown)=>resolve({data:{id:'attachment',google_folder_id:selected,google_file_id:'googleFile12345',preview_google_file_id:null},error:null})};for(const k of ['select','eq','maybeSingle'])chain[k]=()=>chain;r.admin.from.mockReturnValue(chain);const response=await r.run({action:'task-drive-preview',attachmentId:'attachment'});expect(response.status).toBe(200);expect(response.headers.get('Content-Type')).toBe('application/octet-stream');expect(response.headers.get('X-Preview-Mime')).toBe('image/webp');expect(response.headers.get('Access-Control-Expose-Headers')).toContain('X-Preview-Mime');expect((await response.arrayBuffer()).byteLength).toBe(12);expect(r.google.mock.calls.some(call=>String(call[0]).includes('alt=media'))).toBe(false)});
 });
+
+it('returns a clear 504 on Google timeout without retrying the operation',async()=>{const r=runtime();r.google.mockRejectedValueOnce(new GoogleRequestTimeoutError());const response=await r.run({action:'task-drive-folder-list',folderId:selected});expect(response.status).toBe(504);expect(await response.json()).toMatchObject({code:'GOOGLE_TIMEOUT'});expect(r.google).toHaveBeenCalledTimes(1)});

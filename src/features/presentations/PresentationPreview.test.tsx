@@ -59,3 +59,12 @@ it('approving after an adjustment clears the old note from the current card',asy
 it('keeps the saved comment when editing fails and preserves the draft for retry',async()=>{
  render(<PresentationMedia asset={{id:'review-failure',title:'Arte'}} review={{decision:'changes_requested',note:'Retorno salvo'}} onReview={vi.fn().mockRejectedValue(Error('Falha ao registrar'))}/>);fireEvent.click(screen.getByRole('button',{name:'Editar retorno'}));fireEvent.change(screen.getByLabelText('Comentário para a equipe'),{target:{value:'Novo retorno'}});fireEvent.click(screen.getByRole('button',{name:'Salvar retorno'}));expect(await screen.findAllByText('Falha ao registrar')).not.toHaveLength(0);expect(screen.getByText('Retorno salvo')).toBeVisible();expect(screen.getByLabelText('Comentário para a equipe')).toHaveValue('Novo retorno')
 })
+
+it('does not hijack arrow keys inside an expanded carousel material',async()=>{
+ const {PresentationGallery}=await import('./PresentationPreview');
+ render(<PresentationGallery layout="carousel" assets={[{id:'one',title:'Arte ampliada',thumbnail_reference:'https://example.com/1.png'}]}/>);
+ fireEvent.click(screen.getByRole('button',{name:'Ampliar Arte ampliada'}));
+ const image=screen.getByRole('img',{name:'Visualização ampliada de Arte ampliada'});
+ const event=new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true});
+ image.dispatchEvent(event);expect(event.defaultPrevented).toBe(false);
+})
