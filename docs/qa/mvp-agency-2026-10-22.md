@@ -43,3 +43,11 @@ Relatórios mvp-ui-settings-2026-10-22.md, mvp-workflows-2026-10-22.md e aurora-
 
 - Quatro testes adicionais direcionados de TaskDetailPanel aprovados. Não somados à contagem integral para evitar duplicação.
 - Build de produção/typecheck aprovados. Deploy das correções autorizado pelo responsável; exclusão remota dos testes segue aguardando autorização de backup local.
+
+## Limpeza executada com autorização específica
+
+Em 22/10/2026 o responsável autorizou salvar backup local e excluir o cenário fictício. Backup JSON salvo exclusivamente em /Users/designer/Downloads/DoisPontoZero-backups/AuroraCafe-2026-10-22.json, permissões600, 594891 bytes, 385 registros/35 tabelas. SHA-256: b9418d5a4812dad5666e858d91714a468075709c57ef809ee1d4d1402fd1334b. Conteúdo privado não incluído no Git.
+
+Simulação inicial recusada pela proteção de estratégias sem auth.uid(). Conferido vínculo OWNER ativo do solicitante; contexto administrativo delimitado a essa identidade, sem alterar permissões, triggers ou regras. Ordenação ajustada para remover a estratégia após calendários/propostas. Novo dry-run com rollback aprovado, seguido de transação efetivada.
+
+Verificação independente após COMMIT: todos os IDs alvo do backup ausentes nas35 tabelas. Cliente, dois projetos,16 tarefas, briefing, reunião e vínculos fictícios removidos. Arquivos do Google Drive, usuários/membros reais e logs de auditoria preservados. A verificação cobre esse cenário nominal, não constitui limpeza por busca textual de todos os registros da agência.

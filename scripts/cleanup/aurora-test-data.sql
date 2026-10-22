@@ -106,6 +106,9 @@ SELECT relation::regclass::text AS target_table,count(*) AS planned_rows
 FROM aurora_target GROUP BY relation ORDER BY target_table;
 
 -- Re-run preparation immediately before execution; never persist/use CTIDs across transactions.
+-- Existing strategy-delete guard also requires the authorized operator auth.uid() context.
+-- Supply only the requesting active authorized operator for the maintenance transaction;
+-- do not disable triggers or remove the permission checks.
 -- Proof of backup is deliberately mandatory. Set this only after saving/verifying inventory JSON:
 -- SET LOCAL app.aurora_backup_verified = 'd80253af-69ea-4d74-9224-24f39d8b2d61';
 DO $delete$
@@ -117,9 +120,9 @@ BEGIN
  -- each pass removes newly unblocked parents. No constraints/triggers/RLS are disabled.
  LOOP
   progress:=0;remaining:=0;rounds:=rounds+1;
-  FOR r IN SELECT DISTINCT t.relation,n.nspname,c.relname FROM aurora_target t
+  FOR r IN SELECT DISTINCT t.relation,n.nspname,c.relname,CASE WHEN c.relname='content_strategies' THEN 1 ELSE 0 END AS deletion_priority FROM aurora_target t
    JOIN pg_class c ON c.oid=t.relation JOIN pg_namespace n ON n.oid=c.relnamespace
-   ORDER BY c.relname LOOP
+   ORDER BY deletion_priority,c.relname LOOP
    BEGIN
     EXECUTE format('DELETE FROM %I.%I d USING aurora_target t WHERE t.relation=%s AND t.row_tid=d.ctid',r.nspname,r.relname,r.relation);
     GET DIAGNOSTICS deleted=ROW_COUNT;progress:=progress+deleted;
