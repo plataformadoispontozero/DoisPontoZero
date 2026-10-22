@@ -6,7 +6,7 @@ import { useAgencyBranding } from './hooks/useAgencySettings'
 import { SunMoon, Moon, Sun, Monitor, Save, CheckCircle2 } from 'lucide-react'
 import type { ThemeMode } from '@/types/whitelabel'
 
-export const AppearanceSettingsPage: React.FC = () => {
+const AppearanceSettingsPageForm: React.FC = () => {
   const { branding, updateBranding } = useAgencyBranding()
   const [selectedTheme, setSelectedTheme] = useState<ThemeMode>(branding.theme_mode || 'dark')
   const [isSaving, setIsSaving] = useState(false)
@@ -33,10 +33,10 @@ export const AppearanceSettingsPage: React.FC = () => {
             Aparência & Temas Visuais
           </h3>
           <p className="text-xs text-[#B8B8C0]">
-            Defina o tema padrão da agência e gerencie os modos de contraste da interface.
+            Confira o tema disponível para a equipe e a preferência registrada da agência.
           </p>
         </div>
-        <Button type="submit" variant="accent" size="sm" loading={isSaving}>
+        <Button type="submit" variant="accent" size="sm" loading={isSaving} disabled={selectedTheme !== 'dark'}>
           <Save className="w-4 h-4" />
           <span>Salvar Preferência</span>
         </Button>
@@ -46,15 +46,17 @@ export const AppearanceSettingsPage: React.FC = () => {
         <CardHeader>
           <CardTitle className="text-sm">Modo de Tema Padrão do Workspace</CardTitle>
           <CardDescription className="text-xs">
-            Esta configuração define o estilo visual padrão para todos os membros da equipe e portais.
+            O MVP utiliza o tema escuro. Os modos claro e automático ainda não estão disponíveis na interface.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Opção Tema Escuro */}
-            <div
+            <button
+              type="button"
+              aria-pressed={selectedTheme === 'dark'}
               onClick={() => setSelectedTheme('dark')}
-              className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+              className={`p-4 rounded-xl border-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101014] disabled:cursor-not-allowed disabled:opacity-60 ${
                 selectedTheme === 'dark'
                   ? 'border-[#C74410] bg-[#1C1C24] shadow-lg shadow-[#C74410]/10'
                   : 'border-[#30303B] bg-[#101014]/60 hover:border-[#C74410]/50'
@@ -68,16 +70,18 @@ export const AppearanceSettingsPage: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 text-[#C74410]" />
                 )}
               </div>
-              <h4 className="text-sm font-bold text-[#F8F9FC]">Tema Escuro (Dark Mode)</h4>
+              <span className="block text-sm font-bold text-[#F8F9FC]">Tema Escuro (Dark Mode)</span>
               <p className="text-xs text-[#B8B8C0] mt-1">
-                Fundo escuro otimizado (#101014) com elementos contrastantes em neon e roxo. Padrão recomendado.
+                Fundo escuro com textos claros e destaques nas cores da agência.
               </p>
-            </div>
+            </button>
 
             {/* Opção Tema Claro */}
-            <div
-              onClick={() => setSelectedTheme('light')}
-              className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+            <button
+              type="button"
+              disabled
+              aria-pressed={selectedTheme === 'light'}
+              className={`p-4 rounded-xl border-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101014] disabled:cursor-not-allowed disabled:opacity-60 ${
                 selectedTheme === 'light'
                   ? 'border-[#C74410] bg-[#1C1C24] shadow-lg shadow-[#C74410]/10'
                   : 'border-[#30303B] bg-[#101014]/60 hover:border-[#C74410]/50'
@@ -91,16 +95,18 @@ export const AppearanceSettingsPage: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 text-[#C74410]" />
                 )}
               </div>
-              <h4 className="text-sm font-bold text-[#F8F9FC]">Tema Claro (Light Mode)</h4>
+              <span className="block text-sm font-bold text-[#F8F9FC]">Tema Claro (Light Mode)</span>
               <p className="text-xs text-[#B8B8C0] mt-1">
-                Interface com fundos limpos em alta luminosidade para ambientes muito iluminados.
+                Indisponível nesta versão. A interface permanece no tema escuro.
               </p>
-            </div>
+            </button>
 
             {/* Opção Sistema */}
-            <div
-              onClick={() => setSelectedTheme('system')}
-              className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+            <button
+              type="button"
+              disabled
+              aria-pressed={selectedTheme === 'system'}
+              className={`p-4 rounded-xl border-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101014] disabled:cursor-not-allowed disabled:opacity-60 ${
                 selectedTheme === 'system'
                   ? 'border-[#C74410] bg-[#1C1C24] shadow-lg shadow-[#C74410]/10'
                   : 'border-[#30303B] bg-[#101014]/60 hover:border-[#C74410]/50'
@@ -114,11 +120,11 @@ export const AppearanceSettingsPage: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 text-[#C74410]" />
                 )}
               </div>
-              <h4 className="text-sm font-bold text-[#F8F9FC]">Sincronizado com Sistema</h4>
+              <span className="block text-sm font-bold text-[#F8F9FC]">Sincronizado com Sistema</span>
               <p className="text-xs text-[#B8B8C0] mt-1">
-                Acompanha automaticamente as preferências do sistema operacional do usuário (macOS/Windows).
+                Indisponível nesta versão. Não acompanha o tema do dispositivo.
               </p>
-            </div>
+            </button>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#101014] border border-[#30303B] text-xs text-[#B8B8C0] space-y-1">
@@ -126,11 +132,18 @@ export const AppearanceSettingsPage: React.FC = () => {
               Regra de Hierarquia de Aparência
             </span>
             <p className="text-[11px]">
-              O branding e as cores da agência permanecem ativos independentemente do tema selecionado. A preferência pessoal do usuário na sessão local pode alternar entre escuro/claro sem afetar a identidade global da marca.
+              As cores e os logotipos da agência são configurados em Identidade visual. O tema disponível nesta versão é escuro.
             </p>
           </div>
         </CardContent>
       </Card>
     </form>
   )
+}
+
+export const AppearanceSettingsPage: React.FC = () => {
+  const source = useAgencyBranding()
+  if (source.isError) return <div role="alert">Não foi possível carregar a aparência da agência. <Button onClick={() => { void source.refetch() }}>Tentar novamente</Button></div>
+  if (source.isLoading) return <p role="status">Carregando aparência da agência…</p>
+  return <AppearanceSettingsPageForm key={source.branding.agency_id} />
 }

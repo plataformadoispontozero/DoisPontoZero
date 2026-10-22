@@ -59,7 +59,7 @@ import {
   formatDateTime,
   isOverdue,
 } from '@/features/projects/utils/projectUtils'
-import type { Task, Priority, BoardColumn } from '@/types/projects'
+import type { Priority, BoardColumn } from '@/types/projects'
 
 interface TaskDetailPanelProps {
   taskId: string | null
@@ -87,7 +87,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   onClose,
   titlePrefix,
 }) => {
-  const { data: realTask, isLoading, isError } = useTask(taskId ?? undefined)
+  const { data: realTask, isLoading, isError, refetch } = useTask(taskId ?? undefined)
   const { data: subtasks = [] } = useSubtasks(taskId ?? undefined)
   const { data: comments = [] } = useTaskComments(taskId ?? undefined)
   const coverQuery=useTaskCardCovers(taskId?[taskId]:[])
@@ -128,46 +128,9 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
   if (!open || !taskId) return null
 
-  if (isSupabaseConfigured && !realTask) return <Dialog open={open} onOpenChange={onClose}><SheetHeader onClose={onClose}><SheetTitle>Detalhes da demanda</SheetTitle></SheetHeader><SheetContent><p role={isError ? 'alert' : 'status'}>{isLoading ? 'Carregando demanda…' : 'Não foi possível carregar esta demanda.'}</p></SheetContent></Dialog>
+  if (!realTask) return <Dialog open={open} onOpenChange={onClose}><SheetHeader onClose={onClose}><SheetTitle>Detalhes da demanda</SheetTitle></SheetHeader><SheetContent><p role={isLoading ? 'status' : 'alert'}>{isLoading ? 'Carregando demanda…' : !isSupabaseConfigured ? 'Servidor indisponível. Não foi possível carregar esta demanda.' : isError ? 'Não foi possível carregar esta demanda. Confira sua conexão e tente novamente.' : 'Demanda não encontrada ou sem acesso.'}</p>{!isLoading && isSupabaseConfigured && <Button type="button" variant="ghost" className="mt-3" onClick={() => void refetch()}>Tentar novamente</Button>}</SheetContent></Dialog>
 
-  // Fallback demo data if realTask is null (e.g. Supabase disconnected or mocked)
-  const task: Task = realTask ?? {
-    id: taskId,
-    agency_id: agencyId,
-    project_id: projectId,
-    board_id: 'default',
-    column_id: columns[0]?.id ?? 'col-1',
-    parent_task_id: null,
-    title: title || 'Tarefa Selecionada',
-    description: description || 'Detalhamento do escopo e requisitos técnicos...',
-    priority: 'normal',
-    status: 'in_progress',
-    position: 1000,
-    start_date: null,
-    due_date: null,
-    completed_at: null,
-    archived_at: null,
-    created_by: 'user-1',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    assignees: [],
-    checklists: [],
-    comments_count: comments.length,
-    attachments_count: attachments.length,
-    links_count: links.length,
-    column: columns[0] ?? {
-      id: 'col-1',
-      agency_id: agencyId,
-      board_id: 'default',
-      name: 'A Fazer',
-      color: '#98989F',
-      position: 1000,
-      category: 'backlog',
-      wip_limit: null,
-      is_system: true,
-      created_at: new Date().toISOString(),
-    },
-  }
+  const task = realTask
 
   const handleTitleBlur = () => {
     if (title.trim() && title !== task.title) {

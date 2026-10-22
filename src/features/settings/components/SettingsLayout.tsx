@@ -14,6 +14,7 @@ import {
   Activity,
   Cpu,
   LayoutGrid,
+  Palette,
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { cn } from '@/lib/utils'
@@ -31,13 +32,14 @@ export const settingsTabs: SettingsTabItem[] = [
   { id: 'overview', label: 'Visão Geral', path: '/settings', icon: LayoutGrid },
   { id: 'public-site', label: 'Site público da agência', path: '/settings/public-site', icon: Globe2 },
   { id: 'agency', label: 'Dados da Agência', path: '/settings/agency', icon: Building2 },
+  { id: 'branding', label: 'Identidade visual', path: '/settings/branding', icon: Palette },
   { id: 'appearance', label: 'Aparência & Tema', path: '/settings/appearance', icon: SunMoon },
   { id: 'notifications', label: 'Central de notificações', path: '/settings/notifications', icon: Bell },
   { id: 'team', label: 'Gestão de Equipe', path: '/settings/team', icon: Users },
   { id: 'permissions', label: 'Acessos', path: '/settings/permissions', icon: ShieldCheck },
   { id: 'workspace', label: 'Preferências', path: '/settings/workspace', icon: Globe2 },
   { id: 'documents', label: 'Branding de PDFs', path: '/settings/documents', icon: FileSpreadsheet },
-  { id: 'client-experience', label: 'Client Portals', path: '/settings/client-experience', icon: MonitorCheck },
+  { id: 'client-experience', label: 'Portais do cliente', path: '/settings/client-experience', icon: MonitorCheck },
   { id: 'integrations', label: 'Integrações e importação', path: '/settings/integrations', icon: Layers },
   { id: 'apps', label: 'Apps e notificações', path: '/settings/apps', icon: MonitorCheck },
   { id: 'security', label: 'Segurança', path: '/settings/security', icon: ShieldAlert },
@@ -62,7 +64,7 @@ export const SettingsLayout: React.FC = () => {
 
       {/* Navegação Secundária Adaptativa */}
       <div className="border-b border-[#30303B] overflow-x-auto pb-1 scrollbar-none">
-        <nav className="flex items-center gap-1.5 min-w-max">
+        <nav aria-label="Configurações da agência" className="flex items-center gap-1.5 min-w-max">
           {settingsTabs.map((tab) => {
             const Icon = tab.icon
             const isActive =
@@ -75,7 +77,7 @@ export const SettingsLayout: React.FC = () => {
                 key={tab.id}
                 to={tab.path}
                 className={cn(
-                  'flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium transition-all duration-150 select-none whitespace-nowrap',
+                  'flex min-h-11 items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium transition-colors duration-150 select-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-inset',
                   isActive
                     ? 'bg-[#C74410] text-white shadow-sm shadow-[#C74410]/30'
                     : 'text-[#B8B8C0] hover:text-[#F8F9FC] hover:bg-[#1C1C24]'

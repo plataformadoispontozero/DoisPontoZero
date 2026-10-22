@@ -37,82 +37,16 @@ export interface UpdateClientPayload {
 }
 
 // -------------------------
-// Demo Data (Fallback when Supabase not configured)
-// -------------------------
-let demoClientsCache: Client[] = [
-  {
-    id: 'client-demo-1',
-    agency_id: 'demo-agency',
-    name: 'Studio Vertex',
-    slug: 'studio-vertex',
-    logo_url: null,
-    status: 'active',
-    created_at: new Date(Date.now() - 30 * 86400000).toISOString(),
-    updated_at: new Date(Date.now() - 5 * 86400000).toISOString(),
-  },
-  {
-    id: 'client-demo-2',
-    agency_id: 'demo-agency',
-    name: 'Nexus Tech B2B',
-    slug: 'nexus-tech',
-    logo_url: null,
-    status: 'active',
-    created_at: new Date(Date.now() - 20 * 86400000).toISOString(),
-    updated_at: new Date(Date.now() - 2 * 86400000).toISOString(),
-  },
-  {
-    id: 'client-demo-3',
-    agency_id: 'demo-agency',
-    name: 'Pulse Digital',
-    slug: 'pulse-digital',
-    logo_url: null,
-    status: 'active',
-    created_at: new Date(Date.now() - 15 * 86400000).toISOString(),
-    updated_at: new Date(Date.now() - 1 * 86400000).toISOString(),
-  },
-  {
-    id: 'client-demo-4',
-    agency_id: 'demo-agency',
-    name: 'Aura Cosméticos',
-    slug: 'aura-cosmeticos',
-    logo_url: null,
-    status: 'active',
-    created_at: new Date(Date.now() - 10 * 86400000).toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'client-demo-5',
-    agency_id: 'demo-agency',
-    name: 'Lumina Finanças',
-    slug: 'lumina-financas',
-    logo_url: null,
-    status: 'inactive',
-    created_at: new Date(Date.now() - 40 * 86400000).toISOString(),
-    updated_at: new Date(Date.now() - 12 * 86400000).toISOString(),
-  },
-]
-
-// -------------------------
 // Hooks
 // -------------------------
 
-export function useClients(agencyId: string = 'demo-agency', filters?: ClientFilters) {
+export function useClients(agencyId?: string, filters?: ClientFilters) {
+  const activeAgencyId = useAgencyId()
+  agencyId = agencyId ?? activeAgencyId
   return useQuery<Client[]>({
     queryKey: ['clients', agencyId, filters],
     queryFn: async () => {
-      if (!isSupabaseConfigured || !supabase) {
-        let list = [...demoClientsCache]
-        if (filters?.status) {
-          list = list.filter((c) => c.status === filters.status)
-        }
-        if (filters?.search) {
-          const q = filters.search.toLowerCase()
-          list = list.filter(
-            (c) => c.name.toLowerCase().includes(q) || c.slug.toLowerCase().includes(q)
-          )
-        }
-        return list
-      }
+      if (!isSupabaseConfigured || !supabase) throw new Error('Servidor indisponível. Não foi possível carregar os clientes.')
 
       let query = supabase
         .from('clients')
@@ -148,7 +82,7 @@ export function useClient(clientId?: string) {
       if (!clientId) return null
 
       if (!isSupabaseConfigured || !supabase) {
-        return demoClientsCache.find((c) => c.id === clientId) ?? null
+        throw new Error('Servidor indisponível. Não foi possível carregar o cliente.')
       }
 
       const { data, error } = await supabase
@@ -178,21 +112,7 @@ export function useCreateClient(agencyId: string) {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)/g, '')
 
-      if (!isSupabaseConfigured || !supabase) {
-        const newClient: Client = {
-          id: `demo-client-${Date.now()}`,
-          agency_id: agencyId,
-          name: payload.name.trim(),
-          slug,
-          logo_url: payload.logo_url || null,
-          status: payload.status || 'active',
-          profile: payload.profile || {},
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }
-        demoClientsCache = [newClient, ...demoClientsCache]
-        return newClient
-      }
+      if (!isSupabaseConfigured || !supabase) throw new Error('Servidor indisponível. Nenhuma alteração foi salva.')
 
       const { data, error } = await supabase
         .from('clients')
@@ -221,17 +141,7 @@ export function useUpdateClient(agencyId: string) {
 
   return useMutation({
     mutationFn: async (payload: UpdateClientPayload) => {
-      if (!isSupabaseConfigured || !supabase) {
-        const index = demoClientsCache.findIndex((c) => c.id === payload.id)
-        if (index >= 0) {
-          demoClientsCache[index] = {
-            ...demoClientsCache[index],
-            ...payload,
-            updated_at: new Date().toISOString(),
-          }
-        }
-        return demoClientsCache[index]
-      }
+      if (!isSupabaseConfigured || !supabase) throw new Error('Servidor indisponível. Nenhuma alteração foi salva.')
 
       const { data, error } = await supabase
         .from('clients')
@@ -263,15 +173,12 @@ export function useDeleteClient(agencyId: string) {
 
   return useMutation({
     mutationFn: async (clientId: string) => {
-      if (!isSupabaseConfigured || !supabase) {
-        demoClientsCache = demoClientsCache.filter((c) => c.id !== clientId)
-        return { success: true }
-      }
+      if (!isSupabaseConfigured || !supabase) throw new Error('Servidor indisponível. Nenhuma alteração foi salva.')
 
       const { error } = await supabase
         .from('clients')
         .update({ status: 'archived' })
-        .eq('id', clientId)
+        .eq('id', clientId).eq('agency_id', agencyId)
 
       if (error) throw error
       return { success: true }

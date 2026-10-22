@@ -50,10 +50,8 @@ import {
 import { ClientBriefingsTab } from './components/ClientBriefingsTab'
 import type { Client } from '@/types/projects'
 
-const DEMO_AGENCY_ID = 'demo-agency'
-
 export const ClientsPage: React.FC = () => {
-  const DEMO_AGENCY_ID = useAgencyId()
+  const agencyId = useAgencyId()
   const { clientId } = useParams<{ clientId?: string }>()
   const location = useLocation()
   const navigate = useNavigate()
@@ -62,14 +60,14 @@ export const ClientsPage: React.FC = () => {
   const [search, setSearch] = useState('')
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'inactive'>('all')
 
-  const { data: clients = [], isLoading } = useClients(DEMO_AGENCY_ID, {
+  const { data: clients = [], isLoading, isError, refetch } = useClients(agencyId, {
     search: search.trim() || undefined,
     status: selectedStatus === 'all' ? undefined : selectedStatus,
   })
 
-  const createClient = useCreateClient(DEMO_AGENCY_ID)
-  const updateClient = useUpdateClient(DEMO_AGENCY_ID)
-  const deleteClient = useDeleteClient(DEMO_AGENCY_ID)
+  const createClient = useCreateClient(agencyId)
+  const updateClient = useUpdateClient(agencyId)
+  const deleteClient = useDeleteClient(agencyId)
 
   // Dialog & Sheet State
   const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -250,6 +248,11 @@ export const ClientsPage: React.FC = () => {
       {/* Clients Grid */}
       {isLoading ? (
         <LoadingState message="Carregando clientes..." />
+      ) : isError ? (
+        <div role="alert" className="rounded-xl border border-red-500/30 bg-red-500/5 p-5 text-sm text-red-200">
+          <p>Não foi possível carregar os clientes. Confira sua conexão e tente novamente.</p>
+          <Button type="button" variant="ghost" size="sm" className="mt-3" onClick={() => void refetch()}>Tentar novamente</Button>
+        </div>
       ) : clients.length === 0 ? (
         <EmptyState
           icon={Users}

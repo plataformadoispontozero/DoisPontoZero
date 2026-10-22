@@ -9,16 +9,11 @@ import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { useClients } from '@/features/clients/hooks/useClients'
 import { useCreateProject } from '@/features/projects/hooks/useProjects'
 import { toast } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 import type { CreateProjectForm, Priority, ProjectStatus } from '@/types/projects'
-
-// -------------------------------------------------------
-// Mock data until Supabase context is available
-// In production, these would come from useAgencyContext()
-// -------------------------------------------------------
-const MOCK_AGENCY_ID = 'demo-agency'
 
 const PRIORITY_OPTIONS = [
   { value: 'low', label: 'Baixa' },
@@ -41,7 +36,8 @@ const PRIORITY_COLORS: Record<string, string> = {
 }
 
 export const NewProjectPage: React.FC = () => {
-  const MOCK_AGENCY_ID = useAgencyId()
+  const agencyId = useAgencyId()
+  const clients = useClients(agencyId, { status: 'active' })
 
   const navigate = useNavigate()
   const managementPath=isManagementRole(useAuth().activeAgency?.roleName)?'/projects':'/tasks'
@@ -75,12 +71,16 @@ export const NewProjectPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validate() || createProject.isPending) return
+    if (!agencyId || clients.isError || clients.isLoading) {
+      toast.error('Aguarde os clientes da agência carregarem antes de criar o projeto.')
+      return
+    }
 
     try {
       await createProject.mutateAsync({
         ...form,
         name: form.name.trim(),
-        agency_id: MOCK_AGENCY_ID,
+        agency_id: agencyId,
       })
       toast.success('Projeto criado com sucesso!')
       navigate(managementPath)
@@ -121,7 +121,7 @@ export const NewProjectPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
+              <label htmlFor="project-name" className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">
                 Nome do projeto <span className="text-red-400">*</span>
               </label>
               <Input
@@ -134,6 +134,13 @@ export const NewProjectPage: React.FC = () => {
               {errors.name && (
                 <p className="text-xs text-red-400 mt-1">{errors.name}</p>
               )}
+            </div>
+
+            <div>
+              <label htmlFor="project-client" className="text-xs font-medium text-[#B8B8C0] mb-1.5 block">Cliente</label>
+              <Select id="project-client" value={form.client_id ?? ''} disabled={clients.isLoading || clients.isError} onChange={e => setForm(f => ({ ...f, client_id: e.target.value || null }))} options={[{ value: '', label: 'Projeto interno (sem cliente)' }, ...(clients.data ?? []).map(client => ({ value: client.id, label: client.name }))]} />
+              {clients.isLoading && <p role="status" className="mt-2 text-xs text-zinc-400">Carregando clientes…</p>}
+              {clients.isError && <p role="alert" className="mt-2 text-xs text-red-300">Não foi possível carregar os clientes. <button type="button" className="underline" onClick={() => void clients.refetch()}>Tentar novamente</button></p>}
             </div>
 
             <div>
@@ -240,10 +247,10 @@ export const NewProjectPage: React.FC = () => {
           <CardContent>
             <div className="p-4 rounded-xl border border-dashed border-[#30303B] text-center">
               <p className="text-xs text-[#B8B8C0] mb-1">
-                Seleção de responsável e participantes
+                Responsáveis na produção
               </p>
               <p className="text-[11px] text-[#98989F]">
-                Disponível após conectar ao Supabase e configurar membros da agência.
+                Os responsáveis pelas demandas são definidos na produção, conforme a equipe e os setores do cliente.
               </p>
             </div>
           </CardContent>
@@ -263,7 +270,7 @@ export const NewProjectPage: React.FC = () => {
               type="submit"
               variant="primary"
               loading={createProject.isPending}
-              disabled={createProject.isPending}
+              disabled={createProject.isPending || clients.isLoading || clients.isError || !agencyId}
             >
               <FolderKanban className="w-4 h-4" />
               Criar Projeto

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
+import { InterfaceLanguageField } from './components/InterfaceLanguageField'
 import { toast } from '@/components/ui/Toast'
 import { useAgencyBranding, useAgencyPreferences, useSaveAgencyIdentity } from './hooks/useAgencySettings'
 import { Building2, Save, CheckCircle2, Globe, Clock, DollarSign } from 'lucide-react'
@@ -151,21 +152,7 @@ const AgencySettingsPageForm: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
-                  <Globe className="w-3.5 h-3.5 text-[#C74410]" />
-                  Idioma do Sistema
-                </label>
-                <Select
-                  value={formData.language}
-                  onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                  options={[
-                    { value: 'pt-BR', label: 'Português (Brasil)' },
-                    { value: 'en-US', label: 'English (US)' },
-                    { value: 'es-ES', label: 'Español' },
-                  ]}
-                />
-              </div>
+              <InterfaceLanguageField value={formData.language} onChange={language => setFormData({...formData,language})} />
 
               <div>
                 <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">
