@@ -114,7 +114,7 @@ function GroupSections({
                       to={item.path}
                       aria-label={item.label}
                       aria-current={active === item.id ? "page" : undefined}
-                      className={`flex w-full min-h-[44px] items-center rounded-lg text-xs font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] ${collapsed ? "justify-center p-0" : "gap-3 px-3"} ${active === item.id ? "bg-[var(--color-primary)] text-[var(--color-text-primary)]" : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]"}`}
+                      className={`flex w-full min-h-[44px] items-center rounded-lg text-xs font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] ${collapsed ? "justify-center p-0" : "gap-3 px-3"} ${active === item.id ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]" : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]"}`}
                     >
                       <item.icon className="w-4 h-4 shrink-0" />
                       {!collapsed && (

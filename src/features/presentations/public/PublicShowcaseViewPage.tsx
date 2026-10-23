@@ -1,3 +1,4 @@
+import { presentationTokenFromKey } from '../presentationShareUrl';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { type MaterialDecision } from '../hooks/usePresentationReviews';
@@ -13,7 +14,8 @@ interface ShowcaseData {
 }
 
 export const PublicShowcaseViewPage: React.FC = () => {
-  const { publicToken } = useParams<{ publicToken: string }>();
+  const { publicToken: legacyToken, accessKey } = useParams<{ publicToken: string; accessKey: string }>();
+  const publicToken = accessKey ? presentationTokenFromKey(accessKey) : legacyToken;
 
   const tokenRef=useRef(publicToken);tokenRef.current=publicToken;
   const [loadedToken,setLoadedToken]=useState<string|undefined>(undefined);

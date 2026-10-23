@@ -19,7 +19,7 @@ interface BrandPreviewProps {
 
 export const BrandPreview: React.FC<BrandPreviewProps> = ({ branding, isDraft = false }) => {
   return (
-    <div
+    <div data-authored-canvas
       className="rounded-2xl border border-[#30303B] overflow-hidden shadow-2xl transition-all duration-300"
       style={{
         backgroundColor: branding.background_color,

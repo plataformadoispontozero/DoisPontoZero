@@ -3,14 +3,14 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C74410] disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer',
   {
     variants: {
       variant: {
         primary:
-          'bg-[#C74410] text-[#F8F9FC] hover:bg-[#A8370A] active:bg-[#8C2D08] shadow-sm shadow-[#C74410]/20',
+          'bg-[var(--color-primary)] text-[var(--color-on-primary,#fff)] hover:bg-[var(--color-primary-hover)] active:brightness-90 shadow-sm',
         accent:
-          'bg-[#FF8759] text-[#101014] font-semibold hover:bg-[#FF9A73] active:bg-[#FFAF8F]',
+          'bg-[var(--color-accent)] text-[var(--color-on-accent,#101014)] font-semibold hover:bg-[var(--color-accent-hover)] active:brightness-90',
         secondary:
           'bg-[#1C1C24] text-[#F8F9FC] border border-[#30303B] hover:bg-[#252530] hover:border-[#424252]',
         ghost:

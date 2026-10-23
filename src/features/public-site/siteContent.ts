@@ -263,7 +263,7 @@ export function normalizeSiteContent(value: unknown): SiteContent {
     projects: list(
       c.projects,
       (p, i) => ({
-        id: `project-${i}`,
+        id: typeof p.id === "string" && /^[a-zA-Z0-9_-]{1,100}$/.test(p.id) ? p.id : `project-${i}`,
         title: str(p.title),
         category: str(p.category),
         description: str(p.description),
@@ -277,7 +277,7 @@ export function normalizeSiteContent(value: unknown): SiteContent {
           : "violet",
         placement: p.placement === "hero" ? "hero" : "gallery",
       }),
-      12,
+      60,
     ),
     clients: list(
       c.clients,

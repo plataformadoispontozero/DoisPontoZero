@@ -22,6 +22,7 @@ export interface Client {
   status: 'active' | 'inactive' | 'archived'
   created_at: string
   updated_at: string
+  brand_color?: string | null
 }
 
 // -------------------------

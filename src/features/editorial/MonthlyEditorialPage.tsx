@@ -11,7 +11,7 @@ import { readClientProfile } from "@/features/clients/clientProfile";
 import { useEffect, useRef,useState } from "react";
 import { Link, useSearchParams,useLocation,useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAgencyId } from "@/features/auth/AuthProvider";
+import { useAgencyId, usePermission } from "@/features/auth/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
 import {
   ENGINE_VERSION,
@@ -66,6 +66,7 @@ export function MonthlyEditorialPage() {
   const location=useLocation(),navigate=useNavigate(),creating=location.pathname.endsWith('/new');
   const agency = useAgencyId(),
     cache = useQueryClient();
+  const canArchiveCampaign=usePermission("strategy.edit"),canDeleteCampaign=usePermission("strategy.delete");
   const [params] = useSearchParams();
   const [client, setClient] = useState(params.get("clientId") || ""),
     [briefing, setBriefing] = useState(""),
@@ -215,16 +216,16 @@ export function MonthlyEditorialPage() {
     setContext(previous=>({...previous,...next,driveBriefDocumentId:document.id,driveBriefVersion:document.reviewed_version||undefined}));setDirty(true);setNotice('Contexto revisado do Drive aplicado. Confira os dados antes de gerar o rascunho.');
   }
   const campaigns = useQuery({
-    queryKey: ["monthly-editorial", agency],
+    queryKey: ["monthly-editorial", agency, showArchived],
     refetchInterval: 15000, refetchIntervalInBackground: false,
     enabled: !!agency,
     queryFn: async () => {
-      const r = await supabase!
+      let request = supabase!
         .from("monthly_editorial_campaigns")
         .select("*")
-        .eq("agency_id", agency)
-        .order("created_at", { ascending: false })
-        .limit(50);
+        .eq("agency_id", agency);
+      request=showArchived?request.not('archived_at','is',null):request.is('archived_at',null);
+      const r=await request.order("created_at", {ascending:false}).limit(50);
       if (r.error) throw r.error;
       return r.data as Campaign[];
     },
@@ -288,13 +289,32 @@ export function MonthlyEditorialPage() {
     locked = !!active?.project_id || !!active?.archived_at;
   const visibleCampaigns = (campaigns.data || []).filter(c => showArchived ? !!c.archived_at : !c.archived_at);
   async function archiveCampaign(campaign: Campaign, archived: boolean) {
-    if (!window.confirm(archived ? "Remover este calendário da lista ativa? Ele poderá ser restaurado. Projetos e demandas de produção serão preservados; links de aprovação serão revogados." : "Restaurar este calendário como rascunho? Será necessário gerar um novo link de aprovação.")) return;
+    if (!window.confirm(archived ? "Arquivar este calendário? Ele poderá ser restaurado. Projetos e demandas de produção serão preservados; links de aprovação serão revogados." : "Restaurar este calendário como rascunho? Será necessário gerar um novo link de aprovação.")) return;
     await action(async () => {
       const result = await supabase!.rpc("set_editorial_campaign_archived", { p_campaign: campaign.id, p_archived: archived });
       if (result.error || result.data !== true) throw Error("Não foi possível atualizar o calendário.");
-      await Promise.all([cache.invalidateQueries({queryKey:["monthly-editorial",agency]}), cache.invalidateQueries({queryKey:["linked-editorial",agency]}), cache.invalidateQueries({queryKey:["editorial-review-monitor",campaign.id]})]);
+      await Promise.all([cache.invalidateQueries({queryKey:["monthly-editorial",agency]}), cache.invalidateQueries({queryKey:["linked-editorial",agency]}), cache.invalidateQueries({queryKey:["editorial-review-monitor",campaign.id]}), cache.invalidateQueries({queryKey:["social-operations",agency]})]);
       if (archived && id === campaign.id) { setId(null); setItems([]); setDirty(false); setShare(""); navigate("/editorial", {replace:true}); }
-      setNotice(archived ? "Calendário removido da lista ativa. Você pode restaurá-lo em Arquivados." : "Calendário restaurado como rascunho.");
+      setNotice(archived ? "Calendário arquivado. Ele não aparece na operação ativa de Social Media e pode ser restaurado em Arquivados." : "Calendário restaurado como rascunho.");
+    });
+  }
+  async function deleteCampaignPermanently(campaign: Campaign) {
+    const clientName=clients.data?.find(record=>record.id===campaign.client_id)?.name;
+    if (!clientName || !canDeleteCampaign || campaign.project_id || campaign.status==='production') return;
+    const expected=`${clientName} · ${campaign.month.slice(0,7).split('-').reverse().join('/')}`;
+    const confirmation=window.prompt(`Excluir definitivamente este calendário, suas versões e avaliações? Esta ação não pode ser desfeita. Cliente, briefing, Drive e tarefas serão preservados.\n\nPara confirmar, digite exatamente:\n${expected}`);
+    if (confirmation===null) return;
+    if (confirmation!==expected) {setNotice('Exclusão cancelada: o nome do cliente e mês não conferem.');return;}
+    await action(async()=>{
+      const result=await supabase!.rpc('delete_editorial_campaign_permanently',{p_agency:agency,p_campaign:campaign.id,p_confirmation:confirmation});
+      if(result.error)throw Error(result.error.message||'Não foi possível excluir o calendário.');
+      if(result.data!==true)throw Error('O calendário não foi excluído. Atualize e tente novamente.');
+      await Promise.all([cache.invalidateQueries({queryKey:['monthly-editorial',agency]}),cache.invalidateQueries({queryKey:['linked-editorial',agency]}),cache.invalidateQueries({queryKey:['social-operations',agency]}),cache.invalidateQueries({queryKey:['campaign-history',agency]})]);
+      cache.removeQueries({queryKey:['editorial-review-monitor',campaign.id]});
+      cache.removeQueries({queryKey:['editorial-item-reviews',campaign.id]});
+      cache.removeQueries({queryKey:['editorial-feedback',campaign.id]});
+      if(id===campaign.id){setId(null);setItems([]);setDirty(false);setShare('');setSelectedPiece(null);navigate('/editorial',{replace:true});}
+      setNotice('Calendário excluído definitivamente. Cliente, briefing e arquivos externos foram preservados.');
     });
   }
   function newCampaign() {
@@ -809,7 +829,7 @@ export function MonthlyEditorialPage() {
         <div className="space-y-6 p-5 sm:p-8">
           {notice && <p role="status" className="rounded-xl border border-orange-400/30 p-4">{notice}</p>}
           <div className="flex gap-2"><Button aria-pressed={!showArchived} onClick={() => setShowArchived(false)}>Ativos</Button><Button aria-pressed={showArchived} onClick={() => setShowArchived(true)}>Arquivados</Button></div>
-          <div className="grid items-start gap-3 md:grid-cols-2 xl:grid-cols-3">{visibleCampaigns.filter(c => c.client_id === openClient).map(c => <article key={c.id} className={`rounded-xl border p-4 ${id === c.id ? 'border-orange-400 bg-orange-500/5' : 'border-white/15'}`}><button type="button" aria-pressed={id === c.id} className="w-full text-left" onClick={() => { if (dirty && id !== c.id && !window.confirm('Descartar as alterações não salvas e abrir outro calendário?')) return; load(c); navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`); }}><span className="text-lg font-semibold">{c.month.slice(0,7).split('-').reverse().join('/')}</span><span className="mt-2 block text-sm text-orange-200">{c.archived_at ? 'Arquivado' : statusNames[c.status] || c.status} · {c.items.length} conteúdos</span></button><EditorialReviewMonitor campaignId={c.id} archived={!!c.archived_at} compact /><div className="mt-4"><Button size="sm" disabled={busy || (!c.archived_at && !!c.project_id)} onClick={() => void archiveCampaign(c, !c.archived_at)}>{c.archived_at ? 'Restaurar calendário' : 'Remover calendário'}</Button>{c.project_id && !c.archived_at && <p className="mt-2 text-xs text-zinc-400">Vinculado à produção; remoção indisponível.</p>}</div></article>)}</div>
+          <div className="grid items-start gap-3 md:grid-cols-2 xl:grid-cols-3">{visibleCampaigns.filter(c => c.client_id === openClient).map(c => <article key={c.id} className={`rounded-xl border p-4 ${id === c.id ? 'border-orange-400 bg-orange-500/5' : 'border-white/15'}`}><button type="button" aria-pressed={id === c.id} className="w-full text-left" onClick={() => { if (dirty && id !== c.id && !window.confirm('Descartar as alterações não salvas e abrir outro calendário?')) return; load(c); navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`); }}><span className="text-lg font-semibold">{c.month.slice(0,7).split('-').reverse().join('/')}</span><span className="mt-2 block text-sm text-orange-200">{c.archived_at ? 'Arquivado' : `Ativo · ${statusNames[c.status] || c.status}`} · {c.items.length} conteúdos</span></button><EditorialReviewMonitor campaignId={c.id} archived={!!c.archived_at} compact /><div className="mt-4"><Button size="sm" disabled={busy || !canArchiveCampaign || (!c.archived_at && (!!c.project_id || c.status==='production'))} onClick={() => void archiveCampaign(c, !c.archived_at)}>{c.archived_at ? 'Restaurar calendário' : 'Arquivar calendário'}</Button>{canDeleteCampaign&&<Button size="sm" className="ml-2 border-red-500/40 text-red-300" disabled={busy||!!c.project_id||c.status==='production'||!clients.data?.some(record=>record.id===c.client_id)} onClick={()=>void deleteCampaignPermanently(c)}>Excluir definitivamente</Button>}{c.project_id && !c.archived_at && <p className="mt-2 text-xs text-zinc-400">Vinculado à produção; arquivamento e exclusão indisponíveis.</p>}</div></article>)}</div>
       {!creating&&client === openClient&&items.length > 0 && (
         <section className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">

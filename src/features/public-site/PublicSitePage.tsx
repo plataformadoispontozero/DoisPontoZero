@@ -19,7 +19,7 @@ export function PublicSitePage() {
   const [year] = useState(() => new Date().getFullYear());
   const [menu, setMenu] = useState(false);
   const [coloredPerson, setColoredPerson] = useState<number | null>(null);
-  const [motion, setMotion] = useState(true);
+  const motion = true;
   const [splashVisible, setSplashVisible] = useState(true);
   const hero = c.projects.filter((p) => p.placement === "hero");
   const gallery = c.projects.filter((p) => p.placement === "gallery");
@@ -154,7 +154,6 @@ export function PublicSitePage() {
               {c.address || "ESTÚDIO CRIATIVO"}
               <span className="dz-small-dot">•</span>Ideias sem fronteiras
             </span>
-            <label className="dz-motion-switch"><input type="checkbox" checked={motion} onChange={(e) => setMotion(e.target.checked)} /> Movimento</label>
             <a href="#projetos">
               SCROLL PARA EXPLORAR <ArrowDown size={14} />
             </a>
@@ -254,7 +253,6 @@ export function PublicSitePage() {
               <p id="clients-title" className="dz-eyebrow">
                 MARCAS QUE JÁ CRUZARAM NOSSO CAMINHO
               </p>
-              <label className="dz-motion-switch"><input type="checkbox" checked={motion} onChange={(e) => setMotion(e.target.checked)} /> Movimento</label>
             </div>
             <div className={`dz-marquee ${c.logoMotion === "static" ? "dz-loop-still" : ""}`} tabIndex={0} aria-label="Logos de clientes; o movimento pausa ao focar ou passar o cursor">
               <div className="dz-marquee-track" style={{ animationDuration: `${c.logoDuration ?? 38}s`, animationDirection: c.logoMotion === "reverse" ? "reverse" : "normal" }}>
