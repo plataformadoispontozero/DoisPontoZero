@@ -1,4 +1,5 @@
 import {useEffect} from 'react'
+import {usePersonalTheme} from './usePersonalTheme'
 import {useAgencyBranding} from '@/features/settings/hooks/useAgencySettings'
 import type {ThemeMode} from '@/types/whitelabel'
 
@@ -10,7 +11,9 @@ export function applyWorkspaceTheme(mode:ThemeMode,systemDark:boolean){
 }
 export function WorkspaceTheme(){
  const {branding,isLoading,isError}=useAgencyBranding()
- const mode:ThemeMode=!isLoading&&!isError?branding.theme_mode||'dark':'dark'
+ const {preference}=usePersonalTheme()
+ const workspaceMode:ThemeMode=!isLoading&&!isError?branding.theme_mode||'dark':'dark'
+ const mode:ThemeMode=preference==='workspace'?workspaceMode:preference
  useEffect(()=>{
   const media=typeof window.matchMedia==='function'?window.matchMedia('(prefers-color-scheme: dark)'):null
   const apply=()=>applyWorkspaceTheme(mode,media?.matches??true)

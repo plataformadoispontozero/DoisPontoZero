@@ -1,3 +1,4 @@
+import { ThemeSelector } from './ThemeSelector'
 import { isManagementRole } from '@/features/auth/access'
 import { toast } from '@/components/ui/Toast'
 import { useAuth } from '@/features/auth/AuthProvider'
@@ -85,7 +86,7 @@ export const TopBar: React.FC = () => {
           {/* Busca com Atalho */}
           <button
             onClick={() => setSearchDialogOpen(true)}
-            className="flex items-center gap-2.5 h-8 px-3 rounded-lg bg-[#1C1C24] border border-[#30303B] text-xs text-[#98989F] hover:border-[#424252] hover:text-[#B8B8C0] transition-colors cursor-pointer w-56 lg:w-64"
+            className="flex items-center gap-2.5 h-8 px-3 rounded-lg bg-[#1C1C24] border border-[#30303B] text-xs text-[#98989F] hover:border-[#424252] hover:text-[#B8B8C0] transition-colors cursor-pointer w-40 lg:w-64"
             aria-label="Abrir busca global"
           >
             <Search className="w-3.5 h-3.5 text-[#B8B8C0]" />
@@ -95,6 +96,8 @@ export const TopBar: React.FC = () => {
               <span>K</span>
             </span>
           </button>
+
+          <ThemeSelector />
 
           {/* Acesso Rápido às Tarefas */}
           <IconButton

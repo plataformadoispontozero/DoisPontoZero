@@ -1612,3 +1612,18 @@
 @media(prefers-reduced-motion:reduce) { .dz-hero-loop { animation:none; } }
 
 .dz-hero-loop { filter: grayscale(1); }
+
+/* Motion settings apply to published content and local previews. */
+.dz-hero-slide > img { object-fit: var(--hero-image-fit, contain); }
+.dz-hero-loop.dz-loop-still, .dz-loop-still .dz-marquee-track { animation: none; }
+.dz-hero-loop.dz-loop-still .dz-hero-loop-group + .dz-hero-loop-group { display: none; }
+.dz-loop-still .dz-marquee-group + .dz-marquee-group { display: none; }
+.dz-marquee:focus .dz-marquee-track, .dz-marquee:focus-within .dz-marquee-track { animation-play-state: paused; }
+.dz-marquee:focus-visible { outline: 2px solid #b8ff65; outline-offset: 5px; }
+.dz-marquee.dz-loop-still { overflow-x: auto; }
+.dz-motion-switch { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.dz-person-photo { display: block; width: 100%; padding: 0; background: transparent; border: 0; cursor: pointer; border-radius: 22px; }
+.dz-person-photo img { transition: filter .3s ease; }
+.dz-person-photo:hover img, .dz-person-photo:focus-visible img, .dz-person-photo.is-color img { filter: grayscale(0); }
+.dz-person-photo:focus-visible { outline: 2px solid #b8ff65; outline-offset: 5px; }
+@media (prefers-reduced-motion: reduce) { .dz-person-photo img { transition: none; } }

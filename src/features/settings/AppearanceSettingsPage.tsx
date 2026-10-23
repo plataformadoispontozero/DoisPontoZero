@@ -46,7 +46,7 @@ const AppearanceSettingsPageForm: React.FC = () => {
         <CardHeader>
           <CardTitle className="text-sm">Modo de Tema Padrão do Workspace</CardTitle>
           <CardDescription className="text-xs">
-            Escuro, claro ou automático. A preferência salva é aplicada ao espaço de trabalho.
+            Escuro, claro ou automático. Este é o padrão da agência. Cada membro pode escolher seu próprio tema ao lado da busca.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -132,7 +132,7 @@ const AppearanceSettingsPageForm: React.FC = () => {
               Regra de Hierarquia de Aparência
             </span>
             <p className="text-[11px]">
-              As cores e os logotipos da agência são configurados em Identidade visual. O tema acompanha esta preferência sem alterar as artes e os materiais dos clientes.
+              As cores e os logotipos da agência são configurados em Identidade visual. A opção “Da agência” na barra superior acompanha esta preferência. Claro, escuro e sistema na barra superior valem somente para o membro neste navegador, sem alterar as artes e os materiais dos clientes.
             </p>
           </div>
         </CardContent>

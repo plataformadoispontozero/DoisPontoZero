@@ -192,6 +192,7 @@ export function MonthlyEditorialPage() {
   }
   const campaigns = useQuery({
     queryKey: ["monthly-editorial", agency],
+    refetchInterval: 15000, refetchIntervalInBackground: false,
     enabled: !!agency,
     queryFn: async () => {
       const r = await supabase!
@@ -206,6 +207,7 @@ export function MonthlyEditorialPage() {
   });
   const linked = useQuery({
     queryKey: ["linked-editorial", agency, params.get("campaignId"), params.get("clientId")],
+    refetchInterval: 15000, refetchIntervalInBackground: false,
     enabled: !!agency && !!params.get("campaignId"),
     queryFn: async () => {
       let request = supabase!.from("monthly_editorial_campaigns").select("*").eq("agency_id", agency).eq("id", params.get("campaignId")!);
@@ -215,8 +217,18 @@ export function MonthlyEditorialPage() {
       return result.data as Campaign | null;
     },
   });
+  const itemReviews = useQuery({
+    queryKey: ['editorial-item-reviews', agency, id], enabled: !!agency && !!id,
+    refetchInterval: 15000, refetchIntervalInBackground: false,
+    queryFn: async () => {
+      const response = await supabase!.rpc('get_editorial_item_reviews', {p_campaign:id});
+      if (response.error) throw response.error;
+      return response.data as Array<{itemIndex:number;decision:'approve'|'adjust';note:string;copy:string;createdAt:string}>;
+    },
+  });
   const feedback = useQuery({
     queryKey: ["editorial-feedback", id],
+    refetchInterval: 15000, refetchIntervalInBackground: false,
     enabled: !!id,
     queryFn: async () => {
       const r = await supabase!
@@ -871,7 +883,7 @@ export function MonthlyEditorialPage() {
             </section>
           )}
           <div className="flex flex-wrap gap-2">{['all','post','carousel','reels'].map(format=><Button key={format} onClick={()=>setFormatFilter(format)} aria-pressed={formatFilter===format}>{format==='all'?'Todas as demandas':formatNames[format as MonthlyItem['format']]}</Button>)}</div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{items.map((item,index)=>(formatFilter==='all'||item.format===formatFilter)&&<button key={index} aria-label={`Abrir demanda ${index+1}`} onClick={()=>setSelectedPiece(index)} className="rounded-xl border border-white/10 p-5 text-left transition hover:border-orange-500"><p className="text-xs text-orange-300">{item.date} · {formatNames[item.format]}</p><h3 className="mt-3 font-semibold">{item.title}</h3><p className="mt-2 text-sm text-zinc-400">{item.editorial?.pillar}</p><p className="mt-4 text-sm">Revisar copy e direção visual ↗</p></button>)}</div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{items.map((item,index)=>(formatFilter==='all'||item.format===formatFilter)&&<button key={index} aria-label={`Abrir demanda ${index+1}`} onClick={()=>setSelectedPiece(index)} className="rounded-xl border border-white/10 p-5 text-left transition hover:border-orange-500"><p className="text-xs text-orange-300">{item.date} · {formatNames[item.format]}</p><h3 className="mt-3 font-semibold">{item.title}</h3><p className="mt-2 text-sm text-zinc-400">{item.editorial?.pillar}</p><p className="mt-3 text-sm">{dirty?'Alterações não salvas · avaliação da versão anterior':itemReviews.data?.find(review=>review.itemIndex===index)?.decision==='approve'?'✓ Material aprovado':itemReviews.data?.find(review=>review.itemIndex===index)?.decision==='adjust'?'↻ Material para ajuste':active?.status==='approved'||active?.status==='production'?'✓ Material aprovado':'Aguardando avaliação do cliente'}</p><p className="mt-4 text-sm">Revisar copy e direção visual ↗</p></button>)}</div>
           <dialog aria-labelledby="editorial-piece-heading" ref={pieceDialog} onCancel={e=>{e.preventDefault();setSelectedPiece(null);}} className="fixed m-auto max-h-[85dvh] w-[calc(100%-2rem)] max-w-4xl overflow-y-auto rounded-2xl border border-white/15 bg-zinc-900 p-5 text-white backdrop:bg-black/80">
           <div className="sticky top-0 z-10 mb-4 flex justify-between gap-3 bg-zinc-900 py-2"><h2 id="editorial-piece-heading" className="text-xl font-semibold">Revisar demanda</h2><Button onClick={()=>setSelectedPiece(null)}>Fechar</Button></div>
           {items.map((item, index) => selectedPiece===index&&(
@@ -1087,9 +1099,11 @@ export function MonthlyEditorialPage() {
               ))}
             </details>
           )}
+          {itemReviews.isError && <p role="alert">Não foi possível atualizar os status de aprovação. Tente novamente.</p>}
+          {itemReviews.data && itemReviews.data.length > 0 && <section className="space-y-3 rounded-xl border border-white/10 p-5"><h2 className="text-xl">Avaliação dos materiais · versão salva</h2>{dirty&&<p className="text-sm text-orange-200">Há alterações locais não salvas. As avaliações abaixo pertencem à versão salva anteriormente.</p>}{itemReviews.data.map(review=><article key={review.itemIndex} className="rounded-lg border border-white/10 p-4"><p className="font-semibold">Conteúdo {review.itemIndex+1}: {review.decision==='approve'?'Material aprovado':'Material para ajuste'}</p>{review.note&&<p className="mt-2 whitespace-pre-wrap">{review.note}</p>}{review.copy&&<p className="mt-2 whitespace-pre-wrap">{review.copy}</p>}</article>)}</section>}
           {feedback.data && feedback.data.length > 0 && (
             <section className="space-y-3">
-              <h2 className="text-xl">Retorno do cliente</h2>
+              <h2 className="text-xl">Histórico de retornos do cliente</h2><p className="text-sm text-zinc-400">Inclui links e versões anteriores. Os status atuais aparecem acima e em cada material.</p>
               {feedback.data.map((f) => (
                 <article
                   key={f.id}
@@ -1097,7 +1111,7 @@ export function MonthlyEditorialPage() {
                 >
                   <p>
                     {f.decision === "approve"
-                      ? "Calendário aprovado"
+                      ? f.item_index < 0 ? "Calendário aprovado" : `Material ${f.item_index + 1} aprovado`
                       : f.item_index < 0
                         ? "Observação geral"
                         : `Ajuste do conteúdo ${f.item_index + 1}`}

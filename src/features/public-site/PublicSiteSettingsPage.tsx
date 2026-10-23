@@ -9,6 +9,8 @@ import {
   Upload,
   Globe,
   Inbox,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { useAuth, useAgencyId } from "@/features/auth/AuthProvider";
 import { supabase } from "@/lib/supabase/client";
@@ -79,12 +81,12 @@ function Media({
   return (
     <div className="space-y-3">
       <Field label={label} value={value} onChange={onChange} />
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {safeMediaUrl(value) && (
           <img
             src={safeMediaUrl(value)}
             alt="Prévia da imagem"
-            className="h-16 w-24 object-contain rounded bg-[#25232d]"
+            className="max-h-56 w-full max-w-sm object-contain rounded-lg bg-[#25232d]"
           />
         )}
         <label className={`${button} cursor-pointer`}>
@@ -100,6 +102,21 @@ function Media({
       </div>
     </div>
   );
+}
+function MotionSettings({ content, patch, kind }: { content: SiteContent; patch: <K extends keyof SiteContent>(field: K, value: SiteContent[K]) => void; kind: "hero" | "logos" }) {
+  const hero = kind === "hero";
+  const duration = hero ? content.heroDuration ?? 60 : content.logoDuration ?? 38;
+  return <fieldset className="space-y-4 rounded-xl border border-white/15 p-4">
+    <legend className="px-2 font-medium">{hero ? "Animação das imagens da hero" : "Movimento das logos"}</legend>
+    <div className="grid gap-4 sm:grid-cols-2">
+      <label className="space-y-2 text-sm">Efeito<select className={control} value={hero ? content.heroMotion ?? "slide" : content.logoMotion ?? "slide"} onChange={(e) => hero ? patch("heroMotion", e.target.value as SiteContent["heroMotion"]) : patch("logoMotion", e.target.value as SiteContent["logoMotion"])}>
+        <option value="slide">Deslizar em loop</option>{!hero && <option value="reverse">Deslizar no sentido inverso</option>}<option value="static">Sem movimento</option>
+      </select></label>
+      <label className="space-y-2 text-sm">Duração de uma volta: {duration}s<input className="w-full accent-orange-500" type="range" min={hero ? 15 : 10} max={hero ? 180 : 120} step="1" value={duration} onChange={(e) => hero ? patch("heroDuration", Number(e.target.value)) : patch("logoDuration", Number(e.target.value))} /></label>
+      {hero && <label className="space-y-2 text-sm">Enquadramento<select className={control} value={content.heroImageFit ?? "contain"} onChange={(e) => patch("heroImageFit", e.target.value as SiteContent["heroImageFit"])}><option value="contain">Imagem inteira</option><option value="cover">Preencher área (pode cortar bordas)</option></select></label>}
+    </div>
+    <p className="text-xs text-[#B8B8C0]">Menos segundos deixam o movimento mais rápido. A preferência de movimento reduzido do visitante é respeitada.</p>
+  </fieldset>;
 }
 export function PublicSiteSettingsPage() {
   const auth = useAuth(),
@@ -275,7 +292,7 @@ export function PublicSiteSettingsPage() {
     );
   const tabs = [
     ["hero", "Hero & identidade"],
-    ["portfolio", "Portfólio 3D"],
+    ["portfolio", "Imagens & portfólio"],
     ["clients", "Logos de clientes"],
     ["team", "Equipe"],
     ["faq", "FAQ"],
@@ -291,7 +308,7 @@ export function PublicSiteSettingsPage() {
             Edite a página inicial sem alterar a área de trabalho da equipe.
           </p>
         </div>
-        <Link className={button} to={`/?draft=${agencyId}`} target="_blank">
+        <Link className={button} to={`/?draft=${agencyId}`} target="_blank" onClick={(e) => { try { writeSiteDraft(agencyId, content); } catch { e.preventDefault(); setNotice("Não foi possível preparar a prévia local."); } }}>
           <ExternalLink size={16} /> Ver rascunho
         </Link>
       </div>
@@ -309,7 +326,7 @@ export function PublicSiteSettingsPage() {
         {tabs.map(([id, label]) => (
           <button
             key={id}
-            className={`${button} whitespace-nowrap ${tab === id ? "bg-[#7952FF] border-[#7952FF]" : ""}`}
+            className={`${button} whitespace-nowrap ${tab === id ? "bg-[var(--color-primary)] border-[var(--color-primary)] text-white" : ""}`}
             onClick={() => setTab(id)}
           >
             {label}
@@ -337,6 +354,8 @@ export function PublicSiteSettingsPage() {
                 onChange={(e) => patch("heroOpacity", Number(e.target.value))} />
               <p className="text-xs text-[#B8B8C0]">As artes da hero ficam em preto e branco. 0% oculta as artes; 100% usa a opacidade máxima. A logo, os textos e os botões não são afetados.</p>
             </div>
+            <MotionSettings content={content} patch={patch} kind="hero" />
+            <button type="button" className={button} onClick={() => setTab("portfolio")}>Organizar imagens da hero e materiais do portfólio</button>
             <Field
               label="Texto acima do título"
               value={content.eyebrow}
@@ -379,6 +398,7 @@ export function PublicSiteSettingsPage() {
               de câmera. Na hero, imagens horizontais WebP passam em loop na largura da tela. Use a mesma proporção entre artes (por exemplo 1920 × 1080). Marque estudos conceituais; publique resultados apenas
               quando comprovados.
             </p>
+            <div className="flex flex-wrap gap-3 text-sm"><span>Hero: {content.projects.filter((p) => p.placement === "hero" && p.image).length} imagens</span><span>Portfólio: {content.projects.filter((p) => p.placement === "gallery").length} projetos</span></div>
             {content.projects.map((p, i) => {
               const set = (next: SiteProject) =>
                 change({
@@ -393,7 +413,10 @@ export function PublicSiteSettingsPage() {
                   className="p-5 border border-[#443d50] rounded-xl space-y-4"
                 >
                   <div className="flex justify-between gap-3">
-                    <h2 className="font-medium">Peça {i + 1}</h2>
+                    <h2 className="font-medium">{p.placement === "hero" ? "Hero" : "Portfólio"} · {p.title || `Peça ${i + 1}`}</h2>
+                    <div className="flex gap-3">
+                    {([-1, 1] as const).map((direction) => <button key={direction} type="button" disabled={i + direction < 0 || i + direction >= content.projects.length} className="disabled:opacity-30" aria-label={`${direction < 0 ? "Subir" : "Descer"} peça ${i + 1}`} onClick={() => { const projects = [...content.projects]; [projects[i], projects[i + direction]] = [projects[i + direction], projects[i]]; patch("projects", projects); }}>{direction < 0 ? <ArrowUp size={16} /> : <ArrowDown size={16} />}</button>)}
+                    </div>
                     <button
                       type="button"
                       aria-label={`Remover peça ${i + 1}`}
@@ -456,7 +479,7 @@ export function PublicSiteSettingsPage() {
                   <Media
                     busy={busy}
                     upload={upload}
-                    label="Imagem do projeto"
+                    label={p.placement === "hero" ? "Imagem da hero (horizontal, por exemplo 1920 × 1080)" : "Capa do portfólio"}
                     value={p.image}
                     onChange={(v) => set({ ...p, image: v })}
                   />
@@ -467,14 +490,15 @@ export function PublicSiteSettingsPage() {
                     onChange={(v) => set({ ...p, description: v })}
                   />
                   <Field label="Cliente (opcional)" value={p.client || ""} onChange={(v) => set({ ...p, client: v })} />
-                  <h4>Materiais da página de portfólio</h4>
+                  <h4>Materiais da página de portfólio</h4><p className="text-xs text-[#B8B8C0]">Adicione as imagens na ordem de leitura. Cada material pode ter uma legenda; a capa é exibida na galeria do site.</p>
                   {(p.materials || []).map((material, materialIndex) => (
                     <div key={materialIndex} className="space-y-3 rounded-xl border border-white/10 p-4">
                       <Media busy={busy} upload={upload} label={`Material ${materialIndex + 1}`} value={material.image}
                         onChange={(image) => set({ ...p, materials: (p.materials || []).map((m, j) => j === materialIndex ? { ...m, image } : m) })} />
                       <Field label="Legenda do material" value={material.caption}
                         onChange={(caption) => set({ ...p, materials: (p.materials || []).map((m, j) => j === materialIndex ? { ...m, caption } : m) })} />
-                      <button type="button" onClick={() => set({ ...p, materials: (p.materials || []).filter((_, j) => j !== materialIndex) })}>Remover material</button>
+                      {([-1, 1] as const).map((direction) => <button key={direction} className={`${button} mr-2`} type="button" disabled={materialIndex + direction < 0 || materialIndex + direction >= (p.materials || []).length} onClick={() => { const materials = [...(p.materials || [])]; [materials[materialIndex], materials[materialIndex + direction]] = [materials[materialIndex + direction], materials[materialIndex]]; set({ ...p, materials }); }} aria-label={`${direction < 0 ? "Subir" : "Descer"} material ${materialIndex + 1}`}>{direction < 0 ? <ArrowUp size={14} /> : <ArrowDown size={14} />}</button>)}
+                      <button className={button} type="button" onClick={() => set({ ...p, materials: (p.materials || []).filter((_, j) => j !== materialIndex) })}>Remover material</button>
                     </div>
                   ))}
                   {(p.materials || []).length < 20 && <button type="button" onClick={() => set({ ...p, materials: [...(p.materials || []), { image: "", caption: "" }] })}>Adicionar material</button>}
@@ -527,6 +551,7 @@ export function PublicSiteSettingsPage() {
               Logos apresentados no site atual da agência. Revise as
               autorizações antes de publicar.
             </p>
+            <MotionSettings content={content} patch={patch} kind="logos" />
             {content.clients.map((p, i) => (
               <div
                 className="p-4 border border-[#443d50] rounded-lg space-y-3"
@@ -814,7 +839,7 @@ export function PublicSiteSettingsPage() {
           Site publicado
         </label>
         <button
-          className={`${button} bg-[#7952FF]`}
+          className={`${button} bg-[var(--color-primary)] text-white`}
           disabled={busy || !supabase || site.isError || site.isLoading}
           onClick={() => void publish()}
         >

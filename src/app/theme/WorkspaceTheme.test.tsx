@@ -2,6 +2,7 @@ import {render,act} from '@testing-library/react'
 import {describe,it,expect,vi,afterEach} from 'vitest'
 import {WorkspaceTheme} from './WorkspaceTheme'
 const state=vi.hoisted(()=>({mode:'system'}))
+vi.mock('@/features/auth/AuthProvider',()=>({useAuth:()=>({user:{id:'workspace-theme-fixture'}})}))
 vi.mock('@/features/settings/hooks/useAgencySettings',()=>({useAgencyBranding:()=>({branding:{agency_id:'agency',theme_mode:state.mode},isLoading:false,isError:false})}))
 afterEach(()=>{vi.unstubAllGlobals();state.mode='system'})
 describe('workspace theme',()=>{
