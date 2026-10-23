@@ -9,6 +9,7 @@ export function notificationDestination(notification: AppNotification): string |
   if (!notification.resource_id) return null
   if (notification.resource_type === 'editorial_campaign') return `/editorial?campaignId=${notification.resource_id}`
   if (notification.resource_type === 'task') return `/tasks/${notification.resource_id}`
+  if (notification.resource_type === 'presentation') return `/presentations/${notification.resource_id}`
   if (notification.resource_type === 'client') return `/clients/${notification.resource_id}`
   if (notification.resource_type === 'meeting') return `/meetings/${notification.resource_id}`
   if (notification.resource_type === 'chat_conversation') return `/chat/direct/${notification.resource_id}`

@@ -28,6 +28,13 @@ export const PublicShowcaseViewPage: React.FC = () => {
     if(tokenRef.current!==publicToken)return;
     setReviews(current=>({...current,[assetId]:{decision:review.decision,note:review.note}}));
   };
+  const onCompleteReview=async()=>{
+    if(!supabase||!publicToken) throw new Error('Conexão indisponível.');
+    const submittedToken=publicToken;
+    const result=await supabase.rpc('complete_showcase_review',{p_token:submittedToken});
+    if(result.error||result.data?.status!=='completed'||!result.data?.completedAt)throw new Error('Não foi possível concluir. Confira se todos os materiais estão aprovados e se o link continua válido.');
+    if(tokenRef.current!==submittedToken)throw new Error('O link mudou. Abra novamente a apresentação.');
+  };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -99,5 +106,5 @@ export const PublicShowcaseViewPage: React.FC = () => {
     );
   }
 
-  return <div className="min-h-screen bg-[#101012] p-0 sm:p-4">{reviewLoadError&&<p role="alert" className="p-4 text-sm text-orange-300">Não foi possível carregar as avaliações anteriores. Atualize a página para tentar novamente.</p>}<PresentationPreview publicToken={publicToken} presentation={{...data.presentation, client_name:data.client?.name || data.presentation.client_name, client_logo_url:data.client?.logo_url || data.presentation.client_logo_url}} sections={data.sections} assets={data.assets} reviews={reviews} onReview={onReview} /></div>;
+  return <div className="min-h-screen bg-[#101012] p-0 sm:p-4">{reviewLoadError&&<p role="alert" className="p-4 text-sm text-orange-300">Não foi possível carregar as avaliações anteriores. Atualize a página para tentar novamente.</p>}<PresentationPreview publicToken={publicToken} presentation={{...data.presentation, client_name:data.client?.name || data.presentation.client_name, client_logo_url:data.client?.logo_url || data.presentation.client_logo_url}} sections={data.sections} assets={data.assets} reviews={reviews} onReview={onReview} onCompleteReview={reviewLoadError?undefined:onCompleteReview} /></div>;
 };

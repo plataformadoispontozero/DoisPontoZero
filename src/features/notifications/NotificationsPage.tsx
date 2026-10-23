@@ -35,6 +35,10 @@ export const NotificationsPage: React.FC = () => {
       if (destination) navigate(destination)
     } catch { setActionError('Não foi possível marcar a notificação como lida. Tente novamente.') }
   }
+  const markOne = async (id: string) => {
+    try {setActionError('');await markAsRead.mutateAsync(id)}
+    catch {setActionError('Não foi possível marcar a notificação como lida. Tente novamente.')}
+  }
   const markAll = async () => {
     try { setActionError(''); await markAllAsRead.mutateAsync() }
     catch { setActionError('Não foi possível atualizar as notificações. Tente novamente.') }
@@ -90,17 +94,13 @@ export const NotificationsPage: React.FC = () => {
             return (
               <Card
                 key={notif.id}
-                role="button"
-                tabIndex={0}
-                onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); void handleNotificationClick(notif) } }}
-                onClick={() => void handleNotificationClick(notif)}
-                className={`p-4 cursor-pointer border transition-all flex items-start justify-between ${
+                className={`p-4 cursor-pointer border transition-all flex flex-wrap items-start justify-between gap-y-3 ${
                   isUnread
                     ? 'border-brand-primary bg-brand-primary/5 shadow-sm'
                     : 'border-surface-border bg-surface-card hover:border-brand-primary/40'
                 }`}
               >
-                <div className="flex items-start space-x-3">
+                <button type="button" className="flex min-w-0 flex-1 items-start space-x-3 text-left focus-visible:outline-orange-400" onClick={()=>void handleNotificationClick(notif)}>
                   <div className="p-2 rounded-lg bg-surface-subtle border border-surface-border text-brand-primary mt-0.5">
                     {notif.type.startsWith('meeting') ? <Calendar className="w-4 h-4" /> : <MessageSquare className="w-4 h-4" />}
                   </div>
@@ -115,9 +115,11 @@ export const NotificationsPage: React.FC = () => {
                       {new Date(notif.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
                     </span>
                   </div>
+                </button>
+                <div className="ml-3 flex shrink-0 items-center gap-2 self-center">
+                  {isUnread&&<Button variant="outline" size="sm" disabled={markAsRead.isPending||markAllAsRead.isPending} aria-label={`Marcar como lida: ${notif.title}`} onClick={()=>void markOne(notif.id)}><CheckCheck className="mr-1.5 h-4 w-4"/>Marcar como lida</Button>}
+                  <ArrowRight aria-hidden="true" className="w-4 h-4 text-content-tertiary" />
                 </div>
-
-                <ArrowRight className="w-4 h-4 text-content-tertiary self-center" />
               </Card>
             )
           })}

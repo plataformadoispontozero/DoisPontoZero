@@ -8,6 +8,7 @@ import {
   Bell,
   Search,
   CheckSquare,
+  CheckCheck,
   Sparkles,
   Command,
   Settings,
@@ -48,7 +49,7 @@ import {
 } from '@/components/ui/Sheet'
 import { Input } from '@/components/ui/Input'
 
-import { useNotifications } from '@/features/notifications/hooks/useNotifications'
+import { useNotifications, useMarkNotificationAsRead, useMarkAllNotificationsAsRead } from '@/features/notifications/hooks/useNotifications'
 
 export const TopBar: React.FC = () => {
   const auth = useAuth()
@@ -59,6 +60,12 @@ export const TopBar: React.FC = () => {
   const navigate = useNavigate()
 
   const { data: notifications } = useNotifications()
+  const markRead = useMarkNotificationAsRead()
+  const markAllRead = useMarkAllNotificationsAsRead()
+  const markNoticeRead = async (id?: string) => {
+    try { if(id) await markRead.mutateAsync(id); else await markAllRead.mutateAsync() }
+    catch { toast.error('Não foi possível marcar como lida. Tente novamente.') }
+  }
   const unreadNotifications = (notifications || []).filter((n) => !n.read_at)
 
   // Estados de Dialog e Sheet do Header
@@ -130,7 +137,7 @@ export const TopBar: React.FC = () => {
                 <span className="font-heading text-xs font-semibold text-[#F8F9FC]">
                   Notificações
                 </span>
-                <Badge variant="accent" className="text-[10px] py-0">{unreadNotifications.length} novas</Badge>
+                <div className="flex items-center gap-2"><Badge variant="accent" className="text-[10px] py-0">{unreadNotifications.length} novas</Badge>{unreadNotifications.length>0&&<button type="button" aria-label="Marcar todas as notificações como lidas" title="Marcar todas como lidas" disabled={markRead.isPending||markAllRead.isPending} onClick={()=>void markNoticeRead()} className="rounded p-1 text-content-secondary hover:text-content-primary disabled:opacity-50"><CheckCheck size={16}/></button>}</div>
               </div>
               {unreadNotifications.length === 0 ? (
                 <div className="p-6 text-center text-xs text-[#B8B8C0]">
@@ -142,13 +149,9 @@ export const TopBar: React.FC = () => {
               ) : (
                 <div className="max-h-64 overflow-y-auto divide-y divide-surface-border">
                   {unreadNotifications.map((n) => (
-                    <div
-                      key={n.id}
-                      onClick={() => navigate('/notifications')}
-                      className="p-3 hover:bg-surface-elevated transition-colors cursor-pointer space-y-0.5"
-                    >
-                      <p className="text-xs font-semibold text-content-primary leading-snug">{n.title}</p>
-                      <p className="text-[11px] text-content-secondary line-clamp-1">{n.body}</p>
+                    <div key={n.id} className="flex items-start gap-2 p-3 hover:bg-surface-elevated transition-colors">
+                      <button type="button" onClick={()=>navigate('/notifications')} className="min-w-0 flex-1 space-y-0.5 text-left focus-visible:outline-orange-400"><p className="text-xs font-semibold text-content-primary leading-snug">{n.title}</p><p className="text-[11px] text-content-secondary line-clamp-1">{n.body}</p></button>
+                      <button type="button" aria-label={`Marcar como lida: ${n.title}`} title="Marcar como lida" disabled={markRead.isPending||markAllRead.isPending} onClick={()=>void markNoticeRead(n.id)} className="shrink-0 rounded-lg border border-surface-border p-2 text-content-secondary hover:text-content-primary focus-visible:outline-orange-400 disabled:opacity-50"><CheckCheck size={16}/></button>
                     </div>
                   ))}
                 </div>

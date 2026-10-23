@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { usePersonalTheme } from '@/app/theme/usePersonalTheme'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { toast } from '@/components/ui/Toast'
@@ -8,6 +9,7 @@ import type { ThemeMode } from '@/types/whitelabel'
 
 const AppearanceSettingsPageForm: React.FC = () => {
   const { branding, updateBranding } = useAgencyBranding()
+  const {preference,setPreference}=usePersonalTheme()
   const [selectedTheme, setSelectedTheme] = useState<ThemeMode>(branding.theme_mode || 'dark')
   const [isSaving, setIsSaving] = useState(false)
 
@@ -132,8 +134,9 @@ const AppearanceSettingsPageForm: React.FC = () => {
               Regra de Hierarquia de Aparência
             </span>
             <p className="text-[11px]">
-              As cores e os logotipos da agência são configurados em Identidade visual. A opção “Da agência” na barra superior acompanha esta preferência. Claro, escuro e sistema na barra superior valem somente para o membro neste navegador, sem alterar as artes e os materiais dos clientes.
+              As cores e os logotipos da agência são configurados em Identidade visual. O botão de lua/sol no cabeçalho alterna o tema pessoal neste navegador. Para acompanhar o padrão da agência, inclusive o modo automático, use a opção abaixo. As artes e os materiais dos clientes não são alterados.
             </p>
+            {preference!=='workspace'&&<Button type="button" variant="outline" size="sm" onClick={()=>{if(!setPreference('workspace'))toast.error('Não foi possível atualizar sua preferência neste navegador.')}}>Usar o tema padrão da agência neste navegador</Button>}
           </div>
         </CardContent>
       </Card>

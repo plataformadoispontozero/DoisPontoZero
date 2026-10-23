@@ -4,6 +4,7 @@ import {FunctionsHttpError} from '@supabase/supabase-js';
 import {parseEditorialDirection,automaticFormatCounts,automaticEditorialContext} from './automaticEditorialPlan';
 import {useDriveBriefDocuments,currentDriveReview,type DriveBriefDocument} from '@/features/briefing/driveDocuments'
 import { editorialSteps, editorialStepIssues } from "./editorialWizard";
+import { EditorialReviewMonitor } from './EditorialReviewMonitor';
 import { EditorialPieceEditor } from "./EditorialPieceEditor";
 import { briefingEditorialContext, briefingSpecialDates, missingEditorialInputs, suggestEditorialTopics } from "./editorialContext";
 import { readClientProfile } from "@/features/clients/clientProfile";
@@ -41,6 +42,7 @@ interface Campaign {
   items: MonthlyItem[];
   status: string;
   project_id: string | null;
+  archived_at?: string | null;
 }
 interface Feedback {
   id: string;
@@ -81,7 +83,29 @@ export function MonthlyEditorialPage() {
     Record<number, { size: number; seconds: number }>
   >({});
   const [selectedPiece,setSelectedPiece]=useState<number|null>(null),[formatFilter,setFormatFilter]=useState('all');
+  const [openClient, setOpenClient] = useState<string | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
+  const clientDialog = useRef<HTMLDialogElement>(null);
+  const clientBackdropDown = useRef(false);
+  function outsideClientDialog(event: {clientX:number;clientY:number}) { const bounds = clientDialog.current?.getBoundingClientRect(); return !!bounds && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom); }
   const pieceDialog=useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = clientDialog.current;
+    if (!dialog) return;
+    if (openClient) {
+      if (!dialog.open) dialog.showModal();
+      const previousOverflow=document.body.style.overflow;
+      document.body.style.overflow='hidden';
+      return()=>{document.body.style.overflow=previousOverflow;};
+    } else if (dialog.open) dialog.close();
+  }, [openClient]);
+  function closeClientDialog() {
+    if (busy) return;
+    if (dirty && !window.confirm('Há alterações não salvas. Fechar a janela? As alterações permanecem nesta sessão até você abrir outro calendário.')) return;
+    setSelectedPiece(null);
+    setOpenClient(null);
+    navigate('/editorial', { replace: true });
+  }
   useEffect(()=>{const dialog=pieceDialog.current;if(!dialog)return;if(selectedPiece!==null&&!dialog.open)dialog.showModal();else if(selectedPiece===null&&dialog.open)dialog.close();},[selectedPiece]);
   const [wizardStep,setWizardStep]=useState(0);
   const editedFields=useRef(new Set<string>());
@@ -261,7 +285,18 @@ export function MonthlyEditorialPage() {
     },
   });
   const active = campaigns.data?.find((c) => c.id === id) || (linked.data?.id === id ? linked.data : null),
-    locked = !!active?.project_id;
+    locked = !!active?.project_id || !!active?.archived_at;
+  const visibleCampaigns = (campaigns.data || []).filter(c => showArchived ? !!c.archived_at : !c.archived_at);
+  async function archiveCampaign(campaign: Campaign, archived: boolean) {
+    if (!window.confirm(archived ? "Remover este calendário da lista ativa? Ele poderá ser restaurado. Projetos e demandas de produção serão preservados; links de aprovação serão revogados." : "Restaurar este calendário como rascunho? Será necessário gerar um novo link de aprovação.")) return;
+    await action(async () => {
+      const result = await supabase!.rpc("set_editorial_campaign_archived", { p_campaign: campaign.id, p_archived: archived });
+      if (result.error || result.data !== true) throw Error("Não foi possível atualizar o calendário.");
+      await Promise.all([cache.invalidateQueries({queryKey:["monthly-editorial",agency]}), cache.invalidateQueries({queryKey:["linked-editorial",agency]}), cache.invalidateQueries({queryKey:["editorial-review-monitor",campaign.id]})]);
+      if (archived && id === campaign.id) { setId(null); setItems([]); setDirty(false); setShare(""); navigate("/editorial", {replace:true}); }
+      setNotice(archived ? "Calendário removido da lista ativa. Você pode restaurá-lo em Arquivados." : "Calendário restaurado como rascunho.");
+    });
+  }
   function newCampaign() {
     setWizardStep(0);
     editedFields.current.clear();
@@ -277,6 +312,8 @@ export function MonthlyEditorialPage() {
   }
   function load(c: Campaign) {
     setSelectedPiece(null);
+    setOpenClient(c.client_id);
+    setShowArchived(!!c.archived_at);
     setId(c.id);
     setClient(c.client_id);
     setBriefing(c.briefing_id || "");
@@ -762,8 +799,18 @@ export function MonthlyEditorialPage() {
         </section>
         <div className="flex justify-between gap-3 md:col-span-full"><Button disabled={wizardStep===0||busy} onClick={()=>goToStep(Math.max(0,wizardStep-1))}>Anterior</Button>{wizardStep<3&&<Button variant="primary" disabled={!client||busy||details.isFetching} onClick={()=>goToStep(Math.min(3,wizardStep+1))}>Continuar</Button>}</div>
       </div>}
-      {!creating&&<section className="space-y-3"><h2 className="text-xl font-semibold">Calendários por cliente</h2><p className="text-sm text-zinc-400">Abra um cliente e selecione a campanha para revisar o conteúdo e acompanhar sua aprovação.</p>{campaigns.isError?<p role="alert">Não foi possível carregar as campanhas.</p>:campaigns.isPending?<p>Carregando campanhas…</p>:!campaigns.data?.length?<p>Nenhum calendário salvo. Crie uma campanha para organizar as demandas.</p>:<div className="space-y-3">{[...new Set(campaigns.data.map(c=>c.client_id))].map(clientId=>{const list=campaigns.data.filter(c=>c.client_id===clientId);return <details key={clientId} open={list.some(c=>c.id===id)} className="rounded-2xl border border-white/10 bg-[#19191f]"><summary className="cursor-pointer p-5"><span className="font-semibold">{clients.data?.find(c=>c.id===clientId)?.name||'Cliente'}</span><span className="ml-3 text-sm text-zinc-400">{list.length} campanhas · {list.reduce((n,c)=>n+c.items.length,0)} conteúdos</span></summary><div className="grid gap-3 border-t border-white/10 p-4 md:grid-cols-2 xl:grid-cols-3">{list.map(c=><button key={c.id} aria-pressed={c.id===id} className={`rounded-xl border p-4 text-left ${c.id===id?'border-orange-500 bg-orange-500/10':'border-white/10'}`} onClick={()=>{load(c);setSelectedPiece(null);navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`);}}><p className="font-semibold">{c.month.slice(0,7).split('-').reverse().join('/')}</p><p className="mt-2 text-sm text-orange-200">{statusNames[c.status]||c.status} · {c.items.length} conteúdos</p></button>)}</div></details>})}</div>}</section>}
-      {!creating&&items.length > 0 && (
+      {!creating && <section className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-semibold">Calendários por cliente</h2><div className="flex gap-2"><Button aria-pressed={!showArchived} onClick={() => setShowArchived(false)}>Ativos</Button><Button aria-pressed={showArchived} onClick={() => setShowArchived(true)}>Arquivados</Button></div></div>
+        <p className="text-sm text-zinc-400">Selecione um cliente para abrir seus calendários e acompanhar as demandas.</p>
+        {campaigns.isError ? <p role="alert">Não foi possível carregar as campanhas.</p> : campaigns.isPending ? <p>Carregando campanhas…</p> : !visibleCampaigns.length ? <p>{showArchived ? 'Nenhum calendário arquivado.' : 'Nenhum calendário ativo. Crie uma campanha para organizar as demandas.'}</p> : <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{[...new Set(visibleCampaigns.map(c => c.client_id))].map(clientId => { const list = visibleCampaigns.filter(c => c.client_id === clientId); return <button type="button" key={clientId} className="rounded-2xl border border-white/15 bg-[#19191f] p-6 text-left transition hover:border-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-400" onClick={() => { if (dirty && client !== clientId && !window.confirm("Há alterações não salvas. Abrir outro cliente? Elas permanecem nesta sessão até abrir outro calendário.")) return; setOpenClient(clientId); }}><span className="text-lg font-semibold">{clients.data?.find(c => c.id === clientId)?.name || 'Cliente'}</span><span className="mt-3 block text-sm text-zinc-400">{list.length} calendários · {list.reduce((sum, c) => sum + c.items.length, 0)} conteúdos</span><span className="mt-5 block text-sm text-orange-300">Abrir calendários e demandas ↗</span></button>; })}</div>}
+      </section>}
+      {!creating && <dialog ref={clientDialog} aria-labelledby="editorial-client-heading" onCancel={event => { event.preventDefault(); if (selectedPiece === null) closeClientDialog(); }} onPointerDown={event => { clientBackdropDown.current = event.target === event.currentTarget && outsideClientDialog(event); }} onPointerUp={event => { if (clientBackdropDown.current && event.target === event.currentTarget && outsideClientDialog(event)) closeClientDialog(); clientBackdropDown.current = false; }} className="fixed inset-0 m-auto h-[94dvh] max-h-[94dvh] w-[96vw] max-w-[1600px] overflow-y-auto overscroll-contain rounded-2xl border border-white/20 bg-[#101014] p-0 text-white backdrop:bg-black/75">
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-white/15 bg-[#101014] px-5 py-4 sm:px-8"><div><p className="text-xs text-orange-300">Calendários e demandas</p><h2 id="editorial-client-heading" className="mt-1 text-xl font-semibold">{clients.data?.find(c => c.id === openClient)?.name || 'Cliente'}</h2></div><Button size="lg" aria-label="Fechar calendários do cliente" disabled={busy} onClick={closeClientDialog}>✕</Button></div>
+        <div className="space-y-6 p-5 sm:p-8">
+          {notice && <p role="status" className="rounded-xl border border-orange-400/30 p-4">{notice}</p>}
+          <div className="flex gap-2"><Button aria-pressed={!showArchived} onClick={() => setShowArchived(false)}>Ativos</Button><Button aria-pressed={showArchived} onClick={() => setShowArchived(true)}>Arquivados</Button></div>
+          <div className="grid items-start gap-3 md:grid-cols-2 xl:grid-cols-3">{visibleCampaigns.filter(c => c.client_id === openClient).map(c => <article key={c.id} className={`rounded-xl border p-4 ${id === c.id ? 'border-orange-400 bg-orange-500/5' : 'border-white/15'}`}><button type="button" aria-pressed={id === c.id} className="w-full text-left" onClick={() => { if (dirty && id !== c.id && !window.confirm('Descartar as alterações não salvas e abrir outro calendário?')) return; load(c); navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`); }}><span className="text-lg font-semibold">{c.month.slice(0,7).split('-').reverse().join('/')}</span><span className="mt-2 block text-sm text-orange-200">{c.archived_at ? 'Arquivado' : statusNames[c.status] || c.status} · {c.items.length} conteúdos</span></button><EditorialReviewMonitor campaignId={c.id} archived={!!c.archived_at} compact /><div className="mt-4"><Button size="sm" disabled={busy || (!c.archived_at && !!c.project_id)} onClick={() => void archiveCampaign(c, !c.archived_at)}>{c.archived_at ? 'Restaurar calendário' : 'Remover calendário'}</Button>{c.project_id && !c.archived_at && <p className="mt-2 text-xs text-zinc-400">Vinculado à produção; remoção indisponível.</p>}</div></article>)}</div>
+      {!creating&&client === openClient&&items.length > 0 && (
         <section className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="text-xl">
@@ -805,6 +852,7 @@ export function MonthlyEditorialPage() {
                   await cache.invalidateQueries({
                     queryKey: ["monthly-editorial", agency],
                   });
+                  await cache.invalidateQueries({queryKey:["editorial-review-monitor",campaignId]});
                   setNotice(
                     "Link de aprovação criado por 30 dias. Links anteriores foram revogados.",
                   );
@@ -830,6 +878,7 @@ export function MonthlyEditorialPage() {
               </Button>
             )}
           </div>
+          {id && <EditorialReviewMonitor campaignId={id} archived={!!active?.archived_at} />}
           {share && (
             <div className="rounded-xl border border-orange-400/30 p-4 space-y-2">
               <label className="block">
@@ -1190,6 +1239,8 @@ export function MonthlyEditorialPage() {
           </div>
         </section>
       )}
+        </div>
+      </dialog>}
     </div>
   );
 }

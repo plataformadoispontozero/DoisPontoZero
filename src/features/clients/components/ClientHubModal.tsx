@@ -23,6 +23,14 @@ function safeLink(value: unknown) {
 const actionStyle='rounded-lg border border-white/15 px-4 py-2.5 text-sm font-medium hover:border-orange-500 hover:bg-orange-500/10 focus-visible:outline-orange-400';
 export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}) {
  const dialog=useRef<HTMLDialogElement>(null), navigate=useNavigate(), agency=useAgencyId();
+ const backdropPress=useRef(false);
+ const requestClose=()=>{
+  const changed=editing&&(JSON.stringify(draft)!==JSON.stringify(readClientProfile(client.profile))||logo!==(client.logo_url||''));
+  if(update.isPending)return;
+  if(changed&&!window.confirm('Há alterações não salvas. Deseja sair sem salvar?'))return;
+  onClose();
+ };
+ const outside=(event:{clientX:number;clientY:number;currentTarget:HTMLDialogElement})=>{const r=event.currentTarget.getBoundingClientRect();return event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom;};
  const canEdit=usePermission('clients.edit'),canStrategy=usePermission('strategy.view'),canBriefs=usePermission('briefings.view');
  const canPresentations=usePermission('presentations.view');
  const update=useUpdateClient(agency);
@@ -31,7 +39,7 @@ export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}
  const [logo,setLogo]=useState(client.logo_url||'');
  const profile=readClientProfile(client.profile);
  const campaigns=useQuery({queryKey:['client-profile-campaigns',agency,client.id],enabled:!!supabase&&canStrategy,queryFn:async()=>{
-  const {data,error}=await supabase!.from('monthly_editorial_campaigns').select('id,month,status').eq('agency_id',agency).eq('client_id',client.id).order('created_at',{ascending:false}).limit(100);
+  const {data,error}=await supabase!.from('monthly_editorial_campaigns').select('id,month,status').eq('agency_id',agency).eq('client_id',client.id).is('archived_at',null).order('created_at',{ascending:false}).limit(100);
   if(error)throw error;return data as {id:string;month:string;status:string}[];
  }});
  const contacts=useQuery({queryKey:['client-briefing-contacts',agency,client.id],enabled:!!supabase&&Boolean(agency&&client.id),queryFn:async()=>{
@@ -63,7 +71,7 @@ export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}
   try {await update.mutateAsync({id:client.id,profile:draft,logo_url:logo||null});setEditing(false);toast.success('Dados do cliente atualizados.');}catch{toast.error('Não foi possível salvar. Verifique a conexão e sua permissão nesta agência.');}
  }
  const display=(key:string)=>{const value=(profile as Record<string,unknown>)[key];return value===undefined||value===''?'Não informado':String(value);};
- return createPortal(<dialog ref={dialog} aria-labelledby="client-hub-title" onCancel={e=>{e.preventDefault();onClose();}} className="fixed inset-0 m-auto h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] max-w-[1480px] overflow-hidden rounded-2xl border border-white/15 bg-[#111115] p-0 text-white shadow-2xl backdrop:bg-black/80 md:h-[calc(100dvh-3rem)] md:w-[calc(100vw-3rem)]">
+ return createPortal(<dialog ref={dialog} aria-labelledby="client-hub-title" onCancel={e=>{e.preventDefault();requestClose();}} onPointerDown={e=>{backdropPress.current=e.target===e.currentTarget&&outside(e);}} onPointerUp={e=>{if(backdropPress.current&&e.target===e.currentTarget&&outside(e))requestClose();backdropPress.current=false;}} onPointerCancel={()=>{backdropPress.current=false;}} className="fixed inset-0 m-auto h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] max-w-[1480px] overflow-hidden rounded-2xl border border-white/15 bg-[#111115] p-0 text-white shadow-2xl backdrop:bg-black/80 md:h-[calc(100dvh-3rem)] md:w-[calc(100vw-3rem)]">
  <div className="flex h-full flex-col">
   <header className="shrink-0 border-b border-white/10 bg-gradient-to-r from-[#1a191c] to-orange-950/30 p-4 md:p-6">
    <div className="flex items-start justify-between gap-3">
@@ -73,7 +81,7 @@ export function ClientHubModal({client,onClose}:{client:Client;onClose:()=>void}
      </div>
      <div className="min-w-0"><p className="text-xs text-orange-300">FICHA DO CLIENTE · {client.status==='active'?'Ativo':client.status==='inactive'?'Inativo':'Arquivado'}</p><h2 id="client-hub-title" className="mt-1 break-words text-xl font-bold md:text-3xl">{client.name}</h2><p className="mt-1 text-sm text-zinc-300">{[profile.niche,profile.city].filter(Boolean).join(' · ')||'Complete os dados da marca para orientar a equipe.'}</p></div>
     </div>
-    <button aria-label="Fechar ficha do cliente" onClick={onClose} className="shrink-0 rounded-lg p-2 hover:bg-white/10"><X/></button>
+    <button aria-label="Fechar ficha do cliente" onClick={requestClose} className="shrink-0 rounded-lg p-2 hover:bg-white/10"><X/></button>
    </div>
    <div className="mt-4 flex flex-wrap gap-2">
     {canBriefs&&section!=='Briefings'&&<button className={actionStyle} onClick={()=>{setSection('Briefings');setEditing(false);}}><FileText className="mr-2 inline h-4 w-4"/>Briefings</button>}

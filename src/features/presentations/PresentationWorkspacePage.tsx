@@ -1,3 +1,4 @@
+import { presentationSectionPresets, presentationSectionPreset, presentationSectionValue } from './presentationSectionPresets';
 import {usePermission} from '@/features/auth/AuthProvider'
 import {PresentationAssetThumbnail} from './presentationMedia'
 import {PresentationMaterialReviews} from './PresentationMaterialReviews';
@@ -65,7 +66,7 @@ export const PresentationWorkspacePage: React.FC = () => {
 
   // New section dialog
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
-  const [newPresentationSectionType, setNewPresentationSectionType] = useState<PresentationSectionType|'carousel'>('gallery');
+  const [newPresentationSectionType, setNewPresentationSectionType] = useState('gallery');
   const [newSectionTitle, setNewSectionTitle] = useState('');
   const [creatingSection, setCreatingSection] = useState(false);
   const [createSectionError, setCreateSectionError] = useState('');
@@ -105,10 +106,10 @@ export const PresentationWorkspacePage: React.FC = () => {
     setCreateSectionError('');
     try {
       const created = await addSection({
-        section_type: newPresentationSectionType === 'carousel' ? 'gallery' : newPresentationSectionType,
+        section_type: presentationSectionPreset(newPresentationSectionType)?.type || 'custom',
         title: newSectionTitle.trim(),
         description: '',
-        content: { media_layout: newPresentationSectionType === 'carousel' ? 'carousel' : 'grid' },
+        content: { media_layout: presentationSectionPreset(newPresentationSectionType)?.layout || 'grid', section_kind: presentationSectionPreset(newPresentationSectionType)?.kind || '' },
         position: sections.length,
       });
       if (created) setSelectedSectionId(created.id);
@@ -272,7 +273,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-content-secondary uppercase tracking-wider">
-                      {sec.content?.media_layout==='carousel'?'Carrossel':sec.section_type==='gallery'?'Post':sec.section_type==='video'?'Reels':SECTION_TYPES.find(t=>t.type===sec.section_type)?.label||sec.section_type}
+                      {presentationSectionPreset(presentationSectionValue(sec))?.label||SECTION_TYPES.find(t=>t.type===sec.section_type)?.label||sec.section_type}
                     </span>
                     <div className="flex items-center space-x-1" onClick={e => e.stopPropagation()}>
                       <button
@@ -586,11 +587,11 @@ export const PresentationWorkspacePage: React.FC = () => {
             <Select id="presentation-new-section-format" style={{colorScheme: 'dark'}}
               value={newPresentationSectionType}
               disabled={creatingSection}
-              onChange={e => setNewPresentationSectionType(e.target.value as PresentationSectionType|'carousel')}
+              onChange={e => setNewPresentationSectionType(e.target.value)}
               className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
             >
-              {[{type:'gallery',label:'Post'},{type:'carousel',label:'Carrossel'},{type:'video',label:'Reels'}].map((st) => (
-                <option key={st.type} value={st.type}>{st.label}</option>
+              {presentationSectionPresets.map((st) => (
+                <option key={st.value} value={st.value}>{st.label}</option>
               ))}
             </Select>
           </div>

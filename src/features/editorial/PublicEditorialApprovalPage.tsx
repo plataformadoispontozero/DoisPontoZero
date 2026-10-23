@@ -7,6 +7,7 @@ import { OfficialBrandLogo } from '@/components/shared/OfficialBrandLogo';
 import { Button } from '@/components/ui/Button';
 import { formatNames, type MonthlyItem } from './monthlyPlanner';
 import { EditorialContentPreview } from './EditorialContentPreview';
+import { useEditorialReviewPresence } from './useEditorialReviewPresence';
 interface ItemReview { itemIndex: number; decision: 'approve' | 'adjust'; note?: string; copy?: string }
 interface Snapshot { client: string; month: string; items: MonthlyItem[]; status: string; expiresAt: string; itemReviews?: ItemReview[] }
 export function PublicEditorialApprovalPage() {
@@ -37,6 +38,7 @@ export function PublicEditorialApprovalPage() {
     } catch { setError('Não foi possível registrar seu retorno. Tente novamente; sua observação continua aqui.'); }
     finally { setBusy(null); }
   }
+  useEditorialReviewPresence(token, !!query.data && !query.isError);
   const campaign = query.data;
   const closed = campaign?.status === 'approved' || campaign?.status === 'production';
   const reviews = new Map(campaign?.itemReviews?.map(review => [review.itemIndex, review]));
