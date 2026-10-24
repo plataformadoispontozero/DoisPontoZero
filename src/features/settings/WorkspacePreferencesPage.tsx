@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Select } from '@/components/ui/Select'
+import { InterfaceLanguageField } from './components/InterfaceLanguageField'
 import { toast } from '@/components/ui/Toast'
 import { useAgencyPreferences } from './hooks/useAgencySettings'
 import { Globe2, Save, Calendar, Clock, DollarSign, Layout, CheckCircle2 } from 'lucide-react'
@@ -69,27 +70,11 @@ const WorkspacePreferencesPageForm: React.FC = () => {
           <CardHeader>
             <CardTitle className="text-sm">Regionalização & Padrões</CardTitle>
             <CardDescription className="text-xs">
-              Idiomas suportados, moeda operacional e formato de exibição.
+              Idioma disponível, moeda operacional e formato de exibição.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5">
-                Idioma Principal da Interface
-              </label>
-              <Select
-                value={formData.language}
-                onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                options={[
-                  { value: 'pt-BR', label: 'Português (Brasil) - Padrão' },
-                  { value: 'en-US', label: 'English (United States)' },
-                  { value: 'es-ES', label: 'Español' },
-                ]}
-              />
-              <span className="text-[10px] text-[#98989F] mt-1 block">
-                Toda a interface atual está 100% pronta e adaptada para pt-BR.
-              </span>
-            </div>
+            <InterfaceLanguageField value={formData.language} onChange={language => setFormData({...formData,language})} />
 
             <div>
               <label className="text-xs font-semibold text-[#B8B8C0] block mb-1.5 flex items-center gap-1">

@@ -434,3 +434,6 @@ verify_jwt = false # Every POST validates its JWT server-side with auth.getUser 
 
 [functions.livekit-config]
 verify_jwt = false # Every action verifies auth.getUser, settings.edit and OWNER/ADMIN server-side.
+
+[functions.editorial-ai]
+verify_jwt = false # Every action validates auth.getUser, active membership and agency permissions server-side.

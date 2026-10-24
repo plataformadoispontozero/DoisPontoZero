@@ -29,6 +29,11 @@ export interface SiteContent {
   logo: string;
   eyebrow: string;
   heroOpacity?: number;
+  heroMotion?: "slide" | "static";
+  heroDuration?: number;
+  heroImageFit?: "contain" | "cover";
+  logoMotion?: "slide" | "reverse" | "static";
+  logoDuration?: number;
   headline: string;
   highlight: string;
   intro: string;
@@ -241,6 +246,11 @@ export function normalizeSiteContent(value: unknown): SiteContent {
     logo: safeMediaUrl(str(c.logo)),
     eyebrow: str(c.eyebrow),
     heroOpacity: typeof c.heroOpacity === "number" && Number.isFinite(c.heroOpacity) ? Math.max(0, Math.min(100, c.heroOpacity)) : 50,
+    heroMotion: c.heroMotion === "static" ? "static" : "slide",
+    heroDuration: typeof c.heroDuration === "number" && Number.isFinite(c.heroDuration) ? Math.max(15, Math.min(180, c.heroDuration)) : 60,
+    heroImageFit: c.heroImageFit === "cover" ? "cover" : "contain",
+    logoMotion: c.logoMotion === "static" || c.logoMotion === "reverse" ? c.logoMotion : "slide",
+    logoDuration: typeof c.logoDuration === "number" && Number.isFinite(c.logoDuration) ? Math.max(10, Math.min(120, c.logoDuration)) : 38,
     headline: str(c.headline),
     highlight: str(c.highlight),
     intro: str(c.intro),
@@ -253,7 +263,7 @@ export function normalizeSiteContent(value: unknown): SiteContent {
     projects: list(
       c.projects,
       (p, i) => ({
-        id: `project-${i}`,
+        id: typeof p.id === "string" && /^[a-zA-Z0-9_-]{1,100}$/.test(p.id) ? p.id : `project-${i}`,
         title: str(p.title),
         category: str(p.category),
         description: str(p.description),
@@ -267,7 +277,7 @@ export function normalizeSiteContent(value: unknown): SiteContent {
           : "violet",
         placement: p.placement === "hero" ? "hero" : "gallery",
       }),
-      12,
+      60,
     ),
     clients: list(
       c.clients,

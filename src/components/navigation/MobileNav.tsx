@@ -1,3 +1,4 @@
+import { ThemeSelector } from './ThemeSelector'
 import { NavigationGroups } from './NavigationGroups'
 import { WorkspaceSelector } from './WorkspaceSelector'
 import { routePermission } from '@/features/auth/access'
@@ -44,8 +45,9 @@ export const MobileNav: React.FC = () => {
         </NavLink>
 
         <div className="flex items-center gap-2">
+          <ThemeSelector compact />
           <NavLink to="/profile" aria-label="Meu perfil" className="flex min-h-[44px] min-w-[44px] items-center justify-center"><Avatar src={auth.avatarUrl||undefined} name={auth.name||'Usuário'} size="sm"/></NavLink>
-          <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-[#101014] text-[#B8B8C0] border border-[#30303B] truncate max-w-[120px]">
+          <span className="hidden min-[440px]:inline text-[11px] font-medium px-2 py-0.5 rounded bg-[#101014] text-[#B8B8C0] border border-[#30303B] truncate max-w-[120px]">
             {auth.activeAgency?.agencyName || branding.company.workspaceName}
           </span>
           <IconButton

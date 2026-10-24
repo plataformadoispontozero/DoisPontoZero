@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [selected, setSelected] = useState('')
   const [revision, setRevision] = useState(0)
   const generation = useRef(0)
+  const sessionUser = useRef<string | null>(null)
 
   useEffect(() => {
     if (!supabase) return
@@ -46,7 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (disposed) return
       receivedEvent = true
       generation.current += 1
-      setAccess(empty)
+      const changedUser = sessionUser.current !== (next?.user.id ?? null)
+      sessionUser.current = next?.user.id ?? null
+      if (changedUser || !next) { setAccess(empty); setSelected('') }
       setSession(next)
       setInitialized(true)
       setRevision(n => n + 1)
@@ -54,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     void supabase.auth.getSession().then(({ data, error }) => {
       if (disposed || receivedEvent) return
       if (error) setAccess({ ...empty, error: 'Não foi possível recuperar a sessão.' })
+      sessionUser.current = error ? null : data.session?.user.id ?? null
       setSession(error ? null : data.session)
       setInitialized(true)
     }).catch(() => {

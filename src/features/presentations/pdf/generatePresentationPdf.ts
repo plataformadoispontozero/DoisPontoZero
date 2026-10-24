@@ -1,3 +1,4 @@
+import '@/components/pdf/pdfRuntime'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
 // FASE 09: PRESENTATION PDF GENERATOR

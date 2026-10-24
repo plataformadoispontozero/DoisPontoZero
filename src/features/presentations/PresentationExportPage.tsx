@@ -6,14 +6,17 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { useSinglePresentation } from './hooks/usePresentations';
-import { useBranding } from '@/hooks/useBranding';
+import {useAgencyBranding,useAgencyDocumentSettings} from '@/features/settings/hooks/useAgencySettings';
+import {resolveDocumentPdfBranding} from '@/features/briefing/pdf/documentBranding';
 import { toast } from '../../components/ui/Toast';
 
 
 export const PresentationExportPage: React.FC = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
   const navigate = useNavigate();
-  const {branding}=useBranding();
+  const savedBranding=useAgencyBranding();
+  const savedDocuments=useAgencyDocumentSettings();
+  const branding={...resolveDocumentPdfBranding(savedBranding.branding,savedDocuments.documentSettings),website:savedBranding.branding.website_url};
 
   const { presentation, sections, assets, isLoading, isError } = useSinglePresentation(presentationId);
   const [isExporting, setIsExporting] = useState(false);
@@ -25,7 +28,7 @@ export const PresentationExportPage: React.FC = () => {
   const [mediaWarnings,setMediaWarnings]=useState(0);
   useEffect(()=>()=>{if(previewBlobUrl)URL.revokeObjectURL(previewBlobUrl)},[previewBlobUrl]);
 
-  if (isLoading) {
+  if (isLoading || savedBranding.isLoading || savedDocuments.isLoading) {
     return (
       <div className="p-12 text-center text-content-secondary">
         <div className="animate-spin w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full mx-auto mb-4" />
@@ -34,7 +37,7 @@ export const PresentationExportPage: React.FC = () => {
     );
   }
 
-  if (isError || !presentation) {
+  if (isError || savedBranding.isError || savedDocuments.isError || !presentation) {
     return <div role="alert" className="p-12 text-center text-status-error">
       <p>{isError ? 'Não foi possível carregar a apresentação para exportação.' : 'Apresentação não encontrada.'}</p>
       <Button variant="outline" onClick={() => navigate('/presentations')}>Voltar às apresentações</Button>

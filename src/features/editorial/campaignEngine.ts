@@ -1,3 +1,4 @@
+import {automaticReelsDuration} from './automaticEditorialPlan';
 import {defaultPhotography,renderPhotography} from '@/features/production/photographicDirection';
 import type {
   EditorialContext,
@@ -104,6 +105,7 @@ export function validateEditorialItems(
   items: MonthlyItem[],
   context: EditorialContext,
 ) {
+  if(items.length>90)throw Error("Uma campanha permite até 90 materiais no total.");
   const blocked = forbiddenTerms(context),
     signatures = new Set<string>();
   for (const item of items) {
@@ -132,7 +134,11 @@ export function validateEditorialItems(
   }
 }
 export function editorialQualityWarnings(item: MonthlyItem): string[] {
-  const blocks = item.copy
+  const artwork = item.editorial?.postConcept
+    ? [item.editorial.postConcept.headline,item.editorial.postConcept.support].join('\n')
+    : item.editorial?.slides?.map(slide=>[slide.headline,slide.text].filter(Boolean).join(' — ')).join('\n')
+      || item.editorial?.scenes?.map(scene=>scene.onScreen||scene.text).join('\n');
+  const blocks = (artwork || item.copy)
     .split("\n")
     .map((b) =>
       b.replace(/^(?:Slide \d+:|Cena \d+ \(\d+s\):|Legenda:)\s*/, "").trim(),
@@ -146,7 +152,7 @@ export function editorialQualityWarnings(item: MonthlyItem): string[] {
     );
   if (
     blocks.some((b) => b.split(/\s+/).length > 30) ||
-    item.copy.split(/\s+/).length > 150
+    (!artwork && item.copy.split(/\s+/).length > 150)
   )
     alerts.push(
       "Texto extenso para a estrutura curta. Revise concisão e ritmo; nenhum trecho será cortado automaticamente.",
@@ -186,6 +192,7 @@ const narrativeRoles: Record<number, string[]> = {
   9: ['context','diagnostic','criteria','checklist','comparison','action','summary'],
   10: ['context','diagnostic','criteria','evidence','checklist','comparison','action','summary'],
 };
+const compactArtwork=(value:string,maxWords=14)=>value.trim().split(/\s+/).slice(0,maxWords).join(' ');
 const topicReference = (theme: string) => theme.split(/\s+/).slice(0, 8).join(' ');
 function decisionFrame(trace:EditorialTrace){
  const topic=normalizeEditorial(trace.theme+' '+trace.audience);
@@ -231,7 +238,7 @@ export function renderProductionDirection(item:MonthlyItem):string{
 }
 function applyNarrativeStructure(item:MonthlyItem,size:number,seconds:number):MonthlyItem{
  const trace={...item.editorial!};const blocks=narrativeBlocks(trace,size);blocks[0]={...blocks[0],headline:item.title};
- if(item.format==='carousel')trace.slides=blocks.map(b=>({...b}));
+ if(item.format==='carousel')trace.slides=blocks.map(b=>{const fact=trace.sources.some(source=>source==='Informação aprovada: '+b.text);return {...b,headline:compactArtwork(b.headline,10),text:fact?(b.text.split(/\s+/).length<=18?b.text:'Confira a informação aprovada completa na legenda.'):compactArtwork(b.text,16)};});
  else trace.scenes=blocks.map((b,i)=>({...b,narration:b.text,onScreen:b.headline,seconds:Math.floor(seconds/size)+(i<seconds%size?1:0),camera:cameraForRole(b.role),audio:i===0?'Locução clara; trilha instrumental discreta.':i===size-1?'Locução com pausa antes da chamada; finalizar a trilha sem cortar a frase.':'Voz em primeiro plano; transição sonora discreta entre blocos.'}));
  const updated={...item,editorial:trace};trace.visual=renderProductionDirection(updated);return {...updated,copy:renderEditorialCopy(updated)};
 }
@@ -252,21 +259,21 @@ export function generateCampaignPlan(
   const total = counts.post + counts.reels + counts.carousel;
   if (
     Object.values(counts).some(
-      (n) => !Number.isInteger(n) || n < 0 || n > 30,
+      (n) => !Number.isInteger(n) || n < 0 || n > 90,
     ) ||
     total < 1 ||
     total > 90
   )
-    throw Error("Configure de 1 a 90 conteúdos, até 30 por formato.");
+    throw Error("Configure de 1 a 90 materiais no total por cliente/mês.");
   if (!client.trim() || !context.objective.trim() || !context.audience.trim())
     throw Error("Preencha cliente, objetivo e público antes de gerar.");
-  const slidesCount = context.carouselSlides ?? 7,
+  const slidesCount = context.carouselSlides ?? 5,
     seconds = context.reelsSeconds ?? 30,
     scenesCount = context.reelsScenes ?? 3;
   if (
     !Number.isInteger(slidesCount) ||
     slidesCount < 3 ||
-    slidesCount > 10 ||
+    slidesCount > 8 ||
     !Number.isInteger(seconds) ||
     seconds < 10 ||
     seconds > 90 ||
@@ -276,7 +283,7 @@ export function generateCampaignPlan(
     seconds < scenesCount * 2
   )
     throw Error(
-      "Use de 3 a 10 slides e de 3 a 10 cenas, com duração de 10 a 90 segundos e pelo menos 2 segundos por cena.",
+      "Use de 3 a 8 lâminas e de 3 a 10 cenas, com duração de 10 a 90 segundos e pelo menos 2 segundos por cena.",
     );
   const blocked = forbiddenTerms(context),
     avoided = (context.avoidedTopics || []).map(normalizeEditorial);
@@ -335,6 +342,9 @@ export function generateCampaignPlan(
             normalizeEditorial(h.item.editorial!.angle),
         ),
     );
+  const [historyYear,historyMonth]=month.split('-').map(Number);
+  const previousMonth=new Date(Date.UTC(historyYear,historyMonth-2,1)).toISOString().slice(0,7);
+  const previousThemes=new Set(history.filter(h=>h.month?.slice(0,7)===previousMonth).map(h=>normalizeEditorial(h.item.editorial?.theme||h.item.title)));
   const oldTitles = new Set(
     history
       .filter((h) => !h.item.editorial)
@@ -384,6 +394,7 @@ export function generateCampaignPlan(
       .filter(
         (c) =>
           allowedText(c.theme) &&
+          !previousThemes.has(normalizeEditorial(c.theme)) &&
           !used.has(c.signature) &&
           !essential.has(
             normalizeEditorial(c.theme) + "|" + normalizeEditorial(c.angle),
@@ -422,7 +433,7 @@ export function generateCampaignPlan(
     );
     familyUse.set(f.id, (familyUse.get(f.id) || 0) + 1);
     const formal = /formal|profissional|institucional|técnico|tecnico/i.test(context.tone),
-      title = `${openings[angle] || "Sobre"} ${theme}`,
+      title = compactArtwork(`${openings[angle] || "Sobre"} ${theme}`,10),
       cta =
         f.journey === "Conversão"
           ? formal
@@ -472,6 +483,7 @@ export function generateCampaignPlan(
       ],
       rules: [
         "quotas-exatas",
+        "politica-editorial-12-materiais-2026-10",
         "peso-do-pilar",
         "historico-do-cliente",
         "sem-fatos-presumidos",
@@ -485,14 +497,14 @@ export function generateCampaignPlan(
     trace.hashtags='#'+theme.replace(/[^\p{L}\p{N}_]/gu,'').slice(0,60);
     trace.rules.push('narrativa-progressiva-revisavel');
     const shortTheme=topicReference(theme);
-    trace.caption=`${title}.\n${fact||`Ao pensar em ${shortTheme}, organize sua necessidade, seus critérios e o próximo passo.`}\n${cta}`;
+    trace.caption=`${title}.\n${fact||`Ao pensar em ${shortTheme}, organize sua necessidade antes de decidir.`}\n${decisionFrame(trace).need}\nConsidere ${decisionFrame(trace).criteria}. ${decisionFrame(trace).action}\nEstas orientações ajudam a formular perguntas; confirme as condições e a adequação ao seu caso com a equipe.\n${cta}`;
     let item:MonthlyItem={date:`${month}-${String(1+Math.floor((index*days)/total)).padStart(2,"0")}`,format,title,copy:trace.caption,editorial:trace};
     if(format==='post'){
-      const support=fact||`${decisionFrame(trace).need} Ao pensar em ${shortTheme}, organize essa resposta antes do próximo passo.`;
+      const support='Uma ideia para orientar sua decisão. Confira os detalhes na legenda.';
       trace.postConcept={headline:title,support,composition:`Poster com título em destaque sobre ${shortTheme}, apoio em um único bloco e CTA discreto. Criar uma ilustração conceitual ou usar material autorizado; evitar imagem que sugira resultados inexistentes.`,caption:trace.caption};
       trace.visual+=` ${trace.postConcept.composition} Enquadramento sugerido: plano médio com ângulo a 45 graus e luz lateral suave quando houver fotografia autorizada; reservar espaço para título e CTA.`;
       item.copy=renderEditorialCopy(item);
-    } else item=applyNarrativeStructure(item,format==='carousel'?slidesCount:scenesCount,seconds);
+    } else {const reelIndex=results.filter(result=>result.format==='reels').length;const duration=context.planningMode==='automatic'?automaticReelsDuration(reelIndex):seconds;item=applyNarrativeStructure(item,format==='carousel'?slidesCount:context.planningMode==='automatic'?duration/10:scenesCount,duration);}
     item.editorial!.visual=renderProductionDirection(item);
     results.push(item);
   }
@@ -507,8 +519,8 @@ export function restructureItem(
 ): MonthlyItem {
   if (!item.editorial || !["carousel", "reels"].includes(item.format))
     throw Error("Peça sem ficha de formato; ajuste a estrutura manualmente.");
-  if (!Number.isInteger(size) || size < 3 || size > 10)
-    throw Error("Use de 3 a 10 slides/cenas.");
+  if (!Number.isInteger(size) || size < 3 || size > (item.format==='carousel'?8:10))
+    throw Error("Use de 3 a 8 lâminas ou de 3 a 10 cenas.");
   const trace = { ...item.editorial,caption:item.editorial.caption||item.copy.split('\n').find(line=>line.startsWith('Legenda:'))?.replace(/^Legenda:\s*/, '') },
     isCarousel = item.format === "carousel";
   if (

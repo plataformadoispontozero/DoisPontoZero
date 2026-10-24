@@ -15,7 +15,6 @@ import {
   Layers,
   FileCheck2,
 } from 'lucide-react'
-import { useBranding } from '@/hooks/useBranding'
 import { useDashboardData } from '@/features/dashboard/data/useDashboardData'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { SectionHeader } from '@/components/ui/SectionHeader'
@@ -25,19 +24,15 @@ import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Timeline } from '@/features/dashboard/components/Timeline'
 import { StatusIndicator } from '@/components/ui/StatusIndicator'
-import { isSupabaseConfigured, checkSupabaseHealth, type SupabaseHealthStatus } from '@/lib/supabase/client'
+import { isSupabaseConfigured } from '@/lib/supabase/client'
+import { DepartmentWorkloadPanel } from './components/DepartmentWorkloadPanel'
 
 export const DashboardPage: React.FC = () => {
   const auth = useAuth()
-  const { branding } = useBranding()
   const navigate = useNavigate()
-  const [healthStatus, setHealthStatus] = React.useState<SupabaseHealthStatus | null>(null)
-
-  React.useEffect(() => {
-    checkSupabaseHealth().then(setHealthStatus)
-  }, [])
   const {
     indicators,
+    departmentWorkload,
     priorityTasks,
     recentProjects,
     upcomingMeetings,
@@ -99,7 +94,7 @@ export const DashboardPage: React.FC = () => {
       <section aria-labelledby="indicadores-operacionais">
         <SectionHeader
           title="Indicadores Operacionais"
-          subtitle="Consumindo camada de dados do sistema"
+          subtitle="Projetos, demandas e aprovações da agência"
           badge={
             isInitialEnvironment ? (
               <Badge variant="neutral" className="text-[10px]">
@@ -125,7 +120,7 @@ export const DashboardPage: React.FC = () => {
                 {indicators.activeProjects}
               </div>
               <p className="text-[11px] text-[#98989F] mt-1">
-                Nenhum projeto em andamento
+                {indicators.activeProjects ? 'Projetos em execução' : 'Nenhum projeto em andamento'}
               </p>
             </CardContent>
           </Card>
@@ -145,7 +140,7 @@ export const DashboardPage: React.FC = () => {
                 {indicators.pendingTasks}
               </div>
               <p className="text-[11px] text-[#98989F] mt-1">
-                Fila de produção limpa
+                {indicators.pendingTasks ? 'Demandas aguardando conclusão' : 'Fila de produção limpa'}
               </p>
             </CardContent>
           </Card>
@@ -165,7 +160,7 @@ export const DashboardPage: React.FC = () => {
                 {indicators.weekDeliveries}
               </div>
               <p className="text-[11px] text-[#98989F] mt-1">
-                Sem prazos críticos nesta semana
+                {indicators.weekDeliveries ? 'Entregas previstas nos próximos 7 dias' : 'Sem entregas previstas nesta semana'}
               </p>
             </CardContent>
           </Card>
@@ -185,12 +180,14 @@ export const DashboardPage: React.FC = () => {
                 {indicators.pendingApprovals}
               </div>
               <p className="text-[11px] text-[#98989F] mt-1">
-                Sem peças pendentes de aceite
+                {indicators.pendingApprovals ? 'Calendários aguardando decisão' : 'Sem calendários pendentes de aceite'}
               </p>
             </CardContent>
           </Card>
         </div>
       </section>
+
+      <DepartmentWorkloadPanel workload={departmentWorkload ?? []} />
 
       {/* C. MINHAS PRIORIDADES */}
       <section aria-labelledby="suas-prioridades">
@@ -285,7 +282,7 @@ export const DashboardPage: React.FC = () => {
                       </h4>
                       <p className="text-xs text-[#B8B8C0]">{project.client}</p>
                     </div>
-                    <StatusIndicator status="in_progress" label={project.status} />
+                    <StatusIndicator status="in_progress" label={({planning:'Planejamento',in_progress:'Em produção',review:'Em revisão',completed:'Concluído',paused:'Em pausa'} as Record<string,string>)[project.status]||project.status} />
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between text-xs text-[#B8B8C0]">
@@ -300,8 +297,8 @@ export const DashboardPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-[#98989F] pt-2 border-t border-[#30303B]">
-                    <span>Resp: {project.owner.name}</span>
-                    <span>Prazo: {project.deadline}</span>
+                    <span>{project.owner.name?`Resp: ${project.owner.name}`:'Responsável não informado'}</span>
+                    <span>{project.deadline?`Prazo: ${project.deadline}`:'Sem prazo definido'}</span>
                   </div>
                 </Card>
               ))}
@@ -412,96 +409,7 @@ export const DashboardPage: React.FC = () => {
             )}
           </section>
 
-              {/* Card Resumo do Workspace — Auditado e Real */}
-          <Card className="bg-[#1C1C24] border-[#30303B]">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#C74410]" />
-                  <CardTitle className="text-xs font-semibold text-[#F8F9FC]">
-                    Status do Workspace
-                  </CardTitle>
-                </div>
-                <span className="text-[10px] text-[#B8B8C0] font-mono">
-                  {branding.company.workspaceName}
-                </span>
-              </div>
-            </CardHeader>
-            <CardContent className="text-xs space-y-2 pt-1 text-[#B8B8C0]">
-              {/* Seção 1: STATUS OPERACIONAL */}
-              <div className="space-y-1.5 pb-2 border-b border-[#30303B]">
-                <span className="text-[10px] text-[#98989F] font-bold uppercase tracking-wider block">
-                  Status Operacional
-                </span>
-                <div className="flex justify-between py-0.5">
-                  <span>Marca Ativa:</span>
-                  <span className="text-[#F8F9FC] font-medium">{branding.name}</span>
-                </div>
-                <div className="flex justify-between py-0.5">
-                  <span>Ambiente:</span>
-                  <span className="text-[#34D399] font-medium">
-                    {import.meta.env.DEV ? 'Desenvolvimento Executivo' : 'Produção'}
-                  </span>
-                </div>
-                <div className="flex justify-between py-0.5">
-                  <span>Conectividade:</span>
-                  {healthStatus === null ? (
-                    <span className="text-[#B8B8C0] font-medium flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#B8B8C0] animate-pulse" />
-                      Verificando...
-                    </span>
-                  ) : healthStatus.connected ? (
-                    <span className="text-[#34D399] font-medium flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#34D399]" />
-                      Supabase Ativo ({healthStatus.latencyMs}ms)
-                    </span>
-                  ) : healthStatus.configured ? (
-                    <span className="text-[#FB7185] font-medium flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FB7185]" />
-                      Configurado (Sem Resposta)
-                    </span>
-                  ) : (
-                    <span className="text-[#FBBF24] font-medium flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FBBF24]" />
-                      Modo Local / Demo
-                    </span>
-                  )}
-                </div>
-                <div className="flex justify-between py-0.5">
-                  <span>Autenticação:</span>
-                  <span className="text-[#F8F9FC] font-medium">
-                    {auth.user ? 'Sessão Supabase verificada' : 'Demonstração local'}
-                  </span>
-                </div>
-              </div>
 
-              {/* Seção 2: STATUS DE DESENVOLVIMENTO */}
-              <div className="pt-2 space-y-1.5">
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-[#98989F] font-bold uppercase tracking-wider text-[10px]">
-                    Status de Desenvolvimento
-                  </span>
-                  <span className="text-[#FF8759] font-semibold">
-                    Homologação operacional pendente
-                  </span>
-                </div>
-                <div className="h-1.5 w-full bg-[#101014] rounded-full overflow-hidden flex border border-[#30303B]">
-                  <div className="bg-[#FF8759] h-full w-full" title="Consulte os bloqueadores no diagnóstico" />
-                </div>
-                <div className="flex items-center justify-between pt-1">
-                  <p className="text-[10px] text-[#98989F] leading-tight">
-                    Consulte os testes e bloqueadores por módulo.
-                  </p>
-                  <button
-                    onClick={() => navigate('/settings/diagnostics')}
-                    className="text-[10px] text-[#C74410] font-semibold hover:underline"
-                  >
-                    Diagnóstico
-                  </button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>

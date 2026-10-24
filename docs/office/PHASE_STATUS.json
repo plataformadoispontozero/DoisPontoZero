@@ -1,5 +1,5 @@
 {
-  "current_phase": "06",
+  "current_phase": "09",
   "phase_00": {
     "status": "accepted",
     "evidence": "User explicitly requested Phase 01 after audit."
@@ -59,11 +59,15 @@
   "phase_06": {
     "implementation": "complete",
     "scope": "Global in-app room controls (COMMAND 06)",
-    "homologation": "pending",
-    "production_enabled": false,
+    "homologation": "accepted_by_responsible",
+    "production_enabled": true,
+    "production_worker_version": "551c94e2-140d-4bc8-831e-0a43590ca925",
+    "production_rollout_date": "2026-10-19",
+    "production_scope": "Phase 06 controls and combined Phase 06/07 homologation label; private calls and media remain disabled by build flags",
     "evidence": "docs/qa/office-phase06-2026-10-15.md",
     "technical_validation": "automated_verified",
-    "real_multiuser_validation": "pending"
+    "real_multiuser_validation": "not_independently_observed",
+    "acceptance": "User explicitly accepted Phase 06 and authorized continuing through subsequent phases on 2026-10-18"
   },
   "production_rollout": {
     "date": "2026-10-15",
@@ -73,7 +77,37 @@
     "phase_06": "review_only"
   },
   "phase_07": {
-    "status": "blocked",
-    "reason": "Requires explicit acceptance of Phase 06. Not started."
+    "status": "implementation_and_technical_homologation_complete",
+    "scope": "Private voice invitations and notifications (COMMAND 07)",
+    "technical_validation": "automated_verified",
+    "homologation": "technical_homologation_complete_user_authorized",
+    "production_enabled": false,
+    "production_status_label": "Fases 06 e 07 · Em homologação; private-call feature remains disabled in production",
+    "production_worker_version": "551c94e2-140d-4bc8-831e-0a43590ca925",
+    "supabase_migration": "applied_and_permissions_verified_on_shared_project",
+    "stage_worker_version": "c07dc8fb-bda4-4ba7-92e6-bc0b2140741d",
+    "real_two_user_audio": "not_observed",
+    "evidence": "docs/qa/office-phase07-2026-10-18.md"
+  },
+  "phase_08": {
+    "status": "stage_room_connection_verified_manual_device_validation_pending",
+    "scope": "Optional camera, screen share and audio/video settings (COMMAND 08)",
+    "technical_validation": "full_test_suite_typecheck_and_room_context_regression_verified",
+    "homologation": "stage_room_connection_verified_microphone_camera_and_screen_capture_pending",
+    "stage_worker_version": "ace34794-b6a7-4f70-9dec-b17453e7322a",
+    "production_enabled": false,
+    "supabase_backend_deployment": "office-room-token deployed to main/PRODUCTION on 2026-10-19 with user authorization; UI media flag remains disabled",
+    "google_meet_assessment": "Can be initiated from the Office flow using a Meet link/API; complete Meet video UI does not embed in the Office page. OAuth required to create spaces.",
+    "evidence": "docs/qa/office-phase08-2026-10-18.md"
+  },
+  "phase_09": {
+    "status": "implementation_complete_manual_tray_validation_pending",
+    "scope": "Opt-in Tauri tray and background mode (COMMAND 09)",
+    "tauri_version": "2.12.3",
+    "technical_validation": "cargo_check_and_macos_app_bundle_verified",
+    "manual_tray_validation": "pending",
+    "production_enabled": false,
+    "autostart": "omitted_optional",
+    "evidence": "docs/qa/office-phase09-2026-10-18.md"
   }
 }

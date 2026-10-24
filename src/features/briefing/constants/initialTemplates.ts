@@ -791,3 +791,16 @@ export const INITIAL_BRIEFING_TEMPLATES: InitialTemplateDefinition[] = [
     ],
   },
 ]
+
+// Shared client evidence is collected once in each service briefing. These fields
+// feed editorial planning; an empty answer must never be replaced by invented facts.
+for (const template of INITIAL_BRIEFING_TEMPLATES) {
+  const existing = new Set(template.sections.flatMap(section => section.questions.map(question => question.question_key)))
+  const questions: InitialTemplateDefinition['sections'][number]['questions'] = [
+    { id:`${template.id}-facts`, question_key:'fatos_aprovados', label:'Quais fatos, números e informações estão aprovados para comunicação?', description:'Informe somente dados confirmados e, quando possível, a fonte. Não inclua senhas ou dados pessoais sensíveis.', question_type:'long_text' as const, is_required:false },
+    { id:`${template.id}-terms`, question_key:'termos_proibidos', label:'Quais palavras, promessas ou expressões a marca não deve utilizar?', question_type:'long_text' as const, is_required:false },
+    { id:`${template.id}-avoid`, question_key:'temas_evitar', label:'Quais temas devem ser evitados ou já foram trabalhados recentemente?', description:'Inclua campanhas anteriores que não devem se repetir e eventuais restrições.', question_type:'long_text' as const, is_required:false },
+    { id:`${template.id}-visual`, question_key:'direcao_visual', label:'Qual direção visual e identidade da marca devem orientar as peças?', description:'Cores, referências, estilo de imagem, enquadramento e espaço para textos. Inclua links autorizados quando houver.', question_type:'long_text' as const, is_required:false },
+  ].filter(question => !existing.has(question.question_key))
+  if (questions.length) template.sections.push({id:`${template.id}-editorial-evidence`,title:'Fatos e direção da marca',description:'Referências confirmadas para orientar a equipe e o calendário editorial.',questions})
+}

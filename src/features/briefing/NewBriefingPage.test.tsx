@@ -25,7 +25,7 @@ describe('Briefing prerequisites for a real agency', () => {
   })
   it('uses a CRM client even when the client has no project and requires a real template selection', () => {
     state.clients = [{ id: 'real-client', name: 'Cliente real sem projeto', slug: 'real' }]
-    state.templates = [{ id: 'real-template', name: 'Modelo real', category: 'general', version: 1 }]
+    state.templates = [{ id: 'real-template', name: 'Modelo real', category: 'social_media', version: 1 }]
     show()
     fireEvent.click(screen.getByText('Cliente real sem projeto'))
     fireEvent.click(screen.getByRole('button', { name: 'Continuar' }))

@@ -40,11 +40,11 @@ export const SettingsOverviewPage: React.FC = () => {
         {tabs.map((tab) => {
           const Icon = tab.icon
           return (
-            <Link key={tab.id} to={tab.path} className="group focus:outline-none">
+            <Link key={tab.id} to={tab.path} className="group rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101014]">
               <Card className="h-full transition-all duration-200 group-hover:border-[#C74410]/60 group-hover:bg-[#1C1C24]/90 group-hover:shadow-lg group-hover:shadow-[#C74410]/5">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <div className="p-2.5 rounded-xl bg-[#C74410]/10 text-[#C74410] group-hover:bg-[#C74410] group-hover:text-white transition-colors">
+                    <div className="p-2.5 rounded-xl bg-[#C74410]/10 text-[#FF8759] group-hover:bg-[#C74410] group-hover:text-white transition-colors">
                       <Icon className="w-5 h-5" />
                     </div>
                     {tab.badge && (
@@ -53,7 +53,7 @@ export const SettingsOverviewPage: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <CardTitle className="text-base font-bold text-[#F8F9FC] group-hover:text-[#C74410] transition-colors flex items-center gap-1.5 mt-3">
+                  <CardTitle className="text-base font-bold text-[#F8F9FC] group-hover:text-[#FF8759] transition-colors flex items-center gap-1.5 mt-3">
                     {tab.label}
                     <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#C74410]" />
                   </CardTitle>

@@ -60,7 +60,7 @@ export const initialAgencyDocumentSettings: AgencyDocumentSettingsData = {
   id: 'doc-001',
   agency_id: DEMO_AGENCY_ID,
   header_style: 'centered_logo',
-  footer_text: 'Documento confidencial gerado via Creative Agency OS',
+  footer_text: 'Documento confidencial gerado via 2.0',
   show_logo: true,
   show_watermark: true,
   watermark_opacity: 0.05,
@@ -77,7 +77,7 @@ export const initialAgencyPortalSettings: AgencyPortalSettingsData = {
   welcome_message: 'Bem-vindo ao portal de colaboração da nossa agência.',
   show_agency_logo: true,
   show_client_logo: true,
-  footer_text: 'Powered by Creative Agency OS',
+  footer_text: 'Powered by 2.0',
   contact_email: 'contato@doiszero.com.br',
   website_url: 'https://doiszero.com.br',
   created_at: new Date().toISOString(),
@@ -627,42 +627,40 @@ export function useAgencyTeam(agencyId?: string) {
   }
 }
 
+export const ACTIVITY_FEED_LIMIT = 100
 export function useActivityFeed(agencyId?: string) {
   const auth = useAuth()
   const currentAgencyId = useAgencyId()
   agencyId = currentAgencyId || agencyId || ''
   return useQuery({
     queryKey: ['activityFeed', agencyId, auth.user?.id],
-    enabled: auth.isDemo || (!!agencyId && !!auth.user),
+    enabled: !!agencyId && !!auth.user,
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
-      if (isSupabaseConfigured && supabase) {
-        const { data, error } = await supabase
-          .from('audit_logs')
-          .select('*, profiles:actor_user_id(full_name, avatar_url)')
-          .eq('agency_id', agencyId)
-          .order('created_at', { ascending: false })
-          .limit(20)
-
-        if (error) throw error
-        if (data) {
-          return data.map((log: any) => ({
-            id: log.id,
-            agency_id: log.agency_id,
-            actor_user_id: log.actor_user_id,
-            actor_name: log.profiles?.full_name || 'Sistema',
-            actor_avatar: log.profiles?.avatar_url,
-            event_type: log.action,
-            resource_type: log.entity_type,
-            resource_id: log.entity_id,
-            summary: log.metadata?.summary || `${log.action} em ${log.entity_type}`,
-            details: log.metadata,
-            created_at: log.created_at,
-          })) as ActivityEvent[]
-        }
-      }
-      return isSupabaseConfigured ? [] : initialActivityEvents
+      if (!isSupabaseConfigured || !supabase) throw new Error('Conexão necessária para carregar atividades reais.')
+      const { data, error } = await supabase
+        .from('audit_logs')
+        .select('id,agency_id,actor_user_id,action,entity_type,entity_id,metadata,created_at,profiles:actor_user_id(full_name,avatar_url)')
+        .eq('agency_id', agencyId)
+        .order('created_at', { ascending: false })
+        .limit(ACTIVITY_FEED_LIMIT)
+      if (error) throw error
+      return (data ?? []).map((log: any) => ({
+        id: log.id,
+        agency_id: log.agency_id,
+        actor_user_id: log.actor_user_id,
+        actor_name: log.profiles?.full_name || (log.actor_user_id ? 'Membro sem nome disponível' : 'Sistema'),
+        actor_avatar: log.profiles?.avatar_url,
+        event_type: log.action,
+        resource_type: log.entity_type,
+        resource_id: log.entity_id,
+        summary: typeof log.metadata?.summary === 'string' ? log.metadata.summary : `${log.action} em ${log.entity_type}`,
+        details: log.metadata,
+        created_at: log.created_at,
+      })) as ActivityEvent[]
     },
-    initialData: isSupabaseConfigured ? [] : initialActivityEvents,
   })
 }
 

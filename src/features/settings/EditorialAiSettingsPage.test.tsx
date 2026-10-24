@@ -1,0 +1,62 @@
+import {fireEvent,render,screen,waitFor} from '@testing-library/react'
+import {beforeEach,describe,expect,it,vi} from 'vitest'
+const state=vi.hoisted(()=>({invoke:vi.fn(),role:'OWNER',agency:'agency-a',allowed:true}))
+vi.mock('@/features/auth/AuthProvider',()=>({useAgencyId:()=>state.agency,usePermission:()=>state.allowed,useAuth:()=>({user:{id:'operator'},activeAgency:{roleName:state.role}})}))
+vi.mock('@/lib/supabase/client',()=>({supabase:{functions:{invoke:state.invoke}}}))
+import {EditorialAiSettingsPage} from './EditorialAiSettingsPage'
+const base={provider:'none',model:'',ollamaUrl:'http://localhost:11434',apiKeyConfigured:false,secureStorageAvailable:true,generationAvailable:false,allowApprovedData:false}
+beforeEach(()=>{state.role='OWNER';state.agency='agency-a';state.allowed=true;state.invoke.mockReset();state.invoke.mockImplementation(async(_name:string,{body}:any)=>({data:body.action==='status'?base:body.action==='test'?{verified:true}:{...base,...body,apiKeyConfigured:true,generationAvailable:true},error:null}))})
+async function loaded(){render(<EditorialAiSettingsPage/>);await waitFor(()=>expect(screen.getByRole('button',{name:'Salvar conexão de IA'})).toBeEnabled())}
+describe('editorial AI connection settings',()=>{
+ it('never loads credentials for an unauthorized role',()=>{state.role='MANAGER';render(<EditorialAiSettingsPage/>);expect(screen.getByRole('alert')).toHaveTextContent('Somente OWNER ou ADMIN');expect(state.invoke).not.toHaveBeenCalled()})
+ it('starts inactive and saves a masked key without caching or resending it during the test',async()=>{
+  await loaded();expect(screen.getByLabelText('Provedor')).toHaveValue('none')
+  fireEvent.change(screen.getByLabelText('Provedor'),{target:{value:'gemini'}})
+  fireEvent.change(screen.getByLabelText('Modelo'),{target:{value:'gemini-test'}})
+  const key=screen.getByLabelText('Chave da API Gemini');expect(key).toHaveAttribute('type','password')
+  fireEvent.change(key,{target:{value:'TEST_ONLY_API_KEY'}})
+  fireEvent.click(screen.getByRole('checkbox'))
+  fireEvent.click(screen.getByRole('button',{name:'Salvar conexão de IA'}))
+  await waitFor(()=>expect(key).toHaveValue(''))
+  expect(state.invoke.mock.calls.at(-1)?.[1].body).toMatchObject({action:'save',agencyId:'agency-a',provider:'gemini',model:'gemini-test',apiKey:'TEST_ONLY_API_KEY',allowApprovedData:true})
+  expect(await screen.findByText(/Configuração salva com segurança/)).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button',{name:'Testar conexão Gemini'}))
+  await screen.findByText(/validada com uma mensagem de teste/)
+  expect(state.invoke.mock.calls.at(-1)?.[1].body).toEqual({action:'test',agencyId:'agency-a'})
+ })
+ it('preserves an existing key by omitting a blank credential and requires saving changes before testing',async()=>{
+  state.invoke.mockImplementation(async(_name:string,{body}:any)=>({data:body.action==='status'?{...base,provider:'gemini',model:'gemini-test-a',apiKeyConfigured:true,allowApprovedData:true,generationAvailable:true}:{...base,provider:'gemini',model:body.model,apiKeyConfigured:true,allowApprovedData:true},error:null}))
+  await loaded();expect(screen.getByLabelText('Chave da API Gemini')).toHaveValue('')
+  expect(screen.getByRole('checkbox')).toBeChecked()
+  expect(screen.getByRole('button',{name:'Testar conexão Gemini'})).toBeEnabled()
+  fireEvent.change(screen.getByLabelText('Modelo'),{target:{value:'gemini-test-b'}})
+  expect(screen.getByRole('button',{name:'Testar conexão Gemini'})).toBeDisabled()
+  fireEvent.click(screen.getByRole('button',{name:'Salvar conexão de IA'}))
+  await screen.findByText(/Configuração salva com segurança/)
+  expect(state.invoke.mock.calls.at(-1)?.[1].body).not.toHaveProperty('apiKey')
+ })
+ it('shows retry on status failure and does not allow a blind save',async()=>{
+  state.invoke.mockResolvedValueOnce({data:null,error:new Error('network')})
+  render(<EditorialAiSettingsPage/>);expect(await screen.findByRole('alert')).toHaveTextContent('Não foi possível carregar')
+  expect(screen.queryByRole('button',{name:'Salvar conexão de IA'})).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button',{name:'Tentar novamente'}))
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Salvar conexão de IA'})).toBeEnabled())
+ })
+ it('prepares Ollama without offering a false connection test',async()=>{
+  await loaded();fireEvent.change(screen.getByLabelText('Provedor'),{target:{value:'ollama'}})
+  expect(screen.getByLabelText('Endereço local do Ollama')).toHaveValue('http://localhost:11434')
+  expect(screen.getByText(/localhost do servidor da plataforma não é esse computador/)).toBeInTheDocument()
+  fireEvent.change(screen.getByLabelText('Modelo'),{target:{value:'local-model'}})
+  fireEvent.click(screen.getByRole('button',{name:'Salvar conexão de IA'}))
+  await screen.findByText(/Configuração local preparada/)
+  expect(screen.getByRole('button',{name:'Testar conexão Gemini'})).toBeDisabled()
+  expect(state.invoke.mock.calls.at(-1)?.[1].body).toMatchObject({provider:'ollama',allowApprovedData:false,ollamaUrl:'http://localhost:11434'})
+ })
+ it('clears a typed credential when switching agency and discards the previous form',async()=>{
+  const view=render(<EditorialAiSettingsPage/>);await waitFor(()=>expect(screen.getByRole('button',{name:'Salvar conexão de IA'})).toBeEnabled())
+  fireEvent.change(screen.getByLabelText('Provedor'),{target:{value:'gemini'}});fireEvent.change(screen.getByLabelText('Chave da API Gemini'),{target:{value:'TEST_UNSAVED_KEY'}})
+  state.agency='agency-b';view.rerender(<EditorialAiSettingsPage/>);await waitFor(()=>expect(screen.getByRole('button',{name:'Salvar conexão de IA'})).toBeEnabled())
+  expect(screen.getByLabelText('Provedor')).toHaveValue('none');expect(screen.queryByLabelText('Chave da API Gemini')).not.toBeInTheDocument()
+  expect(state.invoke.mock.calls.at(-1)?.[1].body).toEqual({action:'status',agencyId:'agency-b'})
+ })
+})

@@ -2,7 +2,7 @@ import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // useTasks — TanStack Query hooks for task management
 // ============================================================
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 import { projectKeys } from '@/features/projects/hooks/useProjects'
 import type {
@@ -226,35 +226,35 @@ export function useSubtasks(parentTaskId?: string) {
   })
 }
 
-export function useTaskComments(taskId?: string) {
+export function useTaskComments(taskId?: string, enabled = true) {
   return useQuery({
     queryKey: taskKeys.comments(taskId ?? ''),
     queryFn: () => fetchTaskComments(taskId!),
-    enabled: isSupabaseConfigured && !!taskId,
+    enabled: enabled && isSupabaseConfigured && !!taskId,
   })
 }
 
-export function useTaskAttachments(taskId?: string) {
+export function useTaskAttachments(taskId?: string, enabled = true) {
   return useQuery({
     queryKey: taskKeys.attachments(taskId ?? ''),
     queryFn: () => fetchTaskAttachments(taskId!),
-    enabled: isSupabaseConfigured && !!taskId,
+    enabled: enabled && isSupabaseConfigured && !!taskId,
   })
 }
 
-export function useTaskLinks(taskId?: string) {
+export function useTaskLinks(taskId?: string, enabled = true) {
   return useQuery({
     queryKey: taskKeys.links(taskId ?? ''),
     queryFn: () => fetchTaskLinks(taskId!),
-    enabled: isSupabaseConfigured && !!taskId,
+    enabled: enabled && isSupabaseConfigured && !!taskId,
   })
 }
 
-export function useTaskActivity(taskId?: string) {
+export function useTaskActivity(taskId?: string, enabled = true) {
   return useQuery({
     queryKey: taskKeys.activity(taskId ?? ''),
     queryFn: () => fetchTaskActivity(taskId!),
-    enabled: isSupabaseConfigured && !!taskId,
+    enabled: enabled && isSupabaseConfigured && !!taskId,
   })
 }
 
@@ -601,3 +601,22 @@ export function useAddLink() {
 
 // Atomic group movement; the database validates every task before committing.
 export function useMoveTaskGroup(){const qc=useQueryClient();return useMutation({mutationFn:async({agencyId,taskIds,status}:{agencyId:string;taskIds:string[];status:TaskStatus})=>{if(!supabase)throw new Error('Servidor indisponível');const result=await supabase.rpc('move_task_group',{p_agency_id:agencyId,p_task_ids:taskIds,p_status:status});if(result.error)throw result.error;return result.data as number},onSuccess:async()=>{await Promise.all([qc.invalidateQueries({queryKey:taskKeys.all}),qc.invalidateQueries({queryKey:['management-kanban']}),qc.invalidateQueries({queryKey:['production-timing']}),qc.invalidateQueries({queryKey:projectKeys.all})])}})}
+
+// Cursor pagination keeps older activity reachable without downloading it when the card opens.
+export function useTaskActivityPages(taskId?:string,enabled=true){
+ const agency=useAgencyId()
+ return useInfiniteQuery({
+  queryKey:[...taskKeys.activity(taskId??''),'pages',agency],
+  enabled:enabled&&isSupabaseConfigured&&!!taskId&&!!agency,
+  initialPageParam:null as {createdAt:string;id:string}|null,
+  queryFn:async({pageParam,signal})=>{
+   if(!supabase)throw Error('Conexão indisponível.')
+   let request=supabase.from('task_activity').select('*,actor:profiles(id,full_name,avatar_url)').eq('task_id',taskId!).eq('agency_id',agency)
+   if(pageParam)request=request.or(`created_at.lt.${pageParam.createdAt},and(created_at.eq.${pageParam.createdAt},id.lt.${pageParam.id})`)
+   const {data,error}=await request.order('created_at',{ascending:false}).order('id',{ascending:false}).limit(51).abortSignal(signal)
+   if(error)throw error
+   const entries=(data||[]) as unknown as TaskActivity[],rows=entries.slice(0,50),last=rows.at(-1)
+   return {rows,next:entries.length>50&&last?{createdAt:last.created_at,id:last.id}:null}
+  },getNextPageParam:page=>page.next??undefined,
+ })
+}

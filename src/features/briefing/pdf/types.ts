@@ -1,5 +1,5 @@
 // ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
+// DOIS.ZERO | 2.0
 // FASE 06: PDF STUDIO
 // Types for PDF Generation and Document Model
 // ============================================================
@@ -11,6 +11,12 @@ export interface PdfBrandingConfig {
   primaryColor: string
   secondaryColor: string
   footerText?: string
+  headerStyle?: "centered_logo" | "left_logo" | "minimal"
+  pageFormat?: "A4" | "Letter"
+  documentFont?: string
+  showLogo?: boolean
+  showWatermark?: boolean
+  watermarkOpacity?: number
   accentColor?: string
 }
 
@@ -32,6 +38,7 @@ export interface BriefingPdfSectionItem {
 
 export interface BriefingPdfModel {
   briefingId: string
+  agencyId?: string
   documentId: string
   title: string
   description?: string

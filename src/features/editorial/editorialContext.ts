@@ -3,7 +3,7 @@ import type { EditorialContext } from './monthlyPlanner';
 import type { HistoryEntry, PillarInput } from './campaignEngine';
 export interface SuggestedTopic { text: string; source: string }
 export interface LegacyEditorialSource { id: string; payload: Record<string, unknown> }
-const text = (value: unknown) => typeof value === 'string' ? value.trim().slice(0, 500) : '';
+const text = (value: unknown) => {if(typeof value!=='string')return '';const result=value.trim().slice(0,500);const normalized=result.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[.!]$/,'');return /^(nao informad[oa]|n\/a|nao se aplica|sem informacao|a definir|null|undefined)$/.test(normalized)?'':result;};
 export function suggestEditorialTopics(profile: ClientProfile, briefs: LegacyEditorialSource[], strategies: LegacyEditorialSource[]): SuggestedTopic[] {
  const suggestions: SuggestedTopic[] = [];
  const add = (value: unknown, source: string) => { const original = text(value); const candidate = original.length>140?original.slice(0,137).replace(/\s+\S*$/, '').trim()+'…':original; if(candidate && !suggestions.some(s=>s.text.toLocaleLowerCase()===candidate.toLocaleLowerCase())) suggestions.push({text:candidate,source}); };
@@ -12,12 +12,13 @@ export function suggestEditorialTopics(profile: ClientProfile, briefs: LegacyEdi
  const latestBrief=briefs[0];
  if(latestBrief){ for(const key of ['produtos_servicos','dores_principais','objecoes_comuns']){const v=text(latestBrief.payload[key]);if(v)add(`${key==='produtos_servicos'?'Entenda os serviços':key==='dores_principais'?'Orientações sobre':'Dúvidas sobre'}: ${v}`,'Sugestão baseada no briefing histórico');} }
  const niche=text(profile.niche);
- if(niche){add(`Como escolher serviços de ${niche}`,'Sugestão baseada no nicho do cadastro');add(`Dúvidas frequentes sobre ${niche}`,'Sugestão baseada no nicho do cadastro');}
+ if(niche&&!/^(servicos?|outros?)$/i.test(niche.normalize('NFD').replace(/[\u0300-\u036f]/g,''))){add(`Como escolher serviços de ${niche}`,'Sugestão baseada no nicho do cadastro');add(`Dúvidas frequentes sobre ${niche}`,'Sugestão baseada no nicho do cadastro');}
  const positioning=text(profile.positioning||profile.differential);
  if(positioning)add(`O que considerar sobre ${positioning}`,'Sugestão baseada no posicionamento do cadastro');
  return suggestions.slice(0,8);
 }
-export function missingEditorialInputs(context: EditorialContext, pillars: PillarInput[]): string[] {
+export function missingEditorialInputs(context: EditorialContext, pillars: PillarInput[], mode:'rules'|'gemini'='rules'): string[] {
+ if(mode==='gemini'){const issues:string[]=[];if((context.monthlyDirection||'').trim().length<20)issues.push('direção, copy e estratégia do mês com pelo menos 20 caracteres');if(!context.audience.trim())issues.push('público-alvo do cliente no briefing ou cadastro');return issues;}
  const missing:string[]=[];
  if(!context.objective.trim())missing.push('objetivo do mês');
  if(!context.audience.trim())missing.push('público-alvo');
@@ -45,9 +46,22 @@ export function briefingEditorialContext(answers:BriefContextAnswer[]):Partial<E
  const rows=answers.map(a=>({...a,key:normalize(a.questionKey||''),label:normalize(a.label||''),text:typeof a.value==='string'?a.value.trim():Array.isArray(a.value)?a.value.filter(v=>typeof v==='string').join(', '):''})).filter(a=>a.text);
  const pick=(keys:string[],pattern:RegExp)=>keys.map(k=>rows.find(a=>a.key===k)?.text).find(Boolean)||rows.find(a=>pattern.test(a.key+' '+a.label))?.text;
  const result:Partial<EditorialContext>={};
- const fields:[keyof EditorialContext,string[],RegExp][]=[['objective',['objetivo_principal','objective','objetivo'],/objetivo principal|objective|goals/],['audience',['persona_descricao','target_audience','publico_alvo','audience'],/publico.alvo|persona.descricao|audience/],['tone',['tom_de_voz','tone','tom_comunicacao'],/tom de comunicacao|tom de voz|tone/],['positioning',['posicionamento','brand_positioning','diferenciais'],/posicion|position|diferencia/],['restrictions',['palavras_proibidas','restrictions','restricoes'],/restri|proibi/],['visualGuidance',['identidade_visual','visual_guidance'],/identidade.visual|visual.guidance/]];
+ const fields:[keyof EditorialContext,string[],RegExp][]=[['objective',['objetivo_principal','objective','objetivo'],/objetivo principal|objective|goals/],['audience',['persona_descricao','target_audience','publico_alvo','audience'],/publico.alvo|persona.descricao|audience/],['tone',['tom_de_voz','tone','tom_comunicacao'],/tom de comunicacao|tom de voz|tone/],['positioning',['posicionamento','brand_positioning','diferenciais'],/posicion|position|diferencia/],['restrictions',['palavras_proibidas','restrictions','restricoes'],/restri|proibi/],['visualGuidance',['direcao_visual','identidade_visual','visual_guidance'],/direcao.visual|identidade.visual|visual.guidance/]];
  for(const [field,keys,pattern] of fields){const value=pick(keys,pattern);if(value)(result as Record<string,unknown>)[field]=value;}
+ const specialDates=briefingSpecialDates([],answers);if(specialDates)result.briefSpecialDates=specialDates;
  const topics=pick(['temas_aprovados','approved_topics'],/temas.aprovados|approved.topics/);if(topics)result.topics=topics.split(/\n/).map(t=>t.trim()).filter(Boolean);
+ const forbidden=pick(['termos_proibidos','palavras_proibidas','forbidden_terms'],/termos.proibidos|palavras.proibidas|forbidden.terms/);if(forbidden)result.forbiddenTerms=forbidden.split(/\n|;/).map(t=>t.trim()).filter(Boolean);
+ const avoided=pick(['temas_evitar','temas_a_evitar','avoided_topics'],/temas.a.evitar|temas.evitar|avoided.topics/);if(avoided)result.avoidedTopics=avoided.split(/\n|;/).map(t=>t.trim()).filter(Boolean);
  const facts=pick(['fatos_aprovados','approved_facts'],/fatos.aprovados|approved.facts/);if(facts)result.approvedFacts=facts.split('\n').map(t=>t.trim()).filter(Boolean);
  return result;
+}
+
+/** Preserve the client's supplied wording; dates are interpreted by the monthly planner, not invented here. */
+export function briefingSpecialDates(sources:Record<string,unknown>[], answers:BriefContextAnswer[]=[]):string {
+ const normalize=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ const matches=(s:string)=>/(specialdates|datasespeciais|datascomemorativas|datasimportantes|datassazonais|calendariosazonal)/.test(normalize(s));
+ const values:unknown[]=[];
+ for(const source of sources)for(const [key,value] of Object.entries(source))if(matches(key))values.push(value);
+ for(const answer of answers)if(matches(answer.questionKey||'')||matches(answer.label||''))values.push(answer.value);
+ return [...new Set(values.flatMap(value=>typeof value==='string'?[value.trim()]:Array.isArray(value)?value.filter((v):v is string=>typeof v==='string').map(v=>v.trim()):[]).filter(Boolean))].join('\n\n');
 }

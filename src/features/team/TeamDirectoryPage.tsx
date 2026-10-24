@@ -24,7 +24,7 @@ export function TeamDirectoryPage() {
       <label htmlFor="team-search">Buscar profissional por nome</label>
       <Input id="team-search" value={search} onChange={e => setSearch(e.target.value)} />
       {!team.isLoading && !team.isError && members.length === 0 && <p>Nenhum profissional encontrado.</p>}
-      {!team.isError && <ul className="space-y-3">{members.map(m => <li key={m.id} className="rounded-xl border border-[#30303B] p-4"><div className="flex items-center gap-3"><Avatar name={m.full_name} src={m.avatar_url||undefined}/><Link className="text-[#FF8759]" to={`/team/${m.id}`}>{m.full_name}</Link></div><p className="mt-2 text-sm">{professions.find(p=>p.value===m.profession)?.label||'Função não informada'}</p><p className="text-sm">{m.status} · Papel de acesso: {m.role_name}</p></li>)}</ul>}
+      {!team.isError && <ul aria-label="Profissionais da agência" className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">{members.map(m => <li key={m.id} className="flex min-h-52 flex-col rounded-2xl border border-[#30303B] bg-[#19191f] p-5"><div className="flex flex-1 flex-col items-start gap-3"><Avatar name={m.full_name} src={m.avatar_url||undefined}/><Link className="font-semibold text-[#FF8759] focus-visible:outline-orange-400" to={`/team/${m.id}`}>{m.full_name}</Link></div><p className="mt-2 text-sm">{professions.find(p=>p.value===m.profession)?.label||'Função não informada'}</p><p className="text-sm">{m.status} · Papel de acesso: {m.role_name}</p></li>)}</ul>}
       <Link className="text-[#FF8759]" to="/team/new">Convidar profissional</Link>
     </>}
   </div>

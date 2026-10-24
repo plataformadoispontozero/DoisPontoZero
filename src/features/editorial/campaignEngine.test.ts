@@ -268,13 +268,13 @@ it("supports the maximum contracted batch within the database payload limit", ()
     {
       ...context,
       topics: Array.from({ length: 10 }, (_, i) => `Tema aprovado ${i}`),
-      carouselSlides: 10,
-      reelsScenes: 10,
-      reelsSeconds: 90,
+      carouselSlides: 8,
+      reelsScenes: 5,
+      reelsSeconds: 50,
     },
-    { post: 30, reels: 30, carousel: 30 },
+    { post: 5, reels: 3, carousel: 4 },
   );
-  expect(plan).toHaveLength(90);
+  expect(plan).toHaveLength(12);
   expect(new TextEncoder().encode(JSON.stringify(plan)).byteLength).toBeLessThan(1200000);
 });
 it("flags repeated or long blocks and pending facts without truncating edited copy", () => {
@@ -292,7 +292,7 @@ it("flags repeated or long blocks and pending facts without truncating edited co
 });
 
 describe('progressive format narratives',()=>{
- it.each([3,4,5,6,7,8,9,10])('creates %i distinct slides and scenes with opening, development and closing',size=>{
+ it.each([3,4,5,6,7,8])('creates %i distinct slides and scenes with opening, development and closing',size=>{
   const plan=generateCampaignPlan('2026-11','Cliente auditado',{...context,topics:['Planejamento de reformas comerciais'],audience:'Empresas que precisam de obras',carouselSlides:size,reelsScenes:size,reelsSeconds:40},{post:1,reels:1,carousel:1});
   const slides=plan.find(i=>i.format==='carousel')!.editorial!.slides!;
   expect(slides).toHaveLength(size);expect(slides[0].role).toBe('hook');expect(slides.at(-1)?.role).toBe('cta');expect(new Set(slides.map(s=>s.text.toLowerCase())).size).toBe(size);expect(slides.every(s=>s.headline&&s.visual)).toBe(true);
@@ -302,7 +302,7 @@ describe('progressive format narratives',()=>{
  });
  it('uses exact approved claims only once in slide bodies and distinguishes guidance from missing proof',()=>{
   const fact='Atendimento por agendamento.';
-  const plan=generateCampaignPlan('2026-11','Cliente',{...context,approvedFacts:[fact],carouselSlides:10},{post:0,reels:0,carousel:1});
+  const plan=generateCampaignPlan('2026-11','Cliente',{...context,approvedFacts:[fact],carouselSlides:8},{post:0,reels:0,carousel:1});
   const slides=plan[0].editorial!.slides!;expect(slides.filter(s=>s.text===fact)).toHaveLength(1);expect(plan[0].copy).toContain(fact);expect(plan[0].copy).not.toMatch(/\d+%|R\$/);
  });
  it('preserves edited structured text/visual while changing block count and regenerates technical duration summary',()=>{

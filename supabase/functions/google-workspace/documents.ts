@@ -1,4 +1,6 @@
 // @ts-ignore Deno Edge Functions require explicit TypeScript module extensions.
+import {googleFetch} from './googleFetch.ts';
+// @ts-ignore Deno Edge Functions require explicit TypeScript module extensions.
 import {isFolderDescendant} from './drive.ts';
 export class DriveDocumentUnavailableError extends Error {}
 export const MAX_DRIVE_DOCUMENT_BYTES=512*1024;
@@ -16,7 +18,7 @@ export function isBriefingDocument(file:Pick<GoogleFile,'name'|'mimeType'>,path:
 }
 export function canReadDriveDocument(file:Pick<GoogleFile,'name'|'mimeType'>):boolean{return file.mimeType===GOOGLE_DOC||file.mimeType==='text/plain'||(file.mimeType==='application/octet-stream'&&/\.txt$/i.test(file.name));}
 function metadata(file:GoogleFile,path:string):DriveDocumentMetadata{return {id:file.id,name:file.name,mimeType:file.mimeType,path,version:String(file.version||''),...(file.modifiedTime?{modifiedTime:file.modifiedTime}:{}),...(file.size?{size:file.size}:{}),...(file.webViewLink?{webViewLink:file.webViewLink}:{}),canReadText:canReadDriveDocument(file)};}
-export async function discoverClientDriveDocuments(folderId:string,accessToken:string,fetcher:typeof fetch=fetch):Promise<DriveDocumentScan>{
+export async function discoverClientDriveDocuments(folderId:string,accessToken:string,fetcher:typeof fetch=googleFetch):Promise<DriveDocumentScan>{
  const documents:DriveDocumentMetadata[]=[],visited=new Set<string>(),queue=[{id:folderId,path:''}];let requests=0,foldersScanned=0,limitReason='';
  outer:while(queue.length){
   if(foldersScanned>=DRIVE_DOCUMENT_LIMITS.folders){limitReason='folder_limit';break;}
@@ -48,7 +50,7 @@ export async function readLimitedUtf8(response:Response,maxBytes=MAX_DRIVE_DOCUM
  const bytes=new Uint8Array(length);let offset=0;for(const part of parts){bytes.set(part,offset);offset+=part.byteLength;}
  try{return new TextDecoder('utf-8',{fatal:true}).decode(bytes).replace(/^\uFEFF/,'');}catch{throw Error('O documento TXT precisa estar em UTF-8 válido.');}
 }
-export async function readClientDriveDocument(folderId:string,documentId:string,accessToken:string,fetcher:typeof fetch=fetch):Promise<{document:DriveDocumentMetadata;text:string|null;manualReviewRequired:boolean;reason?:string}>{
+export async function readClientDriveDocument(folderId:string,documentId:string,accessToken:string,fetcher:typeof fetch=googleFetch):Promise<{document:DriveDocumentMetadata;text:string|null;manualReviewRequired:boolean;reason?:string}>{
  if(!/^[A-Za-z0-9_-]{10,200}$/.test(documentId))throw Error('Documento inválido.');
  const headers={Authorization:`Bearer ${accessToken}`};
  const lookup=async(id:string)=>{const response=await fetcher(`https://www.googleapis.com/drive/v3/files/${id}?fields=id,name,mimeType,parents,trashed,version,modifiedTime,size,webViewLink,capabilities(canDownload)&supportsAllDrives=true`,{headers});if(response.status===404||response.status===410)throw new DriveDocumentUnavailableError('Documento removido ou indisponível.');if(!response.ok)throw Error('Documento não está disponível para a conta central.');return await response.json() as GoogleFile;};

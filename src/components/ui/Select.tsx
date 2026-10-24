@@ -14,17 +14,18 @@ export interface SelectProps
 }
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, children, error, options, ...props }, ref) => {
+  ({ className, children, error, options, style, ...props }, ref) => {
     return (
       <div className="relative flex items-center w-full">
         <select
           className={cn(
-            'flex h-9 w-full appearance-none rounded-lg border border-[#30303B] bg-[#1C1C24] px-3 py-1.5 pr-8 text-xs text-[#F8F9FC] transition-colors focus-visible:outline-none focus-visible:border-[#C74410] focus-visible:ring-1 focus-visible:ring-[#C74410] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',
+            'flex h-9 w-full appearance-none rounded-lg border border-[#30303B] bg-[#1C1C24] px-3 py-1.5 pr-8 text-xs text-[#F8F9FC] transition-colors focus-visible:outline-none focus-visible:border-[#C74410] focus-visible:ring-1 focus-visible:ring-[#C74410] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer [&_option]:bg-[#1C1C24] [&_option]:text-[#F8F9FC] [&_optgroup]:bg-[#1C1C24] [&_optgroup]:text-[#F8F9FC]',
             error && 'border-[#FB7185] focus-visible:border-[#FB7185]',
             className
           )}
           ref={ref}
           {...props}
+          style={{colorScheme: 'dark', ...style}}
         >
           {options
             ? options.map((opt) => (

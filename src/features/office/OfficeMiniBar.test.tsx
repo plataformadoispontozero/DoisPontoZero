@@ -6,7 +6,7 @@ import {OfficeVoiceContext,type OfficeVoiceValue} from './OfficeVoiceContext'
 import {initialVoice} from './voiceState'
 const flag=vi.hoisted(()=>({officeControlsEnabled:true}))
 vi.mock('./officeFeature',()=>flag)
-const actions={join:vi.fn(),leave:vi.fn(),setMicrophone:vi.fn(),startAudio:vi.fn()}
+const actions={join:vi.fn(),leave:vi.fn(),setMicrophone:vi.fn(),setCamera:vi.fn(),setScreenShare:vi.fn(),switchDevice:vi.fn(),setOutputVolume:vi.fn(),startAudio:vi.fn()}
 function app(value:Partial<OfficeVoiceValue>={}){return <MemoryRouter><OfficeVoiceContext.Provider value={{...initialVoice,...actions,...value}}><OfficeMiniBar/></OfficeVoiceContext.Provider></MemoryRouter>}
 beforeEach(()=>{cleanup();vi.clearAllMocks();flag.officeControlsEnabled=true})
 it('does not join or capture media when idle or disabled',()=>{const r=render(app());expect(screen.queryByRole('complementary')).toBeNull();r.rerender(app({state:'connected',roomId:'a'}));expect(screen.getByRole('complementary')).toBeVisible();flag.officeControlsEnabled=false;r.rerender(app({state:'connected',roomId:'a'}));expect(screen.queryByRole('complementary')).toBeNull();expect(actions.join).not.toHaveBeenCalled();expect(actions.setMicrophone).not.toHaveBeenCalled()})

@@ -1,0 +1,42 @@
+.presentation-hero {
+ position: relative;
+ isolation: isolate;
+ display: grid;
+ place-items: center;
+ min-height: calc(100svh - 100px);
+ overflow: hidden;
+ border-bottom: 1px solid rgb(255 255 255 / .1);
+ padding: clamp(64px, 8cqw, 112px) 20px 80px;
+ text-align: center;
+}
+.presentation-hero__background { position: absolute; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; }
+.presentation-hero__background::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgb(17 17 19 / .88) 0%, rgb(17 17 19 / .55) 38%, rgb(17 17 19 / .12) 100%); }
+.presentation-hero__grid {
+ position: absolute;
+ inset: -192px;
+ background-image: linear-gradient(to right, rgb(251 146 60 / .16) 1px, transparent 1px), linear-gradient(to bottom, rgb(251 146 60 / .16) 1px, transparent 1px), linear-gradient(to right, rgb(255 255 255 / .08) 1px, transparent 1px), linear-gradient(to bottom, rgb(255 255 255 / .08) 1px, transparent 1px);
+ background-size: 192px 192px, 192px 192px, 48px 48px, 48px 48px;
+ animation: presentation-grid-loop 48s linear infinite;
+}
+.presentation-hero[data-paused='true'] .presentation-hero__grid { animation-play-state: paused; }
+.presentation-hero__content { width: 100%; max-width: 1100px; display: grid; justify-items: center; gap: 26px; }
+.presentation-hero__logo { display: block; width: auto; max-width: min(260px, 70cqw); height: auto; max-height: 88px; object-fit: contain; margin-bottom: 8px; }
+.presentation-hero__client { max-width: 42ch; font-size: clamp(20px, 2.4cqw, 28px); line-height: 1.25; font-weight: 500; letter-spacing: -.025em; color: #fafafa; }
+.presentation-hero__title { max-width: 24ch; font-size: clamp(38px, 7cqw, 96px); line-height: 1.04; font-weight: 600; letter-spacing: -.04em; overflow-wrap: anywhere; text-wrap: balance; }
+.presentation-hero__motion { position: absolute; bottom: 16px; right: 16px; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 8px 12px; border-radius: 8px; font-size: 11px; color: #a1a1aa; }
+.presentation-hero__motion:hover { color: white; background: rgb(255 255 255 / .04); }
+.presentation-hero__motion:focus-visible { outline: 2px solid #fb923c; outline-offset: 2px; }
+@keyframes presentation-grid-loop { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(192px, 192px, 0); } }
+@media (prefers-reduced-motion: reduce) { .presentation-hero__grid { animation: none; } .presentation-hero__motion { display: none; } }
+
+.presentation-hero__eyebrow { display: inline-flex; align-items: center; justify-content: center; gap: 10px; max-width: 100%; border: 1px solid rgb(251 146 60 / .2); border-radius: 999px; padding: 9px 16px; font-size: 11px; line-height: 1.5; text-transform: uppercase; letter-spacing: .16em; color: #fdba74; }
+.presentation-hero__eyebrow span { flex-shrink: 0; width: 5px; height: 5px; border-radius: 50%; background: #fb923c; }
+
+.presentation-hero__title[data-detailed="true"] { font-size: clamp(36px, 5.4cqw, 72px); }
+
+.presentation-hero__cover-image { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: .1; }
+.presentation-hero[data-has-image='true'] .presentation-hero__background::after { display: none; }
+
+.presentation-hero[data-light-background='true'] .presentation-hero__title, .presentation-hero[data-light-background='true'] .presentation-hero__client { color: #101014; }
+.presentation-hero[data-light-background='true'] .text-zinc-400, .presentation-hero[data-light-background='true'] .text-zinc-500 { color: #3f3f46; }
+.presentation-hero[data-light-background='true'] .presentation-hero__eyebrow { color: #87300d; border-color: rgb(135 48 13 / .35); }

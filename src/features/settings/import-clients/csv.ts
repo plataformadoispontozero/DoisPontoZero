@@ -1,6 +1,6 @@
 import { PROFILE_FIELDS } from "@/features/clients/profileFields";
 import { validateClientProfile, type ClientProfile } from "@/features/clients/clientProfile";
-export const CSV_LIMITS = { bytes: 2 * 1024 * 1024, rows: 500, columns: 30 };
+export const CSV_LIMITS = { bytes: 1024 ** 3, rows: 1_000_000, columns: 512 };
 export const CLIENT_FIELDS = ["name", "slug", "logo_url", "status", ...PROFILE_FIELDS.map(f=>f.key)] as const;
 export type ClientField = (typeof CLIENT_FIELDS)[number];
 export interface CsvRecord {
@@ -59,7 +59,7 @@ export function autoMapping(headers: string[]): ColumnMapping {
 }
 export function parseCsv(input: string): CsvDocument {
   if (new TextEncoder().encode(input).byteLength > CSV_LIMITS.bytes)
-    throw Error("Arquivo acima de 2 MB.");
+    throw Error("Arquivo acima de 1 GiB.");
   const text = input.replace(/^\uFEFF/, "");
   if (!text.trim()) throw Error("Arquivo vazio.");
   // Binary control characters are rejected intentionally before parsing text.
@@ -95,14 +95,14 @@ export function parseCsv(input: string): CsvDocument {
     cell = "";
     state = "field";
     if (cells.length > CSV_LIMITS.columns)
-      throw Error("Limite de 30 colunas excedido.");
+      throw Error("Limite de 512 colunas excedido.");
   }
   function finishRow() {
     finishCell();
     if (cells.some((v) => v.trim())) records.push({ row: start, cells });
     cells = [];
     if (records.length > CSV_LIMITS.rows + 1)
-      throw Error("Limite de 500 registros excedido.");
+      throw Error("Limite de 1.000.000 de registros excedido.");
   }
   for (let i = 0; i < text.length; i++) {
     const c = text[i];
@@ -154,16 +154,7 @@ export function parseCsv(input: string): CsvDocument {
   return { headers, records, delimiter };
 }
 export async function readCsvFile(file: File) {
-  if (file.size > CSV_LIMITS.bytes) throw Error("Arquivo acima de 2 MB.");
-  let text: string;
-  try {
-    text = new TextDecoder("utf-8", { fatal: true }).decode(
-      await file.arrayBuffer(),
-    );
-  } catch {
-    throw Error("Arquivo inválido. Exporte como CSV UTF-8.");
-  }
-  return parseCsv(text);
+  return (await import('./stream')).scanClientFile(file);
 }
 export const clientSlug = (name: string) => name.normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-")
@@ -173,8 +164,8 @@ export function previewCsv(
   document: CsvDocument,
   mapping: ColumnMapping,
   existing: { id: string; name: string; slug: string }[],
+  seen = new Map<string, number>(),
 ): PreviewRow[] {
-  const seen = new Map<string, number>();
   return document.records.map((record) => {
     const get = (f: ClientField) =>
       mapping[f] === undefined ? "" : (record.cells[mapping[f]!] || "").trim();
@@ -230,9 +221,11 @@ export function previewCsv(
         errors.push("URL do logotipo inválida (HTTP/HTTPS).");
       }
     }
-    if (seen.has(data.slug))
-      errors.push(`Slug repetido no arquivo (linha ${seen.get(data.slug)}).`);
-    else seen.set(data.slug, record.row);
+    // Keep the cross-file duplicate index bounded to accepted identifiers (100 characters).
+    if (data.slug.length <= 100 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(data.slug)) {
+      if (seen.has(data.slug)) errors.push(`Slug repetido no arquivo (linha ${seen.get(data.slug)}).`);
+      else seen.set(data.slug, record.row);
+    }
     const duplicate = existing.find((c) => c.slug === data.slug);
     const sameName = existing.find(
       (c) => normalize(c.name) === normalize(data.name) && c.slug !== data.slug,

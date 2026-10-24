@@ -1,13 +1,11 @@
 import { OfficialBrandLogo as BrandLogo } from "@/components/shared/OfficialBrandLogo";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowDown,
   ArrowUpRight,
   Menu,
   X,
-  Pause,
-  Play,
   Camera,
   Mail,
 } from "lucide-react";
@@ -20,10 +18,11 @@ export function PublicSitePage() {
   const { content: c, draft, configured, available, pending } = usePublicSite();
   const [year] = useState(() => new Date().getFullYear());
   const [menu, setMenu] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const [motion, setMotion] = useState(true);
+  const [coloredPerson, setColoredPerson] = useState<number | null>(null);
+  const motion = true;
   const [splashVisible, setSplashVisible] = useState(true);
   const hero = c.projects.filter((p) => p.placement === "hero");
+  const heroStrip = hero.length ? Array.from({length:Math.max(1,Math.ceil(8/hero.length))},()=>hero).flat() : [];
   const gallery = c.projects.filter((p) => p.placement === "gallery");
   const scene = useSceneMotion(motion && available && !pending && gallery.length > 1, gallery.length);
   useEffect(() => {
@@ -68,7 +67,7 @@ export function PublicSitePage() {
     );
   return (
     <div
-      className={`dz-site ${paused ? "dz-paused" : ""} ${!motion ? "dz-static" : ""}`}
+      className={`dz-site  ${!motion ? "dz-static" : ""}`}
     >
       {splashVisible && <LandingSplash />}
       <a className="dz-skip" href="#conteudo">
@@ -120,10 +119,10 @@ export function PublicSitePage() {
         <section className="dz-hero" aria-labelledby="hero-title">
           <div className="dz-hero-grid" aria-hidden="true" />
           <div className="dz-hero-art" aria-hidden="true">
-            <div className="dz-hero-loop" style={{ opacity: (c.heroOpacity ?? 50) / 100 }}>
+            <div className={`dz-hero-loop ${c.heroMotion === "static" ? "dz-loop-still" : ""}`} style={{ opacity: (c.heroOpacity ?? 50) / 100, animationDuration: `${c.heroDuration ?? 60}s`, "--hero-image-fit": c.heroImageFit ?? "contain" } as CSSProperties}>
               {[0, 1].map((group) => <div className="dz-hero-loop-group" key={group}>
-                {hero.map((p) => <div key={p.id} className="dz-hero-slide">
-                  {p.image ? <img src={p.image} alt="" loading={group === 0 ? "eager" : "lazy"} /> : <Poster project={p} decorative />}
+                {heroStrip.map((p,index) => <div key={`${p.id}-${index}`} className="dz-hero-slide">
+                  {p.image ? <img src={p.image} alt="" width="1080" height="1350" loading={group === 0 ? "eager" : "lazy"} /> : <Poster project={p} decorative />}
                 </div>)}
               </div>)}
             </div>
@@ -156,14 +155,6 @@ export function PublicSitePage() {
               {c.address || "ESTÚDIO CRIATIVO"}
               <span className="dz-small-dot">•</span>Ideias sem fronteiras
             </span>
-            <button
-              type="button"
-              onClick={() => setMotion(!motion)}
-              aria-pressed={!motion}
-            >
-              {motion ? <Pause size={13} /> : <Play size={13} />}{" "}
-              {motion ? "Reduzir movimento" : "Ativar movimento"}
-            </button>
             <a href="#projetos">
               SCROLL PARA EXPLORAR <ArrowDown size={14} />
             </a>
@@ -263,17 +254,9 @@ export function PublicSitePage() {
               <p id="clients-title" className="dz-eyebrow">
                 MARCAS QUE JÁ CRUZARAM NOSSO CAMINHO
               </p>
-              <button
-                type="button"
-                onClick={() => setPaused(!paused)}
-                aria-pressed={paused}
-                aria-label={paused ? "Retomar logos" : "Pausar logos"}
-              >
-                {paused ? <Play size={16} /> : <Pause size={16} />}
-              </button>
             </div>
-            <div className="dz-marquee">
-              <div className="dz-marquee-track">
+            <div className={`dz-marquee ${c.logoMotion === "static" ? "dz-loop-still" : ""}`} tabIndex={0} aria-label="Logos de clientes; o movimento pausa ao focar ou passar o cursor">
+              <div className="dz-marquee-track" style={{ animationDuration: `${c.logoDuration ?? 38}s`, animationDirection: c.logoMotion === "reverse" ? "reverse" : "normal" }}>
                 {[0, 1].map((copy) => (
                   <div
                     className="dz-marquee-group"
@@ -362,13 +345,13 @@ export function PublicSitePage() {
               {c.team.map((person, i) => (
                 <article key={i}>
                   {person.photo ? (
-                    <img
+                    <button type="button" className={`dz-person-photo ${coloredPerson === i ? "is-color" : ""}`} aria-pressed={coloredPerson === i} aria-label={`Ver foto colorida de ${person.name}`} onClick={() => setColoredPerson(coloredPerson === i ? null : i)}><img
                       src={person.photo}
                       alt={person.name}
                       width="400"
                       height="500"
                       loading="lazy"
-                    />
+                    /></button>
                   ) : (
                     <div className="dz-team-initial" aria-hidden="true">
                       {person.name.charAt(0)}

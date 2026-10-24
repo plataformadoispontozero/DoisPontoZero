@@ -1,4 +1,4 @@
-export interface VoiceContext{agency_id:string;user_id:string;room_id:string;room_name:string}
+export interface VoiceContext{agency_id:string;user_id:string;room_id:string;room_name:string;room_type?:'team'|'private_call'}
 export interface TokenConfiguration{url:string;apiKey:string;apiSecret:string}
 export interface TokenDependencies{
  authenticate:(authorization:string)=>Promise<string|null>
@@ -7,7 +7,8 @@ export interface TokenDependencies{
  issue:(context:VoiceContext,configuration:TokenConfiguration)=>Promise<string>
  log?:(code:string)=>void
 }
-const origins=new Set(['https://doispontozero.renatodesigner.com.br','https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev'])
+const homologationOrigin='https://doispontozero-office-homologacao.marketingrenatodesigner.workers.dev'
+const origins=new Set(['https://doispontozero.renatodesigner.com.br',homologationOrigin])
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export function validConfiguration(config:TokenConfiguration|null):config is TokenConfiguration{
  if(!config||!config.apiKey||config.apiSecret.length<32)return false
@@ -39,8 +40,12 @@ export function createTokenHandler(deps:TokenDependencies){return async(req:Requ
   if(final.error==='rate_limited')return new Response(JSON.stringify({error:'rate_limited'}),{status:429,headers:{...headers,'Retry-After':'60'}})
   if(final.error==='unavailable')return reply('backend_unavailable',503)
   const context=final.context
-  if(!context||context.user_id!==user||context.room_id!==input.roomId||!uuid.test(context.agency_id)||context.room_name!==`office_${context.agency_id}_${context.room_id}`)return reply('room_denied',403)
-  const token=await deps.issue(context,config)
+  const validName=context?.room_type==='private_call'?context.room_name===`office_call_${context.agency_id}_${context.room_id}`:context?.room_type==='team'||!context?.room_type?context?.room_name===`office_${context?.agency_id}_${context?.room_id}`:false
+  if(!context||context.user_id!==user||context.room_id!==input.roomId||!uuid.test(context.agency_id)||!validName)return reply('room_denied',403)
+  // Keep authenticated identities stable; only the review environment gets its own room.
+  // Apply after validating the database-owned namespace, never from a body parameter.
+  const signingContext=origin===homologationOrigin?{...context,room_name:`homologacao_${context.room_name}`}:context
+  const token=await deps.issue(signingContext,config)
   return new Response(JSON.stringify({token,serverUrl:config.url,expiresIn:120}),{status:200,headers})
  }catch{return reply('backend_unavailable',503)}
 }}

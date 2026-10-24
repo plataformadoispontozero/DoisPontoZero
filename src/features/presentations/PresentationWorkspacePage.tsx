@@ -1,11 +1,13 @@
+import { presentationSharePath } from './presentationShareUrl';
+import { presentationSectionPresets, presentationSectionPreset, presentationSectionValue } from './presentationSectionPresets';
+import {usePermission} from '@/features/auth/AuthProvider'
 import {PresentationAssetThumbnail} from './presentationMedia'
 import {PresentationMaterialReviews} from './PresentationMaterialReviews';
 import {usePresentationReviews,latestMaterialReviews} from './hooks/usePresentationReviews';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {useQueryClient} from '@tanstack/react-query';
-import {Select} from '@/components/ui/Select';
 import {PresentationSectionEditor} from './PresentationSectionEditor';
-import {PresentationPreview} from './PresentationPreview';
+type PresentationPreviewComponent = typeof import('./PresentationPreview')['PresentationPreview'];
 import {ClientPresentationDrivePicker} from './ClientPresentationDrivePicker';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -28,6 +30,7 @@ export const PresentationWorkspacePage: React.FC = () => {
   const { presentationId } = useParams<{ presentationId: string }>();
   const navigate = useNavigate();
   const cache = useQueryClient();
+  const canManageLinks=usePermission('presentations.manage_public_links');
 
   const {
     presentation,
@@ -43,13 +46,25 @@ export const PresentationWorkspacePage: React.FC = () => {
     removeAsset,
     publishPresentation,
     createPublicLink,
+    sharingToken,
+    sharingLinkError,
     isPublishing,
     isCreatingLink
   } = useSinglePresentation(presentationId);
 
 
   // Tab State: 'editor' | 'preview' | 'publish' | 'versions'
-  const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'publish' | 'versions'>('editor');
+  const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'publish' | 'versions' | 'reviews'>('editor');
+  const [PreviewRenderer,setPreviewRenderer]=useState<PresentationPreviewComponent|null>(null);
+  const [previewLoadError,setPreviewLoadError]=useState(false);
+  const [previewLoadAttempt,setPreviewLoadAttempt]=useState(0);
+  useEffect(()=>{
+    if(activeTab!=='preview'||PreviewRenderer)return;
+    let current=true;setPreviewLoadError(false);
+    void import('./PresentationPreview').then(module=>{if(current)setPreviewRenderer(()=>module.PresentationPreview)}).catch(()=>{if(current)setPreviewLoadError(true)});
+    return()=>{current=false};
+  },[activeTab,PreviewRenderer,previewLoadAttempt]);
+
 
   // Preview device mode
   const materialReviews=usePresentationReviews(presentationId);
@@ -60,13 +75,15 @@ export const PresentationWorkspacePage: React.FC = () => {
 
   // New section dialog
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
-  const [newPresentationSectionType, setNewPresentationSectionType] = useState<PresentationSectionType>('custom');
+  const [newPresentationSectionType, setNewPresentationSectionType] = useState('gallery');
   const [newSectionTitle, setNewSectionTitle] = useState('');
+  const [creatingSection, setCreatingSection] = useState(false);
+  const [createSectionError, setCreateSectionError] = useState('');
 
   // Add Drive File dialog
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   // Public link notification
-  const [copiedLink, setCopiedLink] = useState<string | null>(null);
+  const [copiedLink, setCopiedLink] = useState<{id:string;url:string} | null>(null);
 
   if (isLoading) {
     return (
@@ -93,16 +110,25 @@ export const PresentationWorkspacePage: React.FC = () => {
   const activeSectionAssets = selectedSection ? assets.filter((a: PresentationAsset) => a.section_id === selectedSection.id) : [];
 
   const handleAddSectionSubmit = async () => {
-    if (!newSectionTitle.trim()) return;
-    await addSection({
-      section_type: newPresentationSectionType,
-      title: newSectionTitle,
-      description: '',
-      content: {},
-      position: sections.length
-    });
-    setNewSectionTitle('');
-    setIsAddSectionOpen(false);
+    if (!newSectionTitle.trim() || creatingSection) return;
+    setCreatingSection(true);
+    setCreateSectionError('');
+    try {
+      const created = await addSection({
+        section_type: presentationSectionPreset(newPresentationSectionType)?.type || 'custom',
+        title: newSectionTitle.trim(),
+        description: '',
+        content: { media_layout: presentationSectionPreset(newPresentationSectionType)?.layout || 'grid', section_kind: presentationSectionPreset(newPresentationSectionType)?.kind || '' },
+        position: sections.length,
+      });
+      if (created) setSelectedSectionId(created.id);
+      setNewSectionTitle('');
+      setIsAddSectionOpen(false);
+    } catch {
+      setCreateSectionError('Não foi possível criar a seção. Seu título foi preservado; tente novamente.');
+    } finally {
+      setCreatingSection(false);
+    }
   };
 
   const handleMoveSection = async (index: number, direction: 'up' | 'down') => {
@@ -131,17 +157,20 @@ export const PresentationWorkspacePage: React.FC = () => {
     try {
     const token = await createPublicLink();
     if (token) {
-      const fullUrl = `${window.location.origin}/showcase/${token}`;
-      await navigator.clipboard.writeText(fullUrl);
-      setCopiedLink(fullUrl);
-      setTimeout(() => setCopiedLink(null), 4000);
+      const fullUrl = `${window.location.origin}${presentationSharePath(presentation.client_name,token)}`;
+      setCopiedLink({id:presentation.id,url:fullUrl});
+      try{await navigator.clipboard.writeText(fullUrl);toast.success('Link copiado.')}catch{toast.error('Link gerado. Selecione e copie o endereço no campo.')}
+
     }
     } catch (err) { toast.error((err as {message?: string})?.message || 'Não foi possível gerar ou copiar o link.'); }
   };
 
+
+  const shareUrl=(copiedLink?.id===presentation.id?copiedLink.url:null)||(sharingToken?`${window.location.origin}${presentationSharePath(presentation.client_name,sharingToken)}`:null);
   return (
     <div className="space-y-6 pb-16">
-      <PresentationMaterialReviews reviews={materialReviews.data||[]} assets={assets} error={materialReviews.isError}/>
+      {canManageLinks&&activeTab==='publish'&&<Card className="flex flex-wrap items-center gap-3 p-4"><div className="min-w-0 flex-1"><p className="text-xs text-zinc-400">Link de aprovação do cliente</p>{shareUrl?<input aria-label="Link de aprovação" readOnly value={shareUrl} className="mt-2 w-full rounded-lg border border-white/15 bg-black/20 p-2 text-sm" onFocus={e=>e.target.select()}/>:<p className="mt-1 text-sm">{sharingLinkError?'Não foi possível recuperar o link. Tente novamente.':'Gere o link uma vez. Ele ficará disponível aqui nos próximos acessos.'}</p>}{presentation.status!=='published'&&<p className="mt-2 text-xs text-amber-300">Publique a apresentação para permitir o acesso do cliente.</p>}</div>{shareUrl?<><Button variant="outline" onClick={()=>void navigator.clipboard.writeText(shareUrl).then(()=>toast.success('Link copiado.')).catch(()=>toast.error('Selecione e copie o link no campo.'))}>Copiar link</Button><a href={shareUrl} target="_blank" rel="noreferrer" className="text-sm text-orange-300 underline">Abrir aprovação</a></>:<Button loading={isCreatingLink} onClick={handleGenerateLink}>Gerar link de aprovação</Button>}</Card>}
+
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-orange-500/20 bg-gradient-to-r from-orange-500/10 to-transparent p-4 text-sm"><span className="font-semibold text-orange-300">{presentation.client_name || 'Apresentação do cliente'}</span><span className="text-zinc-400">{sections.length} seções · {assets.length} materiais</span><Button variant="ghost" size="sm" onClick={()=>setActiveTab('preview')}>Ver apresentação <Eye className="ml-2 h-4 w-4"/></Button></div>
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-surface-border pb-4">
@@ -201,6 +230,8 @@ export const PresentationWorkspacePage: React.FC = () => {
             Publicação
           </button>
 
+          <button type="button" onClick={()=>setActiveTab('reviews')} className={`flex min-h-11 items-center rounded-md px-3 py-1.5 text-xs font-medium ${activeTab==='reviews'?'bg-surface-card text-brand-primary shadow-sm':'text-content-secondary hover:text-content-primary'}`}><ShieldCheck className="mr-1.5 h-3.5 w-3.5"/>Avaliações do cliente</button>
+
           <button
             onClick={() => setActiveTab('versions')}
             className={`px-3 py-1.5 text-xs font-medium rounded-md flex items-center transition-all ${
@@ -222,6 +253,11 @@ export const PresentationWorkspacePage: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {activeTab==='reviews'&&(<PresentationMaterialReviews productionProjectId={presentation.production_project_id} clientName={presentation.client_name} presentationId={presentation.id} clientId={presentation.client_id} reviews={materialReviews.data||[]} history={materialReviews.history||[]} completion={materialReviews.completion} linkGeneratedAt={materialReviews.linkGeneratedAt} loading={materialReviews.isLoading} assets={assets} error={materialReviews.isError}/>)}
+
+      {/* Quick delivery sections keep the social workflow explicit. */}
+      {activeTab==='editor'&&<section className="space-y-4 rounded-2xl border border-white/10 p-5"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-semibold">Monte sua apresentação</h2><p className="mt-1 text-sm text-zinc-400">Escolha uma seção, edite o conteúdo e confira a prévia.</p></div><Button variant="outline" onClick={()=>setActiveTab('preview')}><Eye className="h-4 w-4"/>Conferir prévia</Button></div><div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">{presentationSectionPresets.map(preset=><button type="button" key={preset.value} className="flex min-h-14 items-center gap-2 rounded-xl border border-white/15 bg-white/[.02] px-4 py-3 text-left text-sm hover:border-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-400" onClick={()=>{setNewPresentationSectionType(preset.value);setNewSectionTitle(preset.label);setCreateSectionError('');setIsAddSectionOpen(true)}}><Plus className="h-4 w-4 shrink-0 text-orange-300"/>{preset.label}</button>)}</div></section>}
 
       {/* TAB 1: VISUAL BUILDER */}
       {activeTab === 'editor' && (
@@ -251,7 +287,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-content-secondary uppercase tracking-wider">
-                      {SECTION_TYPES.find(t=>t.type===sec.section_type)?.label||sec.section_type}
+                      {presentationSectionPreset(presentationSectionValue(sec))?.label||SECTION_TYPES.find(t=>t.type===sec.section_type)?.label||sec.section_type}
                     </span>
                     <div className="flex items-center space-x-1" onClick={e => e.stopPropagation()}>
                       <button
@@ -293,7 +329,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                 <div className="flex items-center justify-between border-b border-surface-border pb-3">
                   <div>
                     <span className="text-xs font-semibold text-brand-primary uppercase tracking-wider">
-                      Editando Seção #{selectedSection.position + 1}
+                      2 · Edite esta seção
                     </span>
                     <h2 className="text-lg font-bold text-content-primary">{selectedSection.title}</h2>
                   </div>
@@ -307,7 +343,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                   </Button>
                 </div>
 
-                <PresentationSectionEditor key={selectedSection.id} section={selectedSection} onSave={updates=>updateSection({sectionId:selectedSection.id,updates})}/>
+                <PresentationSectionEditor key={selectedSection.id} section={selectedSection} assets={activeSectionAssets} clientLogoUrl={presentation.client_logo_url} onSave={updates=>updateSection({sectionId:selectedSection.id,updates})}/>
 
                 {/* Section Assets */}
                 <div className="pt-4 border-t border-surface-border space-y-3">
@@ -432,7 +468,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                   : 'w-full max-w-[390px]'
               }`}
             >
-              <PresentationPreview presentation={presentation} sections={sections} assets={assets} reviews={latestMaterialReviews(materialReviews.data||[])}/>
+              {PreviewRenderer?<PreviewRenderer presentation={presentation} sections={sections} assets={assets} reviews={latestMaterialReviews(materialReviews.data||[])}/>:previewLoadError?<div role="alert" className="space-y-3 rounded-xl border border-amber-400/30 p-6"><p>Não foi possível carregar a prévia. Seu conteúdo continua salvo no editor.</p><Button variant="outline" onClick={()=>setPreviewLoadAttempt(attempt=>attempt+1)}>Tentar carregar novamente</Button></div>:<p role="status" className="p-8 text-center text-content-secondary">Carregando visualização da apresentação…</p>}
             </div>
           </div>
         </div>
@@ -476,23 +512,24 @@ export const PresentationWorkspacePage: React.FC = () => {
               <div className="pt-4 space-y-3">
                 <h4 className="text-sm font-semibold text-content-primary flex items-center">
                   <ShieldCheck className="w-4 h-4 mr-1.5 text-brand-primary" />
-                  Gerar Novo Link de Acesso Público
+                  Link de acesso público
                 </h4>
 
                 <Button
                   loading={isCreatingLink}
+                  disabled={!canManageLinks}
                   onClick={handleGenerateLink}
                   className="bg-brand-primary hover:bg-brand-primary/90"
                 >
                   <Copy className="w-4 h-4 mr-2" />
-                  Gerar Link Tokenizado
+                  Gerar ou recuperar link
                 </Button>
 
-                {copiedLink && (
+                {copiedLink?.id===presentation.id && (
                   <div className="p-3 bg-status-success/10 border border-status-success/30 rounded-lg text-xs text-status-success flex items-center justify-between">
                     <span>Link seguro copiado para a área de transferência!</span>
                     <a
-                      href={copiedLink}
+                      href={copiedLink.url}
                       target="_blank"
                       rel="noreferrer"
                       className="underline font-semibold flex items-center"
@@ -543,36 +580,28 @@ export const PresentationWorkspacePage: React.FC = () => {
       )}
 
       {/* DIALOG: ADD SECTION */}
-      <Dialog open={isAddSectionOpen} onOpenChange={setIsAddSectionOpen}>
+      <Dialog open={isAddSectionOpen} onOpenChange={open => { if (!creatingSection) {setIsAddSectionOpen(open);setCreateSectionError('');} }}>
         <div className="p-6 space-y-4">
           <h3 className="text-lg font-bold text-content-primary">Adicionar Nova Seção</h3>
           <div>
-            <label className="block text-xs font-semibold text-content-secondary mb-1">Título</label>
+            <label htmlFor="presentation-new-section-title" className="block text-xs font-semibold text-content-secondary mb-1">Título</label>
             <input
               type="text"
+              id="presentation-new-section-title"
               value={newSectionTitle}
+              disabled={creatingSection}
               onChange={e => setNewSectionTitle(e.target.value)}
-              placeholder="Ex: Entrega 01 - Visual Identity"
+              placeholder="Ex.: Conceito da campanha"
               className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-content-secondary mb-1">Tipo de Layout</label>
-            <Select style={{colorScheme: 'dark'}}
-              value={newPresentationSectionType}
-              onChange={e => setNewPresentationSectionType(e.target.value as PresentationSectionType)}
-              className="w-full px-3 py-2 bg-surface-subtle border border-surface-border rounded-lg text-content-primary text-sm focus:outline-none focus:border-brand-primary"
-            >
-              {SECTION_TYPES.map((st) => (
-                <option key={st.type} value={st.type}>{st.label}</option>
-              ))}
-            </Select>
-          </div>
+          <fieldset><legend className="mb-3 text-sm font-medium">1 · Escolha o tipo de seção</legend><div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{presentationSectionPresets.map(preset=><button type="button" key={preset.value} disabled={creatingSection} aria-pressed={newPresentationSectionType===preset.value} className={`min-h-12 rounded-xl border px-3 py-2 text-sm ${newPresentationSectionType===preset.value?'border-orange-400 bg-orange-400/10 text-orange-200':'border-white/15 text-zinc-300 hover:border-orange-400/50'}`} onClick={()=>{const previous=presentationSectionPreset(newPresentationSectionType);setNewPresentationSectionType(preset.value);if(!newSectionTitle.trim()||newSectionTitle===previous?.label)setNewSectionTitle(preset.label)}}>{preset.label}</button>)}</div></fieldset>
 
+          {createSectionError && <p role="alert" className="text-sm text-rose-300">{createSectionError}</p>}
           <div className="flex justify-end space-x-2 pt-2">
-            <Button variant="ghost" onClick={() => setIsAddSectionOpen(false)}>Cancelar</Button>
-            <Button onClick={handleAddSectionSubmit} disabled={!newSectionTitle.trim()}>Adicionar</Button>
+            <Button variant="ghost" disabled={creatingSection} onClick={() => {setIsAddSectionOpen(false);setCreateSectionError('');}}>Cancelar</Button>
+            <Button loading={creatingSection} onClick={() => void handleAddSectionSubmit()} disabled={creatingSection || !newSectionTitle.trim()}>Criar e editar seção</Button>
           </div>
         </div>
       </Dialog>

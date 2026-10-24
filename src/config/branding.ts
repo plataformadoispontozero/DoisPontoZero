@@ -2,7 +2,7 @@ import type { BrandingConfig } from '@/types/branding'
 
 export const defaultBranding: BrandingConfig = {
   name: 'Dois.Zero',
-  category: 'Creative Agency OS',
+  category: '2.0',
   slogan: 'Sua agência. Tudo conectado.',
   version: '0.2.0-phase01',
   colors: {

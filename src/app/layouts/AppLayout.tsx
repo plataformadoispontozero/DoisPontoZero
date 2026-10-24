@@ -1,3 +1,4 @@
+import {WorkspaceTheme} from '@/app/theme/WorkspaceTheme'
 import {useOfficeVoice} from '@/features/office/OfficeVoiceContext'
 import {officeControlsEnabled} from '@/features/office/officeFeature'
 import {OfficeMiniBar} from '@/features/office/OfficeMiniBar'
@@ -7,13 +8,14 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useSyncExternalStore } from 'react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import React, { useState, useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Sidebar } from '@/components/navigation/Sidebar'
 import { MobileNav } from '@/components/navigation/MobileNav'
 import { TopBar } from '@/components/navigation/TopBar'
 
 export const AppLayout: React.FC = () => {
   const auth = useAuth()
+  const wideOffice=useLocation().pathname==='/office'
   const voice=useOfficeVoice()
   const hasOfficeBar=officeControlsEnabled&&Boolean(voice.roomId||voice.error)
   const queryClient = useQueryClient()
@@ -46,7 +48,7 @@ export const AppLayout: React.FC = () => {
 
   return (
     <div style={{'--office-sidebar-width':collapsed?'72px':'248px'} as React.CSSProperties} className="min-h-screen bg-[#101014] text-[#F8F9FC] flex flex-col md:flex-row antialiased overflow-x-hidden">
-      <BrandedNotificationController /><NotificationSoundController />
+      <WorkspaceTheme /><BrandedNotificationController /><NotificationSoundController />
       {/* Sidebar Desktop Fixa */}
       <Sidebar collapsed={collapsed} onToggleCollapse={toggleCollapse} />
 
@@ -54,11 +56,11 @@ export const AppLayout: React.FC = () => {
       <MobileNav />
 
       {/* Área Central de Conteúdo */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden md:ml-[var(--office-sidebar-width)] transition-[margin] motion-reduce:transition-none">
         <TopBar />
         {failedAreas && <div role="alert" className="px-4 py-3 text-xs text-[#FB7185] border-b border-[#30303B]">Não foi possível carregar: {failedAreas}. Verifique a conexão e as permissões. Nenhum dado de demonstração substitui essa falha. <button type="button" className="underline ml-2" onClick={()=>void queryClient.invalidateQueries({predicate:query=>query.state.status==='error',refetchType:'active'})}>Tentar novamente</button></div>}
         {auth.isDemo && <div role="status" className="px-4 py-2 text-xs text-[#FBBF24] border-b border-[#30303B]">Demonstração local — dados não persistidos no Supabase.</div>}
-        <main className={`flex-1 px-4 py-6 md:px-8 md:py-8 max-w-7xl w-full mx-auto ${hasOfficeBar?'pb-64 md:pb-48':'pb-24 md:pb-12'}`}>
+        <main className={`flex-1 px-4 py-6 md:py-8 w-full mx-auto ${wideOffice?'max-w-none md:px-4':'max-w-7xl md:px-8'} ${hasOfficeBar?'pb-64 md:pb-48':'pb-24 md:pb-12'}`}>
           <Outlet />
         </main>
         <OfficeMiniBar />

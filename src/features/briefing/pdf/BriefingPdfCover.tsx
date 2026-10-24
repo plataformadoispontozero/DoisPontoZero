@@ -1,5 +1,5 @@
 // ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
+// DOIS.ZERO | 2.0
 // FASE 06: PDF STUDIO
 // Cover Page Component (A4 Cover: Centered Logo, Title, Client, Category, Date, Version)
 // ============================================================
@@ -153,7 +153,7 @@ export const BriefingPdfCover: React.FC<{ model: BriefingPdfModel }> = ({ model 
         ) : (
           <View style={{ alignItems: 'center' }}>
             <Text style={styles.agencyNameText}>{model.branding.agencyName}</Text>
-            <Text style={styles.agencySubtitle}>Creative Agency OS</Text>
+            <Text style={styles.agencySubtitle}>2.0</Text>
           </View>
         )}
       </View>

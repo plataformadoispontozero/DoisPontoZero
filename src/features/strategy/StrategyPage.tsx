@@ -6,7 +6,7 @@ import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Compass,
   Plus,
@@ -83,7 +83,7 @@ export const StrategyPage: React.FC = () => {
         <div className="flex justify-end gap-3"><Button variant="secondary" disabled={deleteStrategy.isPending} onClick={() => setDeleting(null)}>Cancelar</Button><Button disabled={deleteStrategy.isPending} onClick={() => void confirmDelete()}>{deleteStrategy.isPending ? 'Apagando…' : 'Confirmar exclusão'}</Button></div>
       </section></div>}
       <PageHeader
-        title="Strategy Studio"
+        title="Estratégia e calendário"
         subtitle="Planejamento estratégico, pilares editoriais e calendário de conteúdo."
         breadcrumbs={[
           { label: 'Visão Geral', href: '/dashboard' },
@@ -101,6 +101,7 @@ export const StrategyPage: React.FC = () => {
         }
       />
 
+      <nav aria-label="Planejamento" className="flex gap-2 border-b border-white/10 pb-4"><Link to="/editorial" className="rounded-lg border border-white/15 px-4 py-2 text-sm">Calendários mensais</Link><span aria-current="page" className="rounded-lg bg-orange-500/15 px-4 py-2 text-sm text-orange-300">Estratégias</span></nav>
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>

@@ -8,6 +8,14 @@ export interface MonthlyItem {
   editorial?: EditorialTrace;
 }
 export interface EditorialContext {
+  planningMode?: 'automatic';
+  monthlyDirection?: string;
+  seasonalDates?: string;
+  briefSpecialDates?: string;
+  includeBriefSpecialDates?: boolean;
+  generationProvider?: 'rules'|'gemini';
+  generationModel?: string;
+  requestedCounts?: Record<EditorialFormat, number>;
   objective: string;
   audience: string;
   tone: string;

@@ -1,4 +1,4 @@
-export interface PresentationMediaContext {agencyId:string;fileId:string;folderId:string|null}
+export interface PresentationMediaContext {agencyId:string;fileId:string;folderId:string|null;expectedModifiedTime?:string|null}
 interface Dependencies {authorize:(request:Request,input:{assetId:string;publicToken?:string})=>Promise<PresentationMediaContext|null>;accessToken:(agency:string)=>Promise<string>;fetch?:typeof fetch}
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const imageTypes=new Set(['image/jpeg','image/png','image/webp','image/gif','image/avif'])
@@ -6,22 +6,27 @@ const maximum=20*1024*1024
 export function safeGoogleThumbnail(value:unknown){try{const u=new URL(String(value));return u.protocol==='https:'&&!u.username&&!u.password&&(u.hostname==='drive.google.com'||u.hostname.endsWith('.googleusercontent.com'))?u.href:null}catch{return null}}
 export async function presentationMedia(request:Request,body:Record<string,unknown>,headers:Record<string,string>,deps:Dependencies){
  const reply=(status:number)=>new Response(JSON.stringify({error:'Material indisponível ou acesso não autorizado.'}),{status,headers})
- if(typeof body.assetId!=='string'||!uuid.test(body.assetId)||Object.keys(body).some(k=>!['action','assetId','publicToken'].includes(k))||('publicToken'in body&&(typeof body.publicToken!=='string'||body.publicToken.length<20||body.publicToken.length>512)))return reply(400)
+ if(typeof body.assetId!=='string'||!uuid.test(body.assetId)||Object.keys(body).some(k=>!['action','assetId','publicToken','preview'].includes(k))||('preview'in body&&typeof body.preview!=='boolean')||('publicToken'in body&&(typeof body.publicToken!=='string'||body.publicToken.length<20||body.publicToken.length>512)))return reply(400)
  try{
   const context=await deps.authorize(request,{assetId:body.assetId,publicToken:body.publicToken as string|undefined});if(!context)return reply(403)
   if(!/^[A-Za-z0-9_-]{10,200}$/.test(context.fileId))return reply(404)
   const access=await deps.accessToken(context.agencyId),send=deps.fetch||fetch
-  const metadata=await send(`https://www.googleapis.com/drive/v3/files/${context.fileId}?fields=id,mimeType,parents,trashed,size,thumbnailLink&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${access}`},signal:AbortSignal.timeout(15000)})
+  const metadata=await send(`https://www.googleapis.com/drive/v3/files/${context.fileId}?fields=id,mimeType,parents,trashed,size,thumbnailLink,modifiedTime&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${access}`},signal:AbortSignal.timeout(15000)})
   if(!metadata.ok)return reply(404)
-  const file=await metadata.json();if(file.id!==context.fileId||file.trashed||(context.folderId&&!file.parents?.includes(context.folderId)))return reply(404)
-  const original=imageTypes.has(file.mimeType)&&Number(file.size||0)<=maximum
-  let url=original?`https://www.googleapis.com/drive/v3/files/${context.fileId}?alt=media&supportsAllDrives=true`:safeGoogleThumbnail(file.thumbnailLink)
+  const file=await metadata.json();if(context.expectedModifiedTime&&(!file.modifiedTime||Date.parse(file.modifiedTime)!==Date.parse(context.expectedModifiedTime)))return reply(404);if(file.id!==context.fileId||file.trashed||(context.folderId&&!file.parents?.includes(context.folderId)))return reply(404)
+  const original=!(body.preview===true&&safeGoogleThumbnail(file.thumbnailLink))&&imageTypes.has(file.mimeType)&&Number(file.size||0)<=maximum
+  const previewUrl=safeGoogleThumbnail(file.thumbnailLink)?.replace(/=s\d+(?:-[a-z0-9-]+)?$/i,'=s1200')
+  let url=original?`https://www.googleapis.com/drive/v3/files/${context.fileId}?alt=media&supportsAllDrives=true`:previewUrl
   if(!url)return reply(404)
   let response:Response|undefined
   for(let attempt=0;attempt<4;attempt++){
    response=await send(url,{headers:{Authorization:`Bearer ${access}`},redirect:'manual',signal:AbortSignal.timeout(15000)})
    if(response.status<300||response.status>=400)break
    const next=safeGoogleThumbnail(response.headers.get('location'));await response.body?.cancel();if(original||!next)return reply(502);url=next
+  }
+  if(!original&&body.preview===true&&imageTypes.has(file.mimeType)&&Number(file.size||0)<=maximum&&(!response?.ok||!imageTypes.has(response.headers.get('content-type')?.split(';')[0].trim()||''))){
+   await response?.body?.cancel()
+   response=await send(`https://www.googleapis.com/drive/v3/files/${context.fileId}?alt=media&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${access}`},redirect:'error',signal:AbortSignal.timeout(15000)})
   }
   const mime=response?.headers.get('content-type')?.split(';')[0].trim()||''
   if(!response?.ok||!imageTypes.has(mime)||Number(response.headers.get('content-length')||0)>maximum){await response?.body?.cancel();return reply(502)}

@@ -5,6 +5,36 @@
   "compatibility_date": "2026-10-06",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/assets/*"
+    ]
+  },
+  "main": "worker/index.ts",
+  "routes": [
+    {
+      "pattern": "doispontozero.renatodesigner.com.br",
+      "zone_name": "renatodesigner.com.br",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true
+    },
+    "traces": {
+      "enabled": true
+    },
+    "issues": {
+      "enabled": true
+    }
+  },
+  "env": {
+    "homologacao": {
+      "name": "doispontozero-office-homologacao",
+      "routes": []
+    }
   }
 }

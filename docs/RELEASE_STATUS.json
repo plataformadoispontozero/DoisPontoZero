@@ -293,14 +293,14 @@
     },
     {
       "id": "office-phase06-controls",
-      "title": "Escritório Digital · Fase 06 em homologação",
+      "title": "Escritório Digital · Fase 06 validada com duas contas",
       "phases": [
         "phase-10"
       ],
-      "result": "Fase 05 aceita pelo responsável. Controles globais reutilizam a sala existente durante a navegação. Fase 06 habilitada somente no ambiente de homologação.",
+      "result": "Responsável confirmou em 22/10/2026 duas contas simultâneas, áudio bidirecional e continuidade da chamada durante a navegação após isolamento do namespace de homologação. Controles promovidos à produção no commit 61758f6.",
       "technical_status": "verified",
       "pending": [
-        "Validar áudio contínuo durante navegação com dois membros e aceitar a Fase 06. Fase 07 não iniciada."
+        "Validar o fluxo completo dos convites privados, câmera e compartilhamento entre duas contas; estes cenários não estão cobertos pelo aceite de voz da Fase 06."
       ]
     },
     {

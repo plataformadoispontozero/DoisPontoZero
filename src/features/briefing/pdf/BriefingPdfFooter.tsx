@@ -1,5 +1,5 @@
 // ============================================================
-// DOIS.ZERO | CREATIVE AGENCY OS
+// DOIS.ZERO | 2.0
 // FASE 06: PDF STUDIO
 // Running Footer Component (Discreet, Agency Name, Document ID, Page Numbers)
 // ============================================================

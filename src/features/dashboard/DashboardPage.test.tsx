@@ -30,6 +30,13 @@ describe('DashboardPage - Phase 01', () => {
     expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(4)
   })
 
+  it('replaces technical workspace status with operational workload', () => {
+    renderDashboard()
+    expect(screen.getByRole('heading', { name: 'Carga por setor' })).toBeInTheDocument()
+    expect(screen.queryByText('Status do Workspace')).not.toBeInTheDocument()
+    expect(screen.queryByText('Marca Ativa:')).not.toBeInTheDocument()
+  })
+
   it('renders Suas prioridades with empty state and action to explore projects', () => {
     renderDashboard()
     expect(screen.getByText('Suas prioridades')).toBeInTheDocument()

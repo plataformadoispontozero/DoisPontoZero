@@ -2,13 +2,16 @@ name: Dois.Zero CI Pipeline
 
 on:
   push:
-    branches: [ principal, release/* ]
+    branches: [ principal, main, 'release/**', 'feat/**', 'codex/**' ]
   pull_request:
-    branches: [ principal ]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   audit-and-test:
@@ -22,7 +25,7 @@ jobs:
       - name: Setup Node.js Runtime
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '22.12.0'
           cache: 'npm'
 
       - name: Install Dependencies
@@ -33,12 +36,36 @@ jobs:
 
       - name: Code Quality Audit (oxlint)
         run: npx oxlint
-        continue-on-error: true
 
       - name: Execute Vitest Automated Test Suite
-        run: npm run test
+        run: npm run test -- --maxWorkers=2
 
       - name: Production Bundle Verification (Vite Build)
-        run: npm run build
+        run: |
+          node --input-type=module <<'NODE'
+          const url = process.env.VITE_SUPABASE_URL;
+          const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+          if (!url || !key || !url.startsWith('https://') || key.includes('sua-chave')) {
+            throw new Error('Configure public Supabase URL and publishable/anon key in repository Actions variables before building a release candidate.');
+          }
+          NODE
+          npm run build
         env:
           VITE_APP_ENV: production
+          VITE_ENABLE_DIGITAL_OFFICE: 'true'
+          VITE_ENABLE_OFFICE_CONTROLS: 'true'
+          VITE_ENABLE_OFFICE_CALLS: 'false'
+          VITE_ENABLE_OFFICE_MEDIA: 'false'
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Verify Cloudflare bundle without publishing
+        run: npx wrangler deploy --dry-run --outdir /tmp/dois-worker-dry-run
+
+      - name: Save release candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-${{ github.sha }}
+          path: dist
+          retention-days: 7

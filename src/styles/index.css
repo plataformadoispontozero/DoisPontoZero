@@ -1,4 +1,20 @@
 @import "tailwindcss";
+@import "./workspace-theme.css";
+@import "./workspace-brand.css";
+
+@theme inline {
+ --color-brand-primary:var(--color-primary);
+ --color-brand-accent:var(--color-accent);
+ --color-surface-card:var(--color-surface);
+ --color-surface-subtle:var(--color-bg);
+ --color-surface-border:var(--color-border);
+ --color-content-primary:var(--color-text-primary);
+ --color-content-secondary:var(--color-text-secondary);
+ --color-content-tertiary:var(--color-text-muted);
+ --color-status-success:var(--color-success);
+ --color-status-error:var(--color-error);
+ --color-status-warning:var(--color-warning);
+}
 
 @layer base {
   :root {

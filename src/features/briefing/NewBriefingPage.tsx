@@ -1,3 +1,4 @@
+import { officialBriefingTemplates } from './templates/officialCatalog'
 import { useAgencyId } from '@/features/auth/AuthProvider'
 // ============================================================
 // DOIS.ZERO | CREATIVE AGENCY OS
@@ -26,12 +27,11 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
-import { useBriefingTemplates, useCreateBriefing, useCreatePublicLink } from './hooks/useBriefings'
-import { useClients } from '@/features/clients/hooks/useClients'
+import { useBriefingTemplates, useCreatePublicLink } from './hooks/useBriefings'
+import {useBriefingLeads,useCreateBriefingIntake} from './hooks/useBriefingIntake'
 import { BRIEFING_CATEGORY_CONFIG } from '@/types/briefing'
 import { toast } from '@/components/ui/Toast'
 
-const DEMO_AGENCY_ID = 'demo-agency'
 
 export const NewBriefingPage: React.FC = () => {
   const DEMO_AGENCY_ID = useAgencyId()
@@ -41,14 +41,16 @@ export const NewBriefingPage: React.FC = () => {
   const preselectedTemplateId = searchParams.get('templateId')
 
   const templateQuery = useBriefingTemplates(DEMO_AGENCY_ID)
-  const clientQuery = useClients(DEMO_AGENCY_ID)
-  const templates = templateQuery.data ?? []
-  const availableClients = clientQuery.data ?? []
-  const createBriefing = useCreateBriefing(DEMO_AGENCY_ID)
+  const templates = officialBriefingTemplates(templateQuery.data ?? [])
+  const createBriefing = useCreateBriefingIntake()
+  const [source,setSource]=useState<'new'|'site'>('new')
+  const leads=useBriefingLeads(source==='site')
+  const [leadId,setLeadId]=useState('')
+  const [name,setName]=useState(''),[contactName,setContactName]=useState(''),[email,setEmail]=useState(''),[phone,setPhone]=useState('')
+  const [requestId]=useState(()=>crypto.randomUUID())
 
   // Flow Step: 1 = Client, 2 = Template, 3 = Title & Info, 4 = Review, 5 = Created Success
   const [step, setStep] = useState<number>(preselectedTemplateId ? 1 : 1)
-  const [selectedClientId, setSelectedClientId] = useState<string>(availableClients[0]?.id || '')
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>(
     preselectedTemplateId || ''
   )
@@ -57,12 +59,13 @@ export const NewBriefingPage: React.FC = () => {
   const [createdBriefingId, setCreatedBriefingId] = useState<string | null>(null)
   const [generatedPublicUrl, setGeneratedPublicUrl] = useState<string | null>(null)
 
-  const selectedClient = availableClients.find((c) => c.id === selectedClientId)
+  const selectedClient = name.trim()?{name:name.trim()}:null
+  const validIdentity=name.trim().length>=2&&(source==='new'||!!leadId)&&(!email||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
   const selectedTemplate = templates.find((t) => t.id === selectedTemplateId)
 
   const handleNext = () => {
-    if (step === 1 && !selectedClient) {
-      toast.error('Selecione um cliente para vincular ao briefing.')
+    if (step === 1 && !validIdentity) {
+      toast.error('Informe o nome do novo cliente e confira os dados de contato.')
       return
     }
     if (step === 2 && !selectedTemplate) {
@@ -81,19 +84,18 @@ export const NewBriefingPage: React.FC = () => {
   }
 
   const handleCreate = async () => {
-    if (!selectedClient || !selectedTemplate || !title.trim() || createBriefing.isPending) {
-      toast.error('Selecione um cliente e um modelo existentes e informe o título.')
+    if (!validIdentity || !selectedTemplate || !title.trim() || createBriefing.isPending) {
+      toast.error('Confira os dados do novo cliente, o modelo e o título.')
       return
     }
     try {
       const res = await createBriefing.mutateAsync({
-        client_id: selectedClientId,
-        template_id: selectedTemplateId,
-        title: title.trim(),
-        description: description.trim() || undefined,
+        requestId,leadId:source==='site'?leadId:undefined,
+        name:name.trim(),contactName:contactName.trim(),email:email.trim(),phone:phone.trim(),
+        templateId:selectedTemplateId,title:title.trim(),description:description.trim(),
       })
 
-      const newId = res.id
+      const newId = res.briefing_id
       setCreatedBriefingId(newId)
       setStep(5)
       toast.success('Briefing criado com sucesso!')
@@ -120,7 +122,7 @@ export const NewBriefingPage: React.FC = () => {
     <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-200">
       <PageHeader
         title="Novo Briefing Criativo"
-        subtitle="Crie um novo formulário direcionado a um cliente com modelo padronizado."
+        subtitle="Receba um novo cliente e prepare o briefing da reunião de apresentação."
         breadcrumbs={[
           { label: 'Visão Geral', href: '/dashboard' },
           { label: 'Briefings', href: '/briefings' },
@@ -128,11 +130,8 @@ export const NewBriefingPage: React.FC = () => {
         ]}
       />
 
-      {(clientQuery.isLoading || templateQuery.isLoading) && <p role="status">Carregando clientes e modelos…</p>}
-      {(clientQuery.isError || templateQuery.isError) && <p role="alert">Não foi possível carregar clientes ou modelos. Tente novamente antes de criar o briefing.</p>}
-      {!clientQuery.isLoading && !clientQuery.isError && availableClients.length === 0 && (
-        <p>Nenhum cliente cadastrado. <Link className="text-[#FF8759]" to="/clients/new">Cadastrar cliente no CRM</Link></p>
-      )}
+      {templateQuery.isLoading && <p role="status">Carregando modelos…</p>}
+      {templateQuery.isError && <p role="alert">Não foi possível carregar os modelos. Tente novamente antes de criar o briefing.</p>}
       {!templateQuery.isLoading && !templateQuery.isError && templates.length === 0 && (
         <p>Nenhum modelo cadastrado. <Link className="text-[#FF8759]" to="/briefings/templates">Gerenciar modelos de briefing</Link></p>
       )}
@@ -169,47 +168,13 @@ export const NewBriefingPage: React.FC = () => {
         </div>
       )}
 
-      {/* Step 1: Select Client */}
-      {step === 1 && (
-        <Card>
-          <CardContent className="p-6 space-y-4">
-            <div>
-              <h2 className="text-base font-bold text-[#F8F9FC]">Passo 1: Selecione o Cliente</h2>
-              <p className="text-xs text-[#B8B8C0] mt-0.5">
-                Vincule o briefing a uma conta existente no seu CRM.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              {availableClients.map((client) => {
-                const isSelected = client.id === selectedClientId
-                return (
-                  <div
-                    key={client.id}
-                    onClick={() => setSelectedClientId(client.id)}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                      isSelected
-                        ? 'bg-[#252530] border-[#C74410] shadow-md shadow-[#C74410]/10'
-                        : 'bg-[#1C1C24] border-[#30303B] hover:border-[#C74410]/40'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-[#C74410]/20 text-[#C74410] flex items-center justify-center font-bold text-sm">
-                        {client.name.slice(0, 2).toUpperCase()}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-[#F8F9FC] truncate">{client.name}</div>
-                        <div className="text-xs text-[#98989F]">@{client.slug}</div>
-                      </div>
-                      {isSelected && <Check className="w-4 h-4 text-[#C74410]" />}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {step === 1 && <Card><CardContent className="space-y-5 p-6">
+        <div><h2 className="font-semibold">Entrada do novo cliente</h2><p className="mt-1 text-sm text-[var(--color-text-secondary)]">Cadastre os dados iniciais ou aproveite uma solicitação de orçamento recebida pelo site.</p></div>
+        <div className="flex flex-wrap gap-2"><Button variant={source==='new'?'primary':'outline'} onClick={()=>{setSource('new');setLeadId('');setName('');setContactName('');setEmail('');setPhone('');setDescription('')}}>Novo cliente</Button><Button variant={source==='site'?'primary':'outline'} onClick={()=>{setSource('site');setLeadId('');setName('');setContactName('');setEmail('');setPhone('');setDescription('')}}>Solicitação de orçamento do site</Button></div>
+        {source==='site'&&<div className="space-y-2">{leads.isPending?<p role="status">Consultando solicitações…</p>:leads.isError?<p role="alert">Não foi possível consultar as solicitações. <button type="button" className="underline" onClick={()=>void leads.refetch()}>Tentar novamente</button></p>:<label className="grid gap-2 text-sm">Solicitação recebida<select className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-3 text-[var(--color-text-primary)]" value={leadId} onChange={event=>{const lead=leads.data?.find(item=>item.id===event.target.value);setLeadId(lead?.id||'');setName(lead?.company||lead?.name||'');setContactName(lead?.name||'');setEmail(lead?.email||'');setPhone(lead?.phone||'');setDescription(lead?`Solicitação recebida pelo site em ${new Date(lead.created_at).toLocaleDateString('pt-BR')}\nContato: ${lead.name}\nE-mail: ${lead.email}\nTelefone: ${lead.phone}\nServiços: ${lead.services.join(', ')}\nObjetivo: ${lead.objective}\nInvestimento informado: ${lead.budget||'A definir'}`:'')}}><option value="">Selecione uma solicitação</option>{leads.data?.map(lead=><option key={lead.id} value={lead.id}>{lead.company||lead.name} · {new Date(lead.created_at).toLocaleDateString('pt-BR')}</option>)}</select>{!leads.data?.length&&<span className="text-[var(--color-text-secondary)]">Nenhuma solicitação pendente.</span>}</label>}</div>}
+        <div className="grid gap-4 sm:grid-cols-2"><label className="grid gap-2 text-sm">Nome da empresa ou cliente *<Input value={name} maxLength={160} onChange={e=>setName(e.target.value)} autoComplete="organization"/></label><label className="grid gap-2 text-sm">Pessoa de contato<Input value={contactName} maxLength={120} onChange={e=>setContactName(e.target.value)} autoComplete="name"/></label><label className="grid gap-2 text-sm">E-mail<Input type="email" value={email} maxLength={254} onChange={e=>setEmail(e.target.value)} autoComplete="email"/></label><label className="grid gap-2 text-sm">Telefone<Input type="tel" value={phone} maxLength={30} onChange={e=>setPhone(e.target.value)} autoComplete="tel"/></label></div>
+        <p className="text-xs text-[var(--color-text-secondary)]">O cliente e o briefing serão salvos juntos na confirmação. Para consultar um cliente já cadastrado, abra seu <Link to="/briefings" className="underline">histórico de briefings</Link>.</p>
+      </CardContent></Card>}
 
       {/* Step 2: Select Template */}
       {step === 2 && (
@@ -314,7 +279,7 @@ export const NewBriefingPage: React.FC = () => {
             <div>
               <h2 className="text-base font-bold text-[#F8F9FC]">Passo 4: Revisar e Criar</h2>
               <p className="text-xs text-[#B8B8C0] mt-0.5">
-                Confirme as informações antes de inicializar o briefing no banco de dados.
+                Confirme os dados para cadastrar o cliente e iniciar o briefing da reunião.
               </p>
             </div>
 
@@ -435,12 +400,12 @@ export const NewBriefingPage: React.FC = () => {
           )}
 
           {step < 4 ? (
-            <Button variant="primary" size="md" disabled={clientQuery.isLoading || templateQuery.isLoading || clientQuery.isError || templateQuery.isError || (step === 1 && !selectedClient) || (step === 2 && !selectedTemplate)} onClick={handleNext}>
+            <Button variant="primary" size="md" disabled={templateQuery.isLoading || templateQuery.isError || (step === 1 && !validIdentity) || (step === 2 && !selectedTemplate)} onClick={handleNext}>
               <span>Continuar</span>
               <ArrowRight className="w-4 h-4" />
             </Button>
           ) : (
-            <Button variant="primary" size="md" disabled={createBriefing.isPending || !selectedClient || !selectedTemplate} onClick={handleCreate}>
+            <Button variant="primary" size="md" disabled={createBriefing.isPending || !validIdentity || !selectedTemplate} onClick={handleCreate}>
               <Check className="w-4 h-4" />
               <span>Confirmar e Criar Briefing</span>
             </Button>

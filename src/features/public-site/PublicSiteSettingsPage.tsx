@@ -1,3 +1,5 @@
+import { SiteImageGallery } from "./SiteImageGallery";
+import { prepareSiteImage } from "./prepareSiteImage";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -18,6 +20,7 @@ import {
   readSiteDraft,
   writeSiteDraft,
   SITE_SLUG,
+  draftKey,
   safeMediaUrl,
   safeSocialUrl,
   type SiteContent,
@@ -79,12 +82,12 @@ function Media({
   return (
     <div className="space-y-3">
       <Field label={label} value={value} onChange={onChange} />
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {safeMediaUrl(value) && (
           <img
             src={safeMediaUrl(value)}
             alt="Prévia da imagem"
-            className="h-16 w-24 object-contain rounded bg-[#25232d]"
+            className="max-h-56 w-full max-w-sm object-contain rounded-lg bg-[#25232d]"
           />
         )}
         <label className={`${button} cursor-pointer`}>
@@ -101,6 +104,21 @@ function Media({
     </div>
   );
 }
+function MotionSettings({ content, patch, kind }: { content: SiteContent; patch: <K extends keyof SiteContent>(field: K, value: SiteContent[K]) => void; kind: "hero" | "logos" }) {
+  const hero = kind === "hero";
+  const duration = hero ? content.heroDuration ?? 60 : content.logoDuration ?? 38;
+  return <fieldset className="space-y-4 rounded-xl border border-white/15 p-4">
+    <legend className="px-2 font-medium">{hero ? "Animação das imagens da hero" : "Movimento das logos"}</legend>
+    <div className="grid gap-4 sm:grid-cols-2">
+      <label className="space-y-2 text-sm">Efeito<select className={control} value={hero ? content.heroMotion ?? "slide" : content.logoMotion ?? "slide"} onChange={(e) => hero ? patch("heroMotion", e.target.value as SiteContent["heroMotion"]) : patch("logoMotion", e.target.value as SiteContent["logoMotion"])}>
+        <option value="slide">Deslizar em loop</option>{!hero && <option value="reverse">Deslizar no sentido inverso</option>}<option value="static">Sem movimento</option>
+      </select></label>
+      <label className="space-y-2 text-sm">Duração de uma volta: {duration}s<input className="w-full accent-orange-500" type="range" min={hero ? 15 : 10} max={hero ? 180 : 120} step="1" value={duration} onChange={(e) => hero ? patch("heroDuration", Number(e.target.value)) : patch("logoDuration", Number(e.target.value))} /></label>
+      {hero && <label className="space-y-2 text-sm">Enquadramento<select className={control} value={content.heroImageFit ?? "contain"} onChange={(e) => patch("heroImageFit", e.target.value as SiteContent["heroImageFit"])}><option value="contain">Imagem inteira · artes lado a lado, sem espaço</option><option value="cover">Preencher área (pode cortar bordas)</option></select></label>}
+    </div>
+    <p className="text-xs text-[#B8B8C0]">Menos segundos deixam o movimento mais rápido. A preferência de movimento reduzido do visitante é respeitada.</p>
+  </fieldset>;
+}
 export function PublicSiteSettingsPage() {
   const auth = useAuth(),
     agencyId = useAgencyId(),
@@ -116,6 +134,9 @@ export function PublicSiteSettingsPage() {
   const dirty = useRef(false),
     hydrated = useRef("");
   const publicationDirty = useRef(false);
+  const contentRef=useRef(content); contentRef.current=content;
+  const agencyRef=useRef(agencyId); agencyRef.current=agencyId;
+  const [uploadProgress,setUploadProgress]=useState("");
   const site = useQuery({
     queryKey: ["site-admin", agencyId],
     enabled: Boolean(agencyId && canManage && supabase),
@@ -168,11 +189,12 @@ export function PublicSiteSettingsPage() {
   }, [agencyId, site.data]);
   function change(next: SiteContent) {
     dirty.current = true;
+    contentRef.current=next;
     setContent(next);
     setNotice("");
   }
   function patch<K extends keyof SiteContent>(field: K, value: SiteContent[K]) {
-    change({ ...content, [field]: value });
+    change({ ...contentRef.current, [field]: value });
   }
   function saveDraft() {
     try {
@@ -193,21 +215,29 @@ export function PublicSiteSettingsPage() {
     setBusy(true);
     setNotice("");
     try {
+      const normalized=normalizeSiteContent(contentRef.current);
+      if(new TextEncoder().encode(JSON.stringify(normalized)).length>98000)throw Error("O texto e os links ultrapassam o limite de conteúdo do site. Reduza descrições ou materiais antes de salvar.");
+      const savedAgency=agencyId;
       const { data, error } = await supabase
         .from("agency_public_sites")
         .upsert(
           {
             agency_id: agencyId,
             slug: SITE_SLUG,
-            content: normalizeSiteContent(content),
+            content: normalized,
             published,
             updated_at: new Date().toISOString(),
           },
           { onConflict: "agency_id" },
         )
-        .select("agency_id")
+        .select("agency_id,content,published,slug")
         .single();
-      if (error || !data) throw new Error();
+      if (error || !data) throw new Error(error?.message || "O banco não confirmou a gravação.");
+      if(agencyRef.current!==savedAgency)return;
+      const confirmed=normalizeSiteContent(data.content);
+      contentRef.current=confirmed;setContent(confirmed);setPublished(data.published);dirty.current=false;publicationDirty.current=false;
+      try{localStorage.removeItem(draftKey(savedAgency))}catch{/* Remote save is confirmed; this browser may block local draft cleanup. */}
+      client.setQueryData(["site-admin",savedAgency],{content:confirmed,published:data.published,slug:data.slug});
       await client.invalidateQueries({ queryKey: ["public-site"] });
       await client.invalidateQueries({ queryKey: ["site-admin", agencyId] });
       setNotice(
@@ -215,10 +245,8 @@ export function PublicSiteSettingsPage() {
           ? "Conteúdo publicado no site público."
           : "Conteúdo salvo no Supabase. O site continua despublicado.",
       );
-    } catch {
-      setNotice(
-        "Não foi possível salvar no Supabase. Confira a preparação do banco e as permissões. Seu rascunho pode ser salvo localmente.",
-      );
+    } catch(error) {
+      setNotice(error instanceof Error?`Não foi possível salvar: ${error.message} Seu conteúdo continua nesta tela.`:"Não foi possível salvar. Seu conteúdo continua nesta tela.");
     } finally {
       setBusy(false);
     }
@@ -230,40 +258,63 @@ export function PublicSiteSettingsPage() {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file || busy) return;
-    if (
-      !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
-      file.size > 2 * 1024 * 1024
-    ) {
-      setNotice("Use PNG, JPG ou WebP de até 2 MB.");
-      return;
-    }
     if (!supabase || site.isError) {
       setNotice(
         "O upload depende da ativação do bucket do site no Supabase. Por enquanto, use uma URL HTTPS de imagem.",
       );
       return;
     }
+    const uploadAgency=agencyId;
     setBusy(true);
     try {
-      const path = `${agencyId}/${crypto.randomUUID()}.${file.type.split("/")[1]}`;
+      setUploadProgress("Preparando imagem…");
+      const image=await prepareSiteImage(file);
+      if(agencyRef.current!==uploadAgency)return;
+      const path = `${uploadAgency}/${crypto.randomUUID()}.webp`;
       const { error } = await supabase.storage
         .from("agency-site-media")
-        .upload(path, file, { upsert: false, contentType: file.type });
+        .upload(path, image, { upsert: false, contentType: "image/webp" });
       if (error) throw error;
       const { data } = supabase.storage
         .from("agency-site-media")
         .getPublicUrl(path);
+      if(agencyRef.current!==uploadAgency)return;
       onUrl(data.publicUrl);
       setNotice(
         "Imagem enviada. Salve ou publique o conteúdo para utilizá-la no site.",
       );
-    } catch {
-      setNotice(
-        "Não foi possível enviar a imagem. Confira o bucket e as permissões.",
-      );
+    } catch(error) {
+      setNotice(error instanceof Error?error.message:"Não foi possível enviar a imagem. Confira as permissões.");
     } finally {
-      setBusy(false);
+      setBusy(false);setUploadProgress("");
     }
+  }
+
+  async function uploadGallery(event:ChangeEvent<HTMLInputElement>,placement:SiteProject["placement"]){
+    const files=Array.from(event.target.files||[]);event.target.value="";
+    if(!files.length||busy||!supabase||site.isError)return;
+    const available=60-contentRef.current.projects.length;
+    if(files.length>available){setNotice(`A galeria comporta até 60 imagens/projetos no total. Você pode adicionar mais ${Math.max(0,available)}.`);return;}
+    const uploadAgency=agencyId;setBusy(true);setNotice("");
+    const additions:SiteProject[]=[];const failures:string[]=[];
+    try{
+      for(let index=0;index<files.length;index++){
+        if(agencyRef.current!==uploadAgency)break;
+        const file=files[index];setUploadProgress(`Preparando e enviando imagem ${index+1} de ${files.length}…`);
+        try{
+          const image=await prepareSiteImage(file);
+          if(agencyRef.current!==uploadAgency)break;
+          const path=`${uploadAgency}/${crypto.randomUUID()}.webp`;
+          const result=await supabase.storage.from("agency-site-media").upload(path,image,{upsert:false,contentType:"image/webp"});
+          if(result.error)throw Error(result.error.message);
+          const {data}=supabase.storage.from("agency-site-media").getPublicUrl(path);
+          additions.push({id:crypto.randomUUID(),title:placement==="hero"?file.name.replace(/\.[^.]+$/,""):"",image:data.publicUrl,description:"",client:"",category:"",result:"",concept:true,tone:"violet",placement});
+        }catch(error){failures.push(`${file.name}: ${error instanceof Error?error.message:"falha no upload"}`)}
+      }
+      if(agencyRef.current!==uploadAgency)return;
+      if(additions.length)change({...contentRef.current,projects:[...contentRef.current.projects,...additions]});
+      setNotice(`${additions.length} imagens adicionadas. Salve as alterações para utilizá-las no site.${failures.length?` ${failures.length} não foram enviadas. ${failures.slice(0,3).join(" · ")}`:""}`);
+    }finally{setBusy(false);setUploadProgress("")}
   }
 
   if (!canManage)
@@ -275,7 +326,7 @@ export function PublicSiteSettingsPage() {
     );
   const tabs = [
     ["hero", "Hero & identidade"],
-    ["portfolio", "Portfólio 3D"],
+    ["portfolio", "Imagens & portfólio"],
     ["clients", "Logos de clientes"],
     ["team", "Equipe"],
     ["faq", "FAQ"],
@@ -291,7 +342,7 @@ export function PublicSiteSettingsPage() {
             Edite a página inicial sem alterar a área de trabalho da equipe.
           </p>
         </div>
-        <Link className={button} to={`/?draft=${agencyId}`} target="_blank">
+        <Link className={button} to={`/?draft=${agencyId}`} target="_blank" onClick={(e) => { try { writeSiteDraft(agencyId, content); } catch { e.preventDefault(); setNotice("Não foi possível preparar a prévia local."); } }}>
           <ExternalLink size={16} /> Ver rascunho
         </Link>
       </div>
@@ -309,14 +360,14 @@ export function PublicSiteSettingsPage() {
         {tabs.map(([id, label]) => (
           <button
             key={id}
-            className={`${button} whitespace-nowrap ${tab === id ? "bg-[#7952FF] border-[#7952FF]" : ""}`}
+            className={`${button} whitespace-nowrap ${tab === id ? "bg-[var(--color-primary)] border-[var(--color-primary)] text-white" : ""}`}
             onClick={() => setTab(id)}
           >
             {label}
           </button>
         ))}
       </div>
-      <div className="rounded-xl border border-[#35313f] bg-[#1b1922] p-5 sm:p-7 space-y-6">
+      <fieldset disabled={busy} className="rounded-xl border border-[#35313f] bg-[#1b1922] p-5 sm:p-7 space-y-6">
         {tab === "hero" && (
           <>
             <Field
@@ -337,6 +388,9 @@ export function PublicSiteSettingsPage() {
                 onChange={(e) => patch("heroOpacity", Number(e.target.value))} />
               <p className="text-xs text-[#B8B8C0]">As artes da hero ficam em preto e branco. 0% oculta as artes; 100% usa a opacidade máxima. A logo, os textos e os botões não são afetados.</p>
             </div>
+            <MotionSettings content={content} patch={patch} kind="hero" />
+            <SiteImageGallery projects={content.projects} placement="hero" busy={busy} onChange={projects=>patch("projects",projects)} onUpload={uploadGallery}/>
+
             <Field
               label="Texto acima do título"
               value={content.eyebrow}
@@ -367,166 +421,18 @@ export function PublicSiteSettingsPage() {
               onChange={(v) => patch("about", v)}
             />
             <p className="text-xs text-[#aaa6bb]">
-              As imagens da hero e da câmera ficam na aba Portfólio 3D, com
-              destino separado para evitar repetição.
+              As imagens de fundo ficam na galeria da hero acima. Os projetos públicos ficam na aba Imagens & portfólio.
             </p>
           </>
         )}
-        {tab === "portfolio" && (
-          <>
-            <p className="text-sm text-[#aaa6bb]">
-              Escolha Hero para os posters do fundo ou Galeria para a sequência
-              de câmera. Na hero, imagens horizontais WebP passam em loop na largura da tela. Use a mesma proporção entre artes (por exemplo 1920 × 1080). Marque estudos conceituais; publique resultados apenas
-              quando comprovados.
-            </p>
-            {content.projects.map((p, i) => {
-              const set = (next: SiteProject) =>
-                change({
-                  ...content,
-                  projects: content.projects.map((v, j) =>
-                    j === i ? next : v,
-                  ),
-                });
-              return (
-                <div
-                  key={i}
-                  className="p-5 border border-[#443d50] rounded-xl space-y-4"
-                >
-                  <div className="flex justify-between gap-3">
-                    <h2 className="font-medium">Peça {i + 1}</h2>
-                    <button
-                      type="button"
-                      aria-label={`Remover peça ${i + 1}`}
-                      onClick={() =>
-                        change({
-                          ...content,
-                          projects: content.projects.filter((_, j) => j !== i),
-                        })
-                      }
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <Field
-                      label="Título"
-                      value={p.title}
-                      onChange={(v) => set({ ...p, title: v })}
-                    />
-                    <Field
-                      label="Categoria / serviço"
-                      value={p.category}
-                      onChange={(v) => set({ ...p, category: v })}
-                    />
-                    <label className="text-xs space-y-2">
-                      Destino
-                      <select
-                        className={control}
-                        value={p.placement}
-                        onChange={(e) =>
-                          set({
-                            ...p,
-                            placement: e.target
-                              .value as SiteProject["placement"],
-                          })
-                        }
-                      >
-                        <option value="hero">Hero — fundo</option>
-                        <option value="gallery">Galeria — câmera 3D</option>
-                      </select>
-                    </label>
-                    <label className="text-xs space-y-2">
-                      Cor do poster sem imagem
-                      <select
-                        className={control}
-                        value={p.tone}
-                        onChange={(e) =>
-                          set({
-                            ...p,
-                            tone: e.target.value as SiteProject["tone"],
-                          })
-                        }
-                      >
-                        {["lime", "violet", "coral", "silver"].map((t) => (
-                          <option key={t}>{t}</option>
-                        ))}
-                      </select>
-                    </label>
-                  </div>
-                  <Media
-                    busy={busy}
-                    upload={upload}
-                    label="Imagem do projeto"
-                    value={p.image}
-                    onChange={(v) => set({ ...p, image: v })}
-                  />
-                  <Field
-                    label="Texto de apresentação"
-                    multiline
-                    value={p.description}
-                    onChange={(v) => set({ ...p, description: v })}
-                  />
-                  <Field label="Cliente (opcional)" value={p.client || ""} onChange={(v) => set({ ...p, client: v })} />
-                  <h4>Materiais da página de portfólio</h4>
-                  {(p.materials || []).map((material, materialIndex) => (
-                    <div key={materialIndex} className="space-y-3 rounded-xl border border-white/10 p-4">
-                      <Media busy={busy} upload={upload} label={`Material ${materialIndex + 1}`} value={material.image}
-                        onChange={(image) => set({ ...p, materials: (p.materials || []).map((m, j) => j === materialIndex ? { ...m, image } : m) })} />
-                      <Field label="Legenda do material" value={material.caption}
-                        onChange={(caption) => set({ ...p, materials: (p.materials || []).map((m, j) => j === materialIndex ? { ...m, caption } : m) })} />
-                      <button type="button" onClick={() => set({ ...p, materials: (p.materials || []).filter((_, j) => j !== materialIndex) })}>Remover material</button>
-                    </div>
-                  ))}
-                  {(p.materials || []).length < 20 && <button type="button" onClick={() => set({ ...p, materials: [...(p.materials || []), { image: "", caption: "" }] })}>Adicionar material</button>}
-                  <Field
-                    label="Resultado verificado (opcional)"
-                    value={p.result}
-                    onChange={(v) => set({ ...p, result: v })}
-                  />
-                  <label className="flex items-center gap-3 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={p.concept}
-                      onChange={(e) => set({ ...p, concept: e.target.checked })}
-                    />{" "}
-                    Estudo autoral / peça conceitual
-                  </label>
-                </div>
-              );
-            })}
-            <button
-              disabled={content.projects.length >= 12}
-              className={button}
-              onClick={() =>
-                change({
-                  ...content,
-                  projects: [
-                    ...content.projects,
-                    {
-                      id: crypto.randomUUID(),
-                      title: "Novo projeto",
-                      category: "",
-                      image: "",
-                      description: "",
-                      result: "",
-                      tone: "violet",
-                      concept: true,
-                      placement: "gallery",
-                    },
-                  ],
-                })
-              }
-            >
-              <Plus size={16} /> Adicionar projeto
-            </button>
-          </>
-        )}
+        {tab === "portfolio" && <SiteImageGallery projects={content.projects} placement="gallery" busy={busy} onChange={projects=>patch("projects",projects)} onUpload={uploadGallery}/>}
         {tab === "clients" && (
           <>
             <p className="text-sm text-[#aaa6bb]">
               Logos apresentados no site atual da agência. Revise as
               autorizações antes de publicar.
             </p>
+            <MotionSettings content={content} patch={patch} kind="logos" />
             {content.clients.map((p, i) => (
               <div
                 className="p-4 border border-[#443d50] rounded-lg space-y-3"
@@ -789,7 +695,8 @@ export function PublicSiteSettingsPage() {
             </button>
           </>
         )}
-      </div>
+      </fieldset>
+      {uploadProgress&&<p role="status" className="text-sm text-orange-200">{uploadProgress}</p>}
       {notice && (
         <p
           role="status"
@@ -799,13 +706,14 @@ export function PublicSiteSettingsPage() {
         </p>
       )}
       <div className="flex flex-wrap gap-3 items-center border-t border-[#39323f] pt-5">
-        <button className={button} onClick={saveDraft}>
+        <button className={button} disabled={busy} onClick={saveDraft}>
           <Save size={16} /> Salvar rascunho local
         </button>
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
             checked={published}
+            disabled={busy}
             onChange={(e) => {
               publicationDirty.current = true;
               setPublished(e.target.checked);
@@ -814,7 +722,7 @@ export function PublicSiteSettingsPage() {
           Site publicado
         </label>
         <button
-          className={`${button} bg-[#7952FF]`}
+          className={`${button} bg-[var(--color-primary)] text-white`}
           disabled={busy || !supabase || site.isError || site.isLoading}
           onClick={() => void publish()}
         >

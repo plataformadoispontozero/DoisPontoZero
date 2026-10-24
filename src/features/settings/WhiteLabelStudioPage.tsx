@@ -1,3 +1,5 @@
+import {supabase} from '@/lib/supabase/client'
+import {prepareSiteImage} from '@/features/public-site/prepareSiteImage'
 import React, { useEffect, useState } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -29,6 +31,7 @@ const WhiteLabelStudioPageForm: React.FC = () => {
   const [draft, setDraft] = useState<AgencyBrandingData>({ ...branding })
   const [activeTab, setActiveTab] = useState<'identity' | 'colors' | 'typography' | 'preview'>('identity')
   const [isSaving, setIsSaving] = useState(false)
+  const [uploadingAsset,setUploadingAsset]=useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
   useEffect(() => { if (!isLoading) setDraft({ ...branding }) }, [branding, isLoading])
@@ -42,6 +45,7 @@ const WhiteLabelStudioPageForm: React.FC = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
+    if(uploadingAsset)return
     setIsSaving(true)
     try {
       await updateBranding(draft)
@@ -70,26 +74,20 @@ const WhiteLabelStudioPageForm: React.FC = () => {
     toast.info('Valores padrão restaurados no rascunho.')
   }
 
-  const handleFileUpload = (field: 'logo_light_path' | 'logo_dark_path' | 'symbol_path' | 'favicon_path', e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    // Validação de formato seguro
-    const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']
-    if (!allowedTypes.includes(file.type)) {
-      toast.error('Formato não suportado. Utilize PNG, JPG, WebP ou SVG sanitizado.')
-      return
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('O arquivo deve ter no máximo 2MB.')
-      return
-    }
-
-    // Gerar preview URL
-    const previewUrl = URL.createObjectURL(file)
-    setDraft({ ...draft, [field]: previewUrl })
-    toast.success(`Asset ${file.name} carregado no rascunho!`)
+  const handleFileUpload = async (field: 'logo_light_path' | 'logo_dark_path' | 'symbol_path' | 'favicon_path', e: React.ChangeEvent<HTMLInputElement>) => {
+    const file=e.target.files?.[0];e.target.value=''
+    if(!file||uploadingAsset)return
+    if(file.size>5*1024*1024){toast.error('Use imagens de até 5 MB.');return}
+    setUploadingAsset(true)
+    try{
+      if(!supabase||!branding.agency_id)throw Error('Sessão necessária.')
+      const blob=await prepareSiteImage(file),key=`${branding.agency_id}/${crypto.randomUUID()}.webp`
+      const result=await supabase.storage.from('agency-brand-media').upload(key,blob,{contentType:'image/webp',upsert:false})
+      if(result.error)throw Error('Não foi possível enviar o arquivo. Confira sua permissão de edição da identidade visual.')
+      const url=supabase.storage.from('agency-brand-media').getPublicUrl(result.data.path).data.publicUrl
+      setDraft(current=>({...current,[field]:url}));toast.success('Imagem enviada. Salve as alterações para aplicar à plataforma.')
+    }catch(error){toast.error(error instanceof Error?error.message:'Não foi possível enviar a imagem.')}
+    finally{setUploadingAsset(false)}
   }
 
   return (
@@ -136,7 +134,7 @@ const WhiteLabelStudioPageForm: React.FC = () => {
             </Sheet>
           </div>
 
-          <Button type="submit" variant="accent" size="sm" loading={isSaving}>
+          <Button type="submit" variant="accent" size="sm" loading={isSaving} disabled={uploadingAsset}>
             <Save className="w-4 h-4" />
             <span>Salvar Alterações</span>
           </Button>
@@ -187,7 +185,7 @@ const WhiteLabelStudioPageForm: React.FC = () => {
                   Logotipos & Identidade de Marca
                 </CardTitle>
                 <CardDescription className="text-xs">
-                  Envie os assets de imagem oficiais da agência (PNG, WebP ou SVG).
+                  Envie logos e ícones oficiais em PNG, JPG ou WebP, até 5 MB. Salve para aplicar na plataforma.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -232,7 +230,7 @@ const WhiteLabelStudioPageForm: React.FC = () => {
                         <span>Upload</span>
                         <input
                           type="file"
-                          accept="image/*"
+                          accept="image/png,image/jpeg,image/webp" disabled={uploadingAsset}
                           className="hidden"
                           onChange={(e) => handleFileUpload('symbol_path', e)}
                         />
@@ -255,7 +253,7 @@ const WhiteLabelStudioPageForm: React.FC = () => {
                         <span>Upload</span>
                         <input
                           type="file"
-                          accept="image/*"
+                          accept="image/png,image/jpeg,image/webp" disabled={uploadingAsset}
                           className="hidden"
                           onChange={(e) => handleFileUpload('logo_light_path', e)}
                         />
@@ -455,7 +453,7 @@ const WhiteLabelStudioPageForm: React.FC = () => {
                     className="text-lg font-bold text-[#F8F9FC]"
                     style={{ fontFamily: draft.heading_font }}
                   >
-                    Dois.Zero — Creative Agency OS
+                    Dois.Zero — 2.0
                   </h4>
                   <p
                     className="text-xs text-[#B8B8C0] leading-relaxed"

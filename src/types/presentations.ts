@@ -58,6 +58,7 @@ export interface Presentation {
   status: PresentationStatus
   created_by?: string | null
   owner_id?: string | null
+  production_project_id?: string | null
   created_at: string
   updated_at: string
   published_at?: string | null

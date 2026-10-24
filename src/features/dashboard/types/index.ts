@@ -45,3 +45,14 @@ export interface OperationalActivity {
   timestamp: string
   type: 'system' | 'project' | 'task' | 'meeting' | 'approval'
 }
+
+export interface DepartmentWorkload {
+  id: string
+  name: string
+  path: string
+  pending: number
+  overdue: number
+  unassigned: number
+  inProgress: number
+  limited: boolean
+}

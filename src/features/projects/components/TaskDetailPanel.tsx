@@ -1,3 +1,4 @@
+import {TaskPresentationReturnHistory} from '@/features/tasks/TaskPresentationReturnHistory'
 import {TaskCardCover,useTaskCardCovers} from '@/features/integrations/TaskCardCover'
 import {ProductionTimeline} from '@/features/production/ProductionTimeline'
 import { DemandContent } from './DemandContent'
@@ -41,7 +42,7 @@ import {
   useTaskComments,
   useTaskAttachments,
   useTaskLinks,
-  useTaskActivity,
+  useTaskActivityPages,
   useUpdateTask,
   useMoveTask,
   useArchiveTask,
@@ -59,7 +60,7 @@ import {
   formatDateTime,
   isOverdue,
 } from '@/features/projects/utils/projectUtils'
-import type { Task, Priority, BoardColumn } from '@/types/projects'
+import type { Priority, BoardColumn } from '@/types/projects'
 
 interface TaskDetailPanelProps {
   taskId: string | null
@@ -87,14 +88,22 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   onClose,
   titlePrefix,
 }) => {
-  const { data: realTask, isLoading, isError } = useTask(taskId ?? undefined)
-  const { data: subtasks = [] } = useSubtasks(taskId ?? undefined)
-  const { data: comments = [] } = useTaskComments(taskId ?? undefined)
-  const coverQuery=useTaskCardCovers(taskId?[taskId]:[])
+  const [feedTab,setFeedTab]=useState('comments')
+  const panelTaskId=open?(taskId??undefined):undefined
+  useEffect(()=>setFeedTab('comments'),[taskId])
+  const { data: realTask, isLoading, isError, refetch } = useTask(panelTaskId)
+  const { data: subtasks = [] } = useSubtasks(panelTaskId)
+  const commentsQuery=useTaskComments(panelTaskId,feedTab==='comments')
+  const comments=commentsQuery.data||[]
+  const coverQuery=useTaskCardCovers(panelTaskId?[panelTaskId]:[])
   const taskCover=coverQuery.data?.find(c=>c.task_id===taskId)
-  const { data: attachments = [] } = useTaskAttachments(taskId ?? undefined)
-  const { data: links = [] } = useTaskLinks(taskId ?? undefined)
-  const { data: activities = [] } = useTaskActivity(taskId ?? undefined)
+  const attachmentsQuery=useTaskAttachments(panelTaskId,feedTab==='attachments')
+  const attachments=attachmentsQuery.data||[]
+  const linksQuery=useTaskLinks(panelTaskId,feedTab==='links')
+  const links=linksQuery.data||[]
+  const activityQuery=useTaskActivityPages(panelTaskId,feedTab==='activity')
+  const activities=activityQuery.data?.pages.flatMap(page=>page.rows)||[]
+  const visibleActivities=activities.filter(activity=>activity.action!=='presentation_review_returned')
 
   const updateTask = useUpdateTask()
   const moveTask = useMoveTask()
@@ -128,46 +137,9 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
   if (!open || !taskId) return null
 
-  if (isSupabaseConfigured && !realTask) return <Dialog open={open} onOpenChange={onClose}><SheetHeader onClose={onClose}><SheetTitle>Detalhes da demanda</SheetTitle></SheetHeader><SheetContent><p role={isError ? 'alert' : 'status'}>{isLoading ? 'Carregando demanda…' : 'Não foi possível carregar esta demanda.'}</p></SheetContent></Dialog>
+  if (!realTask) return <Dialog open={open} onOpenChange={onClose}><SheetHeader onClose={onClose}><SheetTitle>Detalhes da demanda</SheetTitle></SheetHeader><SheetContent><p role={isLoading ? 'status' : 'alert'}>{isLoading ? 'Carregando demanda…' : !isSupabaseConfigured ? 'Servidor indisponível. Não foi possível carregar esta demanda.' : isError ? 'Não foi possível carregar esta demanda. Confira sua conexão e tente novamente.' : 'Demanda não encontrada ou sem acesso.'}</p>{!isLoading && isSupabaseConfigured && <Button type="button" variant="ghost" className="mt-3" onClick={() => void refetch()}>Tentar novamente</Button>}</SheetContent></Dialog>
 
-  // Fallback demo data if realTask is null (e.g. Supabase disconnected or mocked)
-  const task: Task = realTask ?? {
-    id: taskId,
-    agency_id: agencyId,
-    project_id: projectId,
-    board_id: 'default',
-    column_id: columns[0]?.id ?? 'col-1',
-    parent_task_id: null,
-    title: title || 'Tarefa Selecionada',
-    description: description || 'Detalhamento do escopo e requisitos técnicos...',
-    priority: 'normal',
-    status: 'in_progress',
-    position: 1000,
-    start_date: null,
-    due_date: null,
-    completed_at: null,
-    archived_at: null,
-    created_by: 'user-1',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    assignees: [],
-    checklists: [],
-    comments_count: comments.length,
-    attachments_count: attachments.length,
-    links_count: links.length,
-    column: columns[0] ?? {
-      id: 'col-1',
-      agency_id: agencyId,
-      board_id: 'default',
-      name: 'A Fazer',
-      color: '#98989F',
-      position: 1000,
-      category: 'backlog',
-      wip_limit: null,
-      is_system: true,
-      created_at: new Date().toISOString(),
-    },
-  }
+  const task = realTask
 
   const handleTitleBlur = () => {
     if (title.trim() && title !== task.title) {
@@ -583,19 +555,19 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
           {/* Tabs for Feed: Comments, Links, Attachments, Activity */}
           <div className="pt-2">
-            <Tabs defaultValue="comments" className="w-full">
+            <Tabs defaultValue="comments" value={feedTab} onValueChange={setFeedTab} className="w-full">
               <TabsList className="w-full grid grid-cols-4 bg-[#14141A]">
                 <TabsTrigger value="comments" className="text-xs gap-1">
                   <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Chat ({comments.length})</span>
+                  <span>Chat{commentsQuery.isSuccess?` (${comments.length})`:""}</span>
                 </TabsTrigger>
                 <TabsTrigger value="links" className="text-xs gap-1">
                   <LinkIcon className="w-3.5 h-3.5" />
-                  <span>Links ({links.length})</span>
+                  <span>Links{linksQuery.isSuccess?` (${links.length})`:""}</span>
                 </TabsTrigger>
                 <TabsTrigger value="attachments" className="text-xs gap-1">
                   <Paperclip className="w-3.5 h-3.5" />
-                  <span>Arquivos ({attachments.length})</span>
+                  <span>Arquivos{attachmentsQuery.isSuccess?` (${attachments.length})`:""}</span>
                 </TabsTrigger>
                 <TabsTrigger value="activity" className="text-xs gap-1">
                   <Activity className="w-3.5 h-3.5" />
@@ -668,6 +640,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
               {/* Links Tab */}
               <TabsContent value="links" className="space-y-3 pt-3">
+                {linksQuery.isFetching&&<p role="status">Carregando links…</p>}
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-medium text-[#B8B8C0]">
                     Links externos de design e assets
@@ -755,6 +728,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
               {/* Attachments Tab */}
               <TabsContent value="attachments" className="space-y-3 pt-3">
+                {attachmentsQuery.isFetching&&<p role="status">Carregando arquivos…</p>}
                 {isSupabaseConfigured && <DemandProductionFiles key={`${agencyId}:${taskId}`} taskId={taskId} taskTitle={task?.title||''} taskDescription={task?.description||''}/>}
 
                 <div className="space-y-2">
@@ -779,9 +753,13 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
               {/* Activity Tab */}
               <TabsContent value="activity" className="space-y-3 pt-3">
+                <TaskPresentationReturnHistory key={taskId} taskId={taskId}/>
+                {activityQuery.isFetching&&<p role="status">Carregando histórico…</p>}
+                {activityQuery.isError&&<p role="alert">Não foi possível carregar o histórico. <button type="button" className="underline" onClick={()=>void activityQuery.refetch()}>Tentar novamente</button></p>}
+                {activityQuery.hasNextPage&&<Button variant="outline" disabled={activityQuery.isFetchingNextPage} onClick={()=>void activityQuery.fetchNextPage()}>Carregar atividades anteriores</Button>}
                 <div className="space-y-2.5">
-                  {activities.length > 0 ? (
-                    activities.map((act) => (
+                  {visibleActivities.length > 0 ? (
+                    visibleActivities.map((act) => (
                       <div key={act.id} className="flex items-start gap-2 text-xs">
                         <div className="w-1.5 h-1.5 rounded-full bg-[#C74410] mt-1.5 shrink-0" />
                         <div>
@@ -799,7 +777,7 @@ export const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                     ))
                   ) : (
                     <p className="text-xs text-[#98989F] text-center py-4 italic">
-                      Nenhuma atividade registrada ainda.
+                      Nenhuma outra atividade registrada ainda.
                     </p>
                   )}
                 </div>

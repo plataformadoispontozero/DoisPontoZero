@@ -1,9 +1,11 @@
+import { RouteErrorPage } from "./RouteErrorPage";
+import type { RouteObject } from "react-router-dom";
 import { AuthPage } from "@/features/auth/AuthPage";
 import { ProtectedWorkspace } from "@/features/auth/ProtectedWorkspace";
 import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 import { SettingsLayout } from "@/features/settings/components/SettingsLayout";
 
-export const router = createBrowserRouter([
+const routes: RouteObject[] = [
   {
     path: "/",
     lazy: async () => ({
@@ -57,6 +59,10 @@ export const router = createBrowserRouter([
   {
     path: "/p/*",
     lazy: async () => ({ Component: (await import("@/features/retired/RetiredProposalPage")).RetiredProposalPage }),
+  },
+  {
+    path: "/apresentacao/:clientSlug/:accessKey",
+    lazy: async () => ({ Component: (await import("@/features/presentations/public/PublicShowcaseViewPage")).PublicShowcaseViewPage }),
   },
   {
     path: "/showcase/:publicToken",
@@ -304,17 +310,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "strategy",
-        lazy: async () => ({
-          Component: (await import("@/features/strategy/StrategyPage"))
-            .StrategyPage,
-        }),
+        element: <Navigate to="/editorial" replace />,
       },
       {
         path: "strategy/new",
-        lazy: async () => ({
-          Component: (await import("@/features/strategy/NewStrategyPage"))
-            .NewStrategyPage,
-        }),
+        element: <Navigate to="/editorial/new" replace />,
       },
       {
         path: "strategy/:strategyId",
@@ -579,6 +579,10 @@ export const router = createBrowserRouter([
             }),
           },
           {
+            path: "integrations/editorial-ai",
+            lazy: async () => ({ Component: (await import("@/features/settings/EditorialAiSettingsPage")).EditorialAiSettingsPage }),
+          },
+          {
             path: "integrations/livekit",
             lazy: async () => ({ Component: (await import("@/features/settings/LivekitSettingsPage")).LivekitSettingsPage }),
           },
@@ -642,4 +646,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+export const router = createBrowserRouter(routes.map(route=>({...route,errorElement:<RouteErrorPage/>})));
