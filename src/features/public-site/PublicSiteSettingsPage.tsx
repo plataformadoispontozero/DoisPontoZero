@@ -114,7 +114,7 @@ function MotionSettings({ content, patch, kind }: { content: SiteContent; patch:
         <option value="slide">Deslizar em loop</option>{!hero && <option value="reverse">Deslizar no sentido inverso</option>}<option value="static">Sem movimento</option>
       </select></label>
       <label className="space-y-2 text-sm">Duração de uma volta: {duration}s<input className="w-full accent-orange-500" type="range" min={hero ? 15 : 10} max={hero ? 180 : 120} step="1" value={duration} onChange={(e) => hero ? patch("heroDuration", Number(e.target.value)) : patch("logoDuration", Number(e.target.value))} /></label>
-      {hero && <label className="space-y-2 text-sm">Enquadramento<select className={control} value={content.heroImageFit ?? "contain"} onChange={(e) => patch("heroImageFit", e.target.value as SiteContent["heroImageFit"])}><option value="contain">Imagem inteira</option><option value="cover">Preencher área (pode cortar bordas)</option></select></label>}
+      {hero && <label className="space-y-2 text-sm">Enquadramento<select className={control} value={content.heroImageFit ?? "contain"} onChange={(e) => patch("heroImageFit", e.target.value as SiteContent["heroImageFit"])}><option value="contain">Imagem inteira · artes lado a lado, sem espaço</option><option value="cover">Preencher área (pode cortar bordas)</option></select></label>}
     </div>
     <p className="text-xs text-[#B8B8C0]">Menos segundos deixam o movimento mais rápido. A preferência de movimento reduzido do visitante é respeitada.</p>
   </fieldset>;

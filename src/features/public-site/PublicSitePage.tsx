@@ -22,6 +22,7 @@ export function PublicSitePage() {
   const motion = true;
   const [splashVisible, setSplashVisible] = useState(true);
   const hero = c.projects.filter((p) => p.placement === "hero");
+  const heroStrip = hero.length ? Array.from({length:Math.max(1,Math.ceil(8/hero.length))},()=>hero).flat() : [];
   const gallery = c.projects.filter((p) => p.placement === "gallery");
   const scene = useSceneMotion(motion && available && !pending && gallery.length > 1, gallery.length);
   useEffect(() => {
@@ -120,8 +121,8 @@ export function PublicSitePage() {
           <div className="dz-hero-art" aria-hidden="true">
             <div className={`dz-hero-loop ${c.heroMotion === "static" ? "dz-loop-still" : ""}`} style={{ opacity: (c.heroOpacity ?? 50) / 100, animationDuration: `${c.heroDuration ?? 60}s`, "--hero-image-fit": c.heroImageFit ?? "contain" } as CSSProperties}>
               {[0, 1].map((group) => <div className="dz-hero-loop-group" key={group}>
-                {hero.map((p) => <div key={p.id} className="dz-hero-slide">
-                  {p.image ? <img src={p.image} alt="" loading={group === 0 ? "eager" : "lazy"} /> : <Poster project={p} decorative />}
+                {heroStrip.map((p,index) => <div key={`${p.id}-${index}`} className="dz-hero-slide">
+                  {p.image ? <img src={p.image} alt="" width="1080" height="1350" loading={group === 0 ? "eager" : "lazy"} /> : <Poster project={p} decorative />}
                 </div>)}
               </div>)}
             </div>

@@ -6,7 +6,7 @@ import { Select } from '@/components/ui/Select'
 import { toast } from '@/components/ui/Toast'
 import { useAgencyDocumentSettings, useAgencyBranding } from './hooks/useAgencySettings'
 import { FileSpreadsheet, Save, FileText, CheckCircle2, Eye } from 'lucide-react'
-import { PdfPreview } from '@/components/pdf/PdfPreview'
+type PdfPreviewComponent = typeof import('@/components/pdf/PdfPreview')['PdfPreview']
 import { resolveDocumentPdfBranding, platformDocumentText } from '@/features/briefing/pdf/documentBranding'
 import type { BriefingPdfModel } from '@/features/briefing/pdf/types'
 import type { HeaderStyle, PageFormat } from '@/types/whitelabel'
@@ -26,6 +26,7 @@ const DocumentBrandingPageForm: React.FC = () => {
   })
 
   const [isSaving, setIsSaving] = useState(false)
+  const [PreviewRenderer,setPreviewRenderer] = useState<PdfPreviewComponent | null>(null)
   const [previewBlob, setPreviewBlob] = useState<Blob | null>(null)
   const [previewError, setPreviewError] = useState('')
   const [isPreviewing, setIsPreviewing] = useState(false)
@@ -50,10 +51,10 @@ const DocumentBrandingPageForm: React.FC = () => {
           {id:'audience',label:'Público e comunicação',questionType:'text',answerText:'Organizar o público-alvo, o tom de voz e a direção visual aprovados para o cliente.',hasAnswer:true},
         ]}],
       }
-      const {generateBriefingPdfBlob} = await import('@/features/briefing/pdf/generateBriefingPdf')
+      const [{generateBriefingPdfBlob},{PdfPreview}] = await Promise.all([import('@/features/briefing/pdf/generateBriefingPdf'),import('@/components/pdf/PdfPreview')])
       const result = await generateBriefingPdfBlob(model)
       URL.revokeObjectURL(result.blobUrl)
-      if (request === generation.current) setPreviewBlob(result.blob)
+      if (request === generation.current) { setPreviewRenderer(()=>PdfPreview);setPreviewBlob(result.blob) }
     } catch { if (request === generation.current) setPreviewError('Não foi possível gerar a prévia. Tente novamente.') }
     finally { if (request === generation.current) setIsPreviewing(false) }
   }
@@ -217,7 +218,7 @@ const DocumentBrandingPageForm: React.FC = () => {
           </div>
           <p className="text-xs text-content-secondary">Gerada pelo mesmo modelo dos briefings, com logotipo, símbolo central, conteúdo e paginação. Atualize a prévia após alterar os parâmetros; ela não cadastra nenhum briefing.</p>
           {previewError && <p role="alert" className="text-sm text-red-400">{previewError}</p>}
-          {previewBlob ? <PdfPreview blob={previewBlob} title="Prévia real do branding PDF"/> : <div className="rounded-xl border border-dashed border-border-default p-8 text-center text-sm text-content-secondary">Clique em Atualizar prévia PDF para conferir o documento gerado.</div>}
+          {previewBlob && PreviewRenderer ? <PreviewRenderer blob={previewBlob} title="Prévia real do branding PDF"/> : <div className="rounded-xl border border-dashed border-border-default p-8 text-center text-sm text-content-secondary">Clique em Atualizar prévia PDF para conferir o documento gerado.</div>}
         </div>
       </div>
     </form>

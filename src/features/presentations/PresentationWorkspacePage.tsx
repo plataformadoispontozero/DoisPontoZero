@@ -4,10 +4,10 @@ import {usePermission} from '@/features/auth/AuthProvider'
 import {PresentationAssetThumbnail} from './presentationMedia'
 import {PresentationMaterialReviews} from './PresentationMaterialReviews';
 import {usePresentationReviews,latestMaterialReviews} from './hooks/usePresentationReviews';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {useQueryClient} from '@tanstack/react-query';
 import {PresentationSectionEditor} from './PresentationSectionEditor';
-import {PresentationPreview} from './PresentationPreview';
+type PresentationPreviewComponent = typeof import('./PresentationPreview')['PresentationPreview'];
 import {ClientPresentationDrivePicker} from './ClientPresentationDrivePicker';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -55,6 +55,16 @@ export const PresentationWorkspacePage: React.FC = () => {
 
   // Tab State: 'editor' | 'preview' | 'publish' | 'versions'
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'publish' | 'versions' | 'reviews'>('editor');
+  const [PreviewRenderer,setPreviewRenderer]=useState<PresentationPreviewComponent|null>(null);
+  const [previewLoadError,setPreviewLoadError]=useState(false);
+  const [previewLoadAttempt,setPreviewLoadAttempt]=useState(0);
+  useEffect(()=>{
+    if(activeTab!=='preview'||PreviewRenderer)return;
+    let current=true;setPreviewLoadError(false);
+    void import('./PresentationPreview').then(module=>{if(current)setPreviewRenderer(()=>module.PresentationPreview)}).catch(()=>{if(current)setPreviewLoadError(true)});
+    return()=>{current=false};
+  },[activeTab,PreviewRenderer,previewLoadAttempt]);
+
 
   // Preview device mode
   const materialReviews=usePresentationReviews(presentationId);
@@ -244,7 +254,7 @@ export const PresentationWorkspacePage: React.FC = () => {
         </div>
       </div>
 
-      {activeTab==='reviews'&&(<PresentationMaterialReviews clientName={presentation.client_name} presentationId={presentation.id} clientId={presentation.client_id} reviews={materialReviews.data||[]} history={materialReviews.history||[]} completion={materialReviews.completion} linkGeneratedAt={materialReviews.linkGeneratedAt} loading={materialReviews.isLoading} assets={assets} error={materialReviews.isError}/>)}
+      {activeTab==='reviews'&&(<PresentationMaterialReviews productionProjectId={presentation.production_project_id} clientName={presentation.client_name} presentationId={presentation.id} clientId={presentation.client_id} reviews={materialReviews.data||[]} history={materialReviews.history||[]} completion={materialReviews.completion} linkGeneratedAt={materialReviews.linkGeneratedAt} loading={materialReviews.isLoading} assets={assets} error={materialReviews.isError}/>)}
 
       {/* Quick delivery sections keep the social workflow explicit. */}
       {activeTab==='editor'&&<section className="space-y-4 rounded-2xl border border-white/10 p-5"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-semibold">Monte sua apresentação</h2><p className="mt-1 text-sm text-zinc-400">Escolha uma seção, edite o conteúdo e confira a prévia.</p></div><Button variant="outline" onClick={()=>setActiveTab('preview')}><Eye className="h-4 w-4"/>Conferir prévia</Button></div><div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">{presentationSectionPresets.map(preset=><button type="button" key={preset.value} className="flex min-h-14 items-center gap-2 rounded-xl border border-white/15 bg-white/[.02] px-4 py-3 text-left text-sm hover:border-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-400" onClick={()=>{setNewPresentationSectionType(preset.value);setNewSectionTitle(preset.label);setCreateSectionError('');setIsAddSectionOpen(true)}}><Plus className="h-4 w-4 shrink-0 text-orange-300"/>{preset.label}</button>)}</div></section>}
@@ -458,7 +468,7 @@ export const PresentationWorkspacePage: React.FC = () => {
                   : 'w-full max-w-[390px]'
               }`}
             >
-              <PresentationPreview presentation={presentation} sections={sections} assets={assets} reviews={latestMaterialReviews(materialReviews.data||[])}/>
+              {PreviewRenderer?<PreviewRenderer presentation={presentation} sections={sections} assets={assets} reviews={latestMaterialReviews(materialReviews.data||[])}/>:previewLoadError?<div role="alert" className="space-y-3 rounded-xl border border-amber-400/30 p-6"><p>Não foi possível carregar a prévia. Seu conteúdo continua salvo no editor.</p><Button variant="outline" onClick={()=>setPreviewLoadAttempt(attempt=>attempt+1)}>Tentar carregar novamente</Button></div>:<p role="status" className="p-8 text-center text-content-secondary">Carregando visualização da apresentação…</p>}
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-export interface PresentationMediaContext {agencyId:string;fileId:string;folderId:string|null}
+export interface PresentationMediaContext {agencyId:string;fileId:string;folderId:string|null;expectedModifiedTime?:string|null}
 interface Dependencies {authorize:(request:Request,input:{assetId:string;publicToken?:string})=>Promise<PresentationMediaContext|null>;accessToken:(agency:string)=>Promise<string>;fetch?:typeof fetch}
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const imageTypes=new Set(['image/jpeg','image/png','image/webp','image/gif','image/avif'])
@@ -11,9 +11,9 @@ export async function presentationMedia(request:Request,body:Record<string,unkno
   const context=await deps.authorize(request,{assetId:body.assetId,publicToken:body.publicToken as string|undefined});if(!context)return reply(403)
   if(!/^[A-Za-z0-9_-]{10,200}$/.test(context.fileId))return reply(404)
   const access=await deps.accessToken(context.agencyId),send=deps.fetch||fetch
-  const metadata=await send(`https://www.googleapis.com/drive/v3/files/${context.fileId}?fields=id,mimeType,parents,trashed,size,thumbnailLink&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${access}`},signal:AbortSignal.timeout(15000)})
+  const metadata=await send(`https://www.googleapis.com/drive/v3/files/${context.fileId}?fields=id,mimeType,parents,trashed,size,thumbnailLink,modifiedTime&supportsAllDrives=true`,{headers:{Authorization:`Bearer ${access}`},signal:AbortSignal.timeout(15000)})
   if(!metadata.ok)return reply(404)
-  const file=await metadata.json();if(file.id!==context.fileId||file.trashed||(context.folderId&&!file.parents?.includes(context.folderId)))return reply(404)
+  const file=await metadata.json();if(context.expectedModifiedTime&&(!file.modifiedTime||Date.parse(file.modifiedTime)!==Date.parse(context.expectedModifiedTime)))return reply(404);if(file.id!==context.fileId||file.trashed||(context.folderId&&!file.parents?.includes(context.folderId)))return reply(404)
   const original=!(body.preview===true&&safeGoogleThumbnail(file.thumbnailLink))&&imageTypes.has(file.mimeType)&&Number(file.size||0)<=maximum
   const previewUrl=safeGoogleThumbnail(file.thumbnailLink)?.replace(/=s\d+(?:-[a-z0-9-]+)?$/i,'=s1200')
   let url=original?`https://www.googleapis.com/drive/v3/files/${context.fileId}?alt=media&supportsAllDrives=true`:previewUrl

@@ -1,3 +1,4 @@
+import {usePaginatedClients,useClientListCounts} from './hooks/usePaginatedClients'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useClient } from '@/features/clients/hooks/useClients'
 import { toast } from '@/components/ui/Toast'
@@ -42,7 +43,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs'
 import { LoadingState } from '@/components/ui/FeedbackStates'
 import { EmptyState } from '@/components/shared/EmptyState'
 import {
-  useClients,
   useCreateClient,
   useUpdateClient,
   useDeleteClient,
@@ -60,10 +60,16 @@ export const ClientsPage: React.FC = () => {
   const [search, setSearch] = useState('')
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'inactive'>('all')
 
-  const { data: clients = [], isLoading, isError, refetch } = useClients(agencyId, {
-    search: search.trim() || undefined,
-    status: selectedStatus === 'all' ? undefined : selectedStatus,
-  })
+  const [page,setPage]=useState(0)
+  const [pageSize,setPageSize]=useState(24)
+  const [debouncedSearch,setDebouncedSearch]=useState('')
+  useEffect(()=>{const timer=window.setTimeout(()=>{setDebouncedSearch(search.trim());setPage(0)},300);return()=>window.clearTimeout(timer)},[search])
+  useEffect(()=>setPage(0),[agencyId])
+  const {data:clientPage,isLoading,isError,isFetching,refetch}=usePaginatedClients(agencyId,{page,pageSize,search:debouncedSearch,status:selectedStatus})
+  const clients=clientPage?.clients||[],total=clientPage?.total||0,totalPages=Math.max(1,Math.ceil(total/pageSize))
+  const clientCounts=useClientListCounts(agencyId)
+  useEffect(()=>{if(clientPage&&page>=totalPages)setPage(totalPages-1)},[clientPage,page,totalPages])
+
 
   const createClient = useCreateClient(agencyId)
   const updateClient = useUpdateClient(agencyId)
@@ -143,8 +149,8 @@ export const ClientsPage: React.FC = () => {
     }
   }
 
-  const activeCount = clients.filter((c) => c.status === 'active').length
-  const inactiveCount = clients.filter((c) => c.status === 'inactive').length
+  const activeCount = clientCounts.isError?'—':clientCounts.data?.active??'…'
+  const inactiveCount = clientCounts.isError?'—':clientCounts.data?.inactive??'…'
 
   if (clientId && routeError) return <div role="alert">Cliente indisponível ou sem acesso nesta agência.</div>
 
@@ -174,7 +180,7 @@ export const ClientsPage: React.FC = () => {
                 Total de Clientes
               </span>
               <span className="text-xl font-bold text-[#F8F9FC] mt-0.5 block">
-                {clients.length}
+                {clientCounts.isError?'—':clientCounts.data?.total??'…'}
               </span>
             </div>
             <div className="w-10 h-10 rounded-xl bg-[#C74410]/10 text-[#C74410] flex items-center justify-center">
@@ -221,9 +227,11 @@ export const ClientsPage: React.FC = () => {
         <div className="relative flex-1 max-w-sm">
           <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#98989F]" />
           <Input
+            aria-label="Buscar cliente por nome ou slug"
+            maxLength={200}
             placeholder="Buscar por nome ou slug..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {setSearch(e.target.value);setPage(0)}}
             className="pl-8 text-xs h-9 bg-[#1C1C24] border-[#30303B]"
           />
         </div>
@@ -232,7 +240,8 @@ export const ClientsPage: React.FC = () => {
           {(['all', 'active', 'inactive'] as const).map((st) => (
             <button
               key={st}
-              onClick={() => setSelectedStatus(st)}
+              onClick={() => {setSelectedStatus(st);setPage(0)}}
+              aria-pressed={selectedStatus===st}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
                 selectedStatus === st
                   ? 'bg-[#C74410] text-white shadow-sm'
@@ -345,6 +354,14 @@ export const ClientsPage: React.FC = () => {
           })}
         </div>
       )}
+
+      {!isError&&<nav aria-label="Paginação dos clientes" className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[var(--color-border)] p-4">
+        <p role="status" className="text-sm text-[var(--color-text-secondary)]">{isLoading?'Carregando clientes…':total?`${page*pageSize+1}–${Math.min((page+1)*pageSize,total)} de ${total} clientes${search||selectedStatus!=='all'?' encontrados':''}`:'0 clientes encontrados'}{isFetching&&!isLoading?' · Atualizando…':''}</p>
+        <div className="flex flex-wrap items-center gap-3"><label className="flex items-center gap-2 text-sm">Por página<select aria-label="Clientes por página" className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-2 text-[var(--color-text-primary)]" value={pageSize} onChange={event=>{setPageSize(Number(event.target.value));setPage(0)}}>{[12,24,48].map(size=><option key={size} value={size}>{size}</option>)}</select></label>
+          <Button variant="secondary" size="sm" disabled={page===0||isFetching||search.trim()!==debouncedSearch} onClick={()=>setPage(current=>current-1)}>Anterior</Button><span className="text-sm">Página {page+1} de {totalPages}</span><Button variant="secondary" size="sm" disabled={page+1>=totalPages||isFetching||search.trim()!==debouncedSearch} onClick={()=>setPage(current=>current+1)}>Próxima</Button>
+        </div>
+      </nav>}
+      {clientCounts.isError&&<p role="alert" className="text-sm text-[var(--color-text-secondary)]">Não foi possível consultar os totais das contas. <button type="button" className="underline" onClick={()=>void clientCounts.refetch()}>Atualizar totais</button></p>}
 
       {/* Create / Edit Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={open => { setIsCreateOpen(open); if (!open && location.pathname !== '/clients') navigate('/clients') }}>

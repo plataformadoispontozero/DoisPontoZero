@@ -1,4 +1,4 @@
-import {useEffect,useState} from 'react'
+import {useEffect,useRef,useState} from 'react'
 import {useQuery} from '@tanstack/react-query'
 import {supabase} from '@/lib/supabase/client'
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -20,6 +20,8 @@ export function usePresentationImage(asset:{id:string;file_reference?:unknown;fi
 }
 export function PresentationAssetThumbnail({asset}:{asset:{id:string;title:string;file_reference?:{thumbnail_reference?:string|null};file_reference_id?:string|null}}){
  const [failedUrl,setFailedUrl]=useState<string|undefined>(undefined)
- const image=usePresentationImage(asset),url=image.managed?image.url:asset.file_reference?.thumbnail_reference
- return url&&url!==failedUrl?<img onError={()=>setFailedUrl(url)} src={url} alt={asset.title} loading="lazy" className="mb-3 h-40 w-full rounded-xl object-contain bg-black/20"/>:<p className="mb-3 flex h-40 items-center justify-center rounded-xl bg-black/20 text-xs text-zinc-400">{image.error||failedUrl===url&&!!url?'Imagem indisponível':'Carregando imagem…'}</p>
+ const host=useRef<HTMLDivElement>(null),[visible,setVisible]=useState(false)
+ useEffect(()=>{if(!host.current)return;if(typeof IntersectionObserver==='undefined'){setVisible(true);return}const observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){setVisible(true);observer.disconnect()}},{rootMargin:'200px'});observer.observe(host.current);return()=>observer.disconnect()},[])
+ const image=usePresentationImage(asset,undefined,{enabled:visible}),url=image.managed?image.url:asset.file_reference?.thumbnail_reference
+ return <div ref={host}>{url&&url!==failedUrl?<img onError={()=>setFailedUrl(url)} src={url} alt={asset.title} loading="lazy" className="mb-3 h-40 w-full rounded-xl object-contain bg-black/20"/>:<p className="mb-3 flex h-40 items-center justify-center rounded-xl bg-black/20 text-xs text-zinc-400">{image.error||failedUrl===url&&!!url?'Imagem indisponível':visible?'Carregando imagem…':'Prévia do material'}</p>}</div>
 }

@@ -1,3 +1,4 @@
+import {taskReviewReturnMedia} from './taskReviewReturnMedia.ts'
 import {googleFetch,isGoogleTimeout} from './googleFetch.ts'
 import {presentationVideo} from './presentationVideo.ts'
 import {authorizePresentationMedia} from './presentationMediaContext.ts'
@@ -78,6 +79,7 @@ Deno.serve(async(req:Request)=>{
    const reader=req.clone().body?.getReader();let previewRaw='',previewSize=0;const decoder=new TextDecoder()
    if(reader)while(true){const part=await reader.read();if(part.done)break;previewSize+=part.value.byteLength;if(previewSize>65536){void reader.cancel().catch(()=>{});return reply({error:'Solicitação inválida.'},400)}previewRaw+=decoder.decode(part.value,{stream:true})}
    previewRaw+=decoder.decode();let previewBody:any=null;try{previewBody=JSON.parse(previewRaw)}catch{/* Existing authenticated request validation handles invalid JSON. */}
+   if(previewBody?.action==='task-review-return-media')return taskReviewReturnMedia(req,previewBody,headers,{member:authorization=>createClient(env('SUPABASE_URL'),env('SUPABASE_ANON_KEY'),{global:{headers:{Authorization:authorization}},auth:{persistSession:false,autoRefreshToken:false}}),accessToken:mediaDeps.accessToken})
    if(previewBody?.action==='presentation-media')return presentationMedia(req,previewBody,headers,mediaDeps)
    if(previewBody?.action==='presentation-video-ticket'){
     if(typeof previewBody.assetId!=='string'||!/^[0-9a-f-]{36}$/i.test(previewBody.assetId)||('publicToken'in previewBody&&(typeof previewBody.publicToken!=='string'||previewBody.publicToken.length>512)))return reply({error:'Material inválido.'},400)
