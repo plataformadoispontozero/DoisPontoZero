@@ -19,7 +19,7 @@ function ScopedProviders({ children }: { children: ReactNode }) {
   return <QueryScope key={scope}>{children}</QueryScope>
 }
 function QueryScope({ children }: { children: ReactNode }) {
-  const [client] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, gcTime: 30 * 60_000, refetchOnWindowFocus: true, retry: 1 } } }))
+  const [client] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, gcTime: 30 * 60_000, refetchOnWindowFocus: true, refetchIntervalInBackground: false, retry: 1 } } }))
   useEffect(() => () => { void client.cancelQueries(); client.clear() }, [client])
   return <QueryClientProvider client={client}><OfficePresenceProvider><VoiceScope><BrandingProvider><ToastProvider>{children}</ToastProvider></BrandingProvider></VoiceScope></OfficePresenceProvider></QueryClientProvider>
 }

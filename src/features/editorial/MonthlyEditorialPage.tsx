@@ -44,6 +44,7 @@ interface Campaign {
   project_id: string | null;
   archived_at?: string | null;
 }
+type CampaignSummary = Omit<Campaign,"context"|"items"|"briefing_id"> & {item_count:number};
 interface Feedback {
   id: string;
   campaign_id: string;
@@ -217,25 +218,25 @@ export function MonthlyEditorialPage() {
   }
   const campaigns = useQuery({
     queryKey: ["monthly-editorial", agency, showArchived],
-    refetchInterval: 15000, refetchIntervalInBackground: false,
+    refetchInterval: 60000, refetchIntervalInBackground: false,
     enabled: !!agency,
     queryFn: async () => {
       let request = supabase!
-        .from("monthly_editorial_campaigns")
-        .select("*")
+        .from("editorial_campaign_summaries")
+        .select("id,client_id,month,status,project_id,archived_at,item_count")
         .eq("agency_id", agency);
       request=showArchived?request.not('archived_at','is',null):request.is('archived_at',null);
       const r=await request.order("created_at", {ascending:false}).limit(50);
       if (r.error) throw r.error;
-      return r.data as Campaign[];
+      return r.data as CampaignSummary[];
     },
   });
   const linked = useQuery({
-    queryKey: ["linked-editorial", agency, params.get("campaignId"), params.get("clientId")],
-    refetchInterval: 15000, refetchIntervalInBackground: false,
-    enabled: !!agency && !!params.get("campaignId"),
+    queryKey: ["linked-editorial", agency, params.get("campaignId")||id, params.get("clientId")],
+    refetchInterval: 60000, refetchIntervalInBackground: false,
+    enabled: !!agency && !!(params.get("campaignId")||id),
     queryFn: async () => {
-      let request = supabase!.from("monthly_editorial_campaigns").select("*").eq("agency_id", agency).eq("id", params.get("campaignId")!);
+      let request = supabase!.from("monthly_editorial_campaigns").select("*").eq("agency_id", agency).eq("id", (params.get("campaignId")||id)!);
       if (params.get("clientId")) request = request.eq("client_id", params.get("clientId")!);
       const result = await request.maybeSingle();
       if (result.error) throw result.error;
@@ -244,7 +245,7 @@ export function MonthlyEditorialPage() {
   });
   const itemReviews = useQuery({
     queryKey: ['editorial-item-reviews', agency, id], enabled: !!agency && !!id,
-    refetchInterval: 15000, refetchIntervalInBackground: false,
+    refetchInterval: 60000, refetchIntervalInBackground: false,
     queryFn: async () => {
       const response = await supabase!.rpc('get_editorial_item_reviews', {p_campaign:id});
       if (response.error) throw response.error;
@@ -253,7 +254,7 @@ export function MonthlyEditorialPage() {
   });
   const feedback = useQuery({
     queryKey: ["editorial-feedback", id],
-    refetchInterval: 15000, refetchIntervalInBackground: false,
+    refetchInterval: 60000, refetchIntervalInBackground: false,
     enabled: !!id,
     queryFn: async () => {
       const r = await supabase!
@@ -285,10 +286,10 @@ export function MonthlyEditorialPage() {
       return r.data;
     },
   });
-  const active = campaigns.data?.find((c) => c.id === id) || (linked.data?.id === id ? linked.data : null),
+  const active = linked.data?.id === id ? linked.data : null,
     locked = !!active?.project_id || !!active?.archived_at;
   const visibleCampaigns = (campaigns.data || []).filter(c => showArchived ? !!c.archived_at : !c.archived_at);
-  async function archiveCampaign(campaign: Campaign, archived: boolean) {
+  async function archiveCampaign(campaign: CampaignSummary, archived: boolean) {
     if (!window.confirm(archived ? "Arquivar este calendário? Ele poderá ser restaurado. Projetos e demandas de produção serão preservados; links de aprovação serão revogados." : "Restaurar este calendário como rascunho? Será necessário gerar um novo link de aprovação.")) return;
     await action(async () => {
       const result = await supabase!.rpc("set_editorial_campaign_archived", { p_campaign: campaign.id, p_archived: archived });
@@ -298,7 +299,7 @@ export function MonthlyEditorialPage() {
       setNotice(archived ? "Calendário arquivado. Ele não aparece na operação ativa de Social Media e pode ser restaurado em Arquivados." : "Calendário restaurado como rascunho.");
     });
   }
-  async function deleteCampaignPermanently(campaign: Campaign) {
+  async function deleteCampaignPermanently(campaign: CampaignSummary) {
     const clientName=clients.data?.find(record=>record.id===campaign.client_id)?.name;
     if (!clientName || !canDeleteCampaign || campaign.project_id || campaign.status==='production') return;
     const expected=`${clientName} · ${campaign.month.slice(0,7).split('-').reverse().join('/')}`;
@@ -351,8 +352,7 @@ export function MonthlyEditorialPage() {
     setNotice("");
   }
   useEffect(() => {
-    const requested = params.get("campaignId");
-    const target = linked.data || campaigns.data?.find(c => c.id === requested);
+    const target = linked.data;
     if (target && id !== target.id && !dirty) load(target);
   }, [params, campaigns.data, linked.data]);
   async function save(generatedItems?:MonthlyItem[],generatedContext?:EditorialContext) {
@@ -373,6 +373,7 @@ export function MonthlyEditorialPage() {
     setDirty(false);
     await Promise.all([
       cache.invalidateQueries({ queryKey: ["monthly-editorial", agency] }),
+      cache.invalidateQueries({ queryKey: ["linked-editorial", agency] }),
       cache.invalidateQueries({ queryKey: ["editorial-versions", agency] }),
       cache.invalidateQueries({
         queryKey: ["campaign-history", agency, client],
@@ -822,14 +823,14 @@ export function MonthlyEditorialPage() {
       {!creating && <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-semibold">Calendários por cliente</h2><div className="flex gap-2"><Button aria-pressed={!showArchived} onClick={() => setShowArchived(false)}>Ativos</Button><Button aria-pressed={showArchived} onClick={() => setShowArchived(true)}>Arquivados</Button></div></div>
         <p className="text-sm text-zinc-400">Selecione um cliente para abrir seus calendários e acompanhar as demandas.</p>
-        {campaigns.isError ? <p role="alert">Não foi possível carregar as campanhas.</p> : campaigns.isPending ? <p>Carregando campanhas…</p> : !visibleCampaigns.length ? <p>{showArchived ? 'Nenhum calendário arquivado.' : 'Nenhum calendário ativo. Crie uma campanha para organizar as demandas.'}</p> : <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{[...new Set(visibleCampaigns.map(c => c.client_id))].map(clientId => { const list = visibleCampaigns.filter(c => c.client_id === clientId); return <button type="button" key={clientId} className="rounded-2xl border border-white/15 bg-[#19191f] p-6 text-left transition hover:border-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-400" onClick={() => { if (dirty && client !== clientId && !window.confirm("Há alterações não salvas. Abrir outro cliente? Elas permanecem nesta sessão até abrir outro calendário.")) return; setOpenClient(clientId); }}><span className="text-lg font-semibold">{clients.data?.find(c => c.id === clientId)?.name || 'Cliente'}</span><span className="mt-3 block text-sm text-zinc-400">{list.length} calendários · {list.reduce((sum, c) => sum + c.items.length, 0)} conteúdos</span><span className="mt-5 block text-sm text-orange-300">Abrir calendários e demandas ↗</span></button>; })}</div>}
+        {campaigns.isError ? <p role="alert">Não foi possível carregar as campanhas.</p> : campaigns.isPending ? <p>Carregando campanhas…</p> : !visibleCampaigns.length ? <p>{showArchived ? 'Nenhum calendário arquivado.' : 'Nenhum calendário ativo. Crie uma campanha para organizar as demandas.'}</p> : <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{[...new Set(visibleCampaigns.map(c => c.client_id))].map(clientId => { const list = visibleCampaigns.filter(c => c.client_id === clientId); return <button type="button" key={clientId} className="rounded-2xl border border-white/15 bg-[#19191f] p-6 text-left transition hover:border-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-400" onClick={() => { if (dirty && client !== clientId && !window.confirm("Há alterações não salvas. Abrir outro cliente? Elas permanecem nesta sessão até abrir outro calendário.")) return; setOpenClient(clientId); }}><span className="text-lg font-semibold">{clients.data?.find(c => c.id === clientId)?.name || 'Cliente'}</span><span className="mt-3 block text-sm text-zinc-400">{list.length} calendários · {list.reduce((sum, c) => sum + c.item_count, 0)} conteúdos</span><span className="mt-5 block text-sm text-orange-300">Abrir calendários e demandas ↗</span></button>; })}</div>}
       </section>}
       {!creating && <dialog ref={clientDialog} aria-labelledby="editorial-client-heading" onCancel={event => { event.preventDefault(); if (selectedPiece === null) closeClientDialog(); }} onPointerDown={event => { clientBackdropDown.current = event.target === event.currentTarget && outsideClientDialog(event); }} onPointerUp={event => { if (clientBackdropDown.current && event.target === event.currentTarget && outsideClientDialog(event)) closeClientDialog(); clientBackdropDown.current = false; }} className="fixed inset-0 m-auto h-[94dvh] max-h-[94dvh] w-[96vw] max-w-[1600px] overflow-y-auto overscroll-contain rounded-2xl border border-white/20 bg-[#101014] p-0 text-white backdrop:bg-black/75">
         <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-white/15 bg-[#101014] px-5 py-4 sm:px-8"><div><p className="text-xs text-orange-300">Calendários e demandas</p><h2 id="editorial-client-heading" className="mt-1 text-xl font-semibold">{clients.data?.find(c => c.id === openClient)?.name || 'Cliente'}</h2></div><Button size="lg" aria-label="Fechar calendários do cliente" disabled={busy} onClick={closeClientDialog}>✕</Button></div>
         <div className="space-y-6 p-5 sm:p-8">
           {notice && <p role="status" className="rounded-xl border border-orange-400/30 p-4">{notice}</p>}
           <div className="flex gap-2"><Button aria-pressed={!showArchived} onClick={() => setShowArchived(false)}>Ativos</Button><Button aria-pressed={showArchived} onClick={() => setShowArchived(true)}>Arquivados</Button></div>
-          <div className="grid items-start gap-3 md:grid-cols-2 xl:grid-cols-3">{visibleCampaigns.filter(c => c.client_id === openClient).map(c => <article key={c.id} className={`rounded-xl border p-4 ${id === c.id ? 'border-orange-400 bg-orange-500/5' : 'border-white/15'}`}><button type="button" aria-pressed={id === c.id} className="w-full text-left" onClick={() => { if (dirty && id !== c.id && !window.confirm('Descartar as alterações não salvas e abrir outro calendário?')) return; load(c); navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`); }}><span className="text-lg font-semibold">{c.month.slice(0,7).split('-').reverse().join('/')}</span><span className="mt-2 block text-sm text-orange-200">{c.archived_at ? 'Arquivado' : `Ativo · ${statusNames[c.status] || c.status}`} · {c.items.length} conteúdos</span></button><EditorialReviewMonitor campaignId={c.id} archived={!!c.archived_at} compact /><div className="mt-4"><Button size="sm" disabled={busy || !canArchiveCampaign || (!c.archived_at && (!!c.project_id || c.status==='production'))} onClick={() => void archiveCampaign(c, !c.archived_at)}>{c.archived_at ? 'Restaurar calendário' : 'Arquivar calendário'}</Button>{canDeleteCampaign&&<Button size="sm" className="ml-2 border-red-500/40 text-red-300" disabled={busy||!!c.project_id||c.status==='production'||!clients.data?.some(record=>record.id===c.client_id)} onClick={()=>void deleteCampaignPermanently(c)}>Excluir definitivamente</Button>}{c.project_id && !c.archived_at && <p className="mt-2 text-xs text-zinc-400">Vinculado à produção; arquivamento e exclusão indisponíveis.</p>}</div></article>)}</div>
+          <div className="grid items-start gap-3 md:grid-cols-2 xl:grid-cols-3">{visibleCampaigns.filter(c => c.client_id === openClient).map(c => <article key={c.id} className={`rounded-xl border p-4 ${id === c.id ? 'border-orange-400 bg-orange-500/5' : 'border-white/15'}`}><button type="button" aria-pressed={id === c.id} className="w-full text-left" onClick={() => { if (dirty && id !== c.id && !window.confirm('Descartar as alterações não salvas e abrir outro calendário?')) return; setDirty(false); navigate(`/editorial?clientId=${c.client_id}&campaignId=${c.id}`); }}><span className="text-lg font-semibold">{c.month.slice(0,7).split('-').reverse().join('/')}</span><span className="mt-2 block text-sm text-orange-200">{c.archived_at ? 'Arquivado' : `Ativo · ${statusNames[c.status] || c.status}`} · {c.item_count} conteúdos</span></button><EditorialReviewMonitor campaignId={c.id} archived={!!c.archived_at} compact /><div className="mt-4"><Button size="sm" disabled={busy || !canArchiveCampaign || (!c.archived_at && (!!c.project_id || c.status==='production'))} onClick={() => void archiveCampaign(c, !c.archived_at)}>{c.archived_at ? 'Restaurar calendário' : 'Arquivar calendário'}</Button>{canDeleteCampaign&&<Button size="sm" className="ml-2 border-red-500/40 text-red-300" disabled={busy||!!c.project_id||c.status==='production'||!clients.data?.some(record=>record.id===c.client_id)} onClick={()=>void deleteCampaignPermanently(c)}>Excluir definitivamente</Button>}{c.project_id && !c.archived_at && <p className="mt-2 text-xs text-zinc-400">Vinculado à produção; arquivamento e exclusão indisponíveis.</p>}</div></article>)}</div>
       {!creating&&client === openClient&&items.length > 0 && (
         <section className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
